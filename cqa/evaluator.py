@@ -90,8 +90,11 @@ def _check_evidence(cr, val, evidence, out):
             return "ledger_inconsistent"
         if any(r.get("status") == "partial" for r in ess) and val == max(cr["scale"]):
             return "ledger_inconsistent"
-        if reqs and all(r.get("status") == "closed" for r in reqs) and val in (5, 10):
-            return "ledger_inconsistent"
+        if reqs and all(r.get("status") == "closed" for r in reqs) and val not in (0, max(cr["scale"])):
+            return "ledger_inconsistent"   # everything closed → 20 (or 0 for a wrong key recommendation)
+        if val == 15 and not any(r.get("status") in ("partial", "open") and not r.get("essential") for r in reqs) and \
+                not any(r.get("status") == "partial" for r in reqs):
+            return "ledger_inconsistent"   # 15 needs a missed (partial/open) secondary detail
     if cr.get("gross") and val == "YES" and not ops:
         return "gross_no_operator_quote"
     if not evidence:
@@ -139,6 +142,23 @@ def _result_dict(cr, chosen, value, **extra):
     return res
 
 
+def _opinion(i, o):
+    """One juror's opinion as shown to the judge (value, reasons, quotes, missing/NA notes, request ledger)."""
+    parts = [f"- Эксперт {i + 1}: значение {o['value']!r}. Обоснование: {o.get('justification', '')} "
+             f"Рассуждение: {o.get('reasoning', '')}"]
+    if o.get("evidence"):
+        parts.append(" Цитаты: " + "; ".join(f"[{e['turn']}] «{e['quote']}»" for e in o["evidence"]))
+    if o.get("missing_where"):
+        parts.append(f" Где ожидалось: {o['missing_where']}.")
+    if o.get("na_reason"):
+        parts.append(f" Почему NA: {o['na_reason']}.")
+    if o.get("client_requests"):
+        parts.append(" Запросы клиента: " + "; ".join(
+            f"{r.get('text')} [{r.get('status')}{'' if r.get('essential') else ', второстеп.'}]"
+            for r in o["client_requests"] if isinstance(r, dict)))
+    return "".join(parts)
+
+
 class Evaluator:
     def __init__(self, llm=None, use_cache=True, samples=None, ensemble=None):
         self.llm = llm or LLM()
@@ -172,6 +192,14 @@ class Evaluator:
                     m.model = fallbacks[0]
                 else:
                     warns.append(f"model {m.model!r} not in the provider's model list; set CQA_FALLBACK_MODELS or fix .env")
+        if self.ensemble:
+            ok = [m for m in models if m.model in avail]
+            if not ok:
+                warns.append("no configured jury model is available — the run would fail closed on every criterion")
+            elif len(ok) < len(models):
+                best = ok[-1]
+                warns.append(f"jury incomplete — switching to single-model mode with {best.model!r}")
+                self.ensemble, self.llm = False, best
         return warns
 
     def _sample(self, rec, tx_block, checklist, cr, temperature, llm=None, extra=""):
@@ -258,6 +286,7 @@ class Evaluator:
         with ThreadPoolExecutor(max_workers=len(self.jurors)) as ex:
             pairs = list(ex.map(safe, self.jurors))
         juror_errors = [err for _, err in pairs if err]
+        decided_by, blind = None, None
         live = [(i, m, o) for i, (m, (o, _)) in enumerate(zip(self.jurors, pairs, strict=True)) if o is not None]
         outs = [o for _, _, o in live]
         votes = {f"{i}:{m.model}": o["value"] for i, m, o in live}
@@ -295,30 +324,30 @@ class Evaluator:
         elif agree:
             chosen, decided_by = outs[-1], "consensus"   # strongest juror's explanation
         else:
-            opinions = "\n".join(
-                f"- Эксперт {i+1}: значение {o['value']!r}. Обоснование: {o.get('justification','')} Рассуждение: {o.get('reasoning','')}"
-                + (" Цитаты: " + "; ".join(f"[{e['turn']}] «{e['quote']}»" for e in o.get("evidence") or []) if o.get("evidence") else "")
-                + (f" Где ожидалось: {o['missing_where']}." if o.get("missing_where") else "")
-                + (f" Почему NA: {o['na_reason']}." if o.get("na_reason") else "")
-                + (" Запросы клиента: " + "; ".join(f"{r.get('text')} [{r.get('status')}{'' if r.get('essential') else ', второстеп.'}]"
-                                                    for r in o["client_requests"] if isinstance(r, dict))
-                   if o.get("client_requests") else "")
-                for i, o in enumerate(outs))
-            extra = ("\n\nДва независимых эксперта разошлись во мнениях:\n" + opinions +
-                     "\nПроверь транскрипт сам, строго по правилам критерия, и вынеси окончательное решение. "
-                     "Не усредняй и не выбирай по большинству: решай по фактам.")
-            chosen, decided_by = self._sample(rec, tx_block, checklist, cr, 0.0, llm=self.judge, extra=extra), self.judge.model
+            if config.BLIND_JUDGE:
+                # anchoring guard: the judge first decides WITHOUT seeing the jurors; accepted if it matches one of them
+                blind = self._sample(rec, tx_block, checklist, cr, 0.0, llm=self.judge)
+                if str(blind["value"]) in {str(o["value"]) for o in outs}:
+                    chosen, decided_by = blind, f"judge_blind:{self.judge.model}"
+            if not str(decided_by or "").startswith("judge_blind"):
+                opinions = "\n".join(_opinion(i, o) for i, o in enumerate(outs))
+                extra = ("\n\nДва независимых эксперта разошлись во мнениях:\n" + opinions +
+                         "\nПроверь транскрипт сам, строго по правилам критерия, и вынеси окончательное решение. "
+                         "Не усредняй и не выбирай по большинству: решай по фактам.")
+                chosen, decided_by = self._sample(rec, tx_block, checklist, cr, 0.0, llm=self.judge, extra=extra), self.judge.model
         final = chosen["value"]
         if juror_errors:
             chosen = {**chosen, "juror_errors": juror_errors}
         all_votes = list(votes.values()) + ([final] if not agree else [])
         return _result_dict(cr, chosen, final, votes=all_votes, jury=votes, decided_by=decided_by,
-                            self_consistency_disagreement=not agree, criterion_hash=key.split("_")[0])
+                            blind_judge_value=blind["value"] if blind else None,
+                            self_consistency_disagreement=not agree, criterion_hash=key[:16])
 
     def evaluate_criterion(self, rec, checklist, cr):
-        msig = (f"J{config.JURORS}{config.JUDGE}C{sorted(config.confirm_criteria())}S{config.SCALE_SAMPLES}"
-                if self.ensemble else self.llm.model)
-        key = f"{ckl.criterion_hash(checklist, cr)}{hashlib.sha1(msig.encode()).hexdigest()[:6]}_{rec['hash']}"
+        msig = (f"{config.PROVIDER}:J{config.JURORS}{config.JUDGE}C{sorted(config.confirm_criteria())}S{config.SCALE_SAMPLES}"
+                f"B{config.BLIND_JUDGE}" if self.ensemble else f"{self.llm.provider}:{self.llm.model}")
+        chash = ckl.criterion_hash(checklist, cr)
+        key = f"{chash}{hashlib.sha1(msig.encode()).hexdigest()[:6]}_{rec['hash']}"
         cp = config.CACHE_DIR / f"{key}.json"
         if self.use_cache and cp.exists():
             res = json.loads(cp.read_text())
@@ -353,7 +382,7 @@ class Evaluator:
             final = first["value"]
         chosen = next(s for s in samples if s["value"] == final)
         res = _result_dict(cr, chosen, final, confidence=conf, votes=votes, self_consistency_disagreement=len(cnt) > 1,
-                           decided_by=self.llm.model, criterion_hash=key.split("_")[0])
+                           decided_by=self.llm.model, criterion_hash=key[:16])
         config.CACHE_DIR.mkdir(parents=True, exist_ok=True)
         store_atomic(cp, json.dumps(res, ensure_ascii=False))
         return res

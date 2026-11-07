@@ -91,6 +91,9 @@ def criterion_block(checklist, cr):
         notes.append("«Первая реплика/первый ответ» = первая реплика ЧЕЛОВЕКА-оператора (OPERATOR), даже если бот отвечал раньше.")
     if a.get("ignore_internal_hold_turns"):
         notes.append("Реплики, помеченные [ВНУТРЕННИЕ ПЕРЕГОВОРЫ НА УДЕРЖАНИИ], клиент не слышит — это не общение с клиентом.")
+    if a.get("in_app_chat_authenticated") and cr["id"] == "03":
+        notes.append("Чат ведётся из авторизованного приложения: клиент уже идентифицирован системой — раскрытие ЕГО "
+                     "данных без дополнительной проверки допустимо (YES); данные третьих лиц — по-прежнему нарушение.")
     vals = " | ".join(allowed_values(cr))
     return f"""ЧЕК-ЛИСТ: {checklist.get('name', checklist['id'])}
 {checklist.get('description', '')}
@@ -106,3 +109,14 @@ def criterion_block(checklist, cr):
 {cr.get('rules', '').strip()}
 
 Оцени ТОЛЬКО этот критерий. Сначала найди все релевантные реплики оператора, затем примени рубрику и правила буквально, затем вызови submit_evaluation."""
+
+
+# Optional prompt variant (cqa/prompt_variants): CQA_PROMPT_VARIANT=v1|v2|v3; default/empty/v0 = the prompts above.
+def _load_variant():
+    import os
+
+    from .prompt_variants import apply
+    apply(os.environ.get("CQA_PROMPT_VARIANT", "v0"), globals())
+
+
+_load_variant()

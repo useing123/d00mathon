@@ -36,3 +36,11 @@ curl -X POST -H 'Content-Type: application/json' -d '{"group":"DEMO"}' http://12
 curl http://127.0.0.1:8091/api/results/DEMO
 ```
 All routes are exercised in `tests/test_e2e_mock.py::test_http_api_end_to_end` (except `/api/fetch`, which needs the organizer URL).
+
+## Submission files (CLI)
+`python -m cqa evaluate --group <ID> --organizer out.csv` writes:
+- `out.csv` — only scored columns: `conversation_id, 01..08, total, gross_error` (criterion values `YES`/`NO`/`NA` or the
+  scale step, total with 2 decimals, gross_error `YES`/`NO`). The organizer's exact column spec is not published to us;
+  this layout is an assumption. Dialogs still incomplete after the rescue pass have an empty total unless
+  `--fill-provisional` is given.
+- `out.diagnostics.csv` — status, failed / needs-review criteria, provisional total, warnings.

@@ -49,7 +49,9 @@ def cmd_evaluate(a):
         f.write(store.to_csv(doc, "ai"))
     if a.organizer:
         with open(a.organizer, "w", encoding="utf-8") as f:
-            f.write(store.to_organizer_csv(doc))
+            f.write(store.to_organizer_csv(doc, fill_provisional=a.fill_provisional))
+        with open(a.organizer.rsplit(".", 1)[0] + ".diagnostics.csv", "w", encoding="utf-8") as f:
+            f.write(store.to_diagnostics_csv(doc))
     tot = [d["total"] for d in dialogs if d["total"] is not None]
     print(json.dumps({"dialogs": len(dialogs), "elapsed_s": round(time.time() - t0, 1), "cost_usd": meta["cost_usd"],
                       "usage": meta["usage"], "errors": meta["errors"][:10],
@@ -134,7 +136,7 @@ def cmd_export(a):
         doc = store.load_results(a.group)
     if not doc:
         sys.exit(f"no results for group {a.group}")
-    txt = store.to_organizer_csv(doc) if a.format == "organizer" else store.to_csv(doc, a.format)
+    txt = store.to_organizer_csv(doc, fill_provisional=a.fill_provisional) if a.format == "organizer" else store.to_csv(doc, a.format)
     if a.out:
         with open(a.out, "w", encoding="utf-8") as f:
             f.write(txt)
@@ -160,7 +162,10 @@ def main():
     e.add_argument("--fresh", action="store_true", help="ignore per-criterion cache (re-run everything)")
     e.add_argument("--final", action="store_true",
                    help="control-run profile: jurors sonnet+opus, judge re-checks unanimous 02/04/06, median of 3 samples on 04/06")
-    e.add_argument("--organizer", help="also write the submission CSV (conversation_id, 01..08, total, gross_error) here")
+    e.add_argument("--organizer", help="also write the submission CSV (conversation_id, 01..08, total, gross_error) here "
+                                       "+ <name>.diagnostics.csv")
+    e.add_argument("--fill-provisional", action="store_true",
+                   help="opt-in: in the submission CSV only, use provisional_total for dialogs still incomplete after rescue")
     e.add_argument("--confirm", help="criteria where the judge re-checks unanimous jury verdicts, e.g. 03,04 (control runs)")
     e.add_argument("--mock", action="store_true", help="offline deterministic heuristic backend (no API key; same as CQA_PROVIDER=mock)")
     r = sub.add_parser("rescore", help="recompute totals after reweighting (no LLM)")
@@ -181,6 +186,7 @@ def main():
     ex.add_argument("--run")
     ex.add_argument("--format", default="organizer", choices=["organizer", "ai", "human", "both"])
     ex.add_argument("--out")
+    ex.add_argument("--fill-provisional", action="store_true")
     lb = sub.add_parser("label", help="label real dialogs by hand (stored in a git-ignored JSON)")
     lb.add_argument("--group", default="DEV")
     lb.add_argument("--ids", help="comma-separated conversation ids (default: next unlabelled)")

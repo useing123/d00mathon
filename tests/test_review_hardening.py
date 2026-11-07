@@ -511,14 +511,6 @@ def test_call_checklist_extends_chat():
         ckl._resolve({"id": "x", "extends": "freedom_chat_v1", "criteria_overrides": [{"id": "99"}]}, "x")
 
 
-def test_organizer_csv():
-    d = {"conversation_id": "c1", "criteria": [{"criterion_id": "01", "value": "YES"}, {"criterion_id": "04", "value": None}],
-         "total": None, "gross_error": False, "status": "incomplete", "failed_criteria": ["04"]}
-    lines = store.to_organizer_csv({"dialogs": [d]}).splitlines()
-    assert lines[0] == "conversation_id,01,04,total,gross_error,status,failed_criteria"
-    assert lines[1] == "c1,YES,,,NO,incomplete,04"
-
-
 def test_preflight_fallback(monkeypatch):
     ev = Evaluator(use_cache=False)
     m = Scripted([{}])
@@ -552,3 +544,75 @@ def test_apply_final_profile(monkeypatch):
     config.apply_final_profile()
     assert config.JURORS == ["claude-sonnet-5-5", "claude-opus-5-5"] and config.confirm_criteria() == {"02", "04", "06"}
     assert config.SCALE_SAMPLES == 3
+
+
+# ---------- round-6 review ----------
+def test_blind_judge_accepts_matching_juror_without_opinions():
+    a = Scripted([{"value": "YES", "evidence": [{"turn": 1, "quote": "Тариф"}]}])
+    b = Scripted([{"value": "NO", "evidence": [], "missing_where": "[1]"}])
+    judge = Scripted([{"value": "NO", "evidence": [], "missing_where": "[1]"}])
+    judge.model = "judge"
+    ev = Evaluator(use_cache=False)
+    ev.jurors, ev.judge, ev.ensemble = [a, b], judge, True
+    tx = prompts.transcript_block(REC, data.format_transcript(REC))
+    res = ev._jury(REC, tx, ckl.load("freedom_chat_v1"), _cr("05"), "k" * 16 + "_h")
+    assert res["decided_by"] == "judge_blind:judge" and res["value"] == "NO" and res["blind_judge_value"] == "NO"
+    assert len(judge.calls) == 1 and "Эксперт" not in judge.calls[0]       # blind: no juror opinions shown
+
+
+def test_blind_judge_third_value_then_sees_opinions():
+    a = Scripted([{"value": "20", "evidence": [{"turn": 1, "quote": "Тариф"}]}])
+    b = Scripted([{"value": "10", "evidence": [{"turn": 1, "quote": "Тариф"}]}])
+    judge = Scripted([{"value": "5", "evidence": [{"turn": 1, "quote": "Тариф"}]},
+                      {"value": "10", "evidence": [{"turn": 1, "quote": "Тариф"}]}])
+    judge.model = "judge"
+    ev = Evaluator(use_cache=False)
+    ev.jurors, ev.judge, ev.ensemble = [a, b], judge, True
+    tx = prompts.transcript_block(REC, data.format_transcript(REC))
+    res = ev._jury(REC, tx, ckl.load("freedom_chat_v1"), _cr("04"), "k" * 16 + "_h")
+    assert res["decided_by"] == "judge" and res["value"] == 10 and res["blind_judge_value"] == 5 and "Эксперт" in judge.calls[1]
+
+
+def test_ledger_15_requires_missed_secondary_detail():
+    from cqa.evaluator import _check_evidence
+    ev = [{"turn": 1, "quote": "x", "speaker": "operator"}]
+    closed = {"client_requests": [{"text": "a", "essential": True, "status": "closed"}]}
+    assert _check_evidence(_cr("04"), 15, ev, closed) == "ledger_inconsistent"
+    minor = {"client_requests": [{"text": "a", "essential": True, "status": "closed"},
+                                 {"text": "b", "essential": False, "status": "open"}]}
+    assert _check_evidence(_cr("04"), 15, ev, minor) == ""
+
+
+@pytest.mark.parametrize("vals,expected", [(["NA", "NA", "15"], "NA"), (["NA", "10", "20"], 20), (["NA", "NA", "NA"], "NA")])
+def test_scale_sample_edge_cases(monkeypatch, vals, expected):
+    monkeypatch.setattr(config, "SCALE_SAMPLES", 3)
+    outs = [{"value": v, "evidence": [{"turn": 1, "quote": "Тариф"}], "na_reason": "x"} for v in vals]
+    a, b = Scripted(list(outs)), Scripted(list(outs))
+    ev = Evaluator(use_cache=False)
+    ev.jurors, ev.judge, ev.ensemble = [a, b], a, True
+    tx = prompts.transcript_block(REC, data.format_transcript(REC))
+    assert ev._jury(REC, tx, ckl.load("freedom_chat_v1"), _cr("04"), "k" * 16 + "_h")["value"] == expected
+
+
+def test_static_assets_are_package_data():
+    import tomllib
+    from pathlib import Path
+    pp = tomllib.loads((Path(__file__).parent.parent / "pyproject.toml").read_text())
+    assert "static/*" in pp["tool"]["setuptools"]["package-data"]["cqa"]
+    from cqa.server import STATIC
+    assert (STATIC / "app.js").exists() and (STATIC / "app.css").exists()
+
+
+def test_group_id_validated_in_cli_paths():
+    with pytest.raises(ValueError):
+        data.load_group("../../etc/passwd")
+    with pytest.raises(ValueError):
+        store.results_path("../x")
+
+
+def test_organizer_csv_scored_columns_only():
+    d = {"conversation_id": "c1", "criteria": [{"criterion_id": "01", "value": "YES"}], "total": None,
+         "provisional_total": 81.256, "gross_error": False, "status": "incomplete", "failed_criteria": ["04"]}
+    assert store.to_organizer_csv({"dialogs": [d]}).splitlines() == ["conversation_id,01,total,gross_error", "c1,YES,,NO"]
+    assert store.to_organizer_csv({"dialogs": [d]}, fill_provisional=True).splitlines()[1] == "c1,YES,81.26,NO"
+    assert "incomplete,04" in store.to_diagnostics_csv({"dialogs": [d]})

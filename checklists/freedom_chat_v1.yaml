@@ -6,7 +6,8 @@ assumptions:
   rounding: half_up        # half_up (Decimal ROUND_HALF_UP) | bankers
   decimals: 2
   first_reply: first_human_operator_turn   # «первая реплика» = первая реплика ЧЕЛОВЕКА-оператора, даже если бот отвечал раньше
-  ignore_internal_hold_turns: true          # реплики во время удержания/консультации между агентами не оцениваются
+  ignore_internal_hold_turns: true
+  in_app_chat_authenticated: false          # true → чат из авторизованного приложения: клиент считается идентифицированным системой (03)          # реплики во время удержания/консультации между агентами не оцениваются
   self_consistency_samples: 3               # только в режиме одной модели (CQA_ENSEMBLE=0): доп. сэмплы при низкой уверенности; в режиме жюри не используется
   confidence_threshold: 0.8                 # порог уверенности для доп. сэмплов (только режим одной модели)
 criteria:

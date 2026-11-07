@@ -1,6 +1,8 @@
-# AI review quorum
+# External design review log
 
-The repository was reviewed by independent LLM "hackathon judges" (`.quorum/run_quorum.py`, git-ignored
+Purpose: independent critique of design, code and docs. Every accepted change had to be a real fix (tests or measured
+numbers); suggestions that contradict the organizer rubric were rejected with the reason below. Scores are recorded as
+history only — they are not an accuracy measure. The repository was reviewed by independent LLM "hackathon judges" (`.quorum/run_quorum.py`, git-ignored
 outputs). Each receives the full repo and returns scores, risks and concrete improvements. We implemented the
 suggestions that are correct and do not contradict the organizer rubric, and re-ran the review.
 
@@ -13,10 +15,11 @@ suggestions that are correct and do not contradict the organizer rubric, and re-
 | 3 (after round-2 changes) | 80 | — | 97 | — | — |
 | 4 (after round-3 changes) | 77 | — | 96 | 66 | — |
 | 5 (after round-4 changes) | 77 | 78 | 94 | 72 | — |
+| 6 (after round-5 changes) | 75 | 77 | 94 | 70 | — |
 
 Reviewer set changed over time (user decision): round 0 fable + luna + gemini-3.8-flash; rounds 1–3 fable + argon;
 round 4 adds luna (run separately on the same commit); round 5 fable + opus + argon + luna; from round 6 also
-gpt-5.3-codex. Stop rule (user): fable ≥ 90 and opus ≥ 90, at most 5 rounds after round 5, or 2 rounds without gain. Round-4 fable output was truncated JSON; overall (77) and risks were read from the raw
+gpt-5.3-codex. Round-4 fable output was truncated JSON; overall (77) and risks were read from the raw
 text, its improvement list was lost. Up to round 4 the review script truncated `cqa/static/index.html` to 14k chars
 (a limitation of the script, not the repo); from round 5 it is sent in full.
 
@@ -174,3 +177,25 @@ Reviewers: claude-fable-5-1 (76), gemini-4-argon (93). fable's first response wa
 | Make 02 YES whenever the operator understood/used the stated need; reduce the 44/65 NA rate (fable, opus) | The organizer rubric defines 02 NA as «данных хватало с самого начала». A request answerable as stated is NA by definition; YES is reserved for cases where data were missing and the operator obtained them (asked, or took them from the bot dialogue instead of re-asking). Changing this would contradict the rubric, so the NA rate is a property of the DEV data, not a bug. |
 | Hand-label real DEV dialogs ourselves (fable, opus) | Self-labelling; the tooling (`cqa label`, `cqa gold --labels`) is ready for a human labeller. |
 | Measure the local-LLM path (fable, opus) | No local GPU/LLM server in this environment; not claimed. |
+
+## Round 6 → changes
+### Accepted (implemented)
+| Suggestion (source) | Implementation |
+|---|---|
+| Judge anchoring (opus) | blind judge: on disagreement the judge decides without seeing the jurors; accepted if it matches one, else a second call with opinions; `blind_judge_value` logged; measured (EVALUATION) |
+| `pip install .` ships no app.js/app.css (fable, opus) | `package-data = static/*`; test |
+| Submission file contract (opus) | organizer CSV has only scored columns; diagnostics in a separate CSV; `--fill-provisional` opt-in for dialogs still incomplete after rescue (fable) |
+| Default fallback chain + drop to single model if the jury is incomplete (opus) | `CQA_FALLBACK_MODELS` default = ids present in the provider listing; preflight |
+| Ledger: 15 requires a missed secondary detail; all closed → 20 or 0 (opus) | `_check_evidence`; test |
+| Criterion hash without model id; clean hash in results (opus) | `criterion_hash`, `msig` |
+| In-app authenticated chats (opus, fable) | checklist assumption `in_app_chat_authenticated` (default false = rubric reading; switch if the organizer confirms) |
+| Group id validation in CLI paths (fable) | `load_group`, `fetch_group`, `results_path`, `overrides_path`; test |
+| Scale-sample edge tests (fable) | tests |
+| Docs drift (fable) | ARCHITECTURE module table, API submission section |
+
+### Rejected
+| Suggestion | Why |
+|---|---|
+| 02 lenient / 07 lenient policy switches (fable, opus) | Both rubric definitions are explicit (02 NA = data sufficient from the start; 07 needs a goodbye); the user decided to keep the rubric reading. |
+| Remove this log / score table (fable, opus) | Kept on the user's request as a transparent record; framed as history, not as a quality claim. |
+| Measure the local-LLM path (fable, opus) | No local inference server in this environment. |

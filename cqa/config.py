@@ -49,7 +49,9 @@ CONFIRM = get("CQA_CONFIRM", "")  # e.g. "03,04": judge re-checks unanimous jury
 
 def confirm_criteria():
     return {x.strip() for x in CONFIRM.split(",") if x.strip()}
-FALLBACK_MODELS = [m.strip() for m in get("CQA_FALLBACK_MODELS", "").split(",") if m.strip()]  # opt-in replacements for missing ids
+# replacements for configured ids missing at the provider (checked by Evaluator.preflight), strongest first
+FALLBACK_MODELS = [m.strip() for m in get("CQA_FALLBACK_MODELS", "claude-sonnet-4-6,claude-opus-4-7,claude-haiku-4-5-20251001").split(",")
+                   if m.strip()]
 SCALE_SAMPLES = int(get("CQA_SCALE_SAMPLES", "1"))   # >1: each juror's verdict on SCALE_SAMPLE_CRITERIA = median of N samples
 SCALE_SAMPLE_CRITERIA = {x.strip() for x in get("CQA_SCALE_SAMPLE_CRITERIA", "04,06").split(",") if x.strip()}
 
@@ -62,3 +64,4 @@ def apply_final_profile():
     global JURORS, JUDGE, CONFIRM, SCALE_SAMPLES
     JURORS, JUDGE = list(FINAL_PROFILE["JURORS"]), FINAL_PROFILE["JUDGE"]
     CONFIRM, SCALE_SAMPLES = FINAL_PROFILE["CONFIRM"], FINAL_PROFILE["SCALE_SAMPLES"]
+BLIND_JUDGE = get("CQA_BLIND_JUDGE", "1") == "1"   # on juror disagreement the judge first decides without seeing them

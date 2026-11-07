@@ -29,7 +29,7 @@ Docker: `docker compose up --build` (секреты из `.env`, в образ �
 ```bash
 python -m cqa evaluate --group <ID> --organizer results/<id>_submission.csv   # или: make eval-group GROUP=<ID>
 ```
-Опционально `--final` — усиленный профиль (присяжные sonnet + opus, судья перепроверяет единогласные 02/04/06, медиана 3 сэмплов на 04/06). На held-out наборе он **не** дал выигрыша (0.925 против 0.938) при цене ×2–4, поэтому по умолчанию не включён; см. EVALUATION.
+Опционально `--final` — усиленный профиль (присяжные sonnet + opus, судья перепроверяет единогласные 02/04/06, медиана 3 сэмплов на 04/06). На held-out наборе он **не** дал выигрыша (0.925 против 0.925–0.938 у профиля по умолчанию) при цене ×2–4, поэтому по умолчанию не включён; см. EVALUATION.
 Загрузка `CQA_API_URL&group_id=<ID>` → авто-выбор чек-листа по каналу (чат → `freedom_chat_v1`, звонок → `freedom_call_v1`) → параллельная оценка → `results/<id>.json` + `results/<id>.csv`. В UI то же — кнопка **Fetch group & evaluate**. Каждый новый диалог реально анализируется LLM: заготовленных ответов нет, кэш ключуется хэшем диалога.
 
 ## Архитектура
@@ -148,12 +148,12 @@ CQA_PROVIDER=openai CQA_OPENAI_BASE_URL=http://127.0.0.1:11434/v1 CQA_MODEL=qwen
 Подробно: [docs/ASSUMPTIONS.md](docs/ASSUMPTIONS.md).
 
 ## Результаты
-Текущая версия (промпт v9, жюри haiku-5-5 + sonnet-5-5, судья opus-5-5). Подробно и история версий: [docs/EVALUATION.md](docs/EVALUATION.md).
+Текущая версия (жюри haiku-5-5 + sonnet-5-5, судья opus-5-5; при расхождении судья сначала решает «вслепую»). Подробно и история версий: [docs/EVALUATION.md](docs/EVALUATION.md).
 
 | Набор | Совпадение значений | MAE итога | Грубые ошибки P/R |
 |---|---|---|---|
 | Gold, 16 синтетических диалогов (по ним настраивались правила) | 0.992 | 0.43 | 1.0 / 1.0 |
-| **Held-out, 10 синтетических диалогов (не для настройки)** | **0.938** | **3.86** | 1.0 / 1.0 |
+| **Held-out, 10 синтетических диалогов (не для настройки)** | **0.925–0.938** (3 прогона) | **3.9–5.7** | 1.0 / 1.0 |
 | Реальные DEV с разметкой человека | не измерено — нужна разметка (`python -m cqa label`, затем `cqa gold --labels`) | | |
 
 Шум между одинаковыми прогонами — около ±2 вердиктов из 128 (Anthropic не принимает `temperature`). Оба gold-набора синтетические и размечены той же командой, что писала правила, — это проверка регрессий, а не оценка совпадения со скрытой разметкой организаторов.
@@ -206,7 +206,7 @@ Makefile · pyproject.toml · Dockerfile · docker-compose.yml · .github/workfl
 
 **Highlights:** per-criterion prompts · LLM jury + judge · quote validation with auto-correction / retry · deterministic scoring · per-criterion cache (editing one rubric re-evaluates only that criterion; reweighting needs no LLM) · no-login web UI with evidence highlighting, audio seek, human override (stored separately, AI vs Human diff, CSV/JSON export) and checklist editor · cloud (Anthropic), local (Ollama/vLLM via OpenAI-compatible API) or offline mock · Docker · CI on 3.11/3.12 without secrets.
 
-**Results (current version):** tuned synthetic gold set 0.992 / MAE 0.43; **held-out synthetic set 0.938 / MAE 3.86**; real-DEV agreement not measured (needs human labels: `cqa label`). DEV: 65 dialogs, 0 errors, mean 78.53, 5 gross-error flags, ~$12–14 per full run.
+**Results (current version):** tuned synthetic gold set 0.992 / MAE 0.43; **held-out synthetic set 0.925–0.938 / MAE 3.9–5.7 over three runs**; real-DEV agreement not measured (needs human labels: `cqa label`). DEV: 65 dialogs, 0 errors, mean 78.53, 5 gross-error flags, ~$12–14 per full run.
 
 **Limitations:** no labelled ground truth for real DEV dialogs; both gold sets are synthetic and self-labelled; criteria 04/05/06 are the most subjective; audio offsets are approximate; local-model accuracy not measured (no local GPU run in this repo).
 

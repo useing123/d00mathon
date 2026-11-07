@@ -138,7 +138,7 @@ def criterion_hash(checklist, cr):
     payload = {k: v for k, v in cr.items() if k != "weight"}
     payload["_desc"] = checklist.get("description", "")
     payload["_assumptions"] = {k: v for k, v in checklist["assumptions"].items() if k not in ("rounding", "decimals")}
-    payload["_model"] = f"{config.PROVIDER}:{config.MODEL}"
+    # model / jury identity is NOT part of this hash: it is added to the cache key in Evaluator.evaluate_criterion
     from .prompts import PROMPT_VERSION, SYSTEM, TOOL
     payload["_pv"] = PROMPT_VERSION
     # hash the actual prompt content too, so an edit without a version bump cannot reuse stale cache entries

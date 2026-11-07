@@ -38,20 +38,24 @@ def load_file(path):
 
 
 def fetch_group(group_id, save=True):
+    from .util import safe_child
+    safe_child(config.DATA_DIR, group_id, ".json")   # validates the id before it reaches a URL or a path
     url = config.get("CQA_API_URL")
     if not url:
         raise RuntimeError("CQA_API_URL is not set (put it in .env)")
-    r = httpx.get(url + ("&" if "?" in url else "?") + "group_id=" + group_id, timeout=180)
+    r = httpx.get(url, params={"group_id": group_id}, timeout=180) if "?" not in url else \
+        httpx.get(url + "&group_id=" + group_id, timeout=180)
     r.raise_for_status()
     obj = r.json()
     if save:
-        config.DATA_DIR.mkdir(exist_ok=True)
-        (config.DATA_DIR / f"{group_id}.json").write_text(json.dumps(obj, ensure_ascii=False))
+        from .util import atomic_write
+        atomic_write(safe_child(config.DATA_DIR, group_id, ".json"), json.dumps(obj, ensure_ascii=False))
     return load_json(obj)
 
 
 def load_group(group_id, refresh=False):
-    p = config.DATA_DIR / f"{group_id}.json"
+    from .util import safe_child
+    p = safe_child(config.DATA_DIR, group_id, ".json")
     if p.exists() and not refresh:
         return load_file(p)
     return fetch_group(group_id)

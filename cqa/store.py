@@ -10,11 +10,13 @@ from .util import atomic_write
 
 
 def results_path(group):
-    return config.RESULTS_DIR / f"{group.lower()}.json"
+    from .util import safe_child
+    return safe_child(config.RESULTS_DIR, str(group).lower(), ".json")
 
 
 def overrides_path(group):
-    return config.RESULTS_DIR / "overrides" / f"{group.lower()}.json"
+    from .util import safe_child
+    return safe_child(config.RESULTS_DIR / "overrides", str(group).lower(), ".json")
 
 
 def load_results(group):
@@ -101,20 +103,41 @@ def to_csv(doc, which="ai"):
     return buf.getvalue()
 
 
-def to_organizer_csv(doc):
-    """Submission format: one row per dialog — conversation_id, criterion values (YES/NO/NA/step), total, gross_error,
-    status. Incomplete dialogs keep an empty total (fail-closed) and list the failed criteria."""
-    crit_ids = []
-    for d in doc["dialogs"]:
-        for r in d["criteria"]:
-            if r["criterion_id"] not in crit_ids:
-                crit_ids.append(r["criterion_id"])
+def to_organizer_csv(doc, fill_provisional=False):
+    """Submission file: ONLY scored columns — conversation_id, one column per criterion id (YES/NO/NA or scale
+    step), total (2 decimals), gross_error (YES/NO). The exact organizer spec is not published; this format is our
+    assumption (docs/API.md). Incomplete dialogs keep an empty total unless ``fill_provisional`` (opt-in) is set;
+    diagnostics (status, failed criteria) go to ``to_diagnostics_csv``."""
+    crit_ids = _crit_ids(doc)
     buf = io.StringIO()
     w = csv.writer(buf)
-    w.writerow(["conversation_id"] + crit_ids + ["total", "gross_error", "status", "failed_criteria"])
+    w.writerow(["conversation_id"] + crit_ids + ["total", "gross_error"])
     for d in doc["dialogs"]:
         vals = {r["criterion_id"]: r.get("value") for r in d["criteria"]}
+        tot = d.get("total")
+        if tot is None and fill_provisional:
+            tot = d.get("provisional_total")
         w.writerow([_cell(x) for x in [d["conversation_id"]] + [("" if vals.get(c) is None else vals.get(c)) for c in crit_ids]
-                    + [d.get("total"), "YES" if d.get("gross_error") else "NO", d.get("status", "complete"),
-                       ";".join(d.get("failed_criteria") or [])]])
+                    + ["" if tot is None else f"{tot:.2f}", "YES" if d.get("gross_error") else "NO"]])
     return buf.getvalue()
+
+
+def to_diagnostics_csv(doc):
+    """Companion file for the submission: per-dialog status, failed / needs-review criteria, provisional total."""
+    buf = io.StringIO()
+    w = csv.writer(buf)
+    w.writerow(["conversation_id", "status", "failed_criteria", "needs_review", "provisional_total", "warnings"])
+    for d in doc["dialogs"]:
+        w.writerow([_cell(x) for x in [d["conversation_id"], d.get("status", "complete"), ";".join(d.get("failed_criteria") or []),
+                                       ";".join(d.get("needs_review") or []), d.get("provisional_total"),
+                                       " | ".join(d.get("warnings") or [])]])
+    return buf.getvalue()
+
+
+def _crit_ids(doc):
+    ids = []
+    for d in doc["dialogs"]:
+        for r in d["criteria"]:
+            if r["criterion_id"] not in ids:
+                ids.append(r["criterion_id"])
+    return ids

@@ -35,7 +35,7 @@ cqa = "cqa.__main__:main"
 packages = ["cqa"]
 
 [tool.setuptools.package-data]
-cqa = ["static/*.html"]
+cqa = ["static/*"]   # index.html, app.js, app.css
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

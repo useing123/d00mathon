@@ -1,6 +1,22 @@
 # Evaluation
 
-## Current version (prompt v9) — numbers used in the README
+## Current version — numbers used in the README
+Latest code (blind-judge disagreement resolution, ledger-15 check, criterion hash without model id):
+
+| Set | Exact agreement | Total MAE | Decided by |
+|---|---|---|---|
+| Tuned synthetic gold (16) | 0.992 (127/128) | 0.43 | consensus 121, blind judge 4, judge-confirmed 08 YES 3 |
+| Held-out synthetic (10) | 0.925 (74/80) | 5.73 | consensus 72, blind judge 7, judge-confirmed 1 |
+
+Blind judge: on all 11 disagreements the judge's blind verdict matched one juror, so the second (opinion-showing) call
+was never needed; accuracy is unchanged within noise (held-out 0.938 → 0.925 = 1 verdict). It stays on because it
+removes the anchoring risk at no extra calls in these runs. Held-out over three runs of near-identical code:
+0.925–0.938, MAE 3.86–5.73 — this spread is the noise floor.
+
+Costs: a separate change replaced the approximate price table with `cqa/pricing.py` partway through these runs, so
+`cost_usd` before and after that change is not directly comparable.
+
+### Prompt v9 runs
 | Set | Exact agreement | Total MAE | Gross P/R | Cost / time |
 |---|---|---|---|---|
 | Tuned synthetic gold (16) | 0.992 (127/128) | 0.43 | 1.0 / 1.0 | $1.16 / 60 s (partly cached) |
