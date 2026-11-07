@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>CQA · Freedom Broker</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--b:#e3e6ea;--t:#1d2433;--m:#6b7280;--g:#16a34a;--r:#dc2626;--y:#d97706;--a:#2563eb;--na:#9ca3af}
+*{box-sizing:border-box}body{margin:0;font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--t)}
+header{display:flex;align-items:center;gap:16px;padding:10px 18px;background:#0f3d2e;color:#fff}
+header b{font-size:16px}header nav a{color:#cfe;margin-right:14px;cursor:pointer;text-decoration:none}header nav a.on{color:#fff;border-bottom:2px solid #7f7}
+header .meta{margin-left:auto;font-size:12px;opacity:.8}
+main{padding:16px 18px}.card{background:var(--card);border:1px solid var(--b);border-radius:8px;padding:14px;margin-bottom:14px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}button,select,input,textarea{font:inherit}
+button{background:var(--a);color:#fff;border:0;border-radius:6px;padding:6px 12px;cursor:pointer}button.sec{background:#e5e7eb;color:var(--t)}button:disabled{opacity:.5}
+input,select,textarea{border:1px solid var(--b);border-radius:6px;padding:5px 8px;background:#fff}
+table{border-collapse:collapse;width:100%}th,td{border-bottom:1px solid var(--b);padding:6px 8px;text-align:left;vertical-align:top}th{font-size:12px;color:var(--m);font-weight:600;cursor:pointer}
+tr.click:hover{background:#f0f5ff;cursor:pointer}
+.v{display:inline-block;min-width:34px;text-align:center;padding:1px 6px;border-radius:10px;font-weight:600;font-size:12px}
+.YES{background:#dcfce7;color:var(--g)}.NO{background:#fee2e2;color:var(--r)}.NA{background:#f3f4f6;color:var(--na)}.S{background:#fef3c7;color:#92400e}.ERR{background:#000;color:#fff}
+.gross{background:var(--r);color:#fff;padding:1px 6px;border-radius:4px;font-size:11px}
+.total{font-size:28px;font-weight:700}.muted{color:var(--m);font-size:12px}
+.grid{display:grid;grid-template-columns:minmax(380px,1fr) minmax(420px,1.2fr);gap:14px}
+.turn{padding:5px 8px;border-left:3px solid transparent;margin:2px 0;border-radius:4px;font-size:13px}
+.turn .sp{font-weight:600;font-size:11px;text-transform:uppercase;margin-right:6px}.turn.client .sp{color:#7c3aed}.turn.operator .sp{color:#0f766e}.turn.bot .sp{color:#9ca3af}.turn.system{color:#9ca3af;font-style:italic}
+.turn.internal{background:repeating-linear-gradient(45deg,#fafafa,#fafafa 6px,#f1f1f1 6px,#f1f1f1 12px)}
+.turn.ev{background:#fff7d6;border-left-color:var(--y)}.turn.focus{outline:2px solid var(--a)}.turn.seek{cursor:pointer}.turn.seek:hover{background:#eef}
+.crit{border:1px solid var(--b);border-radius:6px;padding:8px 10px;margin-bottom:8px}.crit h4{margin:0 0 4px;font-size:13px;display:flex;gap:8px;align-items:center}
+.ev a{color:var(--a);cursor:pointer}.diff{background:#ede9fe;color:#5b21b6;font-size:11px;padding:1px 6px;border-radius:4px}
+.bar{height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden;width:260px}.bar>div{height:100%;background:var(--a);width:0}
+.ccard{border:1px solid var(--b);border-radius:6px;padding:8px;margin-bottom:8px}.ccard textarea{width:100%;height:70px}
+.hide{display:none}.transcript{max-height:72vh;overflow:auto}.crits{max-height:80vh;overflow:auto}
+.hist{display:flex;gap:3px;align-items:flex-end;height:60px}.hist div{background:var(--a);width:22px}
+</style></head><body>
+<header><b>CQA · Freedom Broker</b><nav>
+<a data-v="runs" class="on">Оценка</a><a data-v="dialog">Диалог</a><a data-v="checklists">Чек-листы</a></nav>
+<span class="meta" id="meta"></span></header>
+<main>
+<!-- RUNS -->
+<section id="v-runs">
+ <div class="card"><div class="row">
+  <b>Группа:</b><input id="gid" value="DEV" size="10">
+  <button id="btnFetchEval" title="Загрузить группу по CQA_API_URL и сразу оценить">Fetch group &amp; evaluate</button>
+  <button class="sec" id="btnFetch">Только загрузить</button>
+  <button class="sec" id="btnReeval" title="Использует кэш: к LLM уходят только изменённые критерии и новые диалоги">Re-evaluate with current checklist</button>
+  <label class="muted"><input type="checkbox" id="fresh"> без кэша</label>
+  <span>|</span>
+  <label class="sec">Загрузить JSON <input type="file" id="file" accept=".json"></label>
+  <button class="sec" id="btnPasteToggle">Вставить транскрипт</button>
+ </div>
+ <div id="pasteBox" class="hide" style="margin-top:10px">
+  <div class="muted">Одна реплика на строку: <code>[мм:сс] operator: текст</code> (speaker: client|bot|operator|system)</div>
+  <textarea id="paste" style="width:100%;height:140px"></textarea>
+  <div class="row"><select id="pch"><option>agent chat</option><option>voice call</option></select>
+  <select id="plang"><option>RU</option><option>KZ</option><option>EN</option></select>
+  <button id="btnPaste">Добавить в группу PASTE и оценить</button></div>
+ </div>
+ <div class="row" style="margin-top:10px"><div class="bar"><div id="pbar"></div></div><span id="pstat" class="muted"></span></div>
+ </div>
+ <div class="card"><div class="row"><b>Группы:</b><span id="groups"></span></div></div>
+ <div class="card" id="summary"></div>
+ <div class="card"><div class="row" style="justify-content:space-between"><b>Диалоги</b>
+  <span class="row">
+   <input id="flt" placeholder="фильтр id / язык" size="16">
+   <a id="exJson" class="sec" href="#"><button class="sec">JSON</button></a>
+   <a id="exCsv" href="#"><button class="sec">CSV (AI)</button></a>
+   <a id="exCsvH" href="#"><button class="sec">CSV (Human)</button></a>
+   <a id="exCsvB" href="#"><button class="sec">CSV (AI+Human)</button></a>
+   <button class="sec" id="btnRescore" title="Пересчитать итоги после смены весов (без LLM)">Пересчитать веса</button>
+  </span></div>
+  <table id="tbl"></table></div>
+</section>
+<!-- DIALOG -->
+<section id="v-dialog" class="hide">
+ <div class="card row" id="dhead"></div>
+ <div class="grid">
+  <div class="card"><div id="audioBox"></div><div class="transcript" id="transcript"></div></div>
+  <div class="card crits" id="crits"></div>
+ </div>
+</section>
+<!-- CHECKLISTS -->
+<section id="v-checklists" class="hide">
+ <div class="card row"><select id="clSel"></select><button class="sec" id="btnClNew">Новый (копия)</button>
+ <button class="sec" id="btnYaml">YAML</button><button id="btnClSave">Сохранить</button><span id="clMsg" class="muted"></span></div>
+ <div class="card"><div class="row"><label>id <input id="clId" size="22"></label><label>Название <input id="clName" size="40"></label>
+  <label>Канал <select id="clCh"><option>chat</option><option>call</option></select></label><span class="muted" id="wsum"></span></div>
+  <div class="muted" style="margin-top:6px">Описание / допущения для LLM:</div><textarea id="clDesc" style="width:100%;height:50px"></textarea>
+  <div class="muted">Assumptions (JSON):</div><textarea id="clAss" style="width:100%;height:46px"></textarea></div>
+ <div id="clCrit"></div><button class="sec" id="btnAddCrit">+ критерий</button>
+ <div class="card hide" id="yamlBox"><textarea id="yaml" style="width:100%;height:60vh;font-family:monospace"></textarea></div>
+</section>
+</main>
+<script>
+const $=s=>document.querySelector(s), api=async(u,o={})=>{const r=await fetch(u,o);if(!r.ok)throw new Error((await r.text()));return r.json()};
+let G='DEV', DOC=null, DIALOGS={}, CUR=null, SORT={k:'conversation_id',d:1}, CL=null;
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function badge(v){if(v===null||v===undefined)return '<span class="v ERR">ERR</span>';const c=(v==='YES'||v==='NO'||v==='NA')?v:'S';return `<span class="v ${c}">${v}</span>`}
+function view(v){document.querySelectorAll('header nav a').forEach(a=>a.classList.toggle('on',a.dataset.v==v));['runs','dialog','checklists'].forEach(x=>$('#v-'+x).classList.toggle('hide',x!=v));if(v=='checklists')loadCl()}
+document.querySelectorAll('header nav a').forEach(a=>a.onclick=()=>view(a.dataset.v));
+async function init(){const h=await api('/api/health');$('#meta').textContent=`${h.provider} · ${h.model}`;await loadGroups();await loadGroup(G)}
+async function loadGroups(){const gs=await api('/api/groups');$('#groups').innerHTML=gs.map(g=>`<button class="sec" onclick="loadGroup('${g.group}')">${g.group} (${g.dialogs})${g.evaluated?' ✓':''}</button>`).join(' ')}
+async function loadGroup(g){G=g;$('#gid').value=g;
+ for(const [id,suf] of [['exJson','.json'],['exCsv','.csv?which=ai'],['exCsvH','.csv?which=human'],['exCsvB','.csv?which=both']])$('#'+id).href=`/api/export/${g}${suf}`;
+ try{const ds=await api('/api/dialogs/'+g);DIALOGS={};ds.forEach(d=>DIALOGS[d.conversation_id]=d)}catch(e){DIALOGS={}}
+ try{DOC=await api('/api/results/'+g)}catch(e){DOC=null}
+ renderTable();renderSummary()}
+function renderSummary(){if(!DOC){$('#summary').innerHTML='<span class="muted">Группа ещё не оценена.</span>';return}
+ const ds=DOC.dialogs,t=ds.map(d=>d.total).filter(x=>x!=null),m=DOC.meta||{};const bins=Array(10).fill(0);t.forEach(x=>bins[Math.min(9,Math.floor(x/10))]++);const mx=Math.max(...bins,1);
+ const per={};ds.forEach(d=>d.criteria.forEach(c=>{per[c.criterion_id]=per[c.criterion_id]||{name:c.name,c:{}};per[c.criterion_id].c[c.value]=(per[c.criterion_id].c[c.value]||0)+1}));
+ $('#summary').innerHTML=`<div class="row" style="gap:28px"><div><div class="muted">Средний балл</div><div class="total">${t.length?(t.reduce((a,b)=>a+b,0)/t.length).toFixed(2):'—'}</div><div class="muted">${ds.length} диалогов · грубых ошибок: ${ds.filter(d=>d.gross_error).length} · проверено человеком: ${ds.filter(d=>d.human&&d.human.reviewed).length}</div></div>
+ <div><div class="muted">Распределение 0..100</div><div class="hist">${bins.map((b,i)=>`<div title="${i*10}-${i*10+10}: ${b}" style="height:${b/mx*60}px"></div>`).join('')}</div></div>
+ <div class="muted">${m.model||''} · ${m.elapsed_s||'?'} c · $${m.cost_usd??'?'}</div></div>
+ <table style="margin-top:8px"><tr><th>Критерий</th><th>Распределение значений</th></tr>${Object.entries(per).map(([k,v])=>`<tr><td>${k} ${esc(v.name)}</td><td>${Object.entries(v.c).map(([x,n])=>badge(x)+' '+n).join(' &nbsp; ')}</td></tr>`).join('')}</table>`}
+function renderTable(){const f=$('#flt').value.toLowerCase();let rows;
+ if(DOC){rows=DOC.dialogs.slice()}else{rows=Object.values(DIALOGS).map(d=>({conversation_id:d.conversation_id,language:d.language,channel:d.channel,criteria:[]}))}
+ rows=rows.filter(d=>!f||(d.conversation_id+' '+d.language+' '+d.channel).toLowerCase().includes(f));
+ const k=SORT.k;rows.sort((a,b)=>{const x=k=='total'?(a.total??-1):a[k],y=k=='total'?(b.total??-1):b[k];return (x>y?1:x<y?-1:0)*SORT.d});
+ const cids=rows[0]?rows[0].criteria.map(c=>c.criterion_id):[];
+ $('#tbl').innerHTML=`<tr><th data-k="conversation_id">ID</th><th data-k="channel">Канал</th><th data-k="language">Язык</th>${cids.map(c=>`<th>${c}</th>`).join('')}<th data-k="total">Итог (AI)</th><th>Итог (человек)</th><th>Грубая</th></tr>`+
+ rows.map(d=>`<tr class="click" onclick="openDialog('${d.conversation_id}')"><td>${d.conversation_id}</td><td>${d.channel||''}</td><td>${d.language||''}</td>${d.criteria.map(c=>`<td>${badge(c.value)}${c.self_consistency_disagreement?' <span title="самосогласованность: голоса '+esc(JSON.stringify(c.votes))+'">⚖</span>':''}${d.human&&d.human.overrides[c.criterion_id]?' ✎':''}</td>`).join('')}<td><b>${d.total??'—'}</b></td><td>${d.human&&d.human.reviewed?'<b>'+(d.human.total??'—')+'</b>':'<span class="muted">—</span>'}</td><td>${d.gross_error?'<span class="gross">ДА</span>':''}</td></tr>`).join('');
+ document.querySelectorAll('#tbl th[data-k]').forEach(th=>th.onclick=()=>{SORT={k:th.dataset.k,d:SORT.k==th.dataset.k?-SORT.d:1};renderTable()})}
+$('#flt').oninput=renderTable;
+function fmt(s){if(s==null)return'';s=Math.floor(s);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function openDialog(id){CUR=id;view('dialog');renderDialog()}
+function renderDialog(){const rec=DIALOGS[CUR],res=DOC&&DOC.dialogs.find(d=>d.conversation_id==CUR);if(!rec){$('#dhead').innerHTML='нет данных';return}
+ const ev={};(res?res.criteria:[]).forEach(c=>(c.evidence||[]).forEach(e=>{(ev[e.turn]=ev[e.turn]||[]).push(c.criterion_id)}));
+ const h=res&&res.human;
+ $('#dhead').innerHTML=`<b>${rec.conversation_id}</b><span>${rec.channel} · ${rec.language}</span><span>чек-лист: ${res?res.checklist_id:'—'}</span>
+  <span>Итог AI: <span class="total">${res?res.total??'—':'—'}</span></span>${h&&h.reviewed?`<span>Итог человек: <span class="total" style="color:#5b21b6">${h.total??'—'}</span></span>`:''}
+  ${res&&res.gross_error?'<span class="gross">ГРУБАЯ ОШИБКА</span>':''}<button class="sec" onclick="reevalOne()">Переоценить диалог</button><button class="sec" onclick="view('runs')">← к списку</button>`;
+ const isCall=rec.kind=='call';
+ $('#audioBox').innerHTML=isCall&&rec.audio_url?`<audio id="aud" controls preload="none" style="width:100%" src="${esc(rec.audio_url)}"></audio><div class="muted">Клик по реплике — перемотка. Смещение = время реплики − время первой реплики (приблизительно: запись может начинаться позже/раньше).</div>`:'';
+ $('#transcript').innerHTML=rec.transcript.map(t=>`<div id="t${t.index}" class="turn ${t.speaker} ${t.internal?'internal':''} ${ev[t.index]?'ev':''} ${isCall?'seek':''}" ${isCall?`onclick="seek(${t.offset??0})"`:''}><span class="muted">[${t.index}] ${fmt(t.offset)}</span> <span class="sp">${t.speaker}${t.internal?' · удержание':''}</span>${esc(t.text)}${ev[t.index]?` <span class="muted">← ${ev[t.index].join(',')}</span>`:''}</div>`).join('');
+ if(!res){$('#crits').innerHTML='<span class="muted">Не оценён.</span>';return}
+ $('#crits').innerHTML=res.criteria.map(c=>{const o=h&&h.overrides[c.criterion_id];const opts=c.type=='scale'?(CLS[res.checklist_id]?.criteria.find(x=>x.id==c.criterion_id)?.scale||[]).map(String):['YES','NO'];const crd=CLS[res.checklist_id]?.criteria.find(x=>x.id==c.criterion_id);if(crd&&crd.allow_na)opts.push('NA');
+ return `<div class="crit"><h4>${c.criterion_id}. ${esc(c.name)} ${badge(c.value)} ${o?'→ '+badge(o.value)+' <span class="diff">человек</span>':''}
+ ${c.self_consistency_disagreement?`<span class="muted" title="голоса сэмплов">⚖ ${esc(JSON.stringify(c.votes))}</span>`:''}<span class="muted">conf ${c.confidence??''}${c.cached?' · cache':''}</span></h4>
+ <div>${esc(c.justification)}</div>
+ ${c.na_reason?`<div class="muted">NA: ${esc(c.na_reason)}</div>`:''}${c.missing_where?`<div class="muted">Ожидалось: ${esc(c.missing_where)}</div>`:''}
+ <div class="ev">${(c.evidence||[]).map(e=>`<div>• <a onclick="focusTurn(${e.turn})">[${e.turn}]</a> «${esc(e.quote)}»</div>`).join('')}</div>
+ ${(c.rejected_quotes||[]).length?`<div class="muted">отклонено цитат (не найдены в тексте): ${c.rejected_quotes.length}</div>`:''}
+ <details><summary class="muted">Ручная проверка${o?' (изменено: '+esc(o.reviewer||'')+')':''}</summary><div class="row" style="margin-top:4px">
+ <select id="ov_${c.criterion_id}"><option value="AI">= AI</option>${opts.map(x=>`<option ${o&&String(o.value)==x?'selected':''}>${x}</option>`).join('')}</select>
+ <input id="oj_${c.criterion_id}" placeholder="обоснование ревьюера" size="34" value="${esc(o?o.justification:'')}"><input id="or_${c.criterion_id}" placeholder="кто" size="8" value="${esc(o?o.reviewer:localStorage.reviewer||'')}">
+ <button onclick="saveOv('${c.criterion_id}')">Сохранить</button></div><details><summary class="muted">рассуждение модели</summary><div class="muted">${esc(c.reasoning)}</div></details></details></div>`}).join('')}
+function focusTurn(i){document.querySelectorAll('.turn.focus').forEach(x=>x.classList.remove('focus'));const el=$('#t'+i);if(el){el.classList.add('focus');el.scrollIntoView({block:'center',behavior:'smooth'});const t=DIALOGS[CUR].transcript[i];if(DIALOGS[CUR].kind=='call'&&t)seek(t.offset||0)}}
+function seek(s){const a=$('#aud');if(a){a.currentTime=s;a.play().catch(()=>{})}}
+async function saveOv(cid){const v=$('#ov_'+cid).value;localStorage.reviewer=$('#or_'+cid).value;
+ await api(`/api/overrides/${G}/${CUR}/${cid}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({value:v=='AI'?null:v,justification:$('#oj_'+cid).value,reviewer:$('#or_'+cid).value})});
+ DOC=await api('/api/results/'+G);renderDialog();renderTable();renderSummary()}
+let CLS={};async function loadAllCl(){for(const c of await api('/api/checklists'))CLS[c.id]=(await api('/api/checklists/'+c.id)).checklist}
+async function runJob(body){$('#pstat').textContent='запуск…';$('#pbar').style.width='0';
+ const j=await api('/api/evaluate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+ const tick=async()=>{const s=await api('/api/jobs/'+j.id);$('#pbar').style.width=(s.total?100*s.done/s.total:0)+'%';
+  $('#pstat').textContent=`${s.status} ${s.done}/${s.total} критериев · ${s.dialogs??'?'} диалогов · ${s.elapsed_s}с ${s.meta?'· $'+s.meta.cost_usd:''} ${s.error||''}`;
+  if(s.status=='done'||s.status=='error'){await loadGroups();await loadGroup(body.group);if(CUR&&!$('#v-dialog').classList.contains('hide'))renderDialog();return}setTimeout(tick,1500)};tick()}
+$('#btnFetchEval').onclick=()=>runJob({group:$('#gid').value.trim(),fetch:true,fresh:$('#fresh').checked});
+$('#btnReeval').onclick=()=>runJob({group:$('#gid').value.trim(),fresh:$('#fresh').checked});
+function reevalOne(){runJob({group:G,ids:[CUR],fresh:true});view('runs')}
+$('#btnFetch').onclick=async()=>{try{const r=await api('/api/fetch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({group_id:$('#gid').value.trim()})});$('#pstat').textContent=`загружено ${r.dialogs}`;await loadGroups();await loadGroup(r.group)}catch(e){$('#pstat').textContent=e.message}};
+$('#file').onchange=async e=>{const fd=new FormData();fd.append('file',e.target.files[0]);const g=prompt('Имя группы','UPLOAD')||'UPLOAD';try{const r=await api('/api/upload?group='+encodeURIComponent(g),{method:'POST',body:fd});await loadGroups();await loadGroup(g);$('#pstat').textContent=`загружено ${r.dialogs} диалогов — нажмите Re-evaluate`}catch(er){alert(er.message)}};
+$('#btnPasteToggle').onclick=()=>$('#pasteBox').classList.toggle('hide');
+$('#btnPaste').onclick=async()=>{const r=await api('/api/paste',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:$('#paste').value,channel:$('#pch').value,language:$('#plang').value,group:'PASTE'})});await loadGroup('PASTE');runJob({group:'PASTE',ids:[r.conversation_id]})};
+$('#btnRescore').onclick=async()=>{await api('/api/rescore/'+G,{method:'POST'});await loadGroup(G)};
+// ---- checklist editor ----
+async function loadCl(id){await loadAllCl();const ls=Object.keys(CLS);$('#clSel').innerHTML=ls.map(x=>`<option>${x}</option>`).join('');if(id)$('#clSel').value=id;CL=JSON.parse(JSON.stringify(CLS[$('#clSel').value]));renderCl()}
+$('#clSel').onchange=()=>{CL=JSON.parse(JSON.stringify(CLS[$('#clSel').value]));renderCl()};
+function renderCl(){$('#clId').value=CL.id;$('#clName').value=CL.name||'';$('#clCh').value=CL.channel||'chat';$('#clDesc').value=CL.description||'';$('#clAss').value=JSON.stringify(CL.assumptions||{});
+ const ws=CL.criteria.reduce((a,c)=>a+(c.gross?0:+c.weight||0),0);$('#wsum').textContent=`сумма весов: ${ws} (итог всегда нормируется к 100)`;
+ $('#clCrit').innerHTML=CL.criteria.map((c,i)=>`<div class="ccard"><div class="row"><input size="3" value="${esc(c.id)}" onchange="CL.criteria[${i}].id=this.value"><input size="30" value="${esc(c.name)}" onchange="CL.criteria[${i}].name=this.value">
+ <select onchange="CL.criteria[${i}].type=this.value;renderCl()"><option ${c.type=='binary'?'selected':''}>binary</option><option ${c.type=='scale'?'selected':''}>scale</option></select>
+ ${c.type=='scale'?`шкала <input size="12" value="${(c.scale||[]).join(',')}" onchange="CL.criteria[${i}].scale=this.value.split(',').map(Number)">`:''}
+ вес <input size="3" type="number" value="${c.weight}" onchange="CL.criteria[${i}].weight=+this.value;renderCl()">
+ <label><input type="checkbox" ${c.allow_na?'checked':''} onchange="CL.criteria[${i}].allow_na=this.checked">NA</label>
+ <label><input type="checkbox" ${c.gross?'checked':''} onchange="CL.criteria[${i}].gross=this.checked">грубая (без баллов)</label>
+ <button class="sec" onclick="CL.criteria.splice(${i},1);renderCl()">удалить</button>${i>0?`<button class="sec" onclick="mv(${i},-1)">↑</button>`:''}</div>
+ <div class="muted">Рубрика</div><textarea onchange="CL.criteria[${i}].rubric=this.value">${esc(c.rubric)}</textarea>
+ <div class="muted">Правила решения</div><textarea onchange="CL.criteria[${i}].rules=this.value">${esc(c.rules)}</textarea></div>`).join('')}
+function mv(i,d){const c=CL.criteria.splice(i,1)[0];CL.criteria.splice(i+d,0,c);renderCl()}
+$('#btnAddCrit').onclick=()=>{CL.criteria.push({id:String(CL.criteria.length+1).padStart(2,'0'),name:'Новый критерий',type:'binary',weight:10,allow_na:false,gross:false,rubric:'YES — ...\nNO — ...',rules:''});renderCl()};
+$('#btnClNew').onclick=()=>{CL=JSON.parse(JSON.stringify(CL));CL.id=CL.id+'_copy';renderCl()};
+$('#btnYaml').onclick=async()=>{const b=$('#yamlBox');b.classList.toggle('hide');if(!b.classList.contains('hide')){const r=await api('/api/checklists/'+$('#clSel').value);$('#yaml').value=r.yaml}};
+$('#btnClSave').onclick=async()=>{try{let body;if(!$('#yamlBox').classList.contains('hide'))body={yaml:$('#yaml').value};else{CL.id=$('#clId').value;CL.name=$('#clName').value;CL.channel=$('#clCh').value;CL.description=$('#clDesc').value;CL.assumptions=JSON.parse($('#clAss').value||'{}');body={checklist:CL}}
+ const r=await api('/api/checklists/'+(CL.id||$('#clSel').value),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});$('#clMsg').textContent='сохранено '+r.id+' — теперь «Re-evaluate with current checklist» (переоценятся только изменённые критерии) или «Пересчитать веса»';await loadCl(r.id)}catch(e){$('#clMsg').textContent='Ошибка: '+e.message}};
+loadAllCl().then(init);
+</script></body></html>
