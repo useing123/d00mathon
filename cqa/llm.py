@@ -13,36 +13,49 @@ import time
 
 import httpx
 
-from . import config
+from . import config, pricing
 
 USAGE = {"input_tokens": 0, "output_tokens": 0, "cache_read_input_tokens": 0, "cache_creation_input_tokens": 0, "calls": 0, "usd": 0.0}
-PRICES = {"haiku": (1.0, 5.0), "sonnet": (3.0, 15.0), "opus": (5.0, 25.0)}  # $/MTok in/out (approx.)
+USAGE_BY_MODEL: dict = {}   # model id -> same keys as USAGE (process-global; used by scripts/bench_matrix.py)
 
 
 def _price(model: str | None) -> tuple[float, float]:
-    """Approximate $/MTok (input, output) for a model name."""
-    return next((v for k, v in PRICES.items() if k in (model or "")), (3.0, 15.0))
+    """$/MTok (input, output) for a model name — see cqa/pricing.py for the full table and sources."""
+    return pricing.price(model)[:2]
 
 
 _lock = threading.Lock()
 
 
 def _add_usage(u, model=None):
-    pin, pout = (0.0, 0.0) if (model or "").startswith("mock") else _price(model)
-    usd = (int(u.get("input_tokens") or 0) * pin + int(u.get("cache_creation_input_tokens") or 0) * pin * 1.25 +
-           int(u.get("cache_read_input_tokens") or 0) * pin * 0.1 + int(u.get("output_tokens") or 0) * pout) / 1e6
+    """``u``: Anthropic-style usage (input_tokens = uncached input). Cost uses the cqa/pricing.py table."""
+    toks = {k: int(u.get(k) or 0) for k in ("input_tokens", "output_tokens", "cache_read_input_tokens", "cache_creation_input_tokens")}
+    usd = 0.0 if (model or "").startswith("mock") else pricing.usd(
+        model, toks["input_tokens"], toks["output_tokens"], toks["cache_read_input_tokens"], toks["cache_creation_input_tokens"])
     with _lock:
-        USAGE["usd"] += usd
-        USAGE["calls"] += 1
-        for k in ("input_tokens", "output_tokens", "cache_read_input_tokens", "cache_creation_input_tokens"):
-            USAGE[k] += int(u.get(k) or 0)
+        per = USAGE_BY_MODEL.setdefault(model or "?", {**{k: 0 for k in toks}, "calls": 0, "usd": 0.0})
+        for d in (USAGE, per):
+            d["usd"] += usd
+            d["calls"] += 1
+            for k, v in toks.items():
+                d[k] += v
 
 
 def cost_usd(usage=None, model=None):
     u = usage or USAGE
-    if config.PROVIDER != "anthropic":
+    if config.PROVIDER != "anthropic":   # local OpenAI-compatible servers: GPU time, not tokens
         return 0.0
     return round(float(u.get("usd", 0.0)), 4)
+
+
+def cloud_route(model: str | None) -> str:
+    """Cloud vendor for a model id when CQA_PROVIDER=anthropic (the "cloud" mode): lets jury members mix vendors."""
+    m = (model or "").lower()
+    if m.startswith(("gpt-", "o3", "o4")) or "codex" in m:
+        return "openai_cloud"     # OpenAI Responses API (needed for gpt-5.3-codex and tool use on gpt-6-luna)
+    if m.startswith("gemini-"):
+        return "gemini"           # Gemini OpenAI-compatible endpoint
+    return "anthropic"
 
 
 _TURN_RE = re.compile(r"^\[(\d+)\] \([^)]*\) ([A-Z]+)(?: \[[^\]]*\])?: (.*)$", re.M)
@@ -138,7 +151,8 @@ class LLM:
     def __init__(self, provider=None, model=None):
         self.provider = provider or config.PROVIDER
         self.model = model or config.MODEL
-        if self.provider == "anthropic":
+        self.route = cloud_route(self.model) if self.provider == "anthropic" else self.provider
+        if self.route == "anthropic":
             import anthropic
             self.client = anthropic.Anthropic(api_key=config.get("ANTHROPIC_API_KEY"), max_retries=2)  # + own Retry-After/jitter loop
         elif self.provider == "mock":
@@ -150,9 +164,14 @@ class LLM:
         if self.provider == "mock":
             return self._mock.call(system, cached_user, user, tool, temperature)
         for attempt in range(MAX_ATTEMPTS):
+            route = getattr(self, "route", None) or self.provider
             try:
-                if self.provider == "anthropic":
+                if route == "anthropic":
                     return self._anthropic(system, cached_user, user, tool, temperature)
+                if route == "openai_cloud":
+                    return self._openai_responses(system, cached_user, user, tool)
+                if route == "gemini":
+                    return self._gemini(system, cached_user, user, tool)
                 return self._openai(system, cached_user, user, tool, temperature)
             except Exception as e:
                 if _status(e) == 404:
@@ -230,3 +249,47 @@ class LLM:
         txt = j["choices"][0]["message"]["content"]
         m = re.search(r"\{.*\}", txt, re.S)
         return json.loads(m.group(0) if m else txt)
+
+    # ---- cloud vendors other than Anthropic (selected per model id, see cloud_route) ----
+    def _openai_responses(self, system, cached_user, user, tool):
+        """OpenAI Responses API with a forced function call; sampling/reasoning = model defaults (no tweaks)."""
+        key = config.get("CQA_OPENAI_CLOUD_KEY") or config.get("OPENAI_API_KEY_QUORUM") or config.get("OPENAI_API_KEY")
+        body = {"model": self.model, "instructions": system,
+                "input": [{"role": "user", "content": cached_user + "\n\n" + user}],
+                "tools": [{"type": "function", "name": tool["name"], "description": tool["description"],
+                           "parameters": tool["input_schema"]}],
+                "tool_choice": {"type": "function", "name": tool["name"]}, "prompt_cache_key": "cqa"}
+        r = httpx.post("https://api.openai.com/v1/responses", json=body, headers={"Authorization": f"Bearer {key}"}, timeout=600)
+        r.raise_for_status()
+        j = r.json()
+        u = j.get("usage") or {}
+        cached = int((u.get("input_tokens_details") or {}).get("cached_tokens") or 0)
+        _add_usage({"input_tokens": int(u.get("input_tokens") or 0) - cached, "cache_read_input_tokens": cached,
+                    "output_tokens": u.get("output_tokens")}, self.model)
+        for o in j.get("output") or []:
+            if o.get("type") == "function_call":
+                return json.loads(o["arguments"]) if isinstance(o.get("arguments"), str) else o["arguments"]
+        raise RuntimeError("no function_call in response")
+
+    def _gemini(self, system, cached_user, user, tool):
+        """Gemini via its OpenAI-compatible endpoint, forced function call. Billed output includes thinking tokens."""
+        key = config.get("GOOGLE_API_KEY") or config.get("GEMINI_API_KEY")
+        body = {"model": self.model,
+                "messages": [{"role": "system", "content": system}, {"role": "user", "content": cached_user + "\n\n" + user}],
+                "tools": [{"type": "function", "function": {"name": tool["name"], "description": tool["description"],
+                                                            "parameters": tool["input_schema"]}}],
+                "tool_choice": {"type": "function", "function": {"name": tool["name"]}}}
+        r = httpx.post("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", json=body,
+                       headers={"Authorization": f"Bearer {key}"}, timeout=600)
+        r.raise_for_status()
+        j = r.json()
+        u = j.get("usage") or {}
+        pt = int(u.get("prompt_tokens") or 0)
+        cached = int((u.get("prompt_tokens_details") or {}).get("cached_tokens") or 0)
+        out = max(int(u.get("total_tokens") or 0) - pt, int(u.get("completion_tokens") or 0))   # + thinking tokens
+        _add_usage({"input_tokens": pt - cached, "cache_read_input_tokens": cached, "output_tokens": out}, self.model)
+        calls = (j.get("choices") or [{}])[0].get("message", {}).get("tool_calls") or []
+        if not calls:
+            raise RuntimeError("no tool_calls in response")
+        args = calls[0]["function"]["arguments"]
+        return json.loads(args) if isinstance(args, str) else args

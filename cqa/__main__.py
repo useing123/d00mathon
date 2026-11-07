@@ -16,6 +16,8 @@ def _progress(done, total):
 
 def cmd_evaluate(a):
     """Evaluate a fetched group or a local JSON file; writes results JSON + CSV."""
+    if a.final:
+        config.apply_final_profile()
     if a.confirm:
         config.CONFIRM = a.confirm
     if a.mock:
@@ -31,9 +33,12 @@ def cmd_evaluate(a):
         recs = [r for r in recs if r["conversation_id"] in want]
     if a.limit:
         recs = recs[: a.limit]
-    print(f"Evaluating {len(recs)} dialogs (group={group}, provider={config.PROVIDER}, model={config.MODEL}, "
-          f"cache={'off' if a.fresh else 'on'})", file=sys.stderr)
     ev = Evaluator(use_cache=not a.fresh, samples=a.samples)
+    models = (f"jury[{'+'.join(config.JURORS)}] judge={config.JUDGE}" if ev.ensemble else ev.llm.model)
+    print(f"Evaluating {len(recs)} dialogs (group={group}, provider={config.PROVIDER}, models={models}, "
+          f"confirm={sorted(config.confirm_criteria()) or '-'}, cache={'off' if a.fresh else 'on'})", file=sys.stderr)
+    for w in ev.preflight():
+        print("WARNING: " + w, file=sys.stderr)
     t0 = time.time()
     dialogs, meta = ev.evaluate_many(recs, checklist_override=a.checklist, progress=_progress, concurrency=a.concurrency)
     print(file=sys.stderr)
@@ -42,6 +47,9 @@ def cmd_evaluate(a):
     csv_path = a.csv or out.rsplit(".", 1)[0] + ".csv"
     with open(csv_path, "w", encoding="utf-8") as f:
         f.write(store.to_csv(doc, "ai"))
+    if a.organizer:
+        with open(a.organizer, "w", encoding="utf-8") as f:
+            f.write(store.to_organizer_csv(doc))
     tot = [d["total"] for d in dialogs if d["total"] is not None]
     print(json.dumps({"dialogs": len(dialogs), "elapsed_s": round(time.time() - t0, 1), "cost_usd": meta["cost_usd"],
                       "usage": meta["usage"], "errors": meta["errors"][:10],
@@ -83,6 +91,8 @@ def cmd_stats(a):
 
 
 def cmd_gold(a):
+    if a.final:
+        config.apply_final_profile()
     if a.confirm:
         config.CONFIRM = a.confirm
     from .gold import format_report, run_gold
@@ -116,6 +126,23 @@ def cmd_label(a):
         print(f"saved {cid} → {path} ({len(labels)} labelled)")
 
 
+def cmd_export(a):
+    if a.run:
+        from .util import safe_child
+        doc = json.loads(safe_child(config.RESULTS_DIR, a.run, ".json").read_text(encoding="utf-8"))
+    else:
+        doc = store.load_results(a.group)
+    if not doc:
+        sys.exit(f"no results for group {a.group}")
+    txt = store.to_organizer_csv(doc) if a.format == "organizer" else store.to_csv(doc, a.format)
+    if a.out:
+        with open(a.out, "w", encoding="utf-8") as f:
+            f.write(txt)
+        print(a.out)
+    else:
+        print(txt, end="")
+
+
 def main():
     p = argparse.ArgumentParser(prog="cqa")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -131,10 +158,11 @@ def main():
     e.add_argument("--concurrency", type=int)
     e.add_argument("--refresh", action="store_true", help="re-fetch group even if data/<group>.json exists")
     e.add_argument("--fresh", action="store_true", help="ignore per-criterion cache (re-run everything)")
+    e.add_argument("--final", action="store_true",
+                   help="control-run profile: jurors sonnet+opus, judge re-checks unanimous 02/04/06, median of 3 samples on 04/06")
+    e.add_argument("--organizer", help="also write the submission CSV (conversation_id, 01..08, total, gross_error) here")
     e.add_argument("--confirm", help="criteria where the judge re-checks unanimous jury verdicts, e.g. 03,04 (control runs)")
     e.add_argument("--mock", action="store_true", help="offline deterministic heuristic backend (no API key; same as CQA_PROVIDER=mock)")
-    e.add_argument("--reeval", action="store_true",
-                   help="re-evaluate with current checklist: only changed criteria hit the LLM (default behaviour with cache)")
     r = sub.add_parser("rescore", help="recompute totals after reweighting (no LLM)")
     r.add_argument("--group", required=True)
     s = sub.add_parser("stats")
@@ -142,11 +170,17 @@ def main():
     gd = sub.add_parser("gold", help="evaluate the hand-labelled gold set (examples/gold) and report agreement")
     gd.add_argument("--mock", action="store_true")
     gd.add_argument("--confirm", help="criteria where the judge re-checks unanimous jury verdicts, e.g. 03,04")
+    gd.add_argument("--final", action="store_true", help="control-run profile (see evaluate --final)")
     gd.add_argument("--fresh", action="store_true")
     gd.add_argument("--out")
     gd.add_argument("--dir", help="directory with gold *.json (default examples/gold; held-out: examples/gold_holdout)")
     gd.add_argument("--labels", help="human labels JSON from `cqa label` (e.g. examples/dev_labels.json)")
     gd.add_argument("--group", default="DEV", help="group whose dialogs the --labels refer to")
+    ex = sub.add_parser("export", help="export results: organizer submission CSV or ai/human/both CSV")
+    ex.add_argument("--group", required=True)
+    ex.add_argument("--run")
+    ex.add_argument("--format", default="organizer", choices=["organizer", "ai", "human", "both"])
+    ex.add_argument("--out")
     lb = sub.add_parser("label", help="label real dialogs by hand (stored in a git-ignored JSON)")
     lb.add_argument("--group", default="DEV")
     lb.add_argument("--ids", help="comma-separated conversation ids (default: next unlabelled)")
@@ -167,6 +201,8 @@ def main():
         cmd_stats(a)
     elif a.cmd == "gold":
         cmd_gold(a)
+    elif a.cmd == "export":
+        cmd_export(a)
     elif a.cmd == "label":
         cmd_label(a)
     elif a.cmd == "serve":

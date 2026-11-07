@@ -45,6 +45,13 @@ def index():
     return FileResponse(STATIC / "index.html")
 
 
+@app.get("/static/{name}")
+def static_file(name: str):
+    if name not in ("app.js", "app.css"):
+        raise HTTPException(404, "not found")
+    return FileResponse(STATIC / name, media_type="text/javascript" if name.endswith(".js") else "text/css")
+
+
 @app.get("/api/health")
 def health():
     return {"ok": True, "provider": config.PROVIDER, "model": config.MODEL,

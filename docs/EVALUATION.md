@@ -1,6 +1,30 @@
 # Evaluation
 
-## DEV set results (jury mode, v1 — before the review changes)
+## Current version (prompt v9) — numbers used in the README
+| Set | Exact agreement | Total MAE | Gross P/R | Cost / time |
+|---|---|---|---|---|
+| Tuned synthetic gold (16) | 0.992 (127/128) | 0.43 | 1.0 / 1.0 | $1.16 / 60 s (partly cached) |
+| Held-out synthetic (10) | 0.938 (75/80) | 3.86 | 1.0 / 1.0 (1 TP) | $0.87 / 42 s (partly cached) |
+| Held-out, `--final` profile | 0.925 (74/80) | 6.55 | 1.0 / 1.0 | $3.45 / 78 s (fresh) |
+| Real DEV, human labels | not measured | | | needs `cqa label` |
+
+DEV (`results/dev_jury_v5.json`, prompt v9): 65 dialogs, 0 errors, 0 incomplete, 0 rescued, mean **78.53**, 5 gross
+flags (the same 5 dialogs as in every version), judge decided 78 of 520 verdicts, 37 evidence warnings, 02 = NA in
+44/65, 07 = NO 47 / YES 12 / NA 6. Changed verdicts vs v1: 40 (06 ×13, 04 ×12, 02 ×9, 05 ×4, 07 ×2); vs v4: 19.
+Two full runs were made for v5 ($13.89, then $12.14 — the second was meant to re-evaluate only 07 after the 07 rule
+change, but adding the scale-sampling setting to the cache key invalidated every entry).
+
+**Held-out contamination note:** after the first held-out run (0.925), a reviewer pointed at hold-02 (04 = 0 for an
+action done without ID) and we added the general rule "missing identification is a 03 issue, not a wrong 04
+recommendation". That fixed hold-02, so the held-out set is no longer fully untouched for criterion 04. No other rule
+was changed in response to held-out results.
+
+**`--final` profile:** jurors sonnet-5-5 + opus-5-5, judge re-checks unanimous 02/04/06, median of 3 samples per juror
+on 04/06. On the held-out set it was not better (0.925 vs 0.938, MAE 6.55 vs 3.86) at ~2–4× the cost; it stays opt-in.
+
+## History
+
+### DEV set results (jury mode, v1 — before the review changes)
 Real run on the organizer DEV group (raw results are git-ignored because they contain client text):
 
 | Metric | Value |
@@ -134,7 +158,7 @@ tokens dominate and the new evidence checks cause a few extra retries (55 vs 50 
 | Changed verdicts (of 520) | — | 28: 04 ×12, 02 ×8, 06 ×3, 07 ×3, 05 ×2; 01/03/08 unchanged |
 Most frequent changes: 04 20→15 (7; explicit "minor detail missed" anchor), 02 NO→NA (4) and NO→YES (3) (new 02 scope).
 
-### DEV v4 (prompt v8, after review round 4)
+### DEV v4 (prompt v8, after review round 4) — history
 `results/dev_jury_v4.json` — 65 dialogs, 0 errors, 0 incomplete, 0 rescued, 267 s, $13.37. Mean 78.08, 5 gross flags
 (same 5 dialogs as v1), judge decided 75 verdicts, 27 evidence warnings, 02 = NA in 43/65. Changed verdicts: 43 vs v1
 (04 ×14, 06 ×13, 02 ×8, 05 ×5, 07 ×2, 03 ×1), 31 vs v3.
@@ -144,7 +168,7 @@ Most frequent changes: 04 20→15 (7; explicit "minor detail missed" anchor), 02
 
 | | v1 | v2 | v3 |
 |---|---|---|---|
-| Mean total | 75.95 | 76.57 | 78.08 |
+| Mean total | 75.95 | 76.57 | 78.08 (v4 also 78.08 by coincidence: 31 verdicts differ between v3 and v4) |
 | Gross-error flags | 5 | 5 | 5 (same dialogs) |
 | Changed verdicts vs v1 (of 520) | — | 28 | 34: 04 ×11, 06 ×10, 02 ×8, 07 ×3, 05 ×2 |
 | Decided by the judge | 81 | — | 72 |

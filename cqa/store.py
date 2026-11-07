@@ -99,3 +99,22 @@ def to_csv(doc, which="ai"):
                     "YES" if h.get("gross_error") else "NO", "YES" if h.get("reviewed") else "NO"]
         w.writerow([_cell(x) for x in row])
     return buf.getvalue()
+
+
+def to_organizer_csv(doc):
+    """Submission format: one row per dialog — conversation_id, criterion values (YES/NO/NA/step), total, gross_error,
+    status. Incomplete dialogs keep an empty total (fail-closed) and list the failed criteria."""
+    crit_ids = []
+    for d in doc["dialogs"]:
+        for r in d["criteria"]:
+            if r["criterion_id"] not in crit_ids:
+                crit_ids.append(r["criterion_id"])
+    buf = io.StringIO()
+    w = csv.writer(buf)
+    w.writerow(["conversation_id"] + crit_ids + ["total", "gross_error", "status", "failed_criteria"])
+    for d in doc["dialogs"]:
+        vals = {r["criterion_id"]: r.get("value") for r in d["criteria"]}
+        w.writerow([_cell(x) for x in [d["conversation_id"]] + [("" if vals.get(c) is None else vals.get(c)) for c in crit_ids]
+                    + [d.get("total"), "YES" if d.get("gross_error") else "NO", d.get("status", "complete"),
+                       ";".join(d.get("failed_criteria") or [])]])
+    return buf.getvalue()

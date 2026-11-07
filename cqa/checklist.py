@@ -32,8 +32,29 @@ def load(cid):
     p = (base / f"{cid}.yaml").resolve()
     if p.parent != base:
         raise ValueError(f"invalid checklist id {cid!r}")
-    c = yaml.safe_load(p.read_text(encoding="utf-8"))
-    return validate(c)
+    return validate(_resolve(yaml.safe_load(p.read_text(encoding="utf-8")), cid))
+
+
+def _resolve(c, cid, depth=0):
+    """`extends: <base id>` inherits everything from the base; `criteria_overrides` patch inherited criteria by id."""
+    base_id = c.pop("extends", None)
+    if not base_id:
+        c.pop("criteria_overrides", None)
+        return c
+    if depth > 3 or base_id == cid:
+        raise ValueError(f"checklist {cid!r}: bad extends chain")
+    if not ID_RE.fullmatch(str(base_id)):
+        raise ValueError(f"invalid base checklist id {base_id!r}")
+    base = _resolve(yaml.safe_load((config.CHECKLIST_DIR / f"{base_id}.yaml").read_text(encoding="utf-8")), base_id, depth + 1)
+    over = {o["id"]: o for o in c.pop("criteria_overrides", []) or []}
+    merged = {**base, **{k: v for k, v in c.items() if k != "criteria"}}
+    crits = [dict(x) for x in (c.get("criteria") or base.get("criteria") or [])]
+    unknown = set(over) - {x["id"] for x in crits}
+    if unknown:
+        raise ValueError(f"checklist {cid!r}: overrides for unknown criteria {sorted(unknown)}")
+    merged["criteria"] = [{**x, **over.get(x["id"], {})} for x in crits]
+    merged["assumptions"] = {**base.get("assumptions", {}), **c.get("assumptions", {})}
+    return merged
 
 
 def validate(c):

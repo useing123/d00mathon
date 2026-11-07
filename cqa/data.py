@@ -206,11 +206,16 @@ def format_transcript(rec, mark_internal=True):
     return "\n".join(lines)
 
 
+LONG_WAIT_S = 120
 KZ_LETTERS = set("әғқңөұүһі")
-WAIT_PHRASES = ("минут", "подожд", "ожидайт", "уточню", "проверю", "секунд", "момент", "одну минуту", "оставайтесь на линии",
-                "сейчас посмотрю", "сейчас проверю", "запрошу", "уточняю", "проверяю",
-                "күте тұр", "күтіңіз", "тексеріп", "нақтылап", "бір сәт", "қазір қарайын",
-                "wait", "moment", "hold on", "let me check", "let me look", "checking", "one sec")
+# anchored wait-warning intents (not bare "момент"/"минут": «в данный момент», «в течение 5 минут» are not warnings)
+WAIT_RE = re.compile(
+    r"(?:одну|пару|несколько)\s+(?:минут[уы]?|секунд[уы]?)|минут(?:оч)?ку|секунд(?:оч)?ку|\bподожд[иеё]|ожидайте,?\s+(?:я\s+)?(?:уточн|провер)"
+    r"|(?:сейчас|я)\s+(?:уточню|проверю|посмотрю|узнаю|запрошу)|(?:уточню|проверю)\s+(?:информацию|у коллег|в системе|и вернусь)"
+    r"|мне\s+нужно\s+(?:время|уточнить|проверить)|оставайтесь\s+на\s+линии|не\s+кладите\s+трубку"
+    r"|күте\s+тұрыңыз|күтіңіз|бір\s+сәт|қазір\s+(?:қараймын|қарайын|тексеремін|нақтылаймын)"
+    r"|let\s+me\s+(?:check|look|verify|find)|(?:please\s+)?(?:hold\s+on|wait\s+a\s+(?:moment|minute|second))|one\s+(?:moment|sec|second|minute)"
+    r"|i(?:'ll| will)\s+(?:check|look into|verify)", re.I)
 ACK_ONLY = ("спасибо", "благодарю", "понял", "поняла", "понятно", "ок", "ok", "okay", "хорошо", "ясно", "ага",
             "рақмет", "рахмет", "рахмет сізге", "түсіндім", "жарайды", "thanks", "thank you", "got it", "great")
 AUTH_RE = re.compile(
@@ -288,6 +293,7 @@ def compute_facts(rec):
     # longest wait for the operator after the operator's first reply (queue time before it is not scored);
     # a gap that starts from a pure acknowledgement ("спасибо") is not a wait for an answer
     best = None
+    long_waits = []
     if first_op is not None:
         pending = None              # first unanswered, non-acknowledgement client turn after an operator turn
         since_client = []           # operator turns since the last client turn (wait warning may be in any of them)
@@ -311,21 +317,24 @@ def compute_facts(rec):
                 if start is not None and start.get("offset") is not None and t.get("offset") is not None and \
                         not (pending is None and ack_seen):
                     gap = t["offset"] - start["offset"]
+                    recent = since_client or ([last_op] if last_op else [])
+                    w = {"seconds": round(gap), "from_turn": start["index"], "to_turn": t["index"],
+                         "operator_warned_before": bool(any(WAIT_RE.search(o.get("text") or "") for o in recent)),
+                         "kind": "reply_to_client" if pending is not None else "between_operator_messages"}
+                    if gap > LONG_WAIT_S:
+                        long_waits.append(w)
                     if best is None or gap > best["seconds"]:
-                        recent = since_client or ([last_op] if last_op else [])
-                        warned = any(w in (o.get("text") or "").lower() for o in recent for w in WAIT_PHRASES)
-                        best = {"seconds": round(gap), "from_turn": start["index"], "to_turn": t["index"],
-                                "operator_warned_before": bool(warned),
-                                "kind": "reply_to_client" if pending is not None else "between_operator_messages"}
+                        best = w
                 pending, last_op, ack_seen = None, t, False
                 since_client.append(t)
     facts["longest_wait_after_first_reply"] = best
+    facts["waits_over_2min"] = long_waits
     holds = []
     for t in tr:
         if t.get("hold_event") == "start":
             prev_op = next((p for p in reversed(tr[:t["index"]]) if p["speaker"] == "operator"), None)
             holds.append({"start_turn": t["index"], "operator_warned_before": bool(
-                prev_op and any(w in (prev_op.get("text") or "").lower() for w in WAIT_PHRASES))})
+                prev_op and WAIT_RE.search(prev_op.get("text") or ""))})
         elif t.get("hold_event") == "end" and holds and "end_turn" not in holds[-1]:
             holds[-1]["end_turn"] = t["index"]
             s0, s1 = tr[holds[-1]["start_turn"]].get("offset"), t.get("offset")
@@ -363,6 +372,16 @@ def format_facts(f):
         lines.append(f"- Самое долгое ожидание ответа оператора после его первой реплики: {w['seconds']} с "
                      f"(реплики №{w['from_turn']} → №{w['to_turn']}; {kind}); оператор предупреждал об ожидании перед этим: "
                      f"{'да' if w['operator_warned_before'] else 'нет'}.")
+    lw = f.get("waits_over_2min") or []
+    unwarned = [x for x in lw if not x["operator_warned_before"]]
+    if lw:
+        def d(x):
+            k = "ответ клиенту" if x["kind"] == "reply_to_client" else "пауза между сообщениями оператора"
+            return f"№{x['from_turn']}→№{x['to_turn']} {x['seconds']} с ({k})"
+        lines.append(f"- Ожиданий дольше 2 мин после первой реплики: {len(lw)}; из них БЕЗ предупреждения: {len(unwarned)}"
+                     + (": " + "; ".join(d(x) for x in unwarned) if unwarned else "") + ".")
+    else:
+        lines.append("- Ожиданий дольше 2 мин после первой реплики оператора нет.")
     for h in f["holds"]:
         lines.append(f"- Удержание (системное событие) с реплики №{h['start_turn']}"
                      + (f" до №{h['end_turn']}" if "end_turn" in h else "")

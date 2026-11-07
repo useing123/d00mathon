@@ -3,8 +3,7 @@
 > **Жюри из LLM проверяет каждый критерий отдельно, приводит дословные цитаты-доказательства и считает балл детерминированным кодом.**
 > LLM jury scores every checklist criterion separately, backs each verdict with verified verbatim quotes, and computes the score in deterministic code.
 
-![CI](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&logoColor=white)
-![tests](https://img.shields.io/badge/tests-115%20passed-brightgreen)
+[![CI](https://github.com/useing123/d00mathon/actions/workflows/ci.yml/badge.svg)](https://github.com/useing123/d00mathon/actions/workflows/ci.yml)
 ![python](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue?logo=python&logoColor=white)
 ![ruff](https://img.shields.io/badge/lint-ruff-261230)
 ![license](https://img.shields.io/badge/license-MIT-green)
@@ -28,8 +27,9 @@ Docker: `docker compose up --build` (секреты из `.env`, в образ �
 ### ⏱ Контрольный набор (час 23)
 
 ```bash
-python -m cqa evaluate --group <ID>        # или: make eval-group GROUP=<ID>
+python -m cqa evaluate --group <ID> --organizer results/<id>_submission.csv   # или: make eval-group GROUP=<ID>
 ```
+Опционально `--final` — усиленный профиль (присяжные sonnet + opus, судья перепроверяет единогласные 02/04/06, медиана 3 сэмплов на 04/06). На held-out наборе он **не** дал выигрыша (0.925 против 0.938) при цене ×2–4, поэтому по умолчанию не включён; см. EVALUATION.
 Загрузка `CQA_API_URL&group_id=<ID>` → авто-выбор чек-листа по каналу (чат → `freedom_chat_v1`, звонок → `freedom_call_v1`) → параллельная оценка → `results/<id>.json` + `results/<id>.csv`. В UI то же — кнопка **Fetch group & evaluate**. Каждый новый диалог реально анализируется LLM: заготовленных ответов нет, кэш ключуется хэшем диалога.
 
 ## Архитектура
@@ -147,11 +147,18 @@ CQA_PROVIDER=openai CQA_OPENAI_BASE_URL=http://127.0.0.1:11434/v1 CQA_MODEL=qwen
 
 Подробно: [docs/ASSUMPTIONS.md](docs/ASSUMPTIONS.md).
 
-## Результаты на DEV
-**Gold-набор:** на 16 синтетических диалогах, по которым настраивались правила, совпадение 0.992, MAE 0.43; на **отложенных 10 диалогах (не использовались для настройки)** — 0.925, MAE 7.32. Шум между одинаковыми прогонами ±2 вердикта из 128, грубые ошибки precision/recall 1.0/1.0 — см. [docs/EVALUATION.md](docs/EVALUATION.md) (это проверка регрессий, а не оценка совпадения со скрытой разметкой).
-**DEV v4** (после правок по ревью): 65 диалогов, 0 ошибок, 0 неполных, средний балл 78.08, 5 флагов грубых ошибок (те же диалоги), $13.37 / 267 с. Разметка реальных диалогов человеком: `python -m cqa label`, сверка: `python -m cqa gold --labels`.
+## Результаты
+Текущая версия (промпт v9, жюри haiku-5-5 + sonnet-5-5, судья opus-5-5). Подробно и история версий: [docs/EVALUATION.md](docs/EVALUATION.md).
 
-65 диалогов (60 чатов: RU 30 / KZ 15 / EN 15; 5 звонков RU), 0 ошибок, средний балл 75.95, 5 флагов грубых ошибок. Полный прогон ≈ 5 мин и ≈ $13; 10 диалогов ≈ 1 мин и ≈ $2. Методика: [docs/EVALUATION.md](docs/EVALUATION.md).
+| Набор | Совпадение значений | MAE итога | Грубые ошибки P/R |
+|---|---|---|---|
+| Gold, 16 синтетических диалогов (по ним настраивались правила) | 0.992 | 0.43 | 1.0 / 1.0 |
+| **Held-out, 10 синтетических диалогов (не для настройки)** | **0.938** | **3.86** | 1.0 / 1.0 |
+| Реальные DEV с разметкой человека | не измерено — нужна разметка (`python -m cqa label`, затем `cqa gold --labels`) | | |
+
+Шум между одинаковыми прогонами — около ±2 вердиктов из 128 (Anthropic не принимает `temperature`). Оба gold-набора синтетические и размечены той же командой, что писала правила, — это проверка регрессий, а не оценка совпадения со скрытой разметкой организаторов.
+
+**DEV (65 диалогов: 60 чатов RU 30 / KZ 15 / EN 15, 5 звонков RU):** 0 ошибок, 0 неполных, средний балл 78.53, 5 флагов грубых ошибок, полный прогон ≈ 4–5 мин и ≈ $12–14.
 
 ## Ограничения (честно)
 - Для DEV нет размеченного ground truth; gold-набор синтетический и размечен нами — это регрессионная проверка, а не оценка точности на скрытой разметке.
@@ -177,13 +184,13 @@ cqa/
   __main__.py    CLI: evaluate / stats / rescore / serve
 checklists/      freedom_chat_v1.yaml, freedom_call_v1.yaml
 examples/        sample_dialogs.json — 4 синтетических диалога (RU/EN/KZ чат + RU звонок)
-tests/           115 тестов: скоринг, цитаты, чек-листы, кэш-ключ, fail-closed, строгие значения, роли/время, факты, жюри, провайдеры, безопасность путей, gold, mock e2e, HTTP API
+tests/           pytest (offline, mock): скоринг, цитаты, чек-листы, кэш-ключ, fail-closed, строгие значения, роли/время, факты, жюри, провайдеры, безопасность путей, gold, mock e2e, HTTP API
 docs/            ARCHITECTURE, SCORING, ASSUMPTIONS, EVALUATION, API, презентация + PDF
 Makefile · pyproject.toml · Dockerfile · docker-compose.yml · .github/workflows/ci.yml
 ```
 
 ## CLI
-`python -m cqa evaluate [--group G | --input file.json] [--ids a,b] [--limit N] [--checklist ID] [--fresh] [--reeval] [--mock] [--concurrency N] [--refresh]` · `python -m cqa stats --group G` · `python -m cqa rescore --group G` · `python -m cqa serve --port 8090`.
+`python -m cqa evaluate [--group G | --input file.json] [--ids a,b] [--limit N] [--checklist ID] [--fresh] [--mock] [--confirm 03,04] [--final] [--organizer out.csv] [--concurrency N] [--refresh]` · `python -m cqa stats --group G` · `python -m cqa rescore --group G` · `python -m cqa serve --port 8090` · `python -m cqa gold [--dir D | --labels F]` · `python -m cqa label` · `python -m cqa export --group G --format organizer`.
 
 ## Публичный репозиторий
 `.env`, `data/` (сырые диалоги), `results/` (цитаты клиентов), `.cache/` — в `.gitignore`. Данные загружаются во время работы через `CQA_API_URL`. В `examples/` только выдуманные диалоги.
@@ -199,11 +206,11 @@ Makefile · pyproject.toml · Dockerfile · docker-compose.yml · .github/workfl
 
 **Highlights:** per-criterion prompts · LLM jury + judge · quote validation with auto-correction / retry · deterministic scoring · per-criterion cache (editing one rubric re-evaluates only that criterion; reweighting needs no LLM) · no-login web UI with evidence highlighting, audio seek, human override (stored separately, AI vs Human diff, CSV/JSON export) and checklist editor · cloud (Anthropic), local (Ollama/vLLM via OpenAI-compatible API) or offline mock · Docker · CI on 3.11/3.12 without secrets.
 
-**DEV results (v1):** 65 dialogs (60 chats, 5 calls), 0 errors, mean 75.95, 5 gross-error flags; jurors agreed on 84.4% of 520 criterion verdicts, the judge decided 81. Full run ~5 min / ~$13.
+**Results (current version):** tuned synthetic gold set 0.992 / MAE 0.43; **held-out synthetic set 0.938 / MAE 3.86**; real-DEV agreement not measured (needs human labels: `cqa label`). DEV: 65 dialogs, 0 errors, mean 78.53, 5 gross-error flags, ~$12–14 per full run.
 
-**Limitations:** no labelled ground truth for DEV (accuracy checked by manual review of a sample); criteria 07/04/05 are the most subjective; audio offsets are approximate; local-model accuracy not measured.
+**Limitations:** no labelled ground truth for real DEV dialogs; both gold sets are synthetic and self-labelled; criteria 04/05/06 are the most subjective; audio offsets are approximate; local-model accuracy not measured (no local GPU run in this repo).
 
-**Gold set:** 16 hand-labelled synthetic dialogs, `python -m cqa gold` → tuned set 0.992 / MAE 0.43, **held-out set (10 dialogs never used for tuning) 0.925 / MAE 7.32**, gross-flag P/R 1.0/1.0. **Robustness:** fail-closed `incomplete` status, strict values, operator-quote checks, untrusted-transcript boundary, path-safe ids, atomic writes. Review history: [docs/REVIEW_QUORUM.md](docs/REVIEW_QUORUM.md).
+**Robustness:** fail-closed `incomplete` status after a rescue pass over other models, strict values, operator-quote checks, untrusted-transcript boundary, code-computed facts (waits, holds, language, ending), path-safe ids, atomic writes.
 
 UI: [docs/UI.md](docs/UI.md).
 

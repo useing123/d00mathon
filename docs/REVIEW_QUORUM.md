@@ -12,10 +12,11 @@ suggestions that are correct and do not contradict the organizer rubric, and re-
 | 2 (after round-1 changes) | 79 | — | 95 | — | — |
 | 3 (after round-2 changes) | 80 | — | 97 | — | — |
 | 4 (after round-3 changes) | 77 | — | 96 | 66 | — |
+| 5 (after round-4 changes) | 77 | 78 | 94 | 72 | — |
 
 Reviewer set changed over time (user decision): round 0 fable + luna + gemini-3.8-flash; rounds 1–3 fable + argon;
-round 4 adds luna (run separately on the same commit); from round 5 fable + opus + argon + luna, stop rule
-fable ≥ 90 and opus ≥ 90. Round-4 fable output was truncated JSON; overall (77) and risks were read from the raw
+round 4 adds luna (run separately on the same commit); round 5 fable + opus + argon + luna; from round 6 also
+gpt-5.3-codex. Stop rule (user): fable ≥ 90 and opus ≥ 90, at most 5 rounds after round 5, or 2 rounds without gain. Round-4 fable output was truncated JSON; overall (77) and risks were read from the raw
 text, its improvement list was lost. Up to round 4 the review script truncated `cqa/static/index.html` to 14k chars
 (a limitation of the script, not the repo); from round 5 it is sent in full.
 
@@ -148,3 +149,28 @@ Reviewers: claude-fable-5-1 (76), gemini-4-argon (93). fable's first response wa
 |---|---|
 | `--allow-provisional` total (argon) | Conflicts with fail-closed; `provisional_total` column exists. |
 | Labelling real DEV dialogs ourselves | Would be self-labelling; tooling is ready for a human labeller. |
+
+## Round 5 → changes (decisions by the user on Opus/Fable suggestions)
+### Accepted (implemented)
+| Suggestion (source) | Implementation |
+|---|---|
+| All unwarned waits > 2 min in FACTS; anchored warning regex (opus) | `waits_over_2min`, `WAIT_RE` («в данный момент», «в течение 5 минут» no longer count as warnings); 06 rule uses the list; tests |
+| `evaluate --final` control profile (opus) | jurors sonnet + opus, judge confirms unanimous 02/04/06, median of 3 on 04/06; measured on held-out (not better, opt-in) |
+| Never give up on the first failing model (opus, fable) | rescue pass: judge, then each juror; only then `incomplete` |
+| Model-id preflight + optional fallback (fable) | `Evaluator.preflight`, `CQA_FALLBACK_MODELS`; test |
+| 07: «чем ещё помочь?», client silent, closed without the operator's goodbye → NO (opus; user decision) | rule of 07 — the rubric requires a goodbye and the operator had the chance; NA only if the chat broke off before the operator could close |
+| 04 vs 03 double penalty (fable) | rule: missing ID is 03, not a wrong 04 recommendation |
+| 02: ≥2 plausible readings answered without clarifying → NO (opus) | rule of 02 (NA definition unchanged) |
+| 08 scope: rudeness → 05, wrong advice → 04; confidential-info and multilingual insult examples (opus) | rules of 08 |
+| Checklist dedupe (opus) | `freedom_call_v1` = `extends: freedom_chat_v1` + override of 06 only; test |
+| Organizer submission export (fable) | `evaluate --organizer FILE`, `cqa export --format organizer`; test |
+| One result shape for all paths; no inner imports; dead `--reeval` flag removed (opus, fable) | `_result_dict`, CLI |
+| UI: no `window.prompt/confirm`; upload starts evaluation; AI↔human agreement card; JS/CSS in separate files (opus, fable) | `static/app.js`, `static/app.css`, in-page `ask()` dialog; Playwright smoke updated |
+| Docs consistency: one current version, CI badge wired to the workflow, no static test count (fable, opus) | README / EVALUATION |
+
+### Rejected
+| Suggestion | Why |
+|---|---|
+| Make 02 YES whenever the operator understood/used the stated need; reduce the 44/65 NA rate (fable, opus) | The organizer rubric defines 02 NA as «данных хватало с самого начала». A request answerable as stated is NA by definition; YES is reserved for cases where data were missing and the operator obtained them (asked, or took them from the bot dialogue instead of re-asking). Changing this would contradict the rubric, so the NA rate is a property of the DEV data, not a bug. |
+| Hand-label real DEV dialogs ourselves (fable, opus) | Self-labelling; the tooling (`cqa label`, `cqa gold --labels`) is ready for a human labeller. |
+| Measure the local-LLM path (fable, opus) | No local GPU/LLM server in this environment; not claimed. |

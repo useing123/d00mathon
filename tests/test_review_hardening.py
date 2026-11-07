@@ -480,3 +480,75 @@ def test_optional_judge_confirmation_of_consensus(monkeypatch):
     monkeypatch.setattr(config, "CONFIRM", "03,04")
     res = ev._jury(REC, tx, ckl.load("freedom_chat_v1"), _cr("04"), "k_h")
     assert res["decided_by"] == "judge_confirm:judge" and res["value"] == 10
+
+
+# ---------- round-5 review ----------
+def test_wait_regex_precision():
+    assert data.WAIT_RE.search("Минутку, уточню") and data.WAIT_RE.search("Let me check that")
+    for no in ("В данный момент сервис работает", "Зачисление в течение 5 минут", "момент зачисления"):
+        assert not data.WAIT_RE.search(no), no
+
+
+def test_all_unwarned_waits_listed():
+    r = _rec([{"timestamp": "00:00", "speaker": "operator", "text": "Здравствуйте, меня зовут Ан"},
+              {"timestamp": "00:10", "speaker": "client", "text": "Вопрос 1"},
+              {"timestamp": "00:20", "speaker": "operator", "text": "Минутку, уточню"},
+              {"timestamp": "06:20", "speaker": "operator", "text": "Ответ 1"},          # long but warned
+              {"timestamp": "06:30", "speaker": "client", "text": "Вопрос 2"},
+              {"timestamp": "09:30", "speaker": "operator", "text": "Ответ 2"}])        # shorter, NOT warned
+    f = data.compute_facts(r)
+    assert f["longest_wait_after_first_reply"]["operator_warned_before"] is True
+    un = [w for w in f["waits_over_2min"] if not w["operator_warned_before"]]
+    assert [(w["from_turn"], w["to_turn"]) for w in un] == [(4, 5)]
+    assert "БЕЗ предупреждения: 1" in data.format_facts(f)
+
+
+def test_call_checklist_extends_chat():
+    a, b = ckl.load("freedom_call_v1"), ckl.load("freedom_chat_v1")
+    diff = [x["id"] for x in a["criteria"] if x != next(y for y in b["criteria"] if y["id"] == x["id"])]
+    assert diff == ["06"] and a["channel"] == "call" and a["assumptions"] == b["assumptions"]
+    with pytest.raises(ValueError):
+        ckl._resolve({"id": "x", "extends": "freedom_chat_v1", "criteria_overrides": [{"id": "99"}]}, "x")
+
+
+def test_organizer_csv():
+    d = {"conversation_id": "c1", "criteria": [{"criterion_id": "01", "value": "YES"}, {"criterion_id": "04", "value": None}],
+         "total": None, "gross_error": False, "status": "incomplete", "failed_criteria": ["04"]}
+    lines = store.to_organizer_csv({"dialogs": [d]}).splitlines()
+    assert lines[0] == "conversation_id,01,04,total,gross_error,status,failed_criteria"
+    assert lines[1] == "c1,YES,,,NO,incomplete,04"
+
+
+def test_preflight_fallback(monkeypatch):
+    ev = Evaluator(use_cache=False)
+    m = Scripted([{}])
+    m.provider, m.model = "anthropic", "claude-missing"
+    m.client = type("C", (), {"models": type("M", (), {"list": staticmethod(
+        lambda limit=100: [type("X", (), {"id": "claude-ok"})()])})()})()
+    ev.llm, ev.ensemble = m, False
+    monkeypatch.setattr(config, "FALLBACK_MODELS", ["claude-ok"])
+    assert "fallback" in ev.preflight()[0] and m.model == "claude-ok"
+    m.model = "claude-missing"
+    monkeypatch.setattr(config, "FALLBACK_MODELS", [])
+    assert "not in the provider" in ev.preflight()[0]
+
+
+def test_final_profile_scale_median(monkeypatch):
+    monkeypatch.setattr(config, "SCALE_SAMPLES", 3)
+    a = Scripted([{"value": "20", "evidence": [{"turn": 1, "quote": "Тариф"}]},
+                  {"value": "10", "evidence": [{"turn": 1, "quote": "Тариф"}]},
+                  {"value": "15", "evidence": [{"turn": 1, "quote": "Тариф"}]}])
+    b = Scripted([{"value": "15", "evidence": [{"turn": 1, "quote": "Тариф"}]}])
+    ev = Evaluator(use_cache=False)
+    ev.jurors, ev.judge, ev.ensemble = [a, b], b, True
+    tx = prompts.transcript_block(REC, data.format_transcript(REC))
+    res = ev._jury(REC, tx, ckl.load("freedom_chat_v1"), _cr("04"), "k_h")
+    assert res["value"] == 15 and res["decided_by"] == "consensus" and len(a.calls) == 3
+
+
+def test_apply_final_profile(monkeypatch):
+    for k in ("JURORS", "JUDGE", "CONFIRM", "SCALE_SAMPLES"):
+        monkeypatch.setattr(config, k, getattr(config, k))
+    config.apply_final_profile()
+    assert config.JURORS == ["claude-sonnet-5-5", "claude-opus-5-5"] and config.confirm_criteria() == {"02", "04", "06"}
+    assert config.SCALE_SAMPLES == 3

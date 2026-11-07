@@ -5,6 +5,7 @@ Served by `python -m cqa serve --port 8090` (FastAPI, no auth). Interactive docs
 | Method | Path | Body / query | Returns |
 |---|---|---|---|
 | GET | `/` | — | Web UI (`cqa/static/index.html`) |
+| GET | `/static/app.js`, `/static/app.css` | — | UI script / styles (only these two names) |
 | GET | `/api/health` | — | `{ok, provider, model, fetch_configured}` |
 | GET | `/api/checklists` | — | List of checklists `[{id, name, channel, criteria}]` |
 | GET | `/api/checklists/{cid}` | — | `{checklist, yaml}`; 404 if unknown |

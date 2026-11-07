@@ -1,4 +1,4 @@
-"""Config: reads /root/cqa/.env style file (KEY=VALUE, optional quotes) + environment."""
+"""Config: reads <repo>/.env (KEY=VALUE, optional quotes) + environment variables (env wins)."""
 import os
 from pathlib import Path
 
@@ -49,3 +49,16 @@ CONFIRM = get("CQA_CONFIRM", "")  # e.g. "03,04": judge re-checks unanimous jury
 
 def confirm_criteria():
     return {x.strip() for x in CONFIRM.split(",") if x.strip()}
+FALLBACK_MODELS = [m.strip() for m in get("CQA_FALLBACK_MODELS", "").split(",") if m.strip()]  # opt-in replacements for missing ids
+SCALE_SAMPLES = int(get("CQA_SCALE_SAMPLES", "1"))   # >1: each juror's verdict on SCALE_SAMPLE_CRITERIA = median of N samples
+SCALE_SAMPLE_CRITERIA = {x.strip() for x in get("CQA_SCALE_SAMPLE_CRITERIA", "04,06").split(",") if x.strip()}
+
+# `evaluate --final`: control-run profile (stronger jury, judge re-checks unanimous verdicts, median of 3 on 04/06)
+FINAL_PROFILE = {"JURORS": ["claude-sonnet-5-5", "claude-opus-5-5"], "JUDGE": "claude-opus-5-5",
+                 "CONFIRM": "02,04,06", "SCALE_SAMPLES": 3}
+
+
+def apply_final_profile():
+    global JURORS, JUDGE, CONFIRM, SCALE_SAMPLES
+    JURORS, JUDGE = list(FINAL_PROFILE["JURORS"]), FINAL_PROFILE["JUDGE"]
+    CONFIRM, SCALE_SAMPLES = FINAL_PROFILE["CONFIRM"], FINAL_PROFILE["SCALE_SAMPLES"]

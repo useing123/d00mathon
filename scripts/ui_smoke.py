@@ -36,6 +36,10 @@ def main():
         pg.wait_for_timeout(800)
         checks["incomplete_badge"] = pg.locator("#incTag").count()
         checks["provisional_shown"] = "предварительно 88.0" in pg.inner_text("#dhead")
+        pg.evaluate("void ask('Проверка','Поле','x')")   # in-page dialog (no window.prompt)
+        pg.wait_for_timeout(200)
+        checks["ask_modal_visible"] = pg.is_visible("#askM")
+        pg.click("#askNo")
         b.close()
     req = urllib.request.Request(f"{BASE}/api/overrides/{GROUP}/{cid}/04", data=json.dumps({"value": "4.5"}).encode(),
                                  method="PUT", headers={"Content-Type": "application/json"})
@@ -47,7 +51,7 @@ def main():
     checks["console_errors"] = errs
     print(json.dumps(checks, ensure_ascii=False, indent=1))
     ok = (checks["table_rows"] > 0 and checks["criteria_cards"] >= 8 and checks["incomplete_badge"] == 1
-          and checks["provisional_shown"] and checks["invalid_override_status"] == 400 and not errs)
+          and checks["provisional_shown"] and checks["ask_modal_visible"] and checks["invalid_override_status"] == 400 and not errs)
     sys.exit(0 if ok else 1)
 
 

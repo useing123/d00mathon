@@ -122,6 +122,23 @@ _HINTS = {
 SC_TEMPERATURE = 0.4   # extra self-consistency samples (OpenAI-compatible providers; Anthropic endpoint ignores it)
 
 
+def _result_dict(cr, chosen, value, **extra):
+    """One result shape for jury, single-model and rescue paths (UI and exports rely on these keys)."""
+    res = {
+        "criterion_id": cr["id"], "name": cr["name"], "type": cr["type"], "value": value,
+        "is_na": value == "NA", "scale_step": value if cr["type"] == "scale" else None,
+        "justification": chosen.get("justification", ""), "reasoning": chosen.get("reasoning", ""),
+        "evidence": chosen.get("evidence", []), "rejected_quotes": chosen.get("rejected_quotes", []),
+        "missing_where": chosen.get("missing_where", ""), "na_reason": chosen.get("na_reason", ""),
+        "confidence": float(chosen.get("confidence") or 0),
+        "evidence_warning": chosen.get("evidence_warning", ""), "needs_review": bool(chosen.get("needs_review")),
+        "client_requests": chosen.get("client_requests") or [], "juror_errors": chosen.get("juror_errors", []),
+        "votes": [value], "jury": {}, "decided_by": None, "self_consistency_disagreement": False, "cached": False,
+    }
+    res.update(extra)
+    return res
+
+
 class Evaluator:
     def __init__(self, llm=None, use_cache=True, samples=None, ensemble=None):
         self.llm = llm or LLM()
@@ -136,6 +153,27 @@ class Evaluator:
         self.samples = samples
 
     # ---- single sample with quote validation + retry ----
+    def preflight(self):
+        """Check configured model ids against the provider's model list (Anthropic). Missing ids are replaced by
+        CQA_FALLBACK_MODELS (opt-in) or reported, so a wrong id fails loudly up front instead of per criterion."""
+        if self.llm.provider != "anthropic":
+            return []
+        try:
+            avail = {m.id for m in self.llm.client.models.list(limit=100)}
+        except Exception as e:   # listing is best-effort
+            return [f"could not list provider models ({e}); skipping model-id preflight"]
+        warns = []
+        fallbacks = [m for m in config.FALLBACK_MODELS if m in avail]
+        models = (list(self.jurors) + [self.judge]) if self.ensemble else [self.llm]
+        for m in models:
+            if m.model not in avail:
+                if fallbacks:
+                    warns.append(f"model {m.model!r} not available; using fallback {fallbacks[0]!r}")
+                    m.model = fallbacks[0]
+                else:
+                    warns.append(f"model {m.model!r} not in the provider's model list; set CQA_FALLBACK_MODELS or fix .env")
+        return warns
+
     def _sample(self, rec, tx_block, checklist, cr, temperature, llm=None, extra=""):
         llm = llm or self.llm
         tool = prompts.tool_schema(cr)
@@ -197,9 +235,24 @@ class Evaluator:
 
     def _jury(self, rec, tx_block, checklist, cr, key):
         """Jurors (haiku + sonnet) vote in parallel; on disagreement the frontier judge (opus) decides."""
+        def one(m):
+            n = config.SCALE_SAMPLES if (cr["type"] == "scale" and cr["id"] in config.SCALE_SAMPLE_CRITERIA) else 1
+            if n <= 1:
+                return self._sample(rec, tx_block, checklist, cr, 0.0, llm=m)
+            outs_m = [self._sample(rec, tx_block, checklist, cr, 0.0, llm=m) for _ in range(n)]
+            vals = sorted(o["value"] for o in outs_m if isinstance(o["value"], int))
+            if len(vals) < len(outs_m):           # some NA: majority between NA and the numeric median
+                na = len(outs_m) - len(vals)
+                if na > len(vals):
+                    return next(o for o in outs_m if o["value"] == "NA")
+            med = vals[len(vals) // 2]
+            o = dict(next(o for o in outs_m if o["value"] == med))
+            o["samples"] = [x["value"] for x in outs_m]
+            return o
+
         def safe(m):
             try:
-                return self._sample(rec, tx_block, checklist, cr, 0.0, llm=m), None
+                return one(m), None
             except Exception as e:   # one juror failing must not fail the criterion
                 return None, f"{m.model}: {e}"
         with ThreadPoolExecutor(max_workers=len(self.jurors)) as ex:
@@ -259,23 +312,12 @@ class Evaluator:
         if juror_errors:
             chosen = {**chosen, "juror_errors": juror_errors}
         all_votes = list(votes.values()) + ([final] if not agree else [])
-        return {
-            "criterion_id": cr["id"], "name": cr["name"], "type": cr["type"], "value": final,
-            "is_na": final == "NA", "scale_step": final if cr["type"] == "scale" else None,
-            "justification": chosen.get("justification", ""), "reasoning": chosen.get("reasoning", ""),
-            "evidence": chosen.get("evidence", []), "rejected_quotes": chosen.get("rejected_quotes", []),
-            "missing_where": chosen.get("missing_where", ""), "na_reason": chosen.get("na_reason", ""),
-            "confidence": float(chosen.get("confidence") or 0), "votes": all_votes,
-            "jury": votes, "decided_by": decided_by,
-            "evidence_warning": chosen.get("evidence_warning", ""), "needs_review": bool(chosen.get("needs_review")),
-            "client_requests": chosen.get("client_requests") or [],
-            "self_consistency_disagreement": not agree, "juror_errors": chosen.get("juror_errors", []),
-            "criterion_hash": key.split("_")[0], "cached": False,
-        }
+        return _result_dict(cr, chosen, final, votes=all_votes, jury=votes, decided_by=decided_by,
+                            self_consistency_disagreement=not agree, criterion_hash=key.split("_")[0])
 
     def evaluate_criterion(self, rec, checklist, cr):
-        import hashlib
-        msig = (f"J{config.JURORS}{config.JUDGE}C{sorted(config.confirm_criteria())}" if self.ensemble else self.llm.model)
+        msig = (f"J{config.JURORS}{config.JUDGE}C{sorted(config.confirm_criteria())}S{config.SCALE_SAMPLES}"
+                if self.ensemble else self.llm.model)
         key = f"{ckl.criterion_hash(checklist, cr)}{hashlib.sha1(msig.encode()).hexdigest()[:6]}_{rec['hash']}"
         cp = config.CACHE_DIR / f"{key}.json"
         if self.use_cache and cp.exists():
@@ -310,17 +352,8 @@ class Evaluator:
         else:
             final = first["value"]
         chosen = next(s for s in samples if s["value"] == final)
-        res = {
-            "criterion_id": cr["id"], "name": cr["name"], "type": cr["type"], "value": final,
-            "is_na": final == "NA", "scale_step": final if cr["type"] == "scale" else None,
-            "justification": chosen.get("justification", ""), "reasoning": chosen.get("reasoning", ""),
-            "evidence": chosen.get("evidence", []), "rejected_quotes": chosen.get("rejected_quotes", []),
-            "missing_where": chosen.get("missing_where", ""), "na_reason": chosen.get("na_reason", ""),
-            "confidence": conf, "votes": votes, "self_consistency_disagreement": len(cnt) > 1,
-            "evidence_warning": chosen.get("evidence_warning", ""), "needs_review": bool(chosen.get("needs_review")),
-            "client_requests": chosen.get("client_requests") or [],
-            "criterion_hash": key.split("_")[0], "cached": False,
-        }
+        res = _result_dict(cr, chosen, final, confidence=conf, votes=votes, self_consistency_disagreement=len(cnt) > 1,
+                           decided_by=self.llm.model, criterion_hash=key.split("_")[0])
         config.CACHE_DIR.mkdir(parents=True, exist_ok=True)
         store_atomic(cp, json.dumps(res, ensure_ascii=False))
         return res
@@ -372,26 +405,20 @@ class Evaluator:
         # rescue pass: criteria that failed get up to 2 fresh single-model attempts with the strongest model
         # before the dialog is marked incomplete (fail-closed stays the last resort)
         rescue = [(rec, cid, cr) for rec, cid, cr in jobs if results[rec["conversation_id"]][cr["id"]].get("failed")]
+        rescuers = ([self.judge] + list(self.jurors)) if self.ensemble else [self.llm, self.llm]
         for rec, cid, cr in rescue:
-            rescuer = self.judge if self.ensemble else self.llm
-            for _ in range(2):
+            a = cls[cid]["assumptions"]
+            tx = prompts.transcript_block(rec, data.format_transcript(rec, a.get("ignore_internal_hold_turns", True)),
+                                          data.format_facts(data.compute_facts(rec)))
+            for rescuer in rescuers[:3]:   # strongest model first, then the other models (a different model may be up)
                 try:
-                    a = cls[cid]["assumptions"]
-                    tx = prompts.transcript_block(rec, data.format_transcript(rec, a.get("ignore_internal_hold_turns", True)),
-                                                  data.format_facts(data.compute_facts(rec)))
                     o = self._sample(rec, tx, cls[cid], cr, 0.0, llm=rescuer)
-                    results[rec["conversation_id"]][cr["id"]] = {
-                        "criterion_id": cr["id"], "name": cr["name"], "type": cr["type"], "value": o["value"],
-                        "is_na": o["value"] == "NA", "justification": o.get("justification", ""),
-                        "reasoning": o.get("reasoning", ""), "evidence": o.get("evidence", []),
-                        "missing_where": o.get("missing_where", ""), "na_reason": o.get("na_reason", ""),
-                        "confidence": float(o.get("confidence") or 0), "decided_by": f"rescue:{rescuer.model}",
-                        "evidence_warning": o.get("evidence_warning", "") or "rescued_after_failure",
-                        "needs_review": bool(o.get("needs_review")), "client_requests": o.get("client_requests") or [],
-                        "cached": False}
-                    break
                 except Exception as e:
-                    errors.append(f"rescue {rec['conversation_id']}/{cr['id']}: {e}")
+                    errors.append(f"rescue {rec['conversation_id']}/{cr['id']} via {rescuer.model}: {e}")
+                    continue
+                o["evidence_warning"] = o.get("evidence_warning") or "rescued_after_failure"
+                results[rec["conversation_id"]][cr["id"]] = _result_dict(cr, o, o["value"], decided_by=f"rescue:{rescuer.model}")
+                break
         out = []
         for rec in records:
             cid = checklist_override or ckl.pick_for_channel(rec["kind"])
@@ -409,6 +436,7 @@ class Evaluator:
                     "self_consistency_samples": self.samples,
                     "batch_dialogs": batch_dialogs or config.BATCH_DIALOGS,
                     "judge_confirms_consensus_on": sorted(config.confirm_criteria()) if self.ensemble else [],
+                    "scale_samples": config.SCALE_SAMPLES, "scale_sample_criteria": sorted(config.SCALE_SAMPLE_CRITERIA),
                     "checklists": {c: {"version_hash": hashlib.sha256(json.dumps(
                         {cr["id"]: ckl.criterion_hash(cl, cr) for cr in cl["criteria"]}, sort_keys=True).encode()).hexdigest()[:12],
                         "criterion_hashes": {cr["id"]: ckl.criterion_hash(cl, cr) for cr in cl["criteria"]},
