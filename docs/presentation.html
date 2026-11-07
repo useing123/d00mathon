@@ -122,20 +122,20 @@ tr.flag td{background:var(--soft)}
     </div>
   </div>
   <div class="row" style="margin-top:44px">
-    <div class="col"><div class="big">84%</div><p class="muted" style="margin-top:14px">оценок присяжные дали одинаково</p></div>
-    <div class="col"><div class="big">81</div><p class="muted" style="margin-top:14px">спорных случаев из 520 решил судья</p></div>
+    <div class="col"><div class="big">86%</div><p class="muted" style="margin-top:14px">оценок присяжные дали одинаково (449 из 520)</p></div>
+    <div class="col"><div class="big">66</div><p class="muted" style="margin-top:14px">спорных случаев из 520 решил судья</p></div>
   </div>
   <div class="foot"><span>Данные: прогон на 65 DEV-диалогах</span><span>4</span></div>
 </section>
 
 <section class="slide" data-id="evidence">
-  <div class="kicker">Пример из DEV · p1-ru-023 · итог 84.62 · грубая ошибка</div>
+  <div class="kicker">Пример из DEV · p1-ru-023 · итог 61.54 · грубая ошибка</div>
   <h2 style="font-size:64px">Решение можно проверить за секунды</h2>
   <table>
     <tr><td class="k">01</td><td class="c">Установление контакта</td><td class="v">Да</td><td class="q">«Здравствуйте, я Марк.»</td></tr>
     <tr><td class="k">03</td><td class="c">Идентификация</td><td class="v">N/A</td><td class="q">Общий вопрос про облигации, данные клиента не раскрывались</td></tr>
-    <tr><td class="k">04</td><td class="c">Консультация</td><td class="v">15</td><td class="q">«Откройте „Котировки“. Если знаете название или тикер, введите его в строку поиска.»</td></tr>
-    <tr><td class="k">06</td><td class="c">Ведение диалога</td><td class="v">10</td><td class="q">Присяжные: 7 и 10. Судья Opus: 10</td></tr>
+    <tr><td class="k">04</td><td class="c">Консультация</td><td class="v">0</td><td class="q">Путь в «Котировках» назван, но предложена платная консультация в обход компании — по правилу 0</td></tr>
+    <tr><td class="k">06</td><td class="c">Ведение диалога</td><td class="v">10</td><td class="q">Присяжные: 7 и 10. Судья Opus (вслепую): 10</td></tr>
     <tr><td class="k">07</td><td class="c">Завершение</td><td class="v">Нет</td><td class="q">«Хорошо. Всего доброго.» Прощание есть, итога и предложения помощи нет</td></tr>
     <tr class="flag"><td class="k">08</td><td class="c">Грубые ошибки</td><td class="v">Да</td><td class="q">«Можете дать личный номер? Вечером созвонюсь с вами и за плату объясню…»</td></tr>
   </table>
@@ -150,7 +150,7 @@ tr.flag td{background:var(--soft)}
     <div class="item"><div class="t">N/A не штрафует</div><div class="d">Неприменимый критерий исключается, его вес распределяется пропорционально. Максимум всегда 100.</div></div>
     <div class="item"><div class="t">Округление по правилу</div><div class="d">Half-up до двух знаков: 50.625 → 50.63. Покрыто тестом.</div></div>
     <div class="item"><div class="t">Грубые ошибки отдельно</div><div class="d">Флаг не смешивается с баллом и виден в списке сразу.</div></div>
-    <div class="item"><div class="t">13 юнит-тестов</div><div class="d">Все N/A, шкалы, перераспределение, граничные случаи округления.</div></div>
+    <div class="item"><div class="t">158 автотестов</div><div class="d">N/A, шкалы, перераспределение, округление, цитаты, формат сдачи, апелляции.</div></div>
   </div>
   <div class="foot"><span>Детерминированный расчёт</span><span>6</span></div>
 </section>
@@ -162,26 +162,26 @@ tr.flag td{background:var(--soft)}
     <div class="col" style="flex:1.5">
       <div class="bars">
         <div class="bar"><b>1</b><i style="height:3%"></i><span>10+</span></div>
-        <div class="bar"><b>4</b><i style="height:11%"></i><span>20+</span></div>
+        <div class="bar"><b>0</b><i style="height:0%"></i><span>20+</span></div>
         <div class="bar"><b>6</b><i style="height:17%"></i><span>30+</span></div>
-        <div class="bar"><b>2</b><i style="height:6%"></i><span>40+</span></div>
-        <div class="bar"><b>3</b><i style="height:9%"></i><span>50+</span></div>
-        <div class="bar"><b>6</b><i style="height:17%"></i><span>60+</span></div>
-        <div class="bar"><b>0</b><i style="height:0%"></i><span>70+</span></div>
-        <div class="bar"><b>8</b><i style="height:23%"></i><span>80+</span></div>
-        <div class="bar"><b>35</b><i style="height:100%"></i><span>90+</span></div>
+        <div class="bar"><b>3</b><i style="height:8%"></i><span>40+</span></div>
+        <div class="bar"><b>3</b><i style="height:8%"></i><span>50+</span></div>
+        <div class="bar"><b>5</b><i style="height:14%"></i><span>60+</span></div>
+        <div class="bar"><b>4</b><i style="height:11%"></i><span>70+</span></div>
+        <div class="bar"><b>7</b><i style="height:19%"></i><span>80+</span></div>
+        <div class="bar"><b>36</b><i style="height:100%"></i><span>90+</span></div>
       </div>
       <p class="muted" style="font-size:24px;margin-top:22px">Распределение итоговых баллов</p>
     </div>
     <div class="col">
       <div class="facts" style="grid-template-columns:1fr;gap:40px;margin-top:0">
-        <div class="fact"><div class="v">75.95</div><div class="l">средний балл</div></div>
+        <div class="fact"><div class="v">78.45</div><div class="l">средний балл</div></div>
         <div class="fact"><div class="v">5</div><div class="l">диалогов с грубой ошибкой: перевод денег на карту оператора, платная консультация в обход компании, оскорбление</div></div>
         <div class="fact"><div class="v">60 чатов · 5 звонков</div><div class="l">русский, казахский, английский</div></div>
       </div>
     </div>
   </div>
-  <div class="foot"><span>Эталонной разметки нет. Ручная сверка 8 диалогов по рубрике выполнена</span><span>7</span></div>
+  <div class="foot"><span>Точность на реальных DEV-диалогах человеком пока не измерена: на синтетических gold-наборах 0.99 / отложенном 0.93</span><span>7</span></div>
 </section>
 
 <section class="slide" data-id="product">
@@ -193,7 +193,7 @@ tr.flag td{background:var(--soft)}
     <div class="item"><div class="t">Подсветка доказательств</div><div class="d">Клик по оценке подсвечивает реплику в транскрипте.</div></div>
     <div class="item"><div class="t">Аудио звонков</div><div class="d">Плеер с переходом к реплике по времени транскрипта.</div></div>
     <div class="item"><div class="t">Редактор чек-листов</div><div class="d">Добавить, заменить, перевесить критерий. Отдельные чек-листы для чатов и звонков.</div></div>
-    <div class="item"><div class="t">Экспорт</div><div class="d">JSON и CSV: строка на диалог, столбец на критерий, итог и флаг.</div></div>
+    <div class="item"><div class="t">Экспорт</div><div class="d">results.json в формате сдачи 1.0, JSON и CSV.</div></div>
   </div>
   <div class="foot"><span>Веб-интерфейс · FastAPI</span><span>8</span></div>
 </section>
@@ -214,16 +214,40 @@ tr.flag td{background:var(--soft)}
   <div class="foot"><span>Чек-листы в YAML</span><span>9</span></div>
 </section>
 
+<section class="slide" data-id="appeals">
+  <div class="kicker">Апелляции</div>
+  <h2>Спорная оценка — в два шага</h2>
+  <div class="list">
+    <div class="item"><div class="t">1. Оспорить</div><div class="d">На карточке критерия — кнопка «Оспорить» и обязательный комментарий. Апелляция попадает в очередь со счётчиком.</div></div>
+    <div class="item"><div class="t">2. Решить</div><div class="d">Проверяющий видит комментарий, вердикт AI с цитатами и фрагмент диалога; подтверждает или меняет оценку с обязательной причиной.</div></div>
+    <div class="item"><div class="t">Итог пересчитывается</div><div class="d">Изменение записывается как правка человека; карточка показывает исходную оценку, решение и итог.</div></div>
+    <div class="item"><div class="t">Журнал</div><div class="d">Кто, когда, комментарий, решение и причина сохраняются для каждой апелляции.</div></div>
+  </div>
+  <div class="foot"><span>POST /api/appeals · /api/appeals/{id}/resolve</span><span>10</span></div>
+</section>
+
+<section class="slide" data-id="submission">
+  <div class="kicker">Формат сдачи</div>
+  <h2>results.json 1.0 — по приложению к гайду</h2>
+  <div class="list">
+    <div class="item"><div class="t">results/dev и results/prod</div><div class="d">65 записей DEV и ровно 10 контрольных; диалог с ошибкой остаётся в файле со status=error, без нулевой оценки.</div></div>
+    <div class="item"><div class="t">8 кодов критериев</div><div class="d">contact … critical: true / false / null или шаг шкалы до учёта веса; final_score с двумя знаками и critical_flag.</div></div>
+    <div class="item"><div class="t">Реплики с №1</div><div class="d">evidence_turns — по исходному массиву транскрипта; та же нумерация в промпте, интерфейсе и API.</div></div>
+    <div class="item"><div class="t">Проверка перед push</div><div class="d">python -m cqa validate: схема, значения, дубли ID, число записей.</div></div>
+  </div>
+  <div class="foot"><span>cqa/submission.py · docs/results.schema.json</span><span>11</span></div>
+</section>
+
 <section class="slide" data-id="control">
   <div class="kicker">Контрольный этап</div>
   <h2>10 новых диалогов примерно за минуту</h2>
-  <div class="formula mono" style="font-size:38px">python -m cqa evaluate --group &lt;ID&gt;</div>
+  <div class="formula mono" style="font-size:38px">make submit GROUP=&lt;ID&gt;  →  results/prod/results.json</div>
   <div class="facts" style="grid-template-columns:repeat(3,1fr)">
     <div class="fact"><div class="v">~1 мин</div><div class="l">параллельная обработка</div></div>
-    <div class="fact"><div class="v">~$2</div><div class="l">за 10 диалогов</div></div>
+    <div class="fact"><div class="v">~$1.2</div><div class="l">за 10 диалогов (жюри Claude, $7.64 за 65 на DEV)</div></div>
     <div class="fact"><div class="v">0</div><div class="l">заготовленных ответов: каждый диалог анализируется заново</div></div>
   </div>
-  <div class="foot"><span>Или кнопка «Загрузить группу и оценить» в интерфейсе</span><span>10</span></div>
+  <div class="foot"><span>Или кнопка «Загрузить группу и оценить» в интерфейсе</span><span>12</span></div>
 </section>
 
 <section class="slide" data-id="assumptions">
@@ -235,7 +259,7 @@ tr.flag td{background:var(--soft)}
     <div class="item"><div class="t">Время первой реакции</div><div class="d">Ожидание в очереди не снижает оценку ведения диалога: по условию оно не оценивается.</div></div>
     <div class="item"><div class="t">Всё настраивается</div><div class="d">Каждое допущение вынесено флагом в YAML и меняется за минуту.</div></div>
   </div>
-  <div class="foot"><span>Описано в README</span><span>11</span></div>
+  <div class="foot"><span>Описано в README</span><span>13</span></div>
 </section>
 
 <section class="slide" data-id="end">
@@ -244,7 +268,7 @@ tr.flag td{background:var(--soft)}
   <h1>Точно. Доказуемо.<br>Под контролем человека.</h1>
   <p class="lead">Жюри из трёх моделей, проверка каждой цитаты, расчёт в коде и интерфейс, где последнее слово за контролёром.</p>
   <div class="grow"></div>
-  <div class="foot"><span>Спасибо</span><span>12</span></div>
+  <div class="foot"><span>Спасибо</span><span>14</span></div>
 </section>
 
 </div>
