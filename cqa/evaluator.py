@@ -1,4 +1,5 @@
 """Per-criterion LLM evaluation with evidence validation, self-consistency and a per-criterion cache."""
+import hashlib
 import json
 import re
 import time
@@ -281,6 +282,19 @@ class Evaluator:
         meta = {"elapsed_s": round(time.time() - t0, 1), "usage": dict(USAGE), "cost_usd": cost_usd(),
                 "provider": self.llm.provider,
                 "model": (f"jury[{'+'.join(config.JURORS)}] judge={config.JUDGE}" if self.ensemble else self.llm.model),
+                "reproducibility": {
+                    "prompt_version": prompts.PROMPT_VERSION,
+                    "jurors": list(config.JURORS) if self.ensemble else [self.llm.model],
+                    "judge": config.JUDGE if self.ensemble else None,
+                    "sampling": "provider default (Anthropic endpoint rejects temperature)" if self.llm.provider == "anthropic"
+                    else "temperature 0 (first sample)",
+                    "self_consistency_samples": self.samples,
+                    "batch_dialogs": batch_dialogs or config.BATCH_DIALOGS,
+                    "checklists": {c: {"version_hash": hashlib.sha256(json.dumps(
+                        {cr["id"]: ckl.criterion_hash(cl, cr) for cr in cl["criteria"]}, sort_keys=True).encode()).hexdigest()[:12],
+                        "criterion_hashes": {cr["id"]: ckl.criterion_hash(cl, cr) for cr in cl["criteria"]},
+                        "weights": {cr["id"]: cr.get("weight") for cr in cl["criteria"]}} for c, cl in cls.items()},
+                },
                 "errors": errors, "incomplete_dialogs": [d["conversation_id"] for d in out if d["status"] != "complete"]}
         return out, meta
 
