@@ -92,3 +92,14 @@ Status STOPPED (EXITED). Weights are on the container disk, which may be wiped o
 `ssh kz 'bash /root/serve.sh Qwen/Qwen3.8-27B-FP8 qwen3.8-27b-fp8 --language-model-only'` (≈6 min) +
 `python decision_server.py vllmchoice --port 8101 --model qwen3.8-27b-fp8 --key $(cat /root/.tok)`, and tunnel `ssh -L 18000:…:8000 -L 18101:…:8101 kz`.
 (Pod port 8001 is taken by RunPod nginx.) LitJev: `bash /root/lj.sh <model> <log>` (venv /root/lj-env, sglang 0.5.23).
+
+## Agent a2 run (pod `cqa-a2`, A40 $0.59/h) — 2026-11-08
+
+| model | held-out agr. | MAE | gross P/R | 01 02 03 04 05 06 07 08 | KZ (2) | RU (5) | EN (3) | s/dialog (A40) | $/dialog |
+|---|---|---|---|---|---|---|---|---|---|
+| issai/Qwen3.5-35B-A3B-Kazakh (vLLM `--quantization fp8`, len 8192) | 0.912 | 6.83 | 1.0 / 1.0 | 1 .7 .9 .8 1 1 .9 1 | 0.938 | 0.850 | 1.000 | 8.52 | $0.0014 |
+| armanibadboy/WAL2-Ternary-27B (e022 PQ2_0, llama-server) | **no number** | | | | | | | | |
+
+- ISSAI 35B-A3B: fits an A40 with fp8 weight-only at 8192 ctx, served in ~4 min; 3× faster than Qwen3.8-27B-FP8 but scores lower (0.912 vs 0.963). Same protocol (`run_local_only.py`, tier 1 only, thinking off).
+- WAL2: PrismML fork @9a9394a built with CUDA (sm_86) in < 20 min; llama-server served `wal2-ternary-27b` (fingerprint b10709-9a9394a89), 16384 ctx/slot ×4, `--reasoning-budget 0`. Sanity check: ~41 tok/s decode, but answered "Astrakhan" for the capital of Kazakhstan. The held-out run did not finish in 25 min (calls generating up to 2000 tokens), so it was killed at the wrap-up order → no metrics.
+- Pods `j1pqx9v9bfnnn2` (WAL2) and `d4acpnmevboih8` (ISSAI), both named cqa-a2: **STOPPED (EXITED, verified)**, not terminated.
