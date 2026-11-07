@@ -1,0 +1,77 @@
+id: generic_sales_v1
+version: "1.0.0"
+name: Generic sales call script v1 (non-Freedom, universality demo)
+channel: call
+description: >
+  Evaluates the AGENT (seller / operator) in an outbound or inbound sales conversation against a
+  5-step script. Not tied to Freedom Broker: any product, any company. Client turns are context only.
+assumptions:
+  rounding: half_up
+  decimals: 2
+  self_consistency_samples: 3
+  confidence_threshold: 0.8
+  na_rule: >
+    NA only when the step was objectively impossible (the client hung up / left before that stage, or —
+    for objection handling — the client raised no objection). A skipped step that WAS possible is NO / 0,
+    never NA. NA criteria are excluded from the denominator.
+criteria:
+  - id: S1
+    code: GREETING_AGENDA
+    name: Greeting & agenda
+    type: binary
+    weight: 15
+    allow_na: false
+    rubric: |
+      YES — in the opening the agent greets the client, names themselves and/or the company, and states the purpose of the call/conversation (agenda) or asks permission to proceed.
+      NO — no greeting, or no self/company introduction, or the purpose is never stated before the pitch starts.
+    rules: |
+      - Judge only the agent's first one or two turns.
+      - Any language is fine; the greeting should be in the client's language.
+  - id: S2
+    code: NEED_DISCOVERY
+    name: Need discovery
+    type: scale
+    scale: [0, 1, 2]
+    weight: 25
+    allow_na: true
+    rubric: |
+      2 — the agent asks at least two open/qualifying questions about the client's situation, goals or current solution BEFORE pitching, and listens (follows up on answers).
+      1 — one superficial question, or questions only after the pitch, or ignores the answers.
+      0 — no discovery: pitches straight away.
+      NA — the client left before any discovery was possible.
+    rules: |
+      - Questions that only collect contact details are not discovery.
+  - id: S3
+    code: PITCH_FIT
+    name: Product pitch fit
+    type: scale
+    scale: [0, 1, 2]
+    weight: 25
+    allow_na: true
+    rubric: |
+      2 — the offer is explicitly tied to needs the client expressed (benefits, not just features), and is accurate.
+      1 — a generic pitch (features list) that is not linked to the client's stated needs.
+      0 — no pitch, or the pitch contradicts what the client said / is misleading.
+      NA — the conversation ended before a pitch was possible.
+  - id: S4
+    code: OBJECTION_HANDLING
+    name: Objection handling
+    type: binary
+    weight: 20
+    allow_na: true
+    rubric: |
+      YES — every objection the client raised (price, timing, trust, "need to think", competitor) is acknowledged and answered with a relevant argument or a question clarifying it.
+      NO — an objection is ignored, argued with aggressively, or answered with pressure only.
+      NA — the client raised no objection.
+  - id: S5
+    code: NEXT_STEP
+    name: Next step agreed
+    type: binary
+    weight: 15
+    allow_na: false
+    gross: false
+    rubric: |
+      YES — the conversation ends with a concrete, agreed next step (purchase / application, meeting or call-back with a date/time, materials sent with a follow-up date) OR an explicit agreed "no" with permission to follow up.
+      NO — the conversation ends without a concrete next step or with a vague "we'll be in touch".
+    rules: |
+      - If the client hung up early this is still NO (the agent did not secure a next step); weight it in review, not as NA.
