@@ -64,6 +64,8 @@ def apply_final_profile():
     global JURORS, JUDGE, CONFIRM, SCALE_SAMPLES
     JURORS, JUDGE = list(FINAL_PROFILE["JURORS"]), FINAL_PROFILE["JUDGE"]
     CONFIRM, SCALE_SAMPLES = FINAL_PROFILE["CONFIRM"], FINAL_PROFILE["SCALE_SAMPLES"]
+# variance reduction: when the judge decides a SCALE criterion (04, 06) it is sampled N times; the median step is final
+JUDGE_SAMPLES = int(get("CQA_JUDGE_SAMPLES", "3"))
 BLIND_JUDGE = get("CQA_BLIND_JUDGE", "1") == "1"   # on juror disagreement the judge first decides without seeing them
 
 # Model preset (cqa/presets.py, chosen from the benchmark matrix — docs/MODELS.md). Applied as the default only

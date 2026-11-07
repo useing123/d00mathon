@@ -146,6 +146,12 @@ def _result_dict(cr, chosen, value, **extra):
     return res
 
 
+def _flag(cr, res):
+    res["review_reasons"] = review_reasons(cr, res)
+    res["needs_review"] = bool(res.get("needs_review") or res["review_reasons"])
+    return res
+
+
 def _opinion(i, o):
     """One juror's opinion as shown to the judge (value, reasons, quotes, missing/NA notes, request ledger)."""
     parts = [f"- Эксперт {i + 1}: значение {o['value']!r}. Обоснование: {o.get('justification', '')} "
@@ -161,6 +167,36 @@ def _opinion(i, o):
             f"{r.get('text')} [{r.get('status')}{'' if r.get('essential') else ', второстеп.'}]"
             for r in o["client_requests"] if isinstance(r, dict)))
     return "".join(parts)
+
+
+def median_step(values):
+    """Median of scale samples (lower median on an even count); NA wins only with a strict majority."""
+    nums = sorted(v for v in values if isinstance(v, int))
+    na = sum(1 for v in values if v == "NA")
+    if not nums or na > len(nums):
+        return "NA"
+    return nums[(len(nums) - 1) // 2]
+
+
+REVIEW_CONF = 0.7   # a scale verdict below this confidence is flagged for review
+
+
+def review_reasons(cr, res):
+    """Why a criterion verdict should be looked at by a human (empty list = no flag)."""
+    why = []
+    if res.get("self_consistency_disagreement"):
+        why.append("jurors_disagreed")
+    db = str(res.get("decided_by") or "")
+    if db and db != "consensus" and not db.startswith("single") and (res.get("jury") or db.startswith(("judge", "rescue"))):
+        why.append("judge_decided")
+    js = res.get("judge_samples") or []
+    if cr["type"] == "scale" and len(set(map(str, js))) > 1:
+        why.append("judge_samples_split")
+    if cr["type"] == "scale" and res.get("value") != "NA" and float(res.get("confidence") or 0) < REVIEW_CONF:
+        why.append("low_confidence_scale")
+    if res.get("evidence_warning") == "08=YES without a verified operator quote":
+        why.append("gross_without_quote")
+    return list(dict.fromkeys(why))
 
 
 class Evaluator:
@@ -267,6 +303,21 @@ class Evaluator:
             out["evidence_warning"] = problem
         return out
 
+    def _judge(self, rec, tx_block, checklist, cr, extra=""):
+        """Judge verdict. Scale criteria: config.JUDGE_SAMPLES independent samples, the MEDIAN step is final
+        (variance reduction); binary: one sample (the judge breaks a 1:1 juror tie = majority of three)."""
+        n = config.JUDGE_SAMPLES if cr["type"] == "scale" else 1
+        if n <= 1:
+            o = self._sample(rec, tx_block, checklist, cr, 0.0, llm=self.judge, extra=extra)
+            return dict(o, judge_samples=[o["value"]])
+        with ThreadPoolExecutor(max_workers=n) as ex:
+            outs = list(ex.map(lambda _: self._sample(rec, tx_block, checklist, cr, 0.0, llm=self.judge, extra=extra),
+                               range(n)))
+        med = median_step([o["value"] for o in outs])
+        chosen = dict(next(o for o in outs if o["value"] == med))
+        chosen["judge_samples"] = [o["value"] for o in outs]
+        return chosen
+
     def _jury(self, rec, tx_block, checklist, cr, key):
         """Jurors (haiku + sonnet) vote in parallel; on disagreement the frontier judge (opus) decides."""
         def one(m):
@@ -298,14 +349,14 @@ class Evaluator:
         votes = {f"{i}:{m.model}": o["value"] for i, m, o in live}
         agree = len(outs) >= 2 and len(set(map(str, votes.values()))) == 1
         if not outs:   # all jurors failed → the judge decides alone (raises if it fails too → fail-closed)
-            chosen, decided_by = self._sample(rec, tx_block, checklist, cr, 0.0, llm=self.judge), f"judge_only:{self.judge.model}"
+            chosen, decided_by = self._judge(rec, tx_block, checklist, cr), f"judge_only:{self.judge.model}"
             chosen["evidence_warning"] = "jurors_failed"
         elif len(outs) == 1:   # one juror failed → the judge reviews the surviving verdict
             o = outs[0]
             extra = (f"\n\nМнение эксперта: значение {o['value']!r}. Обоснование: {o.get('justification','')}\n"
                      "Проверь транскрипт сам, строго по правилам критерия, и вынеси окончательное решение.")
             try:
-                chosen, decided_by = self._sample(rec, tx_block, checklist, cr, 0.0, llm=self.judge, extra=extra), self.judge.model
+                chosen, decided_by = self._judge(rec, tx_block, checklist, cr, extra), self.judge.model
             except Exception as e:
                 juror_errors.append(f"{self.judge.model}: {e}")
                 chosen, decided_by = o, f"single:{live[0][1].model}"
@@ -316,8 +367,7 @@ class Evaluator:
             extra = ("\n\nОба эксперта отметили грубую ошибку (YES). Обоснование: " + o.get("justification", "") +
                      " Цитаты: " + "; ".join(f"[{e['turn']}] «{e['quote']}»" for e in o.get("evidence") or []) +
                      "\nПроверь сам строго по правилам: подтверди YES только при явной цитате оператора, подпадающей под определение.")
-            chosen, decided_by = self._sample(rec, tx_block, checklist, cr, 0.0, llm=self.judge, extra=extra), \
-                f"judge_confirm:{self.judge.model}"
+            chosen, decided_by = self._judge(rec, tx_block, checklist, cr, extra), f"judge_confirm:{self.judge.model}"
         elif agree and cr["id"] in config.confirm_criteria():
             # optional (control/final runs): the judge also re-checks unanimous verdicts on high-weight criteria
             o = outs[-1]
@@ -325,12 +375,12 @@ class Evaluator:
                      + "; ".join(f"[{e['turn']}] «{e['quote']}»" for e in o.get("evidence") or [])
                      + "\nНезависимо проверь транскрипт строго по правилам критерия и вынеси окончательное решение "
                        "(согласие с экспертами не обязательно).")
-            chosen, decided_by = self._sample(rec, tx_block, checklist, cr, 0.0, llm=self.judge, extra=extra), \
-                f"judge_confirm:{self.judge.model}"
+            chosen, decided_by = self._judge(rec, tx_block, checklist, cr, extra), f"judge_confirm:{self.judge.model}"
         elif agree:
             chosen, decided_by = outs[-1], "consensus"   # strongest juror's explanation
         else:
-            if config.BLIND_JUDGE:
+            if config.BLIND_JUDGE and not (cr["type"] == "scale" and config.JUDGE_SAMPLES > 1):
+                # (scale criteria skip this: they get the median of JUDGE_SAMPLES informed judge samples below)
                 # anchoring guard: the judge first decides WITHOUT seeing the jurors; accepted if it matches one of them
                 blind = self._sample(rec, tx_block, checklist, cr, 0.0, llm=self.judge)
                 if str(blind["value"]) in {str(o["value"]) for o in outs}:
@@ -340,18 +390,20 @@ class Evaluator:
                 extra = ("\n\nДва независимых эксперта разошлись во мнениях:\n" + opinions +
                          "\nПроверь транскрипт сам, строго по правилам критерия, и вынеси окончательное решение. "
                          "Не усредняй и не выбирай по большинству: решай по фактам.")
-                chosen, decided_by = self._sample(rec, tx_block, checklist, cr, 0.0, llm=self.judge, extra=extra), self.judge.model
+                chosen, decided_by = self._judge(rec, tx_block, checklist, cr, extra), self.judge.model
         final = chosen["value"]
         if juror_errors:
             chosen = {**chosen, "juror_errors": juror_errors}
         all_votes = list(votes.values()) + ([final] if not agree else [])
-        return _result_dict(cr, chosen, final, votes=all_votes, jury=votes, decided_by=decided_by,
-                            blind_judge_value=blind["value"] if blind else None,
-                            self_consistency_disagreement=not agree, criterion_hash=key[:16])
+        res = _result_dict(cr, chosen, final, votes=all_votes, jury=votes, decided_by=decided_by,
+                           blind_judge_value=blind["value"] if blind else None,
+                           judge_samples=chosen.get("judge_samples") or ([blind["value"]] if blind else []),
+                           self_consistency_disagreement=not agree, criterion_hash=key[:16])
+        return _flag(cr, res)
 
     def evaluate_criterion(self, rec, checklist, cr):
         msig = (f"{config.PROVIDER}:J{config.JURORS}{config.JUDGE}C{sorted(config.confirm_criteria())}S{config.SCALE_SAMPLES}"
-                f"B{config.BLIND_JUDGE}" if self.ensemble else
+                f"B{config.BLIND_JUDGE}JS{config.JUDGE_SAMPLES}" if self.ensemble else
                 f"{self.llm.provider}:{self.llm.model}:n{self.samples or checklist['assumptions'].get('self_consistency_samples')}"
                 f":t{checklist['assumptions'].get('confidence_threshold')}")
         chash = ckl.criterion_hash(checklist, cr)
@@ -389,8 +441,9 @@ class Evaluator:
         else:
             final = first["value"]
         chosen = next(s for s in samples if s["value"] == final)
-        res = _result_dict(cr, chosen, final, confidence=conf, votes=votes, self_consistency_disagreement=len(cnt) > 1,
-                           decided_by=self.llm.model, criterion_hash=key[:16])
+        res = _flag(cr, _result_dict(cr, chosen, final, confidence=conf, votes=votes,
+                                     self_consistency_disagreement=len(cnt) > 1,
+                                     decided_by=self.llm.model, criterion_hash=key[:16]))
         config.CACHE_DIR.mkdir(parents=True, exist_ok=True)
         store_atomic(cp, json.dumps(res, ensure_ascii=False))
         return res
@@ -454,7 +507,8 @@ class Evaluator:
                     errors.append(f"rescue {rec['conversation_id']}/{cr['id']} via {rescuer.model}: {e}")
                     continue
                 o["evidence_warning"] = o.get("evidence_warning") or "rescued_after_failure"
-                results[rec["conversation_id"]][cr["id"]] = _result_dict(cr, o, o["value"], decided_by=f"rescue:{rescuer.model}")
+                results[rec["conversation_id"]][cr["id"]] = _flag(cr, _result_dict(cr, o, o["value"],
+                                                                                   decided_by=f"rescue:{rescuer.model}"))
                 break
         out = []
         for rec in records:
@@ -473,7 +527,8 @@ class Evaluator:
                     "self_consistency_samples": self.samples,
                     "batch_dialogs": batch_dialogs or config.BATCH_DIALOGS,
                     "judge_confirms_consensus_on": sorted(config.confirm_criteria()) if self.ensemble else [],
-                    "scale_samples": config.SCALE_SAMPLES, "scale_sample_criteria": sorted(config.SCALE_SAMPLE_CRITERIA),
+                    "scale_samples": config.SCALE_SAMPLES, "judge_samples_scale": config.JUDGE_SAMPLES,
+                    "scale_sample_criteria": sorted(config.SCALE_SAMPLE_CRITERIA),
                     "checklists": {c: {"version_hash": hashlib.sha256(json.dumps(
                         {cr["id"]: ckl.criterion_hash(cl, cr) for cr in cl["criteria"]}, sort_keys=True).encode()).hexdigest()[:12],
                         "criterion_hashes": {cr["id"]: ckl.criterion_hash(cl, cr) for cr in cl["criteria"]},
@@ -485,6 +540,38 @@ class Evaluator:
 
 def _failed(r):
     return bool(r.get("error") or r.get("failed")) or r.get("value") is None
+
+
+def dialog_stability(checklist, crit_results):
+    """Measured in-run noise for one dialog: share of criteria where every vote (jurors + judge samples) agreed, and
+    the range of final scores obtainable by replacing each final value with any value some model actually voted for."""
+    import itertools
+    a = checklist["assumptions"]
+    by_id = {c["id"]: c for c in checklist["criteria"]}
+    alts, unanimous = {}, 0
+    for r in crit_results:
+        cr = by_id.get(r["criterion_id"])
+        if cr is None or _failed(r):
+            return None
+        cand = [ckl.strict_value(cr, v) for v in list(r.get("votes") or []) + list(r.get("judge_samples") or [])]
+        opts = list(dict.fromkeys([r["value"]] + [v for v in cand if v is not None]))
+        unanimous += len(opts) == 1
+        alts[r["criterion_id"]] = opts
+    ids = list(alts)
+    n_combos = 1
+    for i in ids:
+        n_combos *= len(alts[i])
+    totals = []
+    if n_combos <= 20000:
+        for combo in itertools.product(*(alts[i] for i in ids)):
+            t = scoring.compute_total(checklist["criteria"], dict(zip(ids, combo, strict=True)), a["rounding"], a["decimals"])
+            if t["total"] is not None:
+                totals.append(t["total"])
+    lo, hi = (min(totals), max(totals)) if totals else (None, None)
+    return {"criteria_unanimous": unanimous, "criteria_total": len(ids),
+            "agreement": round(unanimous / len(ids), 3) if ids else None,
+            "score_range": [lo, hi], "score_spread": round(hi - lo, 2) if totals else None,
+            "flagged_criteria": sum(1 for r in crit_results if r.get("needs_review"))}
 
 
 def build_dialog_result(rec, checklist, crit_results, overrides=None):
@@ -502,7 +589,7 @@ def build_dialog_result(rec, checklist, crit_results, overrides=None):
            "failed_criteria": failed, "needs_review": flags,
            "warnings": list(rec.get("warnings") or []) + warns,
            "total": None if failed else ai["total"], "provisional_total": ai["total"] if failed else None,
-           "gross_error": ai["gross_error"]}
+           "gross_error": ai["gross_error"], "stability": dialog_stability(checklist, crit_results)}
     return apply_overrides(res, checklist, overrides or {})
 
 

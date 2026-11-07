@@ -571,7 +571,8 @@ def test_blind_judge_accepts_matching_juror_without_opinions():
     assert len(judge.calls) == 1 and "Эксперт" not in judge.calls[0]       # blind: no juror opinions shown
 
 
-def test_blind_judge_third_value_then_sees_opinions():
+def test_blind_judge_third_value_then_sees_opinions(monkeypatch):
+    monkeypatch.setattr(config, "JUDGE_SAMPLES", 1)   # legacy single-judge path for scale criteria
     a = Scripted([{"value": "20", "evidence": [{"turn": 2, "quote": "Тариф"}]}])
     b = Scripted([{"value": "10", "evidence": [{"turn": 2, "quote": "Тариф"}]}])
     judge = Scripted([{"value": "5", "evidence": [{"turn": 2, "quote": "Тариф"}]},
