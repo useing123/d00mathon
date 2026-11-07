@@ -46,6 +46,10 @@ svg text{font-size:11px;fill:var(--ink2)}
 <h2>Полная матрица</h2>
 <div class="wrap"><table id="tbl"><thead></thead><tbody></tbody></table></div>
 
+<h2>Каскад и модели первого прохода</h2>
+<p class="note">Отдельно от матрицы: роутер <code>--preset cascade</code> (Jev → Haiku → Sonnet) и модели-«решатели» первого уровня. Источник — сводки results/oss и results/jev, см. docs/OSS_ROUTER.md, docs/JEV.md.</p>
+<div class="wrap"><table id="dtbl"><thead><tr><th>Конфигурация</th><th>Отложенный</th><th>MAE итога</th><th>DEV vs жюри</th><th>$ / диалог</th><th>Доли уровней T1/T2/T3</th><th>Источник</th></tr></thead><tbody></tbody></table></div>
+
 <h2>Оговорки</h2>
 <ul class="note" id="caveats">
  <li>Gold-наборы синтетические и размечены автором правил: это проверка соответствия правилам, а не «истина» аудитора.</li>
@@ -102,6 +106,10 @@ function plot(){
  s+=`<text x="${(W+L)/2}" y="${H-6}" text-anchor="middle">$ за диалог</text>`;
  $('#plot').innerHTML=s;
 }
+function renderDec(rows){
+ const sh=t=>t?['1','2','3'].map(k=>Math.round((t[k]||0)*100)).join(' / ')+' %':'—';
+ $('#dtbl tbody').innerHTML=rows.map(r=>`<tr><td>${esc(r.config)}${r.note?`<br><small>${esc(r.note)}</small>`:''}</td><td><b>${pct(r.holdout)}</b>${r.holdout_runs?`<br><small>${r.holdout_runs.length} прогона</small>`:''}</td><td>${r.mae??'—'}</td><td>${r.dev_vs_jury!=null?pct(r.dev_vs_jury):'—'}</td><td>${r.usd_per_dialog!=null?usd(r.usd_per_dialog):'—'}${r.usd_dev?`<br><small>DEV ${usd(r.usd_dev)}</small>`:''}</td><td>${sh(r.tiers_holdout)}${r.tiers_dev?`<br><small>DEV ${sh(r.tiers_dev)}</small>`:''}</td><td><small>${esc(r.source)}</small></td></tr>`).join('');
+}
 function est(){
  const n=+$('#n').value||0,r=ROWS.find(r=>r.config==$('#cfg').value);if(!r)return;
  const c=n*(r.usd_per_dialog||0),t=n*(r.sec_per_dialog||0);
@@ -118,7 +126,7 @@ fetch('/api/models/bench').then(r=>{if(!r.ok)throw new Error(r.status);return r.
   <p class="note">${esc(p.why||'')}</p><code>python -m cqa evaluate --preset ${k}</code></div>`}).join('');
  $('#cfg').innerHTML=ROWS.map(r=>`<option>${esc(r.config)}</option>`).join('');
  const mx=pre.max&&pre.max.bench_config;if(mx)$('#cfg').value=mx;
- render();plot();est();$('#n').oninput=est;$('#cfg').onchange=est;
+ renderDec(m.decision_rows||[]);render();plot();est();$('#n').oninput=est;$('#cfg').onchange=est;
 }).catch(e=>{$('#sub').textContent='Матрица не найдена: запустите scripts/bench_matrix.py matrix ('+e.message+')'});
 </script>
 </body></html>

@@ -67,7 +67,45 @@ def models_bench():
     doc = json.loads(p.read_text(encoding="utf-8"))
     doc["presets"] = {k: {**v, "default": k == presets.DEFAULT} for k, v in presets.PRESETS.items()}
     doc["active_preset"] = getattr(config, "PRESET", "")
+    doc["decision_rows"] = _decision_rows()
     return doc
+
+
+def _decision_rows() -> list[dict]:
+    """Cascade & decision-model rows from results/oss + results/jev summaries (docs/OSS_ROUTER.md, docs/JEV.md)."""
+    def load(rel):
+        try:
+            return json.loads((config.RESULTS_DIR / rel).read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return None
+
+    rows = []
+    c, dev = load("oss/jev3_holdout.json"), load("oss/jev3_dev.json")
+    if c:
+        r = c.get("routing", {})
+        rows.append({"config": "Каскад Jev 1.14 → Haiku → Sonnet (preset cascade)",
+                     "holdout": c["metrics"]["overall_agreement"], "mae": c["metrics"]["total_mae"],
+                     "dev_vs_jury": (dev or {}).get("vs_cloud", {}).get("overall_exact"),
+                     "usd_per_dialog": round(r.get("cloud_usd", 0) / max(c.get("dialogs", 1), 1) + 0.00053, 4),
+                     "usd_dev": round(((dev or {}).get("routing", {}).get("cloud_usd", 0)) / 65 + 0.00053, 4) if dev else None,
+                     "tiers_holdout": r.get("tier_share"), "tiers_dev": (dev or {}).get("routing", {}).get("tier_share"),
+                     "source": "results/oss/jev3_holdout.json, jev3_dev.json"})
+    jh = load("oss/jev_haiku_holdout.json")
+    if jh:
+        rows.append({"config": "Jev 1.14 → Haiku", "holdout": jh["metrics"]["overall_agreement"],
+                     "mae": jh["metrics"]["total_mae"], "usd_per_dialog": None,
+                     "tiers_holdout": jh.get("routing", {}).get("tier_share"), "source": "results/oss/jev_haiku_holdout.json"})
+    runs = [x for x in (load(f"jev/holdout{s}.json") for s in ("", "_r2", "_r3")) if x]
+    if runs:
+        rows.append({"config": "Jev 1.14 в одиночку (без цитат)",
+                     "holdout": round(sum(x["overall_agreement"] for x in runs) / len(runs), 3),
+                     "holdout_runs": [x["overall_agreement"] for x in runs],
+                     "mae": runs[0]["total_mae"], "usd_per_dialog": runs[0]["usd_per_dialog"],
+                     "source": "results/jev/holdout*.json"})
+    rows.append({"config": "Qwen3-8B-AWQ в одиночку (open-weight, vLLM)", "holdout": 0.775, "mae": 12.5,
+                 "usd_per_dialog": 0.00085, "note": "слишком слаб как tier 1; GPU-время",
+                 "source": "docs/OSS_ROUTER.md (tier-1 only, held-out)"})
+    return rows
 
 
 @app.get("/api/health")

@@ -10,6 +10,32 @@
 
 [English version ↓](#english) · [Pitch deck (PDF)](docs/CQA_Pitch_Deck.pdf) · [Presentation (HTML)](docs/presentation.html) · [Architecture](docs/ARCHITECTURE.md) · [Scoring](docs/SCORING.md) · [Assumptions](docs/ASSUMPTIONS.md) · [Evaluation](docs/EVALUATION.md) · [API](docs/API.md)
 
+## Архитектура за 30 секунд
+
+```mermaid
+flowchart LR
+    D[Диалог: чат / звонок] --> M{Режим}
+    M -->|по умолчанию| J["Жюри: haiku-5-5 + sonnet-5-5<br/>судья opus-5-5, медиана 3 на 04/06"]
+    M -->|--preset cascade| C1["Jev 1.14<br/>73–82% критериев"]
+    C1 -->|низкая уверенность| C2["Haiku<br/>15–19%"]
+    C2 -->|спор / грубая ошибка| C3["Sonnet<br/>3–7%"]
+    M -->|своя GPU| L["Qwen3-8B + LoRA<br/>vLLM, данные в контуре"]
+    J --> V[Проверка цитат → балл в коде → needs_review]
+    C1 --> V
+    C2 --> V
+    C3 --> V
+    L --> V
+```
+
+| Режим | Held-out | $ / диалог | Когда использовать |
+|---|---|---|---|
+| **Жюри Claude** (по умолчанию) | 0.95 | $0.16 | сдача, максимум доказательств: цитата на каждый критерий, 18% критериев → `needs_review` |
+| **Каскад** Jev 1.14 → Haiku → Sonnet (`--preset cascade`) | 0.963 (DEV: 0.948 совпадения с жюри, грубые 5/5) | $0.004–0.015 | поток в продакшене: в 10–40 раз дешевле; у неэскалированных критериев нет цитат |
+| Jev 1.14 в одиночку | 0.934 | $0.00053 | массовый скрининг без цитат |
+| **Своя модель** Qwen3-8B + QLoRA (1 эпоха) | — (в процессе) | — (в процессе) | данные не покидают контур; база без дообучения — 0.775 |
+
+Подробно: [демо-сценарий](docs/DEMO.md) · [каскад](docs/OSS_ROUTER.md) · [Jev](docs/JEV.md) · [матрица моделей](docs/MODELS.md) (страница `/models`) · [дообучение](docs/FINETUNE.md) · модель на HF: [useing/cqa-qwen3-8b-lora](https://huggingface.co/useing/cqa-qwen3-8b-lora) (публикуется).
+
 ## Результаты (текущая версия, v7)
 
 | Набор | Совпадение значений | MAE итога | Грубые P/R | Прочее |

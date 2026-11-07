@@ -63,7 +63,7 @@ tr.flag td{background:var(--soft)}
 .formula{font-size:40px;margin-top:70px;padding:44px 50px;background:var(--soft);border-radius:24px;line-height:1.5}
 .nav{position:fixed;bottom:18px;right:24px;font-size:14px;color:#8e8e93;font-family:-apple-system,sans-serif;user-select:none}
 .nav button{border:1px solid #d2d2d7;background:#fff;border-radius:8px;width:36px;height:36px;font-size:16px;cursor:pointer;margin-left:6px}
-@media print{html,body{overflow:visible;background:#fff}#stage{position:static;transform:none!important}.slide{display:flex!important;position:relative;page-break-after:always;break-inside:avoid}.nav{display:none}}
+@media print{html,body{overflow:visible;background:#fff}#stage{position:static;transform:none!important}.slide{display:flex!important;position:relative;height:1080px;overflow:hidden;page-break-after:always;break-inside:avoid}.nav{display:none}}
 </style>
 </head>
 <body>
@@ -150,7 +150,7 @@ tr.flag td{background:var(--soft)}
     <div class="item"><div class="t">N/A не штрафует</div><div class="d">Неприменимый критерий исключается, его вес распределяется пропорционально. Максимум всегда 100.</div></div>
     <div class="item"><div class="t">Округление по правилу</div><div class="d">Half-up до двух знаков: 50.625 → 50.63. Покрыто тестом.</div></div>
     <div class="item"><div class="t">Грубые ошибки отдельно</div><div class="d">Флаг не смешивается с баллом и виден в списке сразу.</div></div>
-    <div class="item"><div class="t">174 автотеста</div><div class="d">N/A, шкалы, перераспределение, округление, цитаты, формат сдачи, апелляции.</div></div>
+    <div class="item"><div class="t">192 автотеста</div><div class="d">N/A, шкалы, перераспределение, округление, цитаты, формат сдачи, апелляции.</div></div>
   </div>
   <div class="foot"><span>Детерминированный расчёт</span><span>6</span></div>
 </section>
@@ -184,6 +184,39 @@ tr.flag td{background:var(--soft)}
   <div class="foot"><span>Точность на реальных DEV-диалогах человеком пока не измерена: на отложенном синтетическом наборе 0.95</span><span>7</span></div>
 </section>
 
+<section class="slide" data-id="cascade">
+  <div class="kicker">Каскад · <span class="mono">--preset cascade</span></div>
+  <h2>Каскад: в 10–40 раз дешевле при том же качестве</h2>
+  <div class="flow" style="margin-top:56px">
+    <div class="step"><div class="n">Уровень 1 · 73–82% критериев</div><div class="t">Jev 1.14</div><div class="d">Оценивает все 8 критериев за $0.00053. Уверенные ответы остаются.</div></div>
+    <div class="step"><div class="n">Уровень 2 · 15–19%</div><div class="t">Claude Haiku</div><div class="d">Низкая уверенность и сложные шкалы 04/05/06. Даёт цитаты-доказательства.</div></div>
+    <div class="step"><div class="n">Уровень 3 · 3–7%</div><div class="t">Claude Sonnet</div><div class="d">Разногласия и признаки грубой ошибки.</div></div>
+  </div>
+  <div class="facts" style="grid-template-columns:repeat(4,1fr);margin-top:60px">
+    <div class="fact"><div class="v">0.963</div><div class="l">отложенный набор (жюри: 0.95)</div></div>
+    <div class="fact"><div class="v">0.948</div><div class="l">совпадение с жюри на 65 DEV</div></div>
+    <div class="fact"><div class="v">$0.004–0.015</div><div class="l">за диалог (жюри: $0.16)</div></div>
+    <div class="fact"><div class="v">5 / 5</div><div class="l">грубых ошибок на DEV найдены</div></div>
+  </div>
+  <div class="foot"><span>Jev в одиночку 0.934 · Qwen3-8B в одиночку 0.775 · docs/OSS_ROUTER.md</span><span>8</span></div>
+</section>
+
+<section class="slide" data-id="own-model">
+  <div class="kicker">Своя модель</div>
+  <h2>Своя модель на HuggingFace</h2>
+  <div class="flow" style="margin-top:56px">
+    <div class="step"><div class="n">База</div><div class="t">Qwen3-8B</div><div class="d">Open-weight. Без дообучения 0.775 на отложенном наборе: для первого уровня слабовата.</div></div>
+    <div class="step"><div class="n">Дообучение</div><div class="t">QLoRA, 1 эпоха</div><div class="d">Учится на вердиктах нашего жюри: критерий, значение, цитата.</div></div>
+    <div class="step"><div class="n">Запуск</div><div class="t">На вашей GPU</div><div class="d">vLLM + LoRA-адаптер. Данные диалогов не уходят из контура.</div></div>
+  </div>
+  <div class="facts" style="grid-template-columns:repeat(3,1fr);margin-top:60px">
+    <div class="fact"><div class="v">— (в процессе)</div><div class="l">отложенный набор после дообучения</div></div>
+    <div class="fact"><div class="v">— (в процессе)</div><div class="l">доля критериев без эскалации</div></div>
+    <div class="fact"><div class="v mono" style="font-size:34px;line-height:1.3">huggingface.co/<br>useing/cqa-qwen3-8b-lora</div><div class="l">публикуется · docs/FINETUNE.md</div></div>
+  </div>
+  <div class="foot"><span>Числа после дообучения ещё не измерены — заполним из реального прогона</span><span>9</span></div>
+</section>
+
 <section class="slide" data-id="product">
   <div class="kicker">Продукт</div>
   <h2>Контролёр остаётся главным</h2>
@@ -195,7 +228,7 @@ tr.flag td{background:var(--soft)}
     <div class="item"><div class="t">Редактор чек-листов</div><div class="d">Добавить, заменить, перевесить критерий. Отдельные чек-листы для чатов и звонков.</div></div>
     <div class="item"><div class="t">Экспорт</div><div class="d">results.json в формате сдачи 1.0, JSON и CSV.</div></div>
   </div>
-  <div class="foot"><span>Веб-интерфейс · FastAPI</span><span>8</span></div>
+  <div class="foot"><span>Веб-интерфейс · FastAPI</span><span>10</span></div>
 </section>
 
 <section class="slide" data-id="flex">
@@ -211,7 +244,7 @@ tr.flag td{background:var(--soft)}
       <p style="margin-top:34px"><b>Звонки.</b> Отдельный чек-лист учитывает устную речь: логику разговора, паузы, понятность объяснений.</p>
     </div>
   </div>
-  <div class="foot"><span>Чек-листы в YAML</span><span>9</span></div>
+  <div class="foot"><span>Чек-листы в YAML</span><span>11</span></div>
 </section>
 
 <section class="slide" data-id="appeals">
@@ -223,7 +256,7 @@ tr.flag td{background:var(--soft)}
     <div class="item"><div class="t">Итог пересчитывается</div><div class="d">Изменение записывается как правка человека; карточка показывает исходную оценку, решение и итог.</div></div>
     <div class="item"><div class="t">Журнал</div><div class="d">Кто, когда, комментарий, решение и причина сохраняются для каждой апелляции.</div></div>
   </div>
-  <div class="foot"><span>POST /api/appeals · /api/appeals/{id}/resolve</span><span>10</span></div>
+  <div class="foot"><span>POST /api/appeals · /api/appeals/{id}/resolve</span><span>12</span></div>
 </section>
 
 <section class="slide" data-id="submission">
@@ -235,7 +268,7 @@ tr.flag td{background:var(--soft)}
     <div class="item"><div class="t">Реплики с №1</div><div class="d">evidence_turns — по исходному массиву транскрипта; та же нумерация в промпте, интерфейсе и API.</div></div>
     <div class="item"><div class="t">Проверка перед push</div><div class="d">python -m cqa validate: схема, значения, дубли ID, число записей.</div></div>
   </div>
-  <div class="foot"><span>cqa/submission.py · docs/results.schema.json</span><span>11</span></div>
+  <div class="foot"><span>cqa/submission.py · docs/results.schema.json</span><span>13</span></div>
 </section>
 
 <section class="slide" data-id="control">
@@ -247,7 +280,7 @@ tr.flag td{background:var(--soft)}
     <div class="fact"><div class="v">~$1.6</div><div class="l">за 10 диалогов ($0.16 за диалог; $10.28 за 65 на DEV)</div></div>
     <div class="fact"><div class="v">0</div><div class="l">заготовленных ответов: каждый диалог анализируется заново</div></div>
   </div>
-  <div class="foot"><span>Или кнопка «Загрузить группу и оценить» в интерфейсе</span><span>12</span></div>
+  <div class="foot"><span>Или кнопка «Загрузить группу и оценить» в интерфейсе</span><span>14</span></div>
 </section>
 
 <section class="slide" data-id="assumptions">
@@ -259,7 +292,7 @@ tr.flag td{background:var(--soft)}
     <div class="item"><div class="t">Время первой реакции</div><div class="d">Ожидание в очереди не снижает оценку ведения диалога: по условию оно не оценивается.</div></div>
     <div class="item"><div class="t">Всё настраивается</div><div class="d">Каждое допущение вынесено флагом в YAML и меняется за минуту.</div></div>
   </div>
-  <div class="foot"><span>Описано в README</span><span>13</span></div>
+  <div class="foot"><span>Описано в README</span><span>15</span></div>
 </section>
 
 <section class="slide" data-id="end">
@@ -268,7 +301,7 @@ tr.flag td{background:var(--soft)}
   <h1>Точно. Доказуемо.<br>Под контролем человека.</h1>
   <p class="lead">Жюри из трёх моделей, проверка каждой цитаты, расчёт в коде и интерфейс, где последнее слово за контролёром.</p>
   <div class="grow"></div>
-  <div class="foot"><span>Спасибо</span><span>14</span></div>
+  <div class="foot"><span>Спасибо</span><span>16</span></div>
 </section>
 
 </div>
