@@ -1,6 +1,8 @@
 PY ?= .venv/bin/python
 PORT ?= 8090
 GROUP ?= DEV
+# Stale shell overrides must not silently change the model setup during the control window.
+unexport CQA_MODEL CQA_ENSEMBLE CQA_JURORS CQA_JUDGE
 
 .PHONY: submit install test lint fmt serve demo eval-dev eval-group docker
 
