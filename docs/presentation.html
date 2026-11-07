@@ -156,7 +156,7 @@ tr.flag td{background:var(--soft)}
 </section>
 
 <section class="slide" data-id="results">
-  <div class="kicker">Результаты на DEV</div>
+  <div class="kicker">Основной режим: жюри Claude · результаты</div>
   <h2>65 диалогов, ноль сбоев</h2>
   <div class="row" style="margin-top:30px;align-items:flex-end">
     <div class="col" style="flex:1.5">
@@ -175,46 +175,30 @@ tr.flag td{background:var(--soft)}
     </div>
     <div class="col">
       <div class="facts" style="grid-template-columns:1fr;gap:40px;margin-top:0">
-        <div class="fact"><div class="v">80.41</div><div class="l">средний балл</div></div>
-        <div class="fact"><div class="v">5</div><div class="l">диалогов с грубой ошибкой: перевод денег на карту оператора, платная консультация в обход компании, оскорбление</div></div>
-        <div class="fact"><div class="v">60 чатов · 5 звонков</div><div class="l">русский, казахский, английский</div></div>
+        <div class="fact"><div class="v"><span data-n="jury_heldout">0.95</span></div><div class="l">совпадение с эталоном на отложенном синтетическом наборе (n = 10, CI <span data-n="jury_heldout_ci">[0.875, 1.000]</span>)</div></div>
+        <div class="fact"><div class="v"><span data-n="dev_mean">80.41</span></div><div class="l">средний балл · 60 чатов и 5 звонков, RU / KZ / EN · 5&nbsp;грубых ошибок</div></div>
+        <div class="fact"><div class="v"><span data-n="jury_usd">$0.158</span></div><div class="l">за диалог (жюри, DEV)</div></div>
       </div>
     </div>
   </div>
-  <div class="foot"><span>Точность на реальных DEV-диалогах человеком пока не измерена: на отложенном синтетическом наборе 0.95</span><span>7</span></div>
+  <div class="foot"><span>Валидация: синтетический набор n = 10 · разметка людьми в процессе (docs/LABELING.md)</span><span>7</span></div>
 </section>
 
 <section class="slide" data-id="cascade">
   <div class="kicker">Каскад · <span class="mono">--preset cascade</span></div>
-  <h2>Каскад: в 11–18 раз дешевле при том же качестве</h2>
+  <h2>Для потока: каскад в <span data-n="cost_ratio">11×</span> дешевле</h2>
   <div class="flow" style="margin-top:56px">
     <div class="step"><div class="n">Уровень 1 · 73–82% критериев</div><div class="t">Jev 1.14</div><div class="d">Оценивает все 8 критериев за $0.00053. Уверенные ответы остаются.</div></div>
     <div class="step"><div class="n">Уровень 2 · 15–19%</div><div class="t">Claude Haiku</div><div class="d">Низкая уверенность и сложные шкалы 04/05/06. Даёт цитаты-доказательства.</div></div>
     <div class="step"><div class="n">Уровень 3 · 2–7%</div><div class="t">Claude Sonnet</div><div class="d">Разногласия и признаки грубой ошибки.</div></div>
   </div>
   <div class="facts" style="grid-template-columns:repeat(4,1fr);margin-top:60px">
-    <div class="fact"><div class="v">0.963</div><div class="l">отложенный набор (жюри: 0.95)</div></div>
-    <div class="fact"><div class="v">0.948</div><div class="l">совпадение с жюри на 65 DEV</div></div>
-    <div class="fact"><div class="v">$0.004–0.015</div><div class="l">за диалог: отложенный / DEV (жюри: $0.0745 / $0.158)</div></div>
-    <div class="fact"><div class="v">5 / 5</div><div class="l">грубых ошибок на DEV найдены</div></div>
+    <div class="fact"><div class="v"><span data-n="cascade_heldout">0.963</span></div><div class="l">отложенный набор (разница с жюри не значима)</div></div>
+    <div class="fact"><div class="v"><span data-n="dev_agreement">0.948</span></div><div class="l">совпадение с жюри на 65 DEV · грубые 5 / 5</div></div>
+    <div class="fact"><div class="v"><span data-n="cascade_usd">$0.0146</span></div><div class="l">за диалог на DEV (жюри <span data-n="jury_usd">$0.158</span>)</div></div>
+    <div class="fact"><div class="v"><span data-n="local_cascade_heldout">0.95</span></div><div class="l">с локальной Qwen3.8-27B на 1-м уровне: данные в контуре</div></div>
   </div>
-  <div class="foot"><span>Jev в одиночку 0.933 · Qwen3-8B-AWQ в одиночку 0.775 (отложенный набор) · docs/OSS_ROUTER.md</span><span>8</span></div>
-</section>
-
-<section class="slide" data-id="own-model">
-  <div class="kicker">Своя модель</div>
-  <h2>Своя модель на HuggingFace</h2>
-  <div class="flow" style="margin-top:56px">
-    <div class="step"><div class="n">База</div><div class="t">Qwen3-8B</div><div class="d">Open-weight. Без дообучения 0.787 на отложенном наборе (bf16): для первого уровня слабовата.</div></div>
-    <div class="step"><div class="n">Дообучение</div><div class="t">QLoRA, 16 шагов (≈ 0.32 эпохи)</div><div class="d">Учится на вердиктах нашего жюри: критерий, значение, цитата.</div></div>
-    <div class="step"><div class="n">Запуск</div><div class="t">На вашей GPU</div><div class="d">vLLM + LoRA-адаптер. Данные диалогов не уходят из контура.</div></div>
-  </div>
-  <div class="facts" style="grid-template-columns:repeat(3,1fr);margin-top:60px">
-    <div class="fact"><div class="v">0.787</div><div class="l">отложенный набор после 16 шагов (база 0.787, MAE 12.17 → 10.43)</div></div>
-    <div class="fact"><div class="v">80 МБ</div><div class="l">адаптер на HuggingFace: useing/cqa-qwen3-8b-lora</div></div>
-    <div class="fact"><div class="v mono" style="font-size:34px;line-height:1.3">huggingface.co/<br>useing/cqa-qwen3-8b-lora</div><div class="l">адаптер опубликован · docs/FINETUNE.md</div></div>
-  </div>
-  <div class="foot"><span>Отложенный синтетический набор, 10 диалогов: совпадение не выросло, MAE снизилась; это прототип</span><span>9</span></div>
+  <div class="foot"><span>Цитаты есть только у эскалированных критериев · docs/OSS_ROUTER.md</span><span>8</span></div>
 </section>
 
 <section class="slide" data-id="product">
@@ -228,7 +212,7 @@ tr.flag td{background:var(--soft)}
     <div class="item"><div class="t">Редактор чек-листов</div><div class="d">Добавить, заменить, перевесить критерий. Отдельные чек-листы для чатов и звонков.</div></div>
     <div class="item"><div class="t">Экспорт</div><div class="d">results.json в формате сдачи 1.0, JSON и CSV.</div></div>
   </div>
-  <div class="foot"><span>Веб-интерфейс · FastAPI</span><span>10</span></div>
+  <div class="foot"><span>Веб-интерфейс · FastAPI</span><span>9</span></div>
 </section>
 
 <section class="slide" data-id="flex">
@@ -244,7 +228,7 @@ tr.flag td{background:var(--soft)}
       <p style="margin-top:34px"><b>Звонки.</b> Отдельный чек-лист учитывает устную речь: логику разговора, паузы, понятность объяснений.</p>
     </div>
   </div>
-  <div class="foot"><span>Чек-листы в YAML</span><span>11</span></div>
+  <div class="foot"><span>Чек-листы в YAML</span><span>10</span></div>
 </section>
 
 <section class="slide" data-id="appeals">
@@ -256,7 +240,7 @@ tr.flag td{background:var(--soft)}
     <div class="item"><div class="t">Итог пересчитывается</div><div class="d">Изменение записывается как правка человека; карточка показывает исходную оценку, решение и итог.</div></div>
     <div class="item"><div class="t">Журнал</div><div class="d">Кто, когда, комментарий, решение и причина сохраняются для каждой апелляции.</div></div>
   </div>
-  <div class="foot"><span>POST /api/appeals · /api/appeals/{id}/resolve</span><span>12</span></div>
+  <div class="foot"><span>POST /api/appeals · /api/appeals/{id}/resolve</span><span>11</span></div>
 </section>
 
 <section class="slide" data-id="submission">
@@ -268,7 +252,7 @@ tr.flag td{background:var(--soft)}
     <div class="item"><div class="t">Реплики с №1</div><div class="d">evidence_turns — по исходному массиву транскрипта; та же нумерация в промпте, интерфейсе и API.</div></div>
     <div class="item"><div class="t">Проверка перед push</div><div class="d">python -m cqa validate: схема, значения, дубли ID, число записей.</div></div>
   </div>
-  <div class="foot"><span>cqa/submission.py · docs/results.schema.json</span><span>13</span></div>
+  <div class="foot"><span>cqa/submission.py · docs/results.schema.json</span><span>12</span></div>
 </section>
 
 <section class="slide" data-id="control">
@@ -277,10 +261,10 @@ tr.flag td{background:var(--soft)}
   <div class="formula mono" style="font-size:38px">make submit GROUP=&lt;ID&gt;  →  results/prod/results.json</div>
   <div class="facts" style="grid-template-columns:repeat(3,1fr)">
     <div class="fact"><div class="v">~1 мин</div><div class="l">параллельная обработка</div></div>
-    <div class="fact"><div class="v">~$1.6</div><div class="l">за 10 диалогов ($0.16 за диалог; $10.28 за 65 на DEV)</div></div>
+    <div class="fact"><div class="v">~$1.6</div><div class="l">за 10 диалогов (<span data-n="jury_usd">$0.158</span> за диалог на DEV)</div></div>
     <div class="fact"><div class="v">0</div><div class="l">заготовленных ответов: каждый диалог анализируется заново</div></div>
   </div>
-  <div class="foot"><span>Или кнопка «Загрузить группу и оценить» в интерфейсе</span><span>14</span></div>
+  <div class="foot"><span>Или кнопка «Загрузить группу и оценить» в интерфейсе</span><span>13</span></div>
 </section>
 
 <section class="slide" data-id="assumptions">
@@ -292,7 +276,19 @@ tr.flag td{background:var(--soft)}
     <div class="item"><div class="t">Время первой реакции</div><div class="d">Ожидание в очереди не снижает оценку ведения диалога: по условию оно не оценивается.</div></div>
     <div class="item"><div class="t">Всё настраивается</div><div class="d">Каждое допущение вынесено флагом в YAML и меняется за минуту.</div></div>
   </div>
-  <div class="foot"><span>Описано в README</span><span>15</span></div>
+  <div class="foot"><span>Описано в README</span><span>14</span></div>
+</section>
+
+<section class="slide" data-id="appendix">
+  <div class="kicker">Приложение</div>
+  <h2>Что ещё мы проверили</h2>
+  <div class="list">
+    <div class="item"><div class="t">Своя модель</div><div class="d">Qwen3-8B + QLoRA, 16 шагов (≈ 0.32 эпохи): совпадение не выросло (0.787 = база). Адаптер на HuggingFace.</div></div>
+    <div class="item"><div class="t">Jev 1.14 в одиночку</div><div class="d">0.933, но без цитат — поэтому только первый уровень каскада.</div></div>
+    <div class="item"><div class="t">Роутер и модели</div><div class="d">Политики роутера, gpt-5.3-codex, gemini: отрыв 1–2 метки из 80 — в пределах шума.</div></div>
+    <div class="item"><div class="t">Казахские open-weight</div><div class="d">ISSAI-модели не лучше общей Qwen3.8-27B на этом наборе.</div></div>
+  </div>
+  <div class="foot"><span>docs/APPENDIX_EXPERIMENTS.md · EXPERIMENTS.md</span><span>15</span></div>
 </section>
 
 <section class="slide" data-id="end">

@@ -10,44 +10,34 @@
 
 [English version ↓](#english) · [Pitch deck (PDF)](docs/CQA_Pitch_Deck.pdf) · [Presentation (HTML)](docs/presentation.html) · [Architecture](docs/ARCHITECTURE.md) · [Router](docs/ROUTER.md) · [Scoring](docs/SCORING.md) · [Assumptions](docs/ASSUMPTIONS.md) · [Evaluation](docs/EVALUATION.md) · [API](docs/API.md)
 
-## Архитектура за 30 секунд
+## Главное
+
+**Основной режим — жюри Claude** (`--preset jury`, по умолчанию; им сделан `results/dev/results.json`): Haiku и Sonnet голосуют по каждому критерию, при расхождении решает Opus; каждая оценка с дословной цитатой; итог считает код.
 
 ```mermaid
 flowchart LR
-    D[Диалог: чат / звонок] --> M{Режим}
-    M -->|по умолчанию| J["Жюри: haiku-5-5 + sonnet-5-5<br/>судья opus-5-5, медиана 3 на 04/06"]
-    M -->|--preset cascade| C1["Jev 1.14<br/>73–82% критериев"]
-    C1 -->|низкая уверенность| C2["Haiku<br/>15–19%"]
-    C2 -->|спор / грубая ошибка| C3["Sonnet<br/>2–7%"]
-    M -->|своя GPU| L["Qwen3-8B + LoRA<br/>vLLM, данные в контуре"]
+    D[Диалог: чат / звонок] --> J["Жюри: haiku-5-5 + sonnet-5-5<br/>судья opus-5-5"]
     J --> V[Проверка цитат → балл в коде → needs_review]
-    C1 --> V
-    C2 --> V
-    C3 --> V
-    L --> V
 ```
 
-| Режим | Held-out | $ / диалог | Когда использовать |
-|---|---|---|---|
-| **Жюри Claude** (по умолчанию) | 0.95 | $0.16 | сдача, максимум доказательств: цитата на каждый критерий, 18% критериев → `needs_review` |
-| **Каскад** Jev 1.14 → Haiku → Sonnet (`--preset cascade`) | 0.963 (DEV: 0.948 совпадения с жюри, грубые 5/5) | $0.004 (held-out) – $0.015 (DEV) | поток в продакшене: в 11–18 раз дешевле жюри на том же наборе; у неэскалированных критериев нет цитат |
-| Гибрид: KZ-сигналы парсера в FACTS + каскад (`--preset hybrid`, [docs/HYBRID_KZ.md](docs/HYBRID_KZ.md)) | 0.95 (= каскад в этом прогоне, KZ 16/16) | ≈ каскад | казахский/смешанный чат: подсказки с номерами реплик и глоссами |
-| Jev 1.14 в одиночку | 0.933 (3 прогона) | $0.00053 | массовый скрининг без цитат |
-| **Своя модель** Qwen3-8B + QLoRA (16 шагов ≈ 0.32 эпохи) | 0.787 (база 0.787; MAE 12.17 → 10.43) | ≈ $0.001 (своя GPU) | данные не покидают контур; адаптер на [HF](https://huggingface.co/useing/cqa-qwen3-8b-lora); честно: пока не лучше базы по совпадению |
+| Метрика | Значение |
+|---|---|
+| Совпадение с эталоном, отложенный набор (10 синтетических диалогов) | **<span data-n="jury_heldout">0.95</span>** (95 % CI <span data-n="jury_heldout_ci">[0.875, 1.000]</span>) |
+| Средний балл на DEV (65 диалогов организаторов, 0 ошибок) | **<span data-n="dev_mean">80.41</span>** |
+| Стоимость, $ за диалог (DEV) | **<span data-n="jury_usd">$0.158</span>** |
+| Флаги `needs_review` (DEV) | 18.3% критериев |
 
-Подробно: [демо-сценарий](docs/DEMO.md) · [каскад](docs/OSS_ROUTER.md) · [Jev](docs/JEV.md) · [матрица моделей](docs/MODELS.md) (страница `/models`) · [дообучение](docs/FINETUNE.md) · модель на HF: [useing/cqa-qwen3-8b-lora](https://huggingface.co/useing/cqa-qwen3-8b-lora) .
+**Для большого потока** тот же пайплайн доступен как каскад Jev 1.14 → Haiku → Sonnet (`--preset cascade`): <span data-n="cascade_heldout">0.963</span> на отложенном наборе, <span data-n="dev_agreement">0.948</span> совпадения с жюри на DEV, <span data-n="cascade_usd">$0.0146</span> за диалог (в <span data-n="cost_ratio">11×</span> дешевле); у неэскалированных критериев нет цитат. Если данные не должны покидать контур — тот же каскад с локальной Qwen3.8-27B (vLLM) на первом уровне: <span data-n="local_cascade_heldout">0.95</span>. Какой режим рекомендуем в продакшен — docs/PRODUCTION.md (обновится).
 
-## Результаты (текущая версия, v7)
+Все цифры — из [docs/numbers.json](docs/numbers.json) (`python scripts/pitch_numbers.py`); тест `tests/test_numbers.py` сверяет их с README, DEMO и презентацией.
 
-| Набор | Совпадение значений | MAE итога | Грубые P/R | Прочее |
-|---|---|---|---|---|
-| **Held-out**, 10 синтетических диалогов (по ним не настраивались) | **0.95** (76/80, 1 прогон) | **4.43** | 1.0 / 1.0 | прежние прогоны 0.925–0.938 — это уровень шума |
-| **DEV**, 65 реальных/синтетических диалогов организаторов | не измерено (нет разметки человека) | — | 5 флагов | средний балл 80.41; 0 ошибок; 294 с |
-| Стоимость | **$0.16 за диалог** (DEV: $10.28 за 65, жюри haiku+sonnet → opus) | | | ≈ $1.6 за 10 контрольных |
-| Флаги `needs_review` (DEV) | 18.3% критериев, 75% диалогов | | | разошлись присяжные / решал судья / шкала с низкой уверенностью |
+> **Статус валидации**
+> - ✅ **Синтетический отложенный набор**, n = 10 диалогов / 80 меток, размечен нами, по нему не настраивались: жюри <span data-n="jury_heldout">0.95</span> <span data-n="jury_heldout_ci">[0.875, 1.000]</span>, каскад <span data-n="cascade_heldout">0.963</span> <span data-n="cascade_heldout_ci">[0.912, 1.000]</span> — разница не значима, шум ±2 метки.
+> - ✅ **DEV, 65 реальных диалогов**: каскад совпадает с жюри на <span data-n="dev_agreement">0.948</span> меток, грубые ошибки 5/5. Это согласие двух систем, **не точность**.
+> - ⏳ **Разметка людьми — в процессе.** Набор для разметки: [docs/LABELING.md](docs/LABELING.md). До её завершения точность на реальных диалогах не измерена.
 
-Оба gold-набора синтетические и размечены нами — это проверка регрессий, а не совпадение со скрытой разметкой.
-Подробно: [docs/EVALUATION.md](docs/EVALUATION.md); история версий: [docs/HISTORY.md](docs/HISTORY.md).
+Прочие эксперименты (дообучение, Jev в одиночку, продвинутый роутер, KZ/open-weight модели, сравнение моделей) — одна страница: [docs/APPENDIX_EXPERIMENTS.md](docs/APPENDIX_EXPERIMENTS.md).
+Подробно: [демо-сценарий](docs/DEMO.md) · [оценка](docs/EVALUATION.md) · [все эксперименты](EXPERIMENTS.md) · [история версий](docs/HISTORY.md).
 
 ## Submission / Сдача результатов (формат JSON 1.0)
 
@@ -61,7 +51,7 @@ flowchart LR
 - Все правила — в одном месте: [`cqa/submission.py`](cqa/submission.py); JSON-схема — [`docs/results.schema.json`](docs/results.schema.json); проверка: `python -m cqa validate results/prod/results.json` (схема, домены значений, 8 критериев по одному разу, `critical_flag == critical`, 2 знака, без дублей ID, в prod ровно 10 записей; `--group <id>` — ID совпадают с API).
 - `make submit GROUP=<id>`: загрузка из API → оценка (пресет по умолчанию) → экспорт JSON 1.0 → валидация → `git add -f` + commit; push — вручную. В UI: «Ещё → Выгрузить results.json (v1.0)».
 - Заменённый в UI критерий выгружается под своим `id` (или `code:` из YAML); стандартные 01–08 → официальные коды.
-- **Модель и стоимость.** `results/dev/results.json`: жюри `claude-haiku-5-5` + `claude-sonnet-5-5`, судья `claude-opus-5-5` (`external_api`), $10.28 за 65 диалогов ≈ **$0.16 за диалог**, ≈ 5 мин. Тот же режим (`--preset jury`) — по умолчанию для новых прогонов, в т.ч. `make submit` для контрольных диалогов. Альтернатива `--preset max` (`gpt-5.3-codex`, ≈ $0.058) опциональна: отрыв на отложенном наборе 2 метки из 80, это в пределах шума (см. [docs/MODELS.md](docs/MODELS.md)). Тихих подмен на старые модели нет: запасные модели выключены по умолчанию (`CQA_FALLBACK_MODELS`); фактическая модель записывается в `model.name`.
+- **Модель и стоимость.** `results/dev/results.json`: жюри `claude-haiku-5-5` + `claude-sonnet-5-5`, судья `claude-opus-5-5` (`external_api`), $10.28 за 65 диалогов ≈ **<span data-n="jury_usd">$0.158</span> за диалог**, ≈ 5 мин. Тот же режим (`--preset jury`) — по умолчанию для новых прогонов, в т.ч. `make submit` для контрольных диалогов. Другие модели — в [приложении](docs/APPENDIX_EXPERIMENTS.md). Тихих подмен на старые модели нет: запасные модели выключены по умолчанию (`CQA_FALLBACK_MODELS`); фактическая модель записывается в `model.name`.
 - **Апелляции** (два отдельных действия): «Оспорить» на карточке критерия (обязательный комментарий) → вкладка «Апелляции»: проверяющий подтверждает или меняет оценку с обязательной причиной → итог пересчитывается; карточка показывает исходную оценку, решение и итог. API: `POST /api/appeals`, `GET /api/appeals?group=&status=`, `POST /api/appeals/{id}/resolve`.
 - Точность на реальных DEV-диалогах **не измерена** человеком (нет разметки); измерено только на синтетических gold-наборах (см. [docs/EVALUATION.md](docs/EVALUATION.md)).
 
@@ -183,21 +173,8 @@ sequenceDiagram
 ```
 Сохранить → «Re-evaluate with current checklist» (к LLM уйдёт только новый критерий) или «Пересчитать веса» (без LLM). Валидация: уникальные id, тип, шкала (`tests/test_checklist.py`).
 
-## Run on your own GPU (fine-tuned adapter, prototype)
-
-QLoRA adapter for Qwen3-8B: https://huggingface.co/useing/cqa-qwen3-8b-lora (mirror:
-https://github.com/useing123/d00mathon/releases/download/finetune-v1/cqa-qwen3-8b-lora.tar.gz). You need one 24 GB GPU.
-
-```bash
-vllm serve Qwen/Qwen3-8B --enable-lora --lora-modules cqa=./cqa-qwen3-8b-lora --max-lora-rank 16 \
-     --max-model-len 16384 --default-chat-template-kwargs '{"enable_thinking": false}'
-export CQA_PROVIDER=openai CQA_OPENAI_BASE_URL=http://127.0.0.1:8000/v1 CQA_OPENAI_API_KEY=x CQA_OPENAI_TOOLS=0
-CQA_ENSEMBLE=0 CQA_MODEL=cqa python -m cqa gold --dir examples/gold_holdout              # single model
-CQA_LOCAL_ADAPTER=cqa CQA_ROUTER_LOCAL_MODEL=cqa python -m cqa evaluate --preset cascade ...  # cascade tier 1
-```
-
-Measured after 0.32 epoch (16 steps, A5000, ≈$0.22): held-out agreement **0.787 → 0.787** (no gain), MAE 12.17 → 10.43.
-Jev 1.14 scores 0.933 / 4.83 on the same set, so the adapter does not beat it yet. Details: [docs/FINETUNE.md](docs/FINETUNE.md).
+## Своя модель (прототип)
+Дообученный адаптер Qwen3-8B и инструкция запуска на своей GPU: [docs/FINETUNE.md](docs/FINETUNE.md) (итог — в [приложении](docs/APPENDIX_EXPERIMENTS.md)).
 
 ## Локальная LLM (Ollama / vLLM)
 ```bash
@@ -221,19 +198,17 @@ CQA_PROVIDER=openai CQA_OPENAI_BASE_URL=http://127.0.0.1:11434/v1 CQA_MODEL=qwen
 Подробно (включая таблицу сверки каждого правила с текстом официального чек-листа): [docs/ASSUMPTIONS.md](docs/ASSUMPTIONS.md#rubric-alignment-official-checklist-pdf-vs-our-yaml).
 
 ## Выбор модели (пресеты)
-Матрица цена/точность/скорость по 19 конфигурациям (Anthropic, OpenAI, Gemini, локальная Qwen; одиночные модели, жюри, варианты промптов): [docs/MODELS.md](docs/MODELS.md), страница **`/models`** в интерфейсе.
-Победитель выбран автоматически по отложенному gold-набору: **`gpt-5.3-codex` — 97.5% (2 прогона), MAE 1.54, $0.058/диалог**; второе место — `gemini-4-argon` (96.9%), жюри Claude — 95.0%. Разница 1–2 метки из 80 в пределах шума, поэтому режим по умолчанию оставлен `jury` (им сделан DEV-файл), а `max` доступен как опция.
-`python -m cqa evaluate --preset econom|balanced|max|jury` (или `CQA_PRESET=...`; явные `CQA_MODEL`/`CQA_JURORS`/`CQA_JUDGE` важнее пресета). Воспроизвести: `python scripts/bench_matrix.py snapshot && python scripts/bench_matrix.py run && python scripts/bench_matrix.py matrix`.
+`python -m cqa evaluate --preset jury|cascade|econom|balanced|max` (или `CQA_PRESET=...`). По умолчанию `jury`; сравнение моделей — [docs/APPENDIX_EXPERIMENTS.md](docs/APPENDIX_EXPERIMENTS.md), матрица — [docs/MODELS.md](docs/MODELS.md) (страница `/models`).
 
 ## Результаты
-См. таблицу [в начале README](#результаты-текущая-версия-v7). Распределения значений до/после выравнивания рубрики,
+См. [«Главное»](#главное). Распределения значений до/после выравнивания рубрики,
 шум и флаги проверки — [docs/EVALUATION.md](docs/EVALUATION.md); прежние версии — [docs/HISTORY.md](docs/HISTORY.md).
 
 ## Ограничения (честно)
 - Для DEV нет размеченного ground truth; gold-набор синтетический и размечен нами — это регрессионная проверка, а не оценка точности на скрытой разметке.
 - Если оценка критерия упала (ошибка API), диалог помечается `incomplete` и итог не выставляется (fail-closed).
 - Наиболее неоднозначные критерии — 07, 04, 05 (субъективность рубрики).
-- Облачный режим жюри стоит денег (≈ $0.16 на диалог); локальные модели измерены только на синтетическом held-out (Qwen3-8B 0.787, Qwen3.8-27B 0.963; см. EXPERIMENTS.md).
+- Облачный режим жюри стоит денег (<span data-n="jury_usd">$0.158</span> на диалог); локальные модели измерены только на синтетическом held-out (см. [приложение](docs/APPENDIX_EXPERIMENTS.md)).
 - Смещение аудио приблизительное: запись может стартовать не синхронно с транскриптом.
 - Фоновые задачи UI живут в памяти процесса; авторизации нет (по условию).
 - Mock-провайдер — эвристика для тестов, не бейзлайн качества.
@@ -276,9 +251,9 @@ Makefile · pyproject.toml · Dockerfile · docker-compose.yml · .github/workfl
 
 **Highlights:** per-criterion prompts · LLM jury + judge · quote validation with auto-correction / retry · deterministic scoring · per-criterion cache (editing one rubric re-evaluates only that criterion; reweighting needs no LLM) · no-login web UI with evidence highlighting, audio seek, human override (stored separately, AI vs Human diff, CSV/JSON export) and checklist editor · cloud (Anthropic), local (Ollama/vLLM via OpenAI-compatible API) or offline mock · Docker · CI on 3.11/3.12 without secrets.
 
-**Results (current version, v7):** held-out synthetic set **0.95 / MAE 4.43** (one run; earlier runs 0.925–0.938 = noise floor); real-DEV agreement not measured (needs human labels: `cqa label`). DEV: 65 dialogs, 0 errors, mean 80.41, 5 gross-error flags, ~5 min, **$0.16 per dialog** ($10.28 for 65). `needs_review` on 18.3% of criteria. History: [docs/HISTORY.md](docs/HISTORY.md).
+**Results (main mode = jury):** held-out synthetic set (n=10) **<span data-n="jury_heldout">0.95</span>** <span data-n="jury_heldout_ci">[0.875, 1.000]</span>; DEV: 65 dialogs, 0 errors, mean **<span data-n="dev_mean">80.41</span>**, **<span data-n="jury_usd">$0.158</span> per dialog**. High-volume option: cascade (`--preset cascade`) <span data-n="cascade_heldout">0.963</span> held-out, <span data-n="cascade_usd">$0.0146</span> per dialog. Human labels on real dialogs: in progress ([docs/LABELING.md](docs/LABELING.md)). Other experiments: [docs/APPENDIX_EXPERIMENTS.md](docs/APPENDIX_EXPERIMENTS.md).
 
-**Limitations:** no labelled ground truth for real DEV dialogs; both gold sets are synthetic and self-labelled; criteria 04/05/06 are the most subjective; audio offsets are approximate; local-model accuracy not measured (no local GPU run in this repo).
+**Limitations:** no labelled ground truth for real DEV dialogs; both gold sets are synthetic and self-labelled; criteria 04/05/06 are the most subjective; audio offsets are approximate; local models measured only on the synthetic held-out set.
 
 **Robustness:** fail-closed `incomplete` status after a rescue pass over other models, strict values, operator-quote checks, untrusted-transcript boundary, code-computed facts (waits, holds, language, ending), path-safe ids, atomic writes.
 
