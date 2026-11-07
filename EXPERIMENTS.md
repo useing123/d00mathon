@@ -113,15 +113,16 @@ Every configuration with per-dialog results on disk. Sorted by held-out agreemen
 | 29 | jury v8-prompt, default (EVALUATION held-out) | jury code version | 0.925 [0.825, 1.000] | 1 | — | 7.32 | 1.00/1.00 | 1/0 | — | — | — |  | [gold_holdout_report.json](results/gold_holdout_report.json) |
 | 30 | haiku@v2 | cloud single (prompt v2) | 0.925 [0.863, 0.975] | 1 | 0.977 | 8.18 | 1.00/1.00 | 1/0 | $0.00530 | 2.94 | — |  | [haiku@v2__holdout.dialogs.json](results/bench/haiku%40v2__holdout.dialogs.json) |
 | 31 | gpt-5.4-mini | cloud single | 0.912 [0.850, 0.975] | 1 | 0.938 | 5.73 | 1.00/1.00 | 4/0 | $0.0224 | 2.13 | — |  | [gpt-5.4-mini__holdout.dialogs.json](results/bench/gpt-5.4-mini__holdout.dialogs.json) |
-| 32 | haiku | cloud single | 0.912 [0.838, 0.975] | 1 | 0.969 | 7.59 | 1.00/1.00 | 1/0 | $0.00465 | 2.95 | — |  | [haiku__holdout.dialogs.json](results/bench/haiku__holdout.dialogs.json) |
-| 33 | jury-sonnet+opus>opus | cloud jury | 0.912 [0.800, 1.000] | 1 | 0.984 | 8.90 | 1.00/1.00 | 2/0 | $0.1851 | 4.87 | — |  | [jury-sonnet+opus>opus__holdout.dialogs.json](results/bench/jury-sonnet%2Bopus%3Eopus__holdout.dialogs.json) |
-| 34 | Qwen3-32B-AWQ alone (local, vLLM) | local OSS | 0.887 [0.787, 0.975] | 1 | 0.883 | 6.38 | 1.00/1.00 | 4/0 | $0.00263 | 16.05 | 1× A40 |  | [bench_qwen3-32b-awq_gold_holdout.json](results/bench_qwen3-32b-awq_gold_holdout.json) |
-| 35 | ISSAI Qwen3.5-9B-Kazakh (local, vLLM) | local OSS | 0.887 [0.825, 0.950] | 1 | — | 8.21 | 1.00/1.00 | 4/0 | — | 13.44 | n/r | 100/0/0 | [issai_9b_kk_holdout.json](results/kz_models/issai_9b_kk_holdout.json) |
-| 36 | cascade Qwen3-8B-AWQ → haiku → sonnet | cascade (local tier 1) | 0.863 [0.775, 0.950] | 1 | — | 13.91 | 1.00/1.00 | 6/0 | $0.00286 | 6.98 | 1× A40 | 34/65/1 | [q8_3_holdout.json](results/oss/q8_3_holdout.json) |
-| 37 | Jev 1.14 alone (rules ≤700 chars) ★ | decision model (API) | 0.858 [0.775, 0.929] | 3 | 0.880 | 6.05 | 1.00/1.00 | 4/0 | $0.00037 | 0.12 | — |  | [holdout.dialogs.json](results/jev/truncated700/holdout.dialogs.json) |
-| 38 | Qwen3-8B + QLoRA adapter (16 steps) | fine-tune | 0.787 [0.725, 0.863] | 1 | 0.805 | 10.43 | 0.00/0.00 | 8/0 | $0.00130 | 17.36 | 1× RTX A5000 |  | [holdout_lora.json](results/finetune/holdout_lora.json) |
-| 39 | Qwen3-8B bf16 base (JSON mode) | fine-tune | 0.787 [0.700, 0.875] | 1 | 0.789 | 12.17 | 0.00/0.00 | 8/0 | $0.00125 | 16.69 | 1× RTX A5000 |  | [holdout_base.json](results/finetune/holdout_base.json) |
-| 40 | Qwen3-8B-AWQ alone (local, vLLM) | local OSS | 0.775 [0.662, 0.875] | 1 | 0.781 | 12.47 | —/0.00 | 9/0 | $0.00085 | 5.20 | 1× A40 |  | [bench_oss_qwen3-8b_gold_holdout.json](results/bench_oss_qwen3-8b_gold_holdout.json) |
+| 32 | issai_35b_a3b_kk (local, issai-35b-a3b-kk) | local OSS | 0.912 [0.825, 0.988] | 1 | — | 6.83 | 1.00/1.00 | 4/0 | — | 8.52 | n/r | 100/0/0 | [issai_35b_a3b_kk_holdout.json](results/kz_models/issai_35b_a3b_kk_holdout.json) |
+| 33 | haiku | cloud single | 0.912 [0.838, 0.975] | 1 | 0.969 | 7.59 | 1.00/1.00 | 1/0 | $0.00465 | 2.95 | — |  | [haiku__holdout.dialogs.json](results/bench/haiku__holdout.dialogs.json) |
+| 34 | jury-sonnet+opus>opus | cloud jury | 0.912 [0.800, 1.000] | 1 | 0.984 | 8.90 | 1.00/1.00 | 2/0 | $0.1851 | 4.87 | — |  | [jury-sonnet+opus>opus__holdout.dialogs.json](results/bench/jury-sonnet%2Bopus%3Eopus__holdout.dialogs.json) |
+| 35 | Qwen3-32B-AWQ alone (local, vLLM) | local OSS | 0.887 [0.787, 0.975] | 1 | 0.883 | 6.38 | 1.00/1.00 | 4/0 | $0.00263 | 16.05 | 1× A40 |  | [bench_qwen3-32b-awq_gold_holdout.json](results/bench_qwen3-32b-awq_gold_holdout.json) |
+| 36 | ISSAI Qwen3.5-9B-Kazakh (local, vLLM) | local OSS | 0.887 [0.825, 0.950] | 1 | — | 8.21 | 1.00/1.00 | 4/0 | — | 13.44 | n/r | 100/0/0 | [issai_9b_kk_holdout.json](results/kz_models/issai_9b_kk_holdout.json) |
+| 37 | cascade Qwen3-8B-AWQ → haiku → sonnet | cascade (local tier 1) | 0.863 [0.775, 0.950] | 1 | — | 13.91 | 1.00/1.00 | 6/0 | $0.00286 | 6.98 | 1× A40 | 34/65/1 | [q8_3_holdout.json](results/oss/q8_3_holdout.json) |
+| 38 | Jev 1.14 alone (rules ≤700 chars) ★ | decision model (API) | 0.858 [0.775, 0.929] | 3 | 0.880 | 6.05 | 1.00/1.00 | 4/0 | $0.00037 | 0.12 | — |  | [holdout.dialogs.json](results/jev/truncated700/holdout.dialogs.json) |
+| 39 | Qwen3-8B + QLoRA adapter (16 steps) | fine-tune | 0.787 [0.725, 0.863] | 1 | 0.805 | 10.43 | 0.00/0.00 | 8/0 | $0.00130 | 17.36 | 1× RTX A5000 |  | [holdout_lora.json](results/finetune/holdout_lora.json) |
+| 40 | Qwen3-8B bf16 base (JSON mode) | fine-tune | 0.787 [0.700, 0.875] | 1 | 0.789 | 12.17 | 0.00/0.00 | 8/0 | $0.00125 | 16.69 | 1× RTX A5000 |  | [holdout_base.json](results/finetune/holdout_base.json) |
+| 41 | Qwen3-8B-AWQ alone (local, vLLM) | local OSS | 0.775 [0.662, 0.875] | 1 | 0.781 | 12.47 | —/0.00 | 9/0 | $0.00085 | 5.20 | 1× A40 |  | [bench_oss_qwen3-8b_gold_holdout.json](results/bench_oss_qwen3-8b_gold_holdout.json) |
 
 Tuned-gold-only runs (prompt variants not promoted to held-out): gpt-6-luna@v3 0.969; haiku@v1 0.953; haiku@v3 0.945.
 
@@ -163,35 +164,35 @@ Older jury code versions vs v7 measure prompt/rubric drift of the reference itse
 | hybrid: KZ parser signals ON → cascade | 1.00 | 1.00 | 0.90 | **0.80** | 1.00 | 0.90 | 1.00 | 1.00 |
 | jury-haiku+sonnet>opus | 1.00 | 0.90 | 1.00 | 0.90 | 0.90 | 0.90 | 1.00 | 1.00 |
 
-### 5.2 Where all configurations fail (pooled over 41 held-out runs)
+### 5.2 Where all configurations fail (pooled over 42 held-out runs)
 
 | criterion | error rate | NA vs applicable | scale: adjacent step | scale: ≥2 steps | binary flip | failed |
 |---|---|---|---|---|---|---|
-| 04 | 0.185 | 0 | 68 | 8 | 0 | 0 |
-| 02 | 0.166 | 67 | 0 | 0 | 1 | 0 |
-| 06 | 0.129 | 0 | 36 | 16 | 0 | 1 |
-| 03 | 0.066 | 23 | 0 | 0 | 4 | 0 |
+| 04 | 0.186 | 0 | 70 | 8 | 0 | 0 |
+| 02 | 0.169 | 70 | 0 | 0 | 1 | 0 |
+| 06 | 0.126 | 0 | 36 | 16 | 0 | 1 |
+| 03 | 0.067 | 24 | 0 | 0 | 4 | 0 |
 | 05 | 0.029 | 0 | 0 | 0 | 12 | 0 |
-| 07 | 0.022 | 5 | 0 | 0 | 4 | 0 |
-| 08 | 0.015 | 0 | 0 | 0 | 6 | 0 |
+| 07 | 0.024 | 5 | 0 | 0 | 5 | 0 |
+| 08 | 0.014 | 0 | 0 | 0 | 6 | 0 |
 | 01 | 0.002 | 0 | 0 | 0 | 1 | 0 |
 
 Most frequently missed (dialog, criterion) pairs (share of runs that missed it):
 
 | dialog | criterion | expected | missed in | gold rationale |
 |---|---|---|---|---|
-| hold-10-ru-contradictory | 04 | 5 | 32/41 | ended with a general hint, client still unsure → 5 |
-| hold-04-ru-transfer-minor-detail | 04 | 15 | 29/41 | process fully explained; did not mention the sending broker's fee (secondary detail) → 15 |
-| hold-10-ru-contradictory | 02 | NA | 24/41 |  |
-| hold-10-ru-contradictory | 06 | 4 | 20/41 | contradictory answers, client had to re-ask because of them → 4 |
-| hold-06-ru-wrong-advice-close | 03 | NA | 19/41 |  |
-| hold-08-ru-third-party-data | 06 | 10 | 17/41 |  |
-| hold-03-kz-no-name | 02 | NA | 12/41 |  |
-| hold-10-ru-contradictory | 05 | YES | 12/41 |  |
+| hold-10-ru-contradictory | 04 | 5 | 33/42 | ended with a general hint, client still unsure → 5 |
+| hold-04-ru-transfer-minor-detail | 04 | 15 | 30/42 | process fully explained; did not mention the sending broker's fee (secondary detail) → 15 |
+| hold-10-ru-contradictory | 02 | NA | 25/42 |  |
+| hold-06-ru-wrong-advice-close | 03 | NA | 20/42 |  |
+| hold-10-ru-contradictory | 06 | 4 | 20/42 | contradictory answers, client had to re-ask because of them → 4 |
+| hold-08-ru-third-party-data | 06 | 10 | 17/42 |  |
+| hold-03-kz-no-name | 02 | NA | 12/42 |  |
+| hold-10-ru-contradictory | 05 | YES | 12/42 |  |
 
 Typical failure modes, quoted from the (synthetic, safe-to-quote) held-out dialogs:
 
-**hold-10-ru-contradictory — criterion 04** (expected `5`, missed by 32/41 runs; title: “contradictory answers”)
+**hold-10-ru-contradictory — criterion 04** (expected `5`, missed by 33/42 runs; title: “contradictory answers”)
 
 > **client** [00:20]: Какая комиссия за сделки с акциями на KASE?
 > **operator** [01:25]: Здравствуйте, меня зовут Ержан. Комиссия 0,1% от суммы сделки.
@@ -199,7 +200,7 @@ Typical failure modes, quoted from the (synthetic, safe-to-quote) held-out dialo
 
 Label rationale: ended with a general hint, client still unsure → 5. Models disagree on how much of a partial or self-contradicting answer still earns credit — the boundary is defined by our synthetic rubric reading, so part of this 'error' is label ambiguity.
 
-**hold-04-ru-transfer-minor-detail — criterion 04** (expected `15`, missed by 29/41 runs; title: “main answered, secondary detail missed”)
+**hold-04-ru-transfer-minor-detail — criterion 04** (expected `15`, missed by 30/42 runs; title: “main answered, secondary detail missed”)
 
 > **client** [00:20]: Как перевести мои акции от другого брокера к вам и сколько это стоит?
 > **operator** [01:35]: Здравствуйте, меня зовут Игорь. Чтобы перевести бумаги, подайте у текущего брокера поручение на перевод, указав наши реквизиты из раздела «Перевод ценных бумаг» в приложе…
