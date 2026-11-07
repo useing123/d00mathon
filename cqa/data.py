@@ -1,6 +1,7 @@
 """Loading, fetching and normalising dialog records."""
 import hashlib
 import json
+import re
 from datetime import datetime
 
 import httpx
@@ -64,22 +65,55 @@ def parse_paste(text, channel="agent chat", language="RU"):
         if line.startswith("[") and "]" in line:
             ts, line = line[1:line.index("]")], line[line.index("]") + 1:].strip()
         sp, _, tx = line.partition(":")
-        sp = sp.strip().lower()
-        if sp not in ("client", "bot", "operator", "system"):
+        if normalize_speaker(sp) is None or len(sp) > 40:
             sp, tx = "client", line
+        else:
+            sp = sp.strip()
         turns.append({"timestamp": ts, "speaker": sp, "text": tx.strip()})
     return normalize({"conversation_id": "pasted-" + hashlib.md5(text.encode()).hexdigest()[:8],
                       "channel": channel, "language": language, "transcript": turns}, 0)
 
 
+SPEAKER_ALIASES = {
+    "operator": ("operator", "agent", "manager", "specialist", "support", "оператор", "агент", "менеджер",
+                 "специалист", "консультант", "маман"),
+    "client": ("client", "customer", "user", "caller", "клиент", "пользователь", "абонент", "клиент(ка)"),
+    "bot": ("bot", "assistant", "ivr", "aim", "virtual assistant", "chatbot", "бот", "ассистент"),
+    "system": ("system", "система", "sys", "event"),
+}
+_ALIAS = {a: canon for canon, al in SPEAKER_ALIASES.items() for a in al}
+
+
+def normalize_speaker(sp):
+    """Map a raw speaker label to operator|client|bot|system, or None if unknown."""
+    s = str(sp or "").strip().lower().replace("_", " ")
+    if s in _ALIAS:
+        return _ALIAS[s]
+    head = s.split()[0] if s.split() else ""
+    return _ALIAS.get(head)
+
+
+def parse_timestamp(ts):
+    """Return ("offset", seconds) for mm:ss / hh:mm:ss / plain seconds, ("abs", datetime) for ISO, or (None, None)."""
+    ts = str(ts or "").strip()
+    if not ts:
+        return None, None
+    if re.fullmatch(r"\d+(?:\.\d+)?", ts):
+        return "offset", float(ts)
+    if re.fullmatch(r"\d{1,3}:\d{1,2}(?::\d{1,2})?(?:\.\d+)?", ts):
+        return "offset", _mmss(ts)
+    dt = _parse_iso(ts)
+    if dt is not None:
+        return "abs", dt
+    return None, None
+
+
 def _parse_iso(ts):
     try:
-        s = ts.replace("Z", "+00:00")
-        if "." in s:  # trim 7-digit fractions
-            head, rest = s.split(".", 1)
-            frac = "".join(ch for ch in rest if ch.isdigit())
-            tz = rest[len(frac):]
-            s = f"{head}.{frac[:6]}{tz}"
+        s = str(ts).strip().replace("Z", "+00:00").replace(" ", "T", 1)
+        m = re.match(r"^(.*?\d)\.(\d+)(.*)$", s)
+        if m:  # trim >6-digit fractions (e.g. .1234567) that datetime cannot parse
+            s = f"{m.group(1)}.{m.group(2)[:6]}{m.group(3)}"
         return datetime.fromisoformat(s)
     except Exception:
         return None
@@ -87,7 +121,7 @@ def _parse_iso(ts):
 
 def _mmss(ts):
     try:
-        parts = [int(x) for x in ts.split(":")]
+        parts = [float(x) for x in ts.split(":")]
         sec = 0
         for p in parts:
             sec = sec * 60 + p
@@ -100,37 +134,53 @@ def normalize(rec, i):
     rec = dict(rec)
     rec.setdefault("conversation_id", f"dialog-{i+1}")
     ch = (rec.get("channel") or "agent chat").lower()
-    rec["kind"] = "call" if ("call" in ch or "voice" in ch) else "chat"
+    rec["kind"] = "call" if ("call" in ch or "voice" in ch or "phone" in ch) else "chat"
     turns = []
     first = None
     internal = False
+    warnings = []
+    unknown = {}
     for idx, t in enumerate(rec.get("transcript") or []):
         t = dict(t)
         t["index"] = idx
-        ts = str(t.get("timestamp") or "")
+        raw_sp = t.get("speaker")
+        sp = normalize_speaker(raw_sp)
+        if sp is None:
+            unknown[str(raw_sp)] = unknown.get(str(raw_sp), 0) + 1
+            sp = "unknown"
+        if raw_sp != sp:
+            t["speaker_raw"] = raw_sp
+        t["speaker"] = sp
+        kind, val = parse_timestamp(t.get("timestamp"))
         off = None
-        if rec["kind"] == "call":
-            dt = _parse_iso(ts)
-            if dt is not None:
-                first = first or dt
-                off = (dt - first).total_seconds()
-        else:
-            off = _mmss(ts)
+        if kind == "offset":
+            off = val
+        elif kind == "abs":
+            if first is None:
+                first = val
+            try:
+                off = (val - first).total_seconds()
+            except TypeError:  # naive vs aware mix
+                off = (val.replace(tzinfo=None) - first.replace(tzinfo=None)).total_seconds()
         t["offset"] = off
         low = (t.get("text") or "").lower()
-        if t.get("speaker") == "system" and any(k in low for k in HOLD_END):
+        if sp == "system" and any(k in low for k in HOLD_END):
             internal = False
-        t["internal"] = bool(internal and t.get("speaker") == "operator")
-        if t.get("speaker") == "system" and any(k in low for k in HOLD_START):
+        t["internal"] = bool(internal and sp == "operator")
+        if sp == "system" and any(k in low for k in HOLD_START):
             internal = True
         turns.append(t)
+    if unknown:
+        warnings.append("unknown speaker roles (kept as UNKNOWN, not credited to operator): " +
+                        ", ".join(f"{k!r}×{v}" for k, v in unknown.items()))
     rec["transcript"] = turns
+    rec["warnings"] = warnings
     rec["hash"] = dialog_hash(rec)
     return rec
 
 
 def dialog_hash(rec):
-    core = [(t.get("speaker"), t.get("text")) for t in rec.get("transcript") or []]
+    core = [(t.get("speaker"), t.get("text"), str(t.get("timestamp") or "")) for t in rec.get("transcript") or []]
     return hashlib.sha256(json.dumps([rec.get("channel"), rec.get("language"), core], ensure_ascii=False).encode()).hexdigest()[:16]
 
 

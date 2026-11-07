@@ -1,6 +1,8 @@
 """Checklists: YAML storage, validation, per-criterion hashing, channel auto-pick."""
 import hashlib
 import json
+import math
+import re
 
 import yaml
 
@@ -41,24 +43,58 @@ def validate(c):
         ids.add(cr["id"])
         cr.setdefault("type", "binary")
         cr.setdefault("weight", 0)
+        try:
+            w = float(cr["weight"])
+        except (TypeError, ValueError):
+            raise ValueError(f"criterion {cr['id']}: weight must be a number") from None
+        if not math.isfinite(w) or w < 0:
+            raise ValueError(f"criterion {cr['id']}: weight must be a finite non-negative number")
         cr.setdefault("allow_na", False)
         cr.setdefault("gross", False)
         cr.setdefault("rules", "")
         if cr["type"] == "scale":
             if not cr.get("scale"):
                 raise ValueError(f"criterion {cr['id']}: scale type needs scale: [..]")
-            cr["scale"] = sorted(int(x) for x in cr["scale"])
+            raw = [int(x) for x in cr["scale"]]
+            if len(set(raw)) != len(raw):
+                raise ValueError(f"criterion {cr['id']}: scale steps must be unique")
+            if any(x < 0 for x in raw):
+                raise ValueError(f"criterion {cr['id']}: scale steps must be non-negative")
+            cr["scale"] = sorted(raw)
+            if cr["scale"][-1] <= 0:
+                raise ValueError(f"criterion {cr['id']}: top scale step must be > 0")
         elif cr["type"] != "binary":
             raise ValueError(f"criterion {cr['id']}: type must be binary|scale")
     return c
+
+
+def strict_value(cr, v):
+    """Canonical value if v is EXACTLY an allowed value for cr, else None. No truncation (4.5 is not 4)."""
+    if v is None or isinstance(v, bool):
+        return None
+    if isinstance(v, float):
+        if not v.is_integer():
+            return None
+        v = int(v)
+    s = str(v).strip().upper()
+    if s == "NA":
+        return "NA" if cr.get("allow_na") else None
+    if cr.get("type", "binary") == "scale":
+        if not re.fullmatch(r"-?\d+", s):
+            return None
+        n = int(s)
+        return n if n in [int(x) for x in cr["scale"]] else None
+    return s if s in ("YES", "NO") else None
 
 
 def save(c):
     c = validate(c)
     if not all(ch.isalnum() or ch in "_-." for ch in c["id"]):
         raise ValueError("bad checklist id")
-    (config.CHECKLIST_DIR / f"{c['id']}.yaml").write_text(
-        yaml.safe_dump(c, allow_unicode=True, sort_keys=False, width=1000), encoding="utf-8")
+    if not re.fullmatch(r"[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}", c["id"]) or ".." in c["id"]:
+        raise ValueError("bad checklist id")
+    from .util import atomic_write
+    atomic_write(config.CHECKLIST_DIR / f"{c['id']}.yaml", yaml.safe_dump(c, allow_unicode=True, sort_keys=False, width=1000))
     return c
 
 

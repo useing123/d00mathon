@@ -1,5 +1,6 @@
 """FastAPI backend (no login). Run: python -m cqa serve  ->  http://127.0.0.1:8090"""
 import json
+import re
 import threading
 import time
 import uuid
@@ -12,6 +13,27 @@ from fastapi.responses import FileResponse, JSONResponse, PlainTextResponse
 from . import checklist as ckl, config, data, store
 from .evaluator import Evaluator, rescore
 from .llm import USAGE, cost_usd
+from .util import atomic_write
+
+_ID_RE = re.compile(r"[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}")
+
+
+def safe_id(value, what="identifier"):
+    """Strict allowlist for identifiers that become file names (group / run / checklist)."""
+    v = str(value or "").strip()
+    if not _ID_RE.fullmatch(v) or ".." in v:
+        raise HTTPException(400, f"invalid {what}")
+    return v
+
+
+def safe_path(base, name, suffix=".json"):
+    """Resolve base/name+suffix and make sure it stays inside base."""
+    base = Path(base).resolve()
+    p = (base / f"{name}{suffix}").resolve()
+    if p.parent != base:
+        raise HTTPException(400, "invalid path")
+    return p
+
 
 app = FastAPI(title="CQA — Freedom Broker quality assessment")
 STATIC = Path(__file__).parent / "static"
@@ -37,18 +59,21 @@ def checklists():
 
 @app.get("/api/checklists/{cid}")
 def get_checklist(cid: str):
+    cid = safe_id(cid, "checklist id")
     try:
         c = ckl.load(cid)
     except FileNotFoundError as e:
         raise HTTPException(404) from e
-    return {"checklist": c, "yaml": (config.CHECKLIST_DIR / f"{cid}.yaml").read_text(encoding="utf-8")}
+    return {"checklist": c, "yaml": safe_path(config.CHECKLIST_DIR, cid, ".yaml").read_text(encoding="utf-8")}
 
 
 @app.put("/api/checklists/{cid}")
 def put_checklist(cid: str, body: dict = Body(...)):
+    cid = safe_id(cid, "checklist id")
     try:
         c = yaml.safe_load(body["yaml"]) if "yaml" in body else body["checklist"]
         c["id"] = c.get("id") or cid
+        safe_id(c["id"], "checklist id")
         c = ckl.save(c)
     except Exception as e:
         raise HTTPException(400, str(e)) from e
@@ -57,7 +82,7 @@ def put_checklist(cid: str, body: dict = Body(...)):
 
 # ---------- data ----------
 def _group_records(group):
-    p = config.DATA_DIR / f"{group}.json"
+    p = safe_path(config.DATA_DIR, safe_id(group, "group"))
     if not p.exists():
         raise HTTPException(404, f"no data for group {group}")
     return data.load_file(p)
@@ -77,7 +102,7 @@ def groups():
 
 @app.post("/api/fetch")
 def fetch(body: dict = Body(...)):
-    g = body["group_id"].strip()
+    g = safe_id(body.get("group_id"), "group")
     try:
         recs = data.fetch_group(g)
     except Exception as e:
@@ -87,6 +112,7 @@ def fetch(body: dict = Body(...)):
 
 @app.post("/api/upload")
 async def upload(file: UploadFile = File(...), group: str = "UPLOAD"):
+    group = safe_id(group, "group")
     try:
         obj = json.loads((await file.read()).decode("utf-8"))
         recs = data.load_json(obj)
@@ -98,9 +124,9 @@ async def upload(file: UploadFile = File(...), group: str = "UPLOAD"):
 
 @app.post("/api/paste")
 def paste(body: dict = Body(...)):
-    group = body.get("group") or "PASTE"
+    group = safe_id(body.get("group") or "PASTE", "group")
     rec = data.parse_paste(body["text"], body.get("channel", "agent chat"), body.get("language", "RU"))
-    p = config.DATA_DIR / f"{group}.json"
+    p = safe_path(config.DATA_DIR, group)
     existing = json.loads(p.read_text())["data"]["records"] if p.exists() else []
     existing = [r for r in existing if r["conversation_id"] != rec["conversation_id"]] + [rec]
     _save_group(group, existing)
@@ -112,11 +138,12 @@ def _save_group(group, recs):
     clean = [{k: r[k] for k in ("conversation_id", "channel", "language", "audio_url", "transcript") if k in r} for r in recs]
     for r in clean:
         r["transcript"] = [{k: t.get(k) for k in ("timestamp", "speaker", "text")} for t in r["transcript"]]
-    (config.DATA_DIR / f"{group}.json").write_text(json.dumps({"data": {"records": clean}}, ensure_ascii=False))
+    atomic_write(safe_path(config.DATA_DIR, group), json.dumps({"data": {"records": clean}}, ensure_ascii=False))
 
 
 @app.get("/api/dialogs/{group}")
 def dialogs(group: str):
+    group = safe_id(group, "group")
     return _group_records(group)
 
 
@@ -151,7 +178,7 @@ def _run_job(jid, group, ids, fresh, checklist_override, fetch_first):
 
 @app.post("/api/evaluate")
 def evaluate(body: dict = Body(...)):
-    group = body["group"].strip()
+    group = safe_id(body.get("group"), "group")
     jid = uuid.uuid4().hex[:8]
     JOBS[jid] = {"id": jid, "group": group, "status": "queued", "done": 0, "total": 0, "started_at": time.time()}
     threading.Thread(target=_run_job, args=(jid, group, body.get("ids"), bool(body.get("fresh")),
@@ -187,12 +214,15 @@ def _runs(group):
 
 def _load(group, run=None):
     """Load a run with overrides applied. Default: newest run for the group."""
+    group = safe_id(group, "group")
+    if run:
+        run = safe_id(run, "run")
     if not run:
         rs = _runs(group)
         run = rs[0]["run"] if rs else None
     if not run or run == store.results_path(group).stem:
         return store.load_results(group)
-    p = config.RESULTS_DIR / f"{Path(run).name}.json"
+    p = safe_path(config.RESULTS_DIR, run)
     if not p.exists():
         return None
     from .evaluator import apply_overrides
@@ -206,7 +236,7 @@ def _load(group, run=None):
 
 @app.get("/api/runs/{group}")
 def runs(group: str):
-    return _runs(group)
+    return _runs(safe_id(group, "group"))
 
 
 @app.get("/api/results/{group}")
@@ -219,16 +249,25 @@ def results(group: str, run: str = ""):
 
 @app.put("/api/overrides/{group}/{conv}/{crit}")
 def override(group: str, conv: str, crit: str, body: dict = Body(...), run: str = ""):
+    group = safe_id(group, "group")
+    doc = _load(group, run)
+    if not doc:
+        raise HTTPException(404, "not evaluated yet")
+    d = next((d for d in doc["dialogs"] if d["conversation_id"] == conv), None)
+    if d is None:
+        raise HTTPException(404, "unknown conversation")
     try:
-        store.save_override(group, conv, crit, body.get("value"), body.get("justification", ""), body.get("reviewer", ""))
+        store.save_override(group, conv, crit, body.get("value"), body.get("justification", ""), body.get("reviewer", ""),
+                            checklist_id=d["checklist_id"])
         doc = _load(group, run)
-    except Exception as e:
+    except ValueError as e:
         raise HTTPException(400, str(e)) from e
     return next(d for d in doc["dialogs"] if d["conversation_id"] == conv)
 
 
 @app.post("/api/rescore/{group}")
 def do_rescore(group: str):
+    group = safe_id(group, "group")
     doc = rescore(store.load_results(group))
     store.save_results(group, doc["dialogs"], doc["meta"])
     return {"ok": True}
@@ -237,11 +276,17 @@ def do_rescore(group: str):
 @app.get("/api/export/{group}.json")
 def export_json(group: str, run: str = ""):
     doc = _load(group, run)
+    if not doc:
+        raise HTTPException(404, "not evaluated yet")
     return JSONResponse(doc, headers={"Content-Disposition": f'attachment; filename="{group}.json"'})
 
 
 @app.get("/api/export/{group}.csv")
 def export_csv(group: str, which: str = "ai", run: str = ""):
+    if which not in ("ai", "human", "both"):
+        raise HTTPException(400, "which must be ai|human|both")
     doc = _load(group, run)
+    if not doc:
+        raise HTTPException(404, "not evaluated yet")
     return PlainTextResponse(store.to_csv(doc, which), media_type="text/csv; charset=utf-8",
                              headers={"Content-Disposition": f'attachment; filename="{group}_{which}.csv"'})

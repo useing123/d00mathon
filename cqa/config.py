@@ -41,3 +41,4 @@ JUDGE = get("CQA_JUDGE", "claude-opus-5-5")
 OPENAI_BASE_URL = get("CQA_OPENAI_BASE_URL", "http://127.0.0.1:11434/v1")  # Ollama default
 OPENAI_API_KEY = get("CQA_OPENAI_API_KEY", "ollama")
 CONCURRENCY = int(get("CQA_CONCURRENCY", "24"))
+BATCH_DIALOGS = int(get("CQA_BATCH_DIALOGS", "6"))  # dialog-major batches keep prompt-cache hits within TTL

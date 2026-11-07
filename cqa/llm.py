@@ -6,6 +6,7 @@
   without an API key. It is NOT an accuracy baseline.
 """
 import json
+import random
 import re
 import threading
 import time
@@ -63,7 +64,10 @@ class MockBackend:
     def call(self, system: str, cached_user: str, user: str, tool: dict, temperature: float = 0.0) -> dict:
         turns = [(int(i), sp, tx) for i, sp, tx in _TURN_RE.findall(cached_user)]
         ops = [t for t in turns if t[1] == "OPERATOR"]
-        enum = tool["input_schema"]["properties"]["value"]["enum"]
+        enum = tool["input_schema"]["properties"]["value"].get("enum")
+        if not enum:
+            mv = re.search(r"Допустимые значения[^:]*: (.*)", user)
+            enum = [x.strip() for x in mv.group(1).split("|")] if mv else ["YES", "NO"]
         m = re.search(r"КРИТЕРИЙ (\S+): (.*)", user)
         cid, cname = (m.group(1), m.group(2).lower()) if m else ("?", "")
         low = [(i, tx.lower()) for i, _, tx in ops]
@@ -96,6 +100,38 @@ class MockBackend:
                 "evidence": evidence, "missing_where": "", "na_reason": "", "confidence": 0.95}
 
 
+MAX_ATTEMPTS = 5
+
+
+def _status(e):
+    for obj in (e, getattr(e, "response", None)):
+        code = getattr(obj, "status_code", None)
+        if isinstance(code, int):
+            return code
+    return None
+
+
+def retryable(e):
+    """429 / 5xx / 529 overload / network errors are retried; other 4xx are not."""
+    code = _status(e)
+    if code is None:
+        return True   # timeouts, connection resets, malformed responses
+    return code == 429 or code == 408 or code >= 500
+
+
+def backoff_delay(e, attempt, base=2.0, cap=60.0):
+    """Honour Retry-After when present, else exponential backoff with full jitter."""
+    resp = getattr(e, "response", None)
+    headers = getattr(resp, "headers", None) or {}
+    ra = headers.get("retry-after") if hasattr(headers, "get") else None
+    if ra:
+        try:
+            return min(cap, float(ra)) + random.uniform(0, 1)
+        except ValueError:
+            pass
+    return random.uniform(0, min(cap, base * (2 ** attempt)))
+
+
 class LLM:
     """Provider-agnostic structured-output client: ``call()`` returns the tool-call arguments dict."""
 
@@ -104,7 +140,7 @@ class LLM:
         self.model = model or config.MODEL
         if self.provider == "anthropic":
             import anthropic
-            self.client = anthropic.Anthropic(api_key=config.get("ANTHROPIC_API_KEY"), max_retries=6)
+            self.client = anthropic.Anthropic(api_key=config.get("ANTHROPIC_API_KEY"), max_retries=2)  # + own Retry-After/jitter loop
         elif self.provider == "mock":
             self.model = MockBackend.model
             self._mock = MockBackend()
@@ -113,15 +149,15 @@ class LLM:
         """Run one structured evaluation call with up to 4 attempts (exponential-ish backoff)."""
         if self.provider == "mock":
             return self._mock.call(system, cached_user, user, tool, temperature)
-        for attempt in range(4):
+        for attempt in range(MAX_ATTEMPTS):
             try:
                 if self.provider == "anthropic":
                     return self._anthropic(system, cached_user, user, tool, temperature)
                 return self._openai(system, cached_user, user, tool, temperature)
-            except Exception:
-                if attempt == 3:
+            except Exception as e:
+                if attempt == MAX_ATTEMPTS - 1 or not retryable(e):
                     raise
-                time.sleep(2 * (attempt + 1))
+                time.sleep(backoff_delay(e, attempt))
 
     def _anthropic(self, system, cached_user, user, tool, temperature):
         r = self.client.messages.create(

@@ -48,7 +48,7 @@ def test_pipeline_end_to_end():
     assert d["human"]["total"] == 90.0 and d["total"] == 100.0
     assert rescore(doc)["dialogs"][0]["total"] is not None
     csv = store.to_csv(doc, "both")
-    assert csv.splitlines()[0].startswith("conversation_id,channel,language,checklist_id,c01")
+    assert csv.splitlines()[0].startswith("conversation_id,channel,language,checklist_id,status,failed_criteria,needs_review,c01")
 
 
 def test_http_api_end_to_end():

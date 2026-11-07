@@ -7,6 +7,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from . import checklist as ckl, config, data, prompts, scoring
 from .llm import LLM, USAGE, cost_usd
+from .util import atomic_write as store_atomic
 
 
 def _norm(s):
@@ -55,15 +56,41 @@ def validate_evidence(rec, evidence):
 
 
 def _coerce(cr, v):
-    v = str(v).strip().upper()
-    if v == "NA" and cr.get("allow_na"):
-        return "NA"
-    if cr["type"] == "scale":
-        try:
-            return int(float(v))
-        except Exception:
-            return None
-    return v if v in ("YES", "NO") else None
+    """Strict: accept only the exact declared YES/NO(/NA) or an exact declared scale step. Anything else -> None."""
+    return ckl.strict_value(cr, v)
+
+
+def _positive(cr, v):
+    return v == "YES" if cr["type"] == "binary" else (isinstance(v, int) and v > 0)
+
+
+def _check_evidence(cr, val, evidence, out):
+    """Return a problem string (for a retry hint) or ''. Empty evidence is fine for NA / NO-by-omission
+    if missing_where / na_reason is filled."""
+    ops = [e for e in evidence if e.get("speaker") == "operator"]
+    if cr.get("gross") and val == "YES" and not ops:
+        return "gross_no_operator_quote"
+    if not evidence:
+        if val == "NA" and not str(out.get("na_reason") or "").strip():
+            return "na_without_reason"
+        if not _positive(cr, val) and val != "NA" and not str(out.get("missing_where") or "").strip():
+            return "omission_without_missing_where"
+        if _positive(cr, val) and val != "NA":
+            return "positive_without_evidence"
+        return ""
+    if _positive(cr, val) and not ops and cr.get("evidence_from", "operator") == "operator":
+        return "no_operator_evidence"
+    return ""
+
+
+_HINTS = {
+    "gross_no_operator_quote": ("Значение YES для грубой ошибки требует хотя бы одной ДОСЛОВНОЙ цитаты из реплики OPERATOR. "
+                                "Если такой цитаты нет — пересмотри значение."),
+    "na_without_reason": "При value=NA заполни na_reason.",
+    "omission_without_missing_where": "Если evidence пустой, укажи в missing_where, где ожидалось действие оператора.",
+    "positive_without_evidence": "Положительная оценка требует цитат из реплик OPERATOR.",
+    "no_operator_evidence": "Критерий оценивает поведение оператора: приведи цитаты из реплик OPERATOR (а не клиента/бота).",
+}
 
 
 class Evaluator:
@@ -85,6 +112,8 @@ class Evaluator:
         base = prompts.criterion_block(checklist, cr) + extra
         user = base
         out = None
+        ev_retry_used = False
+        last_valid = None
         for attempt in range(3):
             out = llm.call(prompts.SYSTEM, tx_block, user, tool, temperature)
             val = _coerce(cr, out.get("value"))
@@ -92,29 +121,40 @@ class Evaluator:
             if val is None:
                 user = base + f"\n\nВНИМАНИЕ: значение {out.get('value')!r} недопустимо. Используй только: {prompts.allowed_values(cr)}."
                 continue
+            last_valid = (out, val, valid, invalid, attempt)
             if invalid and attempt < 2:
                 bad = "; ".join(f"[{e.get('turn')}] «{e.get('quote')}»" for e in invalid)
                 user = base + (
                     f"\n\nВНИМАНИЕ: в прошлой попытке цитаты не найдены в транскрипте дословно: {bad}. "
                     "Цитируй ТОЛЬКО точные подстроки текста указанной реплики.")
                 continue
-            out["value"] = val
-            out["evidence"] = valid
-            out["rejected_quotes"] = invalid
-            out["attempts"] = attempt + 1
-            return out
-        if out is not None and _coerce(cr, out.get("value")) is not None:
-            out["value"] = _coerce(cr, out.get("value"))
-            out["evidence"], out["rejected_quotes"] = validate_evidence(rec, out.get("evidence"))
-            out["attempts"] = 3
-            return out
-        raise RuntimeError(f"criterion {cr['id']}: model failed to return a valid value")
+            problem = _check_evidence(cr, val, valid, out)
+            if problem and not ev_retry_used and attempt < 2:
+                ev_retry_used = True
+                user = base + "\n\nВНИМАНИЕ: " + _HINTS[problem]
+                continue
+            return self._finish(cr, out, val, valid, invalid, attempt + 1, problem)
+        if last_valid is not None:
+            out, val, valid, invalid, attempt = last_valid
+            return self._finish(cr, out, val, valid, invalid, attempt + 1, _check_evidence(cr, val, valid, out))
+        raise RuntimeError(f"criterion {cr['id']}: model failed to return a valid value (last: {out and out.get('value')!r})")
+
+    @staticmethod
+    def _finish(cr, out, val, valid, invalid, attempts, problem):
+        out = dict(out)
+        out["value"], out["evidence"], out["rejected_quotes"], out["attempts"] = val, valid, invalid, attempts
+        if problem == "gross_no_operator_quote":
+            out["needs_review"] = True   # do NOT silently flip YES -> NO; a human must decide
+            out["evidence_warning"] = "08=YES without a verified operator quote"
+        elif problem:
+            out["evidence_warning"] = problem
+        return out
 
     def _jury(self, rec, tx_block, checklist, cr, key):
         """Jurors (haiku + sonnet) vote in parallel; on disagreement the frontier judge (opus) decides."""
         with ThreadPoolExecutor(max_workers=len(self.jurors)) as ex:
             outs = list(ex.map(lambda m: self._sample(rec, tx_block, checklist, cr, 0.0, llm=m), self.jurors))
-        votes = {m.model: o["value"] for m, o in zip(self.jurors, outs, strict=True)}
+        votes = {f"{i}:{m.model}": o["value"] for i, (m, o) in enumerate(zip(self.jurors, outs, strict=True))}
         agree = len(set(map(str, votes.values()))) == 1
         if agree:
             chosen, decided_by = outs[-1], "consensus"   # strongest juror's explanation
@@ -136,6 +176,7 @@ class Evaluator:
             "missing_where": chosen.get("missing_where", ""), "na_reason": chosen.get("na_reason", ""),
             "confidence": float(chosen.get("confidence") or 0), "votes": all_votes,
             "jury": votes, "decided_by": decided_by,
+            "evidence_warning": chosen.get("evidence_warning", ""), "needs_review": bool(chosen.get("needs_review")),
             "self_consistency_disagreement": not agree,
             "criterion_hash": key.split("_")[0], "cached": False,
         }
@@ -156,7 +197,7 @@ class Evaluator:
         if self.ensemble:
             res = self._jury(rec, tx_block, checklist, cr, key)
             config.CACHE_DIR.mkdir(parents=True, exist_ok=True)
-            cp.write_text(json.dumps(res, ensure_ascii=False))
+            store_atomic(cp, json.dumps(res, ensure_ascii=False))
             return res
         first = self._sample(rec, tx_block, checklist, cr, 0.0)
         samples = [first]
@@ -183,13 +224,14 @@ class Evaluator:
             "evidence": chosen.get("evidence", []), "rejected_quotes": chosen.get("rejected_quotes", []),
             "missing_where": chosen.get("missing_where", ""), "na_reason": chosen.get("na_reason", ""),
             "confidence": conf, "votes": votes, "self_consistency_disagreement": len(cnt) > 1,
+            "evidence_warning": chosen.get("evidence_warning", ""), "needs_review": bool(chosen.get("needs_review")),
             "criterion_hash": key.split("_")[0], "cached": False,
         }
         config.CACHE_DIR.mkdir(parents=True, exist_ok=True)
-        cp.write_text(json.dumps(res, ensure_ascii=False))
+        store_atomic(cp, json.dumps(res, ensure_ascii=False))
         return res
 
-    def evaluate_many(self, records, checklist_override=None, progress=None, concurrency=None):
+    def evaluate_many(self, records, checklist_override=None, progress=None, concurrency=None, batch_dialogs=None):
         """Flatten (dialog x criterion) into one thread pool -> ~10 dialogs in a couple of minutes."""
         t0 = time.time()
         jobs = []
@@ -203,27 +245,35 @@ class Evaluator:
         results = {r["conversation_id"]: {} for r in records}
         done = 0
         errors = []
-        # Two phases: first criterion of every dialog warms the prompt cache (transcript block),
-        # then the remaining criteria of that dialog read it at 10% of the input price.
+        # Dialog-major batches; inside a batch two phases: the first criterion of every dialog warms the
+        # prompt cache (stable tool schema + system + transcript block), then the remaining criteria of
+        # that dialog read it at ~10% of the input price while the cache is still within its TTL.
         first_ids = {}
         for rec, _cid, cr in jobs:
             first_ids.setdefault(rec["conversation_id"], cr["id"])
-        phase1 = [j for j in jobs if first_ids[j[0]["conversation_id"]] == j[2]["id"]]
-        phase2 = [j for j in jobs if first_ids[j[0]["conversation_id"]] != j[2]["id"]]
+        bs = max(1, int(batch_dialogs or config.BATCH_DIALOGS))
+        order = [r["conversation_id"] for r in records]
+        batches = [set(order[i:i + bs]) for i in range(0, len(order), bs)]
         with ThreadPoolExecutor(max_workers=concurrency or config.CONCURRENCY) as ex:
-          for phase in (phase1, phase2):
-            futs = {ex.submit(self.evaluate_criterion, rec, cls[cid], cr): (rec, cid, cr) for rec, cid, cr in phase}
-            for f in as_completed(futs):
-                  rec, cid, cr = futs[f]
-                  try:
-                      results[rec["conversation_id"]][cr["id"]] = f.result()
-                  except Exception as e:
-                      errors.append(f"{rec['conversation_id']}/{cr['id']}: {e}")
-                      results[rec["conversation_id"]][cr["id"]] = {"criterion_id": cr["id"], "name": cr["name"],
-                          "type": cr["type"], "value": None, "error": str(e), "evidence": [], "justification": "ERROR"}
-                  done += 1
-                  if progress:
-                      progress(done, len(jobs))
+            for batch in batches:
+                bjobs = [j for j in jobs if j[0]["conversation_id"] in batch]
+                phase1 = [j for j in bjobs if first_ids[j[0]["conversation_id"]] == j[2]["id"]]
+                phase2 = [j for j in bjobs if first_ids[j[0]["conversation_id"]] != j[2]["id"]]
+                for phase in (phase1, phase2):
+                    futs = {ex.submit(self.evaluate_criterion, rec, cls[cid], cr): (rec, cid, cr) for rec, cid, cr in phase}
+                    for f in as_completed(futs):
+                        rec, cid, cr = futs[f]
+                        try:
+                            results[rec["conversation_id"]][cr["id"]] = f.result()
+                        except Exception as e:
+                            errors.append(f"{rec['conversation_id']}/{cr['id']}: {e}")
+                            results[rec["conversation_id"]][cr["id"]] = {
+                                "criterion_id": cr["id"], "name": cr["name"], "type": cr["type"], "value": None,
+                                "error": str(e), "failed": True, "evidence": [],
+                                "justification": "ERROR: evaluation failed — dialog marked incomplete (fail-closed)"}
+                        done += 1
+                        if progress:
+                            progress(done, len(jobs))
         out = []
         for rec in records:
             cid = checklist_override or ckl.pick_for_channel(rec["kind"])
@@ -231,41 +281,64 @@ class Evaluator:
         meta = {"elapsed_s": round(time.time() - t0, 1), "usage": dict(USAGE), "cost_usd": cost_usd(),
                 "provider": self.llm.provider,
                 "model": (f"jury[{'+'.join(config.JURORS)}] judge={config.JUDGE}" if self.ensemble else self.llm.model),
-                "errors": errors}
+                "errors": errors, "incomplete_dialogs": [d["conversation_id"] for d in out if d["status"] != "complete"]}
         return out, meta
 
 
+def _failed(r):
+    return bool(r.get("error") or r.get("failed")) or r.get("value") is None
+
+
 def build_dialog_result(rec, checklist, crit_results, overrides=None):
+    """Fail-closed: if any criterion failed, the dialog is `incomplete` and `total` is None
+    (a failed criterion is NEVER treated as NA). `provisional_total` shows the score over the rest."""
     a = checklist["assumptions"]
     ai_vals = {r["criterion_id"]: r.get("value") for r in crit_results}
     ai = scoring.compute_total(checklist["criteria"], ai_vals, a["rounding"], a["decimals"])
+    failed = [r["criterion_id"] for r in crit_results if _failed(r)]
+    flags = [r["criterion_id"] for r in crit_results if r.get("needs_review")]
+    warns = [f"{r['criterion_id']}: {r['evidence_warning']}" for r in crit_results if r.get("evidence_warning")]
     res = {"conversation_id": rec["conversation_id"], "channel": rec.get("channel"), "language": rec.get("language"),
            "kind": rec["kind"], "dialog_hash": rec["hash"], "checklist_id": checklist["id"],
-           "criteria": crit_results, "total": ai["total"], "gross_error": ai["gross_error"]}
+           "criteria": crit_results, "status": "incomplete" if failed else "complete",
+           "failed_criteria": failed, "needs_review": flags,
+           "warnings": list(rec.get("warnings") or []) + warns,
+           "total": None if failed else ai["total"], "provisional_total": ai["total"] if failed else None,
+           "gross_error": ai["gross_error"]}
     return apply_overrides(res, checklist, overrides or {})
 
 
+def validate_override(cr, value):
+    """Return the canonical value or raise ValueError (-> HTTP 400)."""
+    v = ckl.strict_value(cr, value)
+    if v is None:
+        raise ValueError(f"invalid value {value!r} for criterion {cr['id']}; allowed: {prompts.allowed_values(cr)}")
+    return v
+
+
 def apply_overrides(res, checklist, overrides):
-    """Human overrides live separately; recompute the human total and a diff."""
+    """Human overrides live separately; recompute the human total and a diff.
+    A human value can complete a failed criterion; otherwise the human total stays None too."""
     a = checklist["assumptions"]
     vals = {}
     diff = []
+    missing = []
     for r in res["criteria"]:
         o = overrides.get(r["criterion_id"])
         v = r.get("value")
         if o and "value" in o and o["value"] is not None:
-            hv = o["value"]
             cr = next(c for c in checklist["criteria"] if c["id"] == r["criterion_id"])
-            hv = hv if hv in ("YES", "NO", "NA") else int(hv)
-            if cr["type"] == "scale" and hv not in ("NA",) and hv not in cr["scale"]:
-                raise ValueError("bad override value")
+            hv = validate_override(cr, o["value"])
             if hv != v:
                 diff.append({"criterion_id": r["criterion_id"], "ai": v, "human": hv})
             v = hv
+        elif _failed(r):
+            missing.append(r["criterion_id"])
         vals[r["criterion_id"]] = v
     hum = scoring.compute_total(checklist["criteria"], vals, a["rounding"], a["decimals"])
-    res["human"] = {"overrides": overrides, "values": vals, "total": hum["total"], "gross_error": hum["gross_error"],
-                    "diff": diff, "reviewed": bool(overrides)}
+    res["human"] = {"overrides": overrides, "values": vals, "total": None if missing else hum["total"],
+                    "gross_error": hum["gross_error"], "diff": diff, "reviewed": bool(overrides),
+                    "status": "incomplete" if missing else "complete"}
     return res
 
 
@@ -275,6 +348,9 @@ def rescore(results_doc):
         cl = ckl.load(d["checklist_id"])
         vals = {r["criterion_id"]: r.get("value") for r in d["criteria"]}
         t = scoring.compute_total(cl["criteria"], vals, cl["assumptions"]["rounding"], cl["assumptions"]["decimals"])
-        d["total"], d["gross_error"] = t["total"], t["gross_error"]
+        failed = [r["criterion_id"] for r in d["criteria"] if _failed(r)]
+        d["status"], d["failed_criteria"] = ("incomplete" if failed else "complete"), failed
+        d["total"], d["provisional_total"] = (None, t["total"]) if failed else (t["total"], None)
+        d["gross_error"] = t["gross_error"]
         apply_overrides(d, cl, d.get("human", {}).get("overrides", {}))
     return results_doc

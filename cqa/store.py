@@ -6,6 +6,7 @@ import time
 
 from . import checklist as ckl, config
 from .evaluator import apply_overrides
+from .util import atomic_write
 
 
 def results_path(group):
@@ -31,8 +32,7 @@ def save_results(group, dialogs, meta, out=None):
     config.RESULTS_DIR.mkdir(exist_ok=True)
     doc = {"group": group, "created_at": time.strftime("%Y-%m-%dT%H:%M:%S"), "meta": meta, "dialogs": dialogs}
     p = out or results_path(group)
-    with open(p, "w", encoding="utf-8") as f:
-        json.dump(doc, f, ensure_ascii=False, indent=1)
+    atomic_write(p, json.dumps(doc, ensure_ascii=False, indent=1))
     return doc
 
 
@@ -41,7 +41,15 @@ def load_overrides(group):
     return json.loads(p.read_text()) if p.exists() else {}
 
 
-def save_override(group, conv_id, crit_id, value, justification, reviewer=""):
+def save_override(group, conv_id, crit_id, value, justification, reviewer="", checklist_id=None):
+    """Validate (if checklist_id given) and store a human override. Raises ValueError on invalid values."""
+    if value not in (None, "", "AI") and checklist_id:
+        from .evaluator import validate_override
+        cl = ckl.load(checklist_id)
+        cr = next((c for c in cl["criteria"] if c["id"] == crit_id), None)
+        if cr is None:
+            raise ValueError(f"unknown criterion {crit_id!r}")
+        value = validate_override(cr, value)
     ov = load_overrides(group)
     d = ov.setdefault(conv_id, {})
     if value in (None, "", "AI"):
@@ -52,8 +60,7 @@ def save_override(group, conv_id, crit_id, value, justification, reviewer=""):
     if not d:
         ov.pop(conv_id, None)
     p = overrides_path(group)
-    p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(json.dumps(ov, ensure_ascii=False, indent=1))
+    atomic_write(p, json.dumps(ov, ensure_ascii=False, indent=1))
     return ov
 
 
@@ -66,14 +73,15 @@ def to_csv(doc, which="ai"):
                 crit_ids.append(r["criterion_id"])
     buf = io.StringIO()
     w = csv.writer(buf)
-    head = ["conversation_id", "channel", "language", "checklist_id"]
+    head = ["conversation_id", "channel", "language", "checklist_id", "status", "failed_criteria", "needs_review"]
     if which in ("ai", "both"):
         head += [f"c{c}" for c in crit_ids] + ["total", "gross_error"]
     if which in ("human", "both"):
         head += [f"human_c{c}" for c in crit_ids] + ["human_total", "human_gross_error", "reviewed"]
     w.writerow(head)
     for d in doc["dialogs"]:
-        row = [d["conversation_id"], d.get("channel"), d.get("language"), d.get("checklist_id")]
+        row = [d["conversation_id"], d.get("channel"), d.get("language"), d.get("checklist_id"),
+               d.get("status", "complete"), ";".join(d.get("failed_criteria") or []), ";".join(d.get("needs_review") or [])]
         vals = {r["criterion_id"]: r.get("value") for r in d["criteria"]}
         if which in ("ai", "both"):
             row += [vals.get(c, "") for c in crit_ids] + [d.get("total"), "YES" if d.get("gross_error") else "NO"]
