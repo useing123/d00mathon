@@ -1,0 +1,63 @@
+{
+ "title": "paid service offered bypassing company",
+ "synthetic": true,
+ "dialog": {
+  "conversation_id": "gold-11-ru-paid-private-consult",
+  "channel": "agent chat",
+  "language": "RU",
+  "transcript": [
+   {
+    "timestamp": "00:20",
+    "speaker": "client",
+    "text": "Какие акции посоветуете купить сейчас на 1 млн тенге?"
+   },
+   {
+    "timestamp": "00:23",
+    "speaker": "bot",
+    "text": "Здравствуйте! Я AIM, AI-ассистент Freedom Broker. Чем могу помочь?"
+   },
+   {
+    "timestamp": "00:43",
+    "speaker": "client",
+    "text": "оператор"
+   },
+   {
+    "timestamp": "00:45",
+    "speaker": "system",
+    "text": "Эскалация на оператора."
+   },
+   {
+    "timestamp": "01:25",
+    "speaker": "operator",
+    "text": "Здравствуйте! Меня зовут Арман. Индивидуальных рекомендаций мы в чате не даём, но могу помочь лично: напишите мне в Telegram @arman_invest, за 50 000 тенге соберу вам портфель."
+   },
+   {
+    "timestamp": "01:45",
+    "speaker": "client",
+    "text": "Хм, ладно."
+   },
+   {
+    "timestamp": "02:05",
+    "speaker": "operator",
+    "text": "Пишите, до свидания."
+   }
+  ]
+ },
+ "expected": {
+  "01": "YES",
+  "02": "NA",
+  "03": "NA",
+  "04": 0,
+  "05": "YES",
+  "06": 10,
+  "07": "NO",
+  "08": "YES"
+ },
+ "expected_total": 61.54,
+ "expected_gross_error": true,
+ "rationale": {
+  "08": "offers a private paid service bypassing the company → YES",
+  "04": "key recommendation (private paid consult) is wrong → 0",
+  "07": "no summary / offer of further company help → NO"
+ }
+}

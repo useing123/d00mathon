@@ -1,0 +1,68 @@
+{
+ "title": "operator insults client",
+ "synthetic": true,
+ "dialog": {
+  "conversation_id": "gold-13-kz-insult",
+  "channel": "agent chat",
+  "language": "KZ",
+  "transcript": [
+   {
+    "timestamp": "00:20",
+    "speaker": "client",
+    "text": "Қосымшада құпия сөзді қалай өзгертемін?"
+   },
+   {
+    "timestamp": "00:23",
+    "speaker": "bot",
+    "text": "Сәлеметсіз бе! Мен AIM, Freedom Broker AI-ассистентімін. Қалай көмектесе аламын?"
+   },
+   {
+    "timestamp": "00:43",
+    "speaker": "client",
+    "text": "оператор"
+   },
+   {
+    "timestamp": "00:45",
+    "speaker": "system",
+    "text": "Чат операторға жіберілді."
+   },
+   {
+    "timestamp": "01:25",
+    "speaker": "operator",
+    "text": "Сәлеметсіз бе, менің атым Нұрлан. «Профиль» → «Қауіпсіздік» → «Құпия сөзді өзгерту» бөліміне кіріңіз."
+   },
+   {
+    "timestamp": "01:45",
+    "speaker": "client",
+    "text": "Таппадым, қайда?"
+   },
+   {
+    "timestamp": "02:05",
+    "speaker": "operator",
+    "text": "Сіз мүлде түсінбейтін адамсыз ба? Профиль → Қауіпсіздік → Құпия сөзді өзгерту. Бәрі жазылған."
+   },
+   {
+    "timestamp": "02:25",
+    "speaker": "client",
+    "text": "Тапттым."
+   }
+  ]
+ },
+ "expected": {
+  "01": "YES",
+  "02": "NA",
+  "03": "NA",
+  "04": 20,
+  "05": "NO",
+  "06": 10,
+  "07": "NO",
+  "08": "YES"
+ },
+ "expected_total": 69.23,
+ "expected_gross_error": true,
+ "rationale": {
+  "08": "insults the client → YES",
+  "05": "rude → NO",
+  "07": "no farewell → NO"
+ }
+}

@@ -1,0 +1,52 @@
+{
+ "title": "client leaves before formulating a request",
+ "synthetic": true,
+ "dialog": {
+  "conversation_id": "gold-07-ru-client-left-before-request",
+  "channel": "agent chat",
+  "language": "RU",
+  "transcript": [
+   {
+    "timestamp": "00:20",
+    "speaker": "client",
+    "text": "оператор"
+   },
+   {
+    "timestamp": "00:23",
+    "speaker": "bot",
+    "text": "Здравствуйте! Я AIM, AI-ассистент Freedom Broker. Чем могу помочь?"
+   },
+   {
+    "timestamp": "00:25",
+    "speaker": "system",
+    "text": "Эскалация на оператора."
+   },
+   {
+    "timestamp": "01:05",
+    "speaker": "operator",
+    "text": "Здравствуйте! Меня зовут Ольга, специалист Freedom Broker. Чем могу помочь?"
+   },
+   {
+    "timestamp": "03:05",
+    "speaker": "system",
+    "text": "Клиент завершил разговор."
+   }
+  ]
+ },
+ "expected": {
+  "01": "YES",
+  "02": "NA",
+  "03": "NA",
+  "04": "NA",
+  "05": "YES",
+  "06": 10,
+  "07": "NA",
+  "08": "NO"
+ },
+ "expected_total": 100.0,
+ "expected_gross_error": false,
+ "rationale": {
+  "04": "chat ended before any request was formulated → NA",
+  "07": "client left, no chance to close → NA"
+ }
+}

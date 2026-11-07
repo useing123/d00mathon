@@ -1,0 +1,61 @@
+{
+ "title": "farewell only, no summary/offer",
+ "synthetic": true,
+ "dialog": {
+  "conversation_id": "gold-08-en-farewell-only",
+  "channel": "agent chat",
+  "language": "EN",
+  "transcript": [
+   {
+    "timestamp": "00:20",
+    "speaker": "client",
+    "text": "How much does it cost to open an account?"
+   },
+   {
+    "timestamp": "00:23",
+    "speaker": "bot",
+    "text": "Hello! I'm AIM, Freedom Broker's AI assistant. How can I help?"
+   },
+   {
+    "timestamp": "00:43",
+    "speaker": "client",
+    "text": "agent"
+   },
+   {
+    "timestamp": "00:45",
+    "speaker": "system",
+    "text": "Chat transferred to an agent."
+   },
+   {
+    "timestamp": "01:25",
+    "speaker": "operator",
+    "text": "Hello, my name is Ruslan from Freedom Broker. Opening an account is free of charge, and there is no minimum deposit."
+   },
+   {
+    "timestamp": "01:45",
+    "speaker": "client",
+    "text": "Ok thanks"
+   },
+   {
+    "timestamp": "02:05",
+    "speaker": "operator",
+    "text": "Happy to help. Goodbye!"
+   }
+  ]
+ },
+ "expected": {
+  "01": "YES",
+  "02": "NA",
+  "03": "NA",
+  "04": 20,
+  "05": "YES",
+  "06": 10,
+  "07": "NO",
+  "08": "NO"
+ },
+ "expected_total": 92.31,
+ "expected_gross_error": false,
+ "rationale": {
+  "07": "goodbye without summary or offer of further help → NO"
+ }
+}

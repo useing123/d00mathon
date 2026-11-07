@@ -1,0 +1,72 @@
+{
+ "title": "general tariff question, all good",
+ "synthetic": true,
+ "dialog": {
+  "conversation_id": "gold-01-ru-tariff-good",
+  "channel": "agent chat",
+  "language": "RU",
+  "transcript": [
+   {
+    "timestamp": "00:20",
+    "speaker": "client",
+    "text": "Здравствуйте, какая комиссия на тарифе «Стандарт» за сделки с американскими акциями?"
+   },
+   {
+    "timestamp": "00:23",
+    "speaker": "bot",
+    "text": "Здравствуйте! Я AIM, AI-ассистент Freedom Broker. Чем могу помочь?"
+   },
+   {
+    "timestamp": "00:43",
+    "speaker": "client",
+    "text": "оператор"
+   },
+   {
+    "timestamp": "00:45",
+    "speaker": "system",
+    "text": "Эскалация на оператора."
+   },
+   {
+    "timestamp": "01:45",
+    "speaker": "operator",
+    "text": "Здравствуйте! Меня зовут Алина, я специалист Freedom Broker. На тарифе «Стандарт» комиссия за сделки с акциями США составляет 0,1% от суммы сделки плюс 1,2 USD за поручение. Полный список тарифов есть в разделе «Тарифы» на сайте и в приложении."
+   },
+   {
+    "timestamp": "02:05",
+    "speaker": "client",
+    "text": "Понял, спасибо."
+   },
+   {
+    "timestamp": "02:25",
+    "speaker": "operator",
+    "text": "Пожалуйста! Итак, по тарифу «Стандарт»: 0,1% + 1,2 USD за поручение. Могу ещё чем-то помочь?"
+   },
+   {
+    "timestamp": "02:45",
+    "speaker": "client",
+    "text": "Нет, всё."
+   },
+   {
+    "timestamp": "03:05",
+    "speaker": "operator",
+    "text": "Хорошего дня, до свидания!"
+   }
+  ]
+ },
+ "expected": {
+  "01": "YES",
+  "02": "NA",
+  "03": "NA",
+  "04": 20,
+  "05": "YES",
+  "06": 10,
+  "07": "YES",
+  "08": "NO"
+ },
+ "expected_total": 100.0,
+ "expected_gross_error": false,
+ "rationale": {
+  "03": "general tariff question needs no ID → NA",
+  "02": "request clear from the start → NA"
+ }
+}

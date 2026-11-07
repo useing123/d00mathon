@@ -1,0 +1,71 @@
+{
+ "title": "operator greets in wrong language",
+ "synthetic": true,
+ "dialog": {
+  "conversation_id": "gold-02-kz-wrong-language",
+  "channel": "agent chat",
+  "language": "KZ",
+  "transcript": [
+   {
+    "timestamp": "00:20",
+    "speaker": "client",
+    "text": "Сәлеметсіз бе, шотты қалай толтыруға болады?"
+   },
+   {
+    "timestamp": "00:23",
+    "speaker": "bot",
+    "text": "Сәлеметсіз бе! Мен AIM, Freedom Broker AI-ассистентімін. Қалай көмектесе аламын?"
+   },
+   {
+    "timestamp": "00:43",
+    "speaker": "client",
+    "text": "оператор"
+   },
+   {
+    "timestamp": "00:45",
+    "speaker": "system",
+    "text": "Чат операторға жіберілді."
+   },
+   {
+    "timestamp": "01:35",
+    "speaker": "operator",
+    "text": "Здравствуйте, меня зовут Марат. Пополнить счёт можно банковским переводом по реквизитам из раздела «Пополнить» в приложении или картой любого банка Казахстана."
+   },
+   {
+    "timestamp": "01:55",
+    "speaker": "client",
+    "text": "Картамен комиссия бар ма?"
+   },
+   {
+    "timestamp": "02:15",
+    "speaker": "operator",
+    "text": "Пополнение картой без комиссии с нашей стороны, банк-эмитент может взять свою комиссию. Могу ещё чем-то помочь?"
+   },
+   {
+    "timestamp": "02:35",
+    "speaker": "client",
+    "text": "Жоқ, рақмет"
+   },
+   {
+    "timestamp": "02:55",
+    "speaker": "operator",
+    "text": "Всего доброго, до свидания!"
+   }
+  ]
+ },
+ "expected": {
+  "01": "NO",
+  "02": "NA",
+  "03": "NA",
+  "04": 20,
+  "05": "YES",
+  "06": 10,
+  "07": "YES",
+  "08": "NO"
+ },
+ "expected_total": 84.62,
+ "expected_gross_error": false,
+ "rationale": {
+  "01": "client writes Kazakh, operator greets in Russian → NO"
+ }
+}

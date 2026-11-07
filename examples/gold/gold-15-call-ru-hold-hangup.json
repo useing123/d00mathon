@@ -1,0 +1,87 @@
+{
+ "title": "call: hold without warning, client hangs up",
+ "synthetic": true,
+ "dialog": {
+  "conversation_id": "gold-15-call-ru-hold-hangup",
+  "channel": "voice call",
+  "language": "RU",
+  "transcript": [
+   {
+    "timestamp": "2026-10-20T09:00:08.000+00:00",
+    "speaker": "system",
+    "text": "Запись и транскрибирование запущены."
+   },
+   {
+    "timestamp": "2026-10-20T09:00:16.000+00:00",
+    "speaker": "bot",
+    "text": "Здравствуйте, вы позвонили в Фридом Брокер."
+   },
+   {
+    "timestamp": "2026-10-20T09:00:36.000+00:00",
+    "speaker": "system",
+    "text": "Агент присоединился к разговору с клиентом."
+   },
+   {
+    "timestamp": "2026-10-20T09:00:44.000+00:00",
+    "speaker": "operator",
+    "text": "Здравствуйте, Фридом Брокер, меня зовут Ая. Слушаю вас."
+   },
+   {
+    "timestamp": "2026-10-20T09:00:52.000+00:00",
+    "speaker": "client",
+    "text": "Я подал заявку на вывод вчера, какой у неё статус?"
+   },
+   {
+    "timestamp": "2026-10-20T09:01:00.000+00:00",
+    "speaker": "operator",
+    "text": "Назовите, пожалуйста, ФИО, ИИН и кодовое слово для идентификации."
+   },
+   {
+    "timestamp": "2026-10-20T09:01:08.000+00:00",
+    "speaker": "client",
+    "text": "Ким Виктор, ИИН 850505300456, кодовое слово «ветер»."
+   },
+   {
+    "timestamp": "2026-10-20T09:01:11.000+00:00",
+    "speaker": "system",
+    "text": "Клиент находится на удержании."
+   },
+   {
+    "timestamp": "2026-10-20T09:04:11.000+00:00",
+    "speaker": "system",
+    "text": "Клиент больше не находится на удержании."
+   },
+   {
+    "timestamp": "2026-10-20T09:04:19.000+00:00",
+    "speaker": "operator",
+    "text": "Данные подтверждены. Заявка на вывод 300 000 тенге исполнена сегодня в 10:00, деньги поступят на счёт в банке до конца дня."
+   },
+   {
+    "timestamp": "2026-10-20T09:04:27.000+00:00",
+    "speaker": "client",
+    "text": "Ага, понял."
+   },
+   {
+    "timestamp": "2026-10-20T09:04:29.000+00:00",
+    "speaker": "system",
+    "text": "Клиент завершил разговор."
+   }
+  ]
+ },
+ "expected": {
+  "01": "YES",
+  "02": "NA",
+  "03": "YES",
+  "04": 20,
+  "05": "YES",
+  "06": 7,
+  "07": "NA",
+  "08": "NO"
+ },
+ "expected_total": 94.38,
+ "expected_gross_error": false,
+ "rationale": {
+  "06": "3-min hold without warning → 7",
+  "07": "client hung up right after the answer → NA"
+ }
+}

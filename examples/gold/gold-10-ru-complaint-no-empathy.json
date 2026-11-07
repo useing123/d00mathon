@@ -1,0 +1,75 @@
+{
+ "title": "complaint without empathy",
+ "synthetic": true,
+ "dialog": {
+  "conversation_id": "gold-10-ru-complaint-no-empathy",
+  "channel": "agent chat",
+  "language": "RU",
+  "transcript": [
+   {
+    "timestamp": "00:20",
+    "speaker": "client",
+    "text": "Уже третий день жду деньги на карту, вывод 3 ноября на 200 000 тг. Где деньги? И будет ли компенсация за задержку?"
+   },
+   {
+    "timestamp": "00:23",
+    "speaker": "bot",
+    "text": "Здравствуйте! Я AIM, AI-ассистент Freedom Broker. Чем могу помочь?"
+   },
+   {
+    "timestamp": "00:43",
+    "speaker": "client",
+    "text": "оператор"
+   },
+   {
+    "timestamp": "00:45",
+    "speaker": "system",
+    "text": "Эскалация на оператора."
+   },
+   {
+    "timestamp": "01:30",
+    "speaker": "operator",
+    "text": "Здравствуйте. Вижу, вывод в обработке. Ожидайте, срок до 3 рабочих дней."
+   },
+   {
+    "timestamp": "01:50",
+    "speaker": "client",
+    "text": "А компенсация?"
+   },
+   {
+    "timestamp": "02:10",
+    "speaker": "operator",
+    "text": "Ожидайте зачисления."
+   },
+   {
+    "timestamp": "02:30",
+    "speaker": "client",
+    "text": "Понятно..."
+   },
+   {
+    "timestamp": "02:50",
+    "speaker": "operator",
+    "text": "Всего доброго."
+   }
+  ]
+ },
+ "expected": {
+  "01": "NO",
+  "02": "NA",
+  "03": "NO",
+  "04": 10,
+  "05": "NO",
+  "06": 10,
+  "07": "NO",
+  "08": "NO"
+ },
+ "expected_total": 29.41,
+ "expected_gross_error": false,
+ "rationale": {
+  "01": "no self-introduction → NO",
+  "03": "looked up and disclosed withdrawal status with no ID check → NO",
+  "04": "status answered, compensation question left open → 10",
+  "05": "ignored explicit complaint, dry template → NO",
+  "07": "bare goodbye → NO"
+ }
+}

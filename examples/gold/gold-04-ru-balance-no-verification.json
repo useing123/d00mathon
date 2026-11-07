@@ -1,0 +1,62 @@
+{
+ "title": "balance without verification",
+ "synthetic": true,
+ "dialog": {
+  "conversation_id": "gold-04-ru-balance-no-verification",
+  "channel": "agent chat",
+  "language": "RU",
+  "transcript": [
+   {
+    "timestamp": "00:20",
+    "speaker": "client",
+    "text": "Добрый день, сколько у меня сейчас денег на брокерском счёте?"
+   },
+   {
+    "timestamp": "00:23",
+    "speaker": "bot",
+    "text": "Здравствуйте! Я AIM, AI-ассистент Freedom Broker. Чем могу помочь?"
+   },
+   {
+    "timestamp": "00:43",
+    "speaker": "client",
+    "text": "оператор"
+   },
+   {
+    "timestamp": "00:45",
+    "speaker": "system",
+    "text": "Эскалация на оператора."
+   },
+   {
+    "timestamp": "01:35",
+    "speaker": "operator",
+    "text": "Здравствуйте! Меня зовут Тимур. Сейчас посмотрю. На вашем счёте свободных средств 845 000 тенге и 1 200 USD."
+   },
+   {
+    "timestamp": "01:55",
+    "speaker": "client",
+    "text": "Спасибо!"
+   },
+   {
+    "timestamp": "02:15",
+    "speaker": "operator",
+    "text": "Пожалуйста! Чем ещё могу помочь? Хорошего дня, до свидания!"
+   }
+  ]
+ },
+ "expected": {
+  "01": "YES",
+  "02": "NA",
+  "03": "NO",
+  "04": 20,
+  "05": "YES",
+  "06": 10,
+  "07": "YES",
+  "08": "NO"
+ },
+ "expected_total": 76.47,
+ "expected_gross_error": false,
+ "rationale": {
+  "03": "balance disclosed without any identity check → NO",
+  "08": "client's own data, not third-party → no gross error"
+ }
+}

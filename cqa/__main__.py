@@ -80,6 +80,13 @@ def cmd_stats(a):
     print("rejected (hallucinated) quotes kept out:", rej)
 
 
+def cmd_gold(a):
+    from .gold import format_report, run_gold
+    m = run_gold(mock=a.mock, out=a.out, use_cache=not a.fresh)
+    print(format_report(m))
+    print(json.dumps({"report": m["report"], "meta": m["meta"]}, ensure_ascii=False))
+
+
 def main():
     p = argparse.ArgumentParser(prog="cqa")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -102,6 +109,10 @@ def main():
     r.add_argument("--group", required=True)
     s = sub.add_parser("stats")
     s.add_argument("--group", required=True)
+    gd = sub.add_parser("gold", help="evaluate the hand-labelled gold set (examples/gold) and report agreement")
+    gd.add_argument("--mock", action="store_true")
+    gd.add_argument("--fresh", action="store_true")
+    gd.add_argument("--out")
     v = sub.add_parser("serve")
     v.add_argument("--host", default="127.0.0.1")
     v.add_argument("--port", type=int, default=8090)
@@ -114,6 +125,8 @@ def main():
         cmd_rescore(a)
     elif a.cmd == "stats":
         cmd_stats(a)
+    elif a.cmd == "gold":
+        cmd_gold(a)
     elif a.cmd == "serve":
         import uvicorn
         uvicorn.run("cqa.server:app", host=a.host, port=a.port)

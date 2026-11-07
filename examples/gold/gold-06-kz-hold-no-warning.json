@@ -1,0 +1,77 @@
+{
+ "title": "hold/long pause without warning",
+ "synthetic": true,
+ "dialog": {
+  "conversation_id": "gold-06-kz-hold-no-warning",
+  "channel": "agent chat",
+  "language": "KZ",
+  "transcript": [
+   {
+    "timestamp": "00:20",
+    "speaker": "client",
+    "text": "Сәлеметсіз бе, IPO-ға қатысу шарттары қандай?"
+   },
+   {
+    "timestamp": "00:23",
+    "speaker": "bot",
+    "text": "Сәлеметсіз бе! Мен AIM, Freedom Broker AI-ассистентімін. Қалай көмектесе аламын?"
+   },
+   {
+    "timestamp": "00:43",
+    "speaker": "client",
+    "text": "оператор"
+   },
+   {
+    "timestamp": "00:45",
+    "speaker": "system",
+    "text": "Чат операторға жіберілді."
+   },
+   {
+    "timestamp": "01:25",
+    "speaker": "operator",
+    "text": "Сәлеметсіз бе! Менің атым Әсел, Freedom Broker маманымын."
+   },
+   {
+    "timestamp": "01:40",
+    "speaker": "client",
+    "text": "Сонымен, шарттары қандай?"
+   },
+   {
+    "timestamp": "05:40",
+    "speaker": "client",
+    "text": "Алло? Жауап бересіз бе?"
+   },
+   {
+    "timestamp": "08:10",
+    "speaker": "operator",
+    "text": "Кешіріңіз, күттіріп қойдым. IPO-ға қатысу үшін брокерлік шот ашық болуы керек, өтінімді қосымшадағы «IPO» бөлімінде бересіз, ең аз сома 100 USD, ал акция бөлу нәтижесі IPO күнінен кейін 1-2 күнде көрінеді."
+   },
+   {
+    "timestamp": "08:30",
+    "speaker": "client",
+    "text": "Түсіндім, рақмет"
+   },
+   {
+    "timestamp": "08:50",
+    "speaker": "operator",
+    "text": "Тағы сұрақтарыңыз бар ма? Сау болыңыз!"
+   }
+  ]
+ },
+ "expected": {
+  "01": "YES",
+  "02": "NA",
+  "03": "NA",
+  "04": 20,
+  "05": "YES",
+  "06": 7,
+  "07": "YES",
+  "08": "NO"
+ },
+ "expected_total": 93.08,
+ "expected_gross_error": false,
+ "rationale": {
+  "06": "≈6.5 min silence after first reply with no warning → max 7",
+  "05": "apologised for the wait → YES"
+ }
+}

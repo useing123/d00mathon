@@ -1,0 +1,77 @@
+{
+ "title": "complaint with empathy, verification, next step",
+ "synthetic": true,
+ "dialog": {
+  "conversation_id": "gold-09-ru-complaint-empathy",
+  "channel": "agent chat",
+  "language": "RU",
+  "transcript": [
+   {
+    "timestamp": "00:20",
+    "speaker": "client",
+    "text": "Я уже третий день жду деньги! Вывел на карту, до сих пор нет. Я уже писал вам вчера!"
+   },
+   {
+    "timestamp": "00:23",
+    "speaker": "bot",
+    "text": "Здравствуйте! Я AIM, AI-ассистент Freedom Broker. Чем могу помочь?"
+   },
+   {
+    "timestamp": "00:43",
+    "speaker": "client",
+    "text": "оператор"
+   },
+   {
+    "timestamp": "00:45",
+    "speaker": "system",
+    "text": "Эскалация на оператора."
+   },
+   {
+    "timestamp": "01:30",
+    "speaker": "operator",
+    "text": "Здравствуйте! Меня зовут Данияр. Понимаю, как неприятно три дня ждать свои деньги, приношу извинения за задержку — разберусь. Для доступа к данным счёта назовите, пожалуйста, ФИО и кодовое слово, а также сумму и дату вывода."
+   },
+   {
+    "timestamp": "01:50",
+    "speaker": "client",
+    "text": "Ахметов Ерлан Сапарович, кодовое слово «весна». 500 000 тенге, 3 ноября."
+   },
+   {
+    "timestamp": "02:30",
+    "speaker": "operator",
+    "text": "Спасибо, данные подтверждены. Минутку, проверю статус вывода в системе."
+   },
+   {
+    "timestamp": "03:40",
+    "speaker": "operator",
+    "text": "Вижу заявку на 500 000 тенге от 3 ноября: банк-получатель вернул платёж из-за ошибки в реквизитах карты. Я создал обращение №48213 в бэк-офис на повторную отправку; в течение 1 рабочего дня вам на почту придёт ответ, а деньги поступят на карту в течение 1–2 рабочих дней после этого."
+   },
+   {
+    "timestamp": "04:00",
+    "speaker": "client",
+    "text": "Ладно, спасибо."
+   },
+   {
+    "timestamp": "04:20",
+    "speaker": "operator",
+    "text": "Итого: обращение №48213 создано, ответ — в течение рабочего дня на почту. Ещё раз извините за неудобства. Могу чем-то ещё помочь? До свидания!"
+   }
+  ]
+ },
+ "expected": {
+  "01": "YES",
+  "02": "YES",
+  "03": "YES",
+  "04": 20,
+  "05": "YES",
+  "06": 10,
+  "07": "YES",
+  "08": "NO"
+ },
+ "expected_total": 100.0,
+ "expected_gross_error": false,
+ "rationale": {
+  "02": "asked for amount/date needed to find the withdrawal → YES",
+  "04": "correct concrete next step with timeline → closes the request (20)"
+ }
+}

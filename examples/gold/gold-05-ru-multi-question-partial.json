@@ -1,0 +1,62 @@
+{
+ "title": "multi-question, one essential unanswered",
+ "synthetic": true,
+ "dialog": {
+  "conversation_id": "gold-05-ru-multi-question-partial",
+  "channel": "agent chat",
+  "language": "RU",
+  "transcript": [
+   {
+    "timestamp": "00:20",
+    "speaker": "client",
+    "text": "Здравствуйте. Три вопроса: 1) какая комиссия за покупку облигаций на KASE? 2) как вывести деньги на карту Kaspi? 3) сколько обычно идут дивиденды по американским акциям после даты выплаты?"
+   },
+   {
+    "timestamp": "00:23",
+    "speaker": "bot",
+    "text": "Здравствуйте! Я AIM, AI-ассистент Freedom Broker. Чем могу помочь?"
+   },
+   {
+    "timestamp": "00:43",
+    "speaker": "client",
+    "text": "оператор"
+   },
+   {
+    "timestamp": "00:45",
+    "speaker": "system",
+    "text": "Эскалация на оператора."
+   },
+   {
+    "timestamp": "01:45",
+    "speaker": "operator",
+    "text": "Здравствуйте! Меня зовут Айгерим. 1) Комиссия за сделки с облигациями на KASE — 0,05% от суммы сделки. 2) Вывести на карту Kaspi можно в приложении: «Вывод» → «На карту», введите сумму и номер карты, зачисление обычно в течение рабочего дня."
+   },
+   {
+    "timestamp": "02:05",
+    "speaker": "client",
+    "text": "Хорошо, понятно."
+   },
+   {
+    "timestamp": "02:25",
+    "speaker": "operator",
+    "text": "Рада помочь! Подскажу ещё что-нибудь? Всего доброго, до свидания!"
+   }
+  ]
+ },
+ "expected": {
+  "01": "YES",
+  "02": "NA",
+  "03": "NA",
+  "04": 10,
+  "05": "YES",
+  "06": 10,
+  "07": "YES",
+  "08": "NO"
+ },
+ "expected_total": 84.62,
+ "expected_gross_error": false,
+ "rationale": {
+  "04": "2 of 3 essential questions answered, dividend question ignored → 10",
+  "03": "general questions → NA"
+ }
+}

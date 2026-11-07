@@ -1,0 +1,62 @@
+{
+ "title": "transfer to operator's personal card",
+ "synthetic": true,
+ "dialog": {
+  "conversation_id": "gold-12-en-personal-card-transfer",
+  "channel": "agent chat",
+  "language": "EN",
+  "transcript": [
+   {
+    "timestamp": "00:20",
+    "speaker": "client",
+    "text": "My bank transfer to top up the account takes too long. Any faster way?"
+   },
+   {
+    "timestamp": "00:23",
+    "speaker": "bot",
+    "text": "Hello! I'm AIM, Freedom Broker's AI assistant. How can I help?"
+   },
+   {
+    "timestamp": "00:43",
+    "speaker": "client",
+    "text": "agent"
+   },
+   {
+    "timestamp": "00:45",
+    "speaker": "system",
+    "text": "Chat transferred to an agent."
+   },
+   {
+    "timestamp": "01:25",
+    "speaker": "operator",
+    "text": "Hello, I'm Serik from Freedom Broker. A faster option: transfer the money to my personal card 4400 4302 1111 2222 and I'll top up your account myself today."
+   },
+   {
+    "timestamp": "01:45",
+    "speaker": "client",
+    "text": "Oh, ok."
+   },
+   {
+    "timestamp": "02:05",
+    "speaker": "operator",
+    "text": "Anything else I can help you with? Goodbye!"
+   }
+  ]
+ },
+ "expected": {
+  "01": "YES",
+  "02": "NA",
+  "03": "NA",
+  "04": 0,
+  "05": "YES",
+  "06": 10,
+  "07": "YES",
+  "08": "YES"
+ },
+ "expected_total": 69.23,
+ "expected_gross_error": true,
+ "rationale": {
+  "08": "asks client to send money to operator's personal card → YES",
+  "04": "key recommendation is wrong/harmful → 0"
+ }
+}

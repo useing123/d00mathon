@@ -1,0 +1,71 @@
+{
+ "title": "balance with verification",
+ "synthetic": true,
+ "dialog": {
+  "conversation_id": "gold-03-en-balance-verified",
+  "channel": "agent chat",
+  "language": "EN",
+  "transcript": [
+   {
+    "timestamp": "00:20",
+    "speaker": "client",
+    "text": "Hi, what is my current cash balance in USD?"
+   },
+   {
+    "timestamp": "00:23",
+    "speaker": "bot",
+    "text": "Hello! I'm AIM, Freedom Broker's AI assistant. How can I help?"
+   },
+   {
+    "timestamp": "00:43",
+    "speaker": "client",
+    "text": "agent"
+   },
+   {
+    "timestamp": "00:45",
+    "speaker": "system",
+    "text": "Chat transferred to an agent."
+   },
+   {
+    "timestamp": "01:30",
+    "speaker": "operator",
+    "text": "Hello! My name is Dana, I'm a Freedom Broker specialist. To share account information I first need to verify you: please provide your full name, date of birth and your code word."
+   },
+   {
+    "timestamp": "01:50",
+    "speaker": "client",
+    "text": "John Miller, 12.03.1990, code word 'falcon'."
+   },
+   {
+    "timestamp": "02:10",
+    "speaker": "operator",
+    "text": "Thank you, John, you are verified. Your current free cash balance is 1,250.40 USD; 300 USD more is reserved for an open order."
+   },
+   {
+    "timestamp": "02:30",
+    "speaker": "client",
+    "text": "Great, thanks."
+   },
+   {
+    "timestamp": "02:50",
+    "speaker": "operator",
+    "text": "You're welcome! Is there anything else I can help with? Have a nice day, goodbye!"
+   }
+  ]
+ },
+ "expected": {
+  "01": "YES",
+  "02": "NA",
+  "03": "YES",
+  "04": 20,
+  "05": "YES",
+  "06": 10,
+  "07": "YES",
+  "08": "NO"
+ },
+ "expected_total": 100.0,
+ "expected_gross_error": false,
+ "rationale": {
+  "03": "balance = personal data; full verification before disclosure → YES"
+ }
+}
