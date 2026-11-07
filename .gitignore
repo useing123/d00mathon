@@ -1,10 +1,29 @@
+# secrets & local config
 .env
-__pycache__/
-*.pyc
-.cache/
-.pytest_cache/
+.env.*
+!.env.example
+
+# private data / outputs (contain real client text)
 data/
 results/
+.cache/
 *.wav
 *.mp3
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
 .venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# editors / OS
+.idea/
+.vscode/
+.DS_Store

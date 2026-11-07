@@ -1,0 +1,10 @@
+services:
+  cqa:
+    build: .
+    ports: ["8090:8090"]
+    env_file: [.env]
+    volumes:
+      - ./data:/app/data
+      - ./results:/app/results
+      - ./checklists:/app/checklists
+      - ./.cache:/app/.cache
