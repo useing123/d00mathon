@@ -7,6 +7,7 @@ import yaml
 
 from cqa import checklist as ckl, config, data, submission
 from cqa.evaluator import Evaluator
+from cqa.llm import LLM
 
 ROOT = Path(__file__).resolve().parent.parent
 SAMPLE = ROOT / "examples" / "sample_dialogs.json"
@@ -15,7 +16,8 @@ SAMPLE = ROOT / "examples" / "sample_dialogs.json"
 @pytest.fixture(scope="module")
 def doc():
     recs = data.load_file(SAMPLE)
-    dialogs, meta = Evaluator(use_cache=True).evaluate_many(recs)
+    # module-scoped → runs before the autouse `isolated` fixture: force mock + no real cache explicitly
+    dialogs, meta = Evaluator(llm=LLM(provider="mock"), use_cache=False, ensemble=False).evaluate_many(recs)
     return {"group": "DEMO", "meta": meta, "dialogs": dialogs}
 
 
