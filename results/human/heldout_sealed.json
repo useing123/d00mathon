@@ -1,0 +1,23 @@
+{
+ "sealed": true,
+ "n": 15,
+ "ids": [
+  "p1-en-003",
+  "p1-en-006",
+  "p1-en-010",
+  "p1-en-013",
+  "p1-kz-005",
+  "p1-kz-007",
+  "p1-kz-013",
+  "p1-kz-014",
+  "p1-ru-009",
+  "p1-ru-012",
+  "p1-ru-014",
+  "p1-ru-016",
+  "p1-ru-023",
+  "p1-ru-028",
+  "p4-ru-004"
+ ],
+ "sha256": "f2369fd0201e724064d7483fbef5f57cb2aff7ce6eeed26f2175fbc078737b3b",
+ "rule": "Do not use these dialogs to tune prompts/checklists; reported only with agreement.py --final."
+}

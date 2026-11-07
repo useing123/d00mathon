@@ -158,3 +158,18 @@ Changed verdicts (v7 → v8):
 
 closure_mode=lenient would flip **37/65** DEV dialogs on 07 (mostly NO→YES for a bare farewell). Not the default.
 Held-out regression (`results/gold_holdout_v13.json`): overall agreement 0.963 (v12: 0.95), 02 10/10, 07 10/10, MAE 4.0.
+
+## Run-to-run variance (DEV, 3 runs)
+
+Same 20 DEV dialogs (8 RU chat, 2 RU calls, 5 KZ, 5 EN; incl. 2 gross-error dialogs), default jury (haiku+sonnet, judge opus),
+per-criterion cache OFF (`--fresh`), 3 independent runs; run 3 covered 19 of the 20 (budget), so 3-run stats are on 19 dialogs.
+Script: `python scripts/variance.py results/variance/run*.json` → `results/variance/summary.json` (ids + numbers only).
+Cost: $3.39 + $2.36 + $2.54 = $8.29; 0 errors.
+
+| criterion | 01 | 02 | 03 | 04 | 05 | 06 | 07 | 08 |
+|---|---|---|---|---|---|---|---|---|
+| flip rate (value not identical in all 3 runs) | 0.00 | 0.11 | 0.05 | 0.21 | 0.00 | 0.16 | 0.05 | 0.00 |
+
+- All criteria: 7.2% of dialog×criterion cells flip across 3 runs (pairwise 3.9–5.6%); 8/19 dialogs have ≥1 flip.
+- Total score std per dialog: mean 2.53, median 0.00, max 10.83 points; mean range (max−min) 4.59. Gross-error flag: 0 flips.
+- Flips concentrate in the scales 04/06 and in 02 (NA vs YES) — the same areas where humans disagree most (see Known disagreement areas).

@@ -1,0 +1,125 @@
+{
+ "files": [
+  "results/variance/run1.json",
+  "results/variance/run2.json",
+  "results/variance/run3.json"
+ ],
+ "cost_usd": [
+  3.3929,
+  2.3562,
+  2.542
+ ],
+ "model": [
+  "jury[claude-haiku-5-5+claude-sonnet-5-5] judge=claude-opus-5-5",
+  "jury[claude-haiku-5-5+claude-sonnet-5-5] judge=claude-opus-5-5",
+  "jury[claude-haiku-5-5+claude-sonnet-5-5] judge=claude-opus-5-5"
+ ],
+ "dialogs_per_run": [
+  20,
+  20,
+  19
+ ],
+ "all_runs": {
+  "runs": 3,
+  "dialogs": 19,
+  "flip_rate_all_criteria": 0.072,
+  "per_criterion": {
+   "01": {
+    "n": 19,
+    "flip_rate": 0.0,
+    "pairwise_disagreement": 0.0,
+    "flipped_dialogs": []
+   },
+   "02": {
+    "n": 19,
+    "flip_rate": 0.105,
+    "pairwise_disagreement": 0.07,
+    "flipped_dialogs": [
+     "p1-ru-005",
+     "p1-ru-026"
+    ]
+   },
+   "03": {
+    "n": 19,
+    "flip_rate": 0.053,
+    "pairwise_disagreement": 0.035,
+    "flipped_dialogs": [
+     "p1-kz-012"
+    ]
+   },
+   "04": {
+    "n": 19,
+    "flip_rate": 0.211,
+    "pairwise_disagreement": 0.14,
+    "flipped_dialogs": [
+     "p1-en-008",
+     "p1-ru-005",
+     "p1-ru-024",
+     "p4-ru-001"
+    ]
+   },
+   "05": {
+    "n": 19,
+    "flip_rate": 0.0,
+    "pairwise_disagreement": 0.0,
+    "flipped_dialogs": []
+   },
+   "06": {
+    "n": 19,
+    "flip_rate": 0.158,
+    "pairwise_disagreement": 0.105,
+    "flipped_dialogs": [
+     "p1-ru-009",
+     "p1-ru-026",
+     "p4-ru-001"
+    ]
+   },
+   "07": {
+    "n": 19,
+    "flip_rate": 0.053,
+    "pairwise_disagreement": 0.035,
+    "flipped_dialogs": [
+     "p4-ru-003"
+    ]
+   },
+   "08": {
+    "n": 19,
+    "flip_rate": 0.0,
+    "pairwise_disagreement": 0.0,
+    "flipped_dialogs": []
+   }
+  },
+  "total_std_mean": 2.53,
+  "total_std_median": 0.0,
+  "total_std_max": 10.83,
+  "total_range_mean": 4.59,
+  "dialogs_with_any_flip": 8,
+  "gross_flips": [],
+  "total_std_per_dialog": {
+   "p1-en-002": 0.0,
+   "p1-en-003": 0.0,
+   "p1-en-006": 0.0,
+   "p1-en-008": 4.45,
+   "p1-kz-001": 0.0,
+   "p1-kz-003": 0.0,
+   "p1-kz-007": 0.0,
+   "p1-kz-010": 0.0,
+   "p1-kz-012": 10.83,
+   "p1-ru-005": 7.36,
+   "p1-ru-009": 2.6,
+   "p1-ru-022": 0.0,
+   "p1-ru-024": 4.44,
+   "p1-ru-025": 0.0,
+   "p1-ru-026": 8.24,
+   "p1-ru-028": 0.0,
+   "p1-ru-029": 0.0,
+   "p4-ru-001": 7.92,
+   "p4-ru-003": 2.16
+  }
+ },
+ "pairwise": {
+  "results/variance/run1.json vs results/variance/run2.json": 0.056,
+  "results/variance/run1.json vs results/variance/run3.json": 0.053,
+  "results/variance/run2.json vs results/variance/run3.json": 0.039
+ }
+}

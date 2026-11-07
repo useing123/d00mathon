@@ -103,29 +103,104 @@ def cmd_gold(a):
     print(json.dumps({"report": m["report"], "meta": m["meta"]}, ensure_ascii=False))
 
 
+def _getkey(prompt):
+    """One keystroke (no Enter) on a TTY; falls back to a line read for pipes/tests."""
+    print(prompt, end="", flush=True)
+    if not sys.stdin.isatty():
+        line = sys.stdin.readline()
+        if not line:
+            raise EOFError
+        return line.strip()[:1] or "\n"
+    import termios
+    import tty
+    fd = sys.stdin.fileno()
+    old = termios.tcgetattr(fd)
+    try:
+        tty.setcbreak(fd)
+        ch = sys.stdin.read(1)
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old)
+    print(ch if ch.isprintable() else "")
+    return "\n" if ch in "\r\n" else ch
+
+
+def fast_label_dialog(rec, checklist, existing=None, key=_getkey, say=print, ask=input):
+    """One keystroke per criterion: y/n (x = NA), scale → digit index; Enter keeps the previous label,
+    ? shows the rules, c adds a comment, b goes back. The model's answers are never shown."""
+    from .checklist import render
+    say(data.format_transcript(rec))
+    crs, exp, notes = checklist["criteria"], dict((existing or {}).get("expected", {})), dict((existing or {}).get("notes", {}))
+    i = 0
+    while i < len(crs):
+        cr = crs[i]
+        if cr.get("type") == "scale":
+            opts = {str(k): v for k, v in enumerate(cr["scale"])}
+        else:
+            opts = {"y": "YES", "n": "NO"}
+        if cr.get("allow_na"):
+            opts["x"] = "NA"
+        prev = exp.get(cr["id"])
+        say(f"\n── {cr['id']} {cr['name']}{' [ГРУБАЯ ОШИБКА: y = ошибка есть]' if cr.get('gross') else ''}")
+        say(render(cr.get("rubric", ""), checklist).strip())
+        keys = " ".join(f"{k}={v}" for k, v in opts.items())
+        k = key(f"[{keys} | ?=правила c=комментарий b=назад]{f' Enter={prev}' if prev is not None else ''}: ").lower()
+        if k == "?":
+            say(render(cr.get("rules", "") or "(нет доп. правил)", checklist).strip())
+        elif k == "c":
+            notes[cr["id"]] = ask("   комментарий: ").strip()
+        elif k == "b":
+            i = max(0, i - 1)
+        elif k == "\n" and prev is not None:
+            i += 1
+        elif k in opts:
+            exp[cr["id"]] = opts[k]
+            i += 1
+        else:
+            say("  неверная клавиша")
+    return {"expected": exp, "notes": {k: v for k, v in notes.items() if v}}
+
+
 def cmd_label(a):
-    """Human labelling of real dialogs -> examples/dev_labels.json (git-ignored). Labels are never invented by the tool."""
+    """Human labelling of real dialogs -> examples/dev_labels.json or data/human/labels_<annotator>.json (git-ignored).
+    Labels are never invented by the tool."""
     from pathlib import Path
 
     from . import checklist as ckl
     from .gold import label_dialog
     from .util import atomic_write
-    path = Path(a.out)
+    session = json.loads(Path(a.sample).read_text(encoding="utf-8")) if a.sample else {}
+    who = a.annotator or a.labeller or session.get("annotator", "")
+    out = a.out or session.get("labels_out") or (f"data/human/labels_{who}.json" if a.annotator else "examples/dev_labels.json")
+    path = Path(out)
+    path.parent.mkdir(parents=True, exist_ok=True)
     labels = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
-    recs = data.load_group(a.group)
-    ids = a.ids.split(",") if a.ids else [r["conversation_id"] for r in recs if r["conversation_id"] not in labels][: a.n]
-    for cid in ids:
+    recs = data.load_group(session.get("group") or a.group)
+    if a.ids:
+        ids = a.ids.split(",")
+    elif session:
+        ids = [i for i in session["ids"] if i not in labels]
+        print(f"annotator {who}: {len(session['ids']) - len(ids)}/{len(session['ids'])} done, {len(ids)} left → {path}")
+    else:
+        ids = [r["conversation_id"] for r in recs if r["conversation_id"] not in labels][: a.n]
+    fast = bool(session or a.annotator) and not a.slow
+    for n, cid in enumerate(ids, 1):
         rec = next((r for r in recs if r["conversation_id"] == cid), None)
         if rec is None:
             print(f"unknown dialog {cid}")
             continue
         cl = ckl.load(ckl.pick_for_channel(rec["kind"]))
-        print(f"\n===== {cid} ({rec['kind']}, {rec.get('language')}) — label by the organizer rubric =====")
-        lab = label_dialog(rec, cl, labels.get(cid))
-        lab["labeller"] = a.labeller
+        print(f"\n===== [{n}/{len(ids)}] {cid} ({rec['kind']}, {rec.get('language')}) — label by the organizer rubric =====")
+        t0 = time.time()
+        try:
+            lab = (fast_label_dialog if fast else label_dialog)(rec, cl, labels.get(cid))
+        except (EOFError, KeyboardInterrupt):
+            print("\nstopped; progress is saved — rerun the same command to continue")
+            return
+        lab["labeller"] = who
+        lab["seconds"] = round(time.time() - t0, 1)
         labels[cid] = lab
         atomic_write(path, json.dumps(labels, ensure_ascii=False, indent=1))   # saved after every dialog
-        print(f"saved {cid} → {path} ({len(labels)} labelled)")
+        print(f"saved {cid} → {path} ({len(labels)} labelled, {lab['seconds']} s)")
 
 
 def cmd_export(a):
@@ -248,8 +323,11 @@ def main():
     lb.add_argument("--group", default="DEV")
     lb.add_argument("--ids", help="comma-separated conversation ids (default: next unlabelled)")
     lb.add_argument("-n", type=int, default=5, help="how many unlabelled dialogs to label")
-    lb.add_argument("--out", default="examples/dev_labels.json")
+    lb.add_argument("--out", help="labels JSON (default: session labels_out, data/human/labels_<A>.json or examples/dev_labels.json)")
     lb.add_argument("--labeller", default="")
+    lb.add_argument("--annotator", help="annotator id (A/B); enables the one-keystroke mode")
+    lb.add_argument("--sample", help="session file from scripts/labeling_kit.py (results/human/session_A.json)")
+    lb.add_argument("--slow", action="store_true", help="old typed-answer mode (YES/NO + note per criterion)")
     v = sub.add_parser("serve")
     v.add_argument("--host", default="127.0.0.1")
     v.add_argument("--port", type=int, default=8090)
