@@ -191,7 +191,7 @@ time and averaged. Here, codex, argon, sonnet, luna and the old jury were all re
 - **Runner-up: `gemini-4-argon`**: 97.5% then 96.3% (mean 96.9%), MAE 3.01, $0.067/dialog, 7.8 s/dialog.
   - It is within noise of codex. Codex wins on mean score, MAE, cost and latency all at once.
   - Note: Gemini prices double after 2026-11-30.
-- The previous default (jury haiku+sonnet→opus) scored 95.0% in both runs, with MAE 4.21 and $0.073/dialog. On the
+- The previous default (jury haiku+sonnet→opus) scored 95.0% in both runs, with MAE 4.21 and $0.0745/dialog (held-out). On the
   held-out set it is dominated by the winner.
 
 ## Presets (`python -m cqa evaluate --preset econom|balanced|max|jury`, or `CQA_PRESET=...`)
@@ -201,7 +201,7 @@ time and averaged. Here, codex, argon, sonnet, luna and the old jury were all re
 | **econom** | `gpt-6-luna` + prompt v1 | 96.3% (1 run) | 0.0030 | On the Pareto frontier. About 20× cheaper than max, 1 label of 80 lower (within noise) |
 | **balanced** | `claude-sonnet-5-5` | 96.25% (2 runs) | 0.080 | Single vendor: needs only an Anthropic key. **Not** on the frontier; choose it for vendor or data-processing reasons |
 | **max** (default) | `gpt-5.3-codex` | 97.5% (2 runs) | 0.058 | Selected by the rule above. On the frontier |
-| jury | haiku+sonnet → opus | 95.0% (2 runs) | 0.073 | The previous default, kept for comparison and continuity |
+| jury | haiku+sonnet → opus | 95.0% (2 runs) | 0.0745 | The previous default, kept for comparison and continuity |
 
 **Pareto frontier** (held-out score vs $/dialog): gpt-5.3-codex, gpt-6-luna@v1, gpt-6-luna, local:qwen3-32b-awq. Every other config is beaten by at least
 one of these on both cost and accuracy.

@@ -49,10 +49,10 @@ objective: max agreement, then min cost proxy tier2 + 15×tier3, 04/05/06 hard s
 | Qwen3-8B-AWQ alone | 0.781 (MAE 14.7) | 0.775 (MAE 12.5, gross recall 0/1) | not finished¹ | $0.00085 GPU² | 5.2 | 100/0/0 |
 | Qwen3-32B-AWQ alone (earlier run) | 0.883 | 0.887 | 0.81 (v5) | $0.0026 | 16 | 100/0/0 |
 | cascade Qwen3-8B → haiku → sonnet (T1 .999, HARD_CONF 1.01, T2 .7) | 0.953 (replay) | **0.863** (MAE 13.9) | – | $0.0017 cloud + ~$0.0011 GPU | 7.0 | 34/65/1 % (held-out) |
-| Jev alone (Jev agent, 3 runs) | 0.974 | 0.934 | – | $0.00053 | 0.4 | 100/0/0 |
+| Jev alone (Jev agent, 3 runs) | 0.974 | 0.933 | – | $0.00053 | 0.4 | 100/0/0 |
 | Jev → haiku (T1 .7, HARD_CONF .9) | 0.984 (replay) | 0.925 | – | $0.0011+$0.0005 | 0.9 | 82/18/0 % |
-| **Jev → haiku → sonnet (T1 .7, HARD_CONF .9, T2 .7)** | 0.992 (replay) | **0.963** (MAE 2.46) | **0.948** (MAE 3.71, gross 5/5) | $0.0042 held-out, $0.0146 DEV | 1.3 / 2.8 | 82/15/3 % held-out; 73/19/7 % DEV |
-| claude jury (bench_matrix) | 0.992 | 0.95 | reference | $0.073 | 4.45 | – |
+| **Jev → haiku → sonnet (T1 .7, HARD_CONF .9, T2 .7)** | 0.992 (replay) | **0.963** (MAE 2.46) | **0.948** (MAE 3.71, gross 5/5) | $0.0042 held-out, $0.0146 DEV | 1.3 / 2.8 | 82/15/2 % held-out; 73/19/7 % DEV |
+| claude jury (bench_matrix) | 0.992 | 0.95 | reference | $0.0745 held-out, $0.158 DEV | 4.45 | – |
 | haiku alone | 0.969 | 0.912 | 0.871 | $0.0044 | 3.1 | – |
 | gpt-5.3-codex | 0.977 | 0.975 | – | $0.057 | 3.05 | – |
 | gpt-6-luna | 0.984 | 0.944 | 0.885 | $0.0015 | 3.2 | – |
@@ -62,9 +62,9 @@ was added to the OpenAI-compatible path; not re-run before the freeze. ² A40 $0
 DEV reference = `results/dev_jury_v7.json`.
 
 **Cheapest config within run-to-run noise (±2/80 = ±0.025) of the claude jury (0.95 held-out):** Jev alone
-(0.934 mean, $0.00053/dialog, no evidence quotes). Cheapest *with evidence on every escalated criterion and above
-the jury*: **Jev → haiku → sonnet** (0.963 held-out, 0.948 DEV agreement, ~$0.004–0.015/dialog, ≈5–17× cheaper than
-the jury) — the recommended `cascade` preset default. No local open-weight config tested reaches the band:
+(0.933 pooled, $0.00053/dialog, no evidence quotes). Cheapest *with evidence on every escalated criterion and above
+the jury*: **Jev → haiku → sonnet** (0.963 held-out, 0.948 DEV agreement, ~$0.004–0.015/dialog, ≈18× cheaper than the jury on held-out
+($0.0745), ≈11× on DEV ($0.158)) — the recommended `cascade` preset default. No local open-weight config tested reaches the band:
 Qwen3-8B is too weak (02/04 especially) and its routing escalates 65% of criteria.
 
 ## 4. Caveats

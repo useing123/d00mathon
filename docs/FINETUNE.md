@@ -2,7 +2,7 @@
 
 > **Status (2026-11-08): one real QLoRA run was executed and evaluated.** Qwen3-8B was trained for 16 steps (≈0.32 epoch, capped by the time
 > budget) on 1× RTX A5000 for 27 min, and the pod session cost ≈ $0.22. On the held-out gold set the adapter **does not beat base on agreement**
-> (0.787 vs 0.787). It lowers total MAE (12.17 → 10.43) and is far below Jev 1.14 (0.934 / MAE 4.83). Numbers:
+> (0.787 vs 0.787). It lowers total MAE (12.17 → 10.43) and is far below Jev 1.14 (0.933 / MAE 4.83). Numbers:
 > `results/finetune/summary.json`; details in [Measured run](#measured-run-2026-11-08).
 
 ## Run on your own GPU
@@ -42,7 +42,7 @@ CQA_LOCAL_ADAPTER=cqa CQA_ROUTER_LOCAL_MODEL=cqa python -m cqa evaluate --preset
 | held-out 10 | + adapter | 0.787 | 10.43 | 0.0 / 0.0 (fp1 fn1) | 1.0 | 0.4 | 0.9 | 0.5 | 1.0 | 0.9 | 0.8 | 0.8 |
 | gold 16 (in train) | Qwen3-8B base | 0.789 | 14.77 | 0.67 / 0.67 | 1.0 | 0.5 | 0.81 | 0.81 | 0.88 | 0.75 | 0.69 | 0.88 |
 | gold 16 (in train) | + adapter | 0.805 | 8.95 | 0.75 / 1.0 | 1.0 | 0.56 | 0.88 | 0.69 | 0.88 | 0.63 | 0.88 | 0.94 |
-| held-out 10 | **Jev 1.14** (docs/JEV.md) | **0.934** | **4.83** | 1.0 / 1.0 | | | | | | | | |
+| held-out 10 | **Jev 1.14** (docs/JEV.md) | **0.933** | **4.83** | 1.0 / 1.0 | | | | | | | | |
 
 **Verdict:** after 0.32 epoch the adapter **does not beat base** on held-out agreement (a tie). It lowers MAE by ~15%, moves 03/06/08
 up and 02/04/07 down, and is **0.15 below Jev 1.14**. The goal "beat Jev" was **not met**. On the 16 gold dialogs, which are in

@@ -30,10 +30,10 @@ That choice was made after seeing both sets, so the held-out number is only semi
 
 | config | gold (16) agreement | held-out (10) agreement | total MAE gold / held-out | gross P/R | $/dialog | latency |
 |---|---|---|---|---|---|---|
-| **jev-1.14 (full rules)** | 0.977 / 0.977 / 0.969 (mean 0.974) | 0.938 / 0.925 / 0.938 (mean 0.934) | 0.66 / 4.83 (means) | 1.0 / 1.0 | **$0.00053** | ~0.4 s/dialog, 1 call |
+| **jev-1.14 (full rules)** | 0.977 / 0.977 / 0.969 (mean 0.974) | 0.938 / 0.925 / 0.938 (pooled 0.933) | 0.66 / 4.83 (means) | 1.0 / 1.0 | **$0.00053** | ~0.4 s/dialog, 1 call |
 | jev-1.14 (rules ≤700 chars) | 0.883 / 0.883 / 0.875 | 0.850 / 0.838 / 0.887 | ~5.0 / ~6.1 | 1.0 / 1.0 | $0.00037 | ~0.4 s |
 | gpt-5.3-codex (bench_matrix) | 0.977 | 0.975 | 0.91 / 1.54 | 1.0 / 1.0 | $0.058 | 2.7 s, 8 calls |
-| jury haiku+sonnet→opus | 0.992 | 0.95 | 0.43 / 4.21 | 1.0 / 1.0 | $0.073 | |
+| jury haiku+sonnet→opus | 0.992 | 0.95 | 0.43 / 4.21 | 1.0 / 1.0 | $0.0745 | |
 | sonnet | 0.992 | 0.95 | 0.43 / 3.11 | | $0.080 | |
 | gpt-6-luna@v1 | 0.984 | 0.963 | 0.85 / 2.46 | | $0.0030 | |
 | gpt-6-luna | 0.984 | 0.95 | 1.5 / 5.05 | | $0.0024 | |
