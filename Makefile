@@ -33,14 +33,16 @@ eval-group:
 docker:
 	docker build -t cqa .
 
-submit:  ## control window: evaluate GROUP in --final mode, export v1.0, validate, commit results/prod/results.json
-	@test -n "$(GROUP)" && test "$(GROUP)" != "DEV" || (echo "usage: make submit GROUP=<prod group id>"; exit 2)
-	$(PY) -m cqa evaluate --final --refresh --group $(GROUP) --out results/$(GROUP)_final.json
-	$(PY) -m cqa export --format v1 --group $(GROUP) --run $(GROUP)_final --out results/prod/results.json
-	$(PY) -m cqa validate results/prod/results.json
-	git add -f results/prod/results.json
-	git -c user.name=cqa -c user.email=cqa@local commit -m "Submission: results/prod/results.json (group $(GROUP), v1.0)" results/prod/results.json
+submit:  ## control window: fetch GROUP -> evaluate (default preset) -> export JSON 1.0 -> validate -> commit (push is manual)
+	@test -n "$(GROUP)" || (echo "usage: make submit GROUP=<group id>  (DEV -> results/dev, anything else -> results/prod)"; exit 2)
+	$(eval SUB := $(if $(filter DEV dev,$(GROUP)),dev,prod))
+	$(PY) -m cqa evaluate --refresh --group $(GROUP) --out results/$(GROUP)_submit.json
+	$(PY) -m cqa export --format v1 --group $(GROUP) --run $(GROUP)_submit --out results/$(SUB)/results.json
+	$(PY) -m cqa validate results/$(SUB)/results.json --group $(GROUP) --allow-custom
+	git add -f results/$(SUB)/results.json
+	git -c user.name=cqa -c user.email=cqa@local commit -m "Submission: results/$(SUB)/results.json (group $(GROUP), JSON 1.0)" results/$(SUB)/results.json
+	@echo "committed results/$(SUB)/results.json - now: git push"
 
-submit-dev:  ## regenerate results/dev/results.json from a DEV run (RUN=dev_jury_v6)
+submit-dev:  ## re-export results/dev/results.json from an existing DEV run, no LLM calls (RUN=dev_jury_v6)
 	$(PY) -m cqa export --format v1 --group DEV $(if $(RUN),--run $(RUN)) --out results/dev/results.json
-	$(PY) -m cqa validate results/dev/results.json
+	$(PY) -m cqa validate results/dev/results.json --group DEV

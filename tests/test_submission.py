@@ -39,8 +39,7 @@ def test_shape_and_mapping(doc):
 
 def test_evidence_turns_index_original_transcript(doc):
     recs = {r["conversation_id"]: r for r in data.load_file(SAMPLE)}
-    raw = {r["conversation_id"]: r["transcript"] for r in json.loads(SAMPLE.read_text())["data"]["records"]} \
-        if isinstance(json.loads(SAMPLE.read_text()), dict) else {r["conversation_id"]: r["transcript"] for r in json.loads(SAMPLE.read_text())}
+    raw = {r["conversation_id"]: r["transcript"] for r in json.loads(SAMPLE.read_text())["data"]["records"]}
     for cid, rec in recs.items():
         assert len(rec["transcript"]) == len(raw[cid])          # normalisation never drops or merges turns
         for t, orig in zip(rec["transcript"], raw[cid], strict=True):

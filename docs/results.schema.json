@@ -1,37 +1,55 @@
 {
  "$schema": "https://json-schema.org/draft/2020-12/schema",
- "$id": "cqa-results-v1.0",
- "title": "CQA submission results.json v1.0 (see cqa/submission.py SPEC; ASSUMED items pending the guide)",
+ "$id": "cqa-results-1.0",
+ "title": "CQA results.json, format JSON 1.0 (organizer Student Guide appendix)",
  "type": "object",
  "additionalProperties": false,
  "required": [
-  "format_version",
-  "group",
-  "generated_at",
-  "source_run",
-  "turn_numbering",
-  "dialogs"
+  "schema_version",
+  "team_name",
+  "model",
+  "results"
  ],
  "properties": {
-  "format_version": {
+  "schema_version": {
    "const": "1.0"
   },
-  "group": {
-   "type": "string"
+  "team_name": {
+   "type": "string",
+   "minLength": 1
   },
-  "generated_at": {
-   "type": "string"
+  "model": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "mode",
+    "name"
+   ],
+   "properties": {
+    "mode": {
+     "enum": [
+      "local",
+      "external_api",
+      "hybrid"
+     ]
+    },
+    "name": {
+     "type": "string",
+     "minLength": 1
+    }
+   }
   },
-  "source_run": {
-   "type": "string"
-  },
-  "turn_numbering": {
-   "const": "1-based"
-  },
-  "dialogs": {
+  "results": {
    "type": "array",
    "items": {
-    "$ref": "#/$defs/dialog"
+    "oneOf": [
+     {
+      "$ref": "#/$defs/ok"
+     },
+     {
+      "$ref": "#/$defs/error"
+     }
+    ]
    }
   }
  },
@@ -40,10 +58,16 @@
    "type": "object",
    "additionalProperties": false,
    "required": [
+    "criterion_id",
     "value",
+    "rationale",
     "evidence_turns"
    ],
    "properties": {
+    "criterion_id": {
+     "type": "string",
+     "minLength": 1
+    },
     "value": {
      "type": [
       "boolean",
@@ -51,84 +75,90 @@
       "null"
      ]
     },
+    "rationale": {
+     "type": "string"
+    },
     "evidence_turns": {
      "type": "array",
      "items": {
       "type": "integer",
       "minimum": 1
-     },
-     "uniqueItems": true
+     }
     }
    }
   },
-  "dialog": {
+  "ok": {
    "type": "object",
    "additionalProperties": false,
    "required": [
     "conversation_id",
-    "checklist_id",
-    "final_score",
-    "critical_flag",
-    "criteria"
+    "status",
+    "criteria",
+    "score"
    ],
    "properties": {
     "conversation_id": {
      "type": "string",
      "minLength": 1
     },
-    "checklist_id": {
-     "type": "string"
-    },
-    "final_score": {
-     "type": [
-      "number",
-      "null"
-     ],
-     "minimum": 0,
-     "maximum": 100
-    },
-    "critical_flag": {
-     "type": "boolean"
+    "status": {
+     "const": "ok"
     },
     "criteria": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/criterion"
+     },
+     "minItems": 1
+    },
+    "score": {
      "type": "object",
      "additionalProperties": false,
      "required": [
-      "contact",
-      "discovery",
-      "identification",
-      "consultation",
-      "empathy",
-      "dialogue_management",
-      "closing",
-      "critical"
+      "final_score",
+      "critical_flag"
      ],
      "properties": {
-      "contact": {
-       "$ref": "#/$defs/criterion"
+      "final_score": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 100
       },
-      "discovery": {
-       "$ref": "#/$defs/criterion"
-      },
-      "identification": {
-       "$ref": "#/$defs/criterion"
-      },
-      "consultation": {
-       "$ref": "#/$defs/criterion"
-      },
-      "empathy": {
-       "$ref": "#/$defs/criterion"
-      },
-      "dialogue_management": {
-       "$ref": "#/$defs/criterion"
-      },
-      "closing": {
-       "$ref": "#/$defs/criterion"
-      },
-      "critical": {
-       "$ref": "#/$defs/criterion"
+      "critical_flag": {
+       "type": "boolean"
       }
      }
+    }
+   }
+  },
+  "error": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "conversation_id",
+    "status",
+    "criteria",
+    "score",
+    "error"
+   ],
+   "properties": {
+    "conversation_id": {
+     "type": "string",
+     "minLength": 1
+    },
+    "status": {
+     "const": "error"
+    },
+    "criteria": {
+     "type": "array",
+     "maxItems": 0
+    },
+    "score": {
+     "type": "null"
+    },
+    "error": {
+     "type": "string",
+     "minLength": 1
     }
    }
   }
