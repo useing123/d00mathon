@@ -1,6 +1,6 @@
 """Prompt templates (one focused prompt per criterion)."""
 
-PROMPT_VERSION = "v4"
+PROMPT_VERSION = "v5"
 
 SYSTEM = """Ты — строгий и последовательный эксперт по контролю качества (QA) клиентской поддержки брокера Freedom Broker.
 Ты оцениваешь работу ЧЕЛОВЕКА-ОПЕРАТОРА (speaker=OPERATOR) по ОДНОМУ критерию чек-листа.
@@ -47,6 +47,12 @@ TOOL = {
             "missing_where": {"type": "string", "description": "Где ожидалось отсутствующее действие (номер реплики/момент), если применимо; иначе пусто."},
             "na_reason": {"type": "string", "description": "Почему NA, если value=NA; иначе пусто."},
             "confidence": {"type": "number"},
+            "client_requests": {"type": "array", "description": (
+                "Только если критерий это просит (04): все вопросы/запросы клиента — text, essential (существенный?), "
+                "status: closed | partial | open, turn. Для остальных критериев не заполняй."),
+                "items": {"type": "object", "properties": {
+                    "text": {"type": "string"}, "essential": {"type": "boolean"},
+                    "status": {"type": "string", "enum": ["closed", "partial", "open"]}, "turn": {"type": "integer"}}}},
         },
         "required": ["reasoning", "value", "justification", "evidence", "confidence"],
     },

@@ -51,7 +51,10 @@ NA-vs-applicable confusion, list of disagreements.
 | Change | Agreement | Total MAE | Remaining disagreements |
 |---|---|---|---|
 | + 06 rule: a skipped question counts only in 04, not 06 | 0.969 | 3.41 | 06 gold-05, 06 gold-13, 05 gold-12, 05 gold-16 |
-| + code-computed FACTS block (first operator turn, language heuristic, longest wait & warning, holds, ending), 01 naming examples, 06 literacy rule (prompt v4, full re-run, $2.30) | **0.992** | **1.44** | 05 gold-12 (model treats "takes too long" as a complaint needing acknowledgement) |
+| + code-computed FACTS block (first operator turn, language heuristic, longest wait & warning, holds, ending), 01 naming examples, 06 literacy rule (prompt v4, full re-run, $2.30) | 0.992 | 1.44 | 05 gold-12 (model treats "takes too long" as a complaint needing acknowledgement) |
+| + round-2 changes: 04 request ledger (`client_requests`, consistency check), 05 boundary (incidental inconvenience inside a how-to question needs no apology), 03/07 rule additions, better FACTS (multi-message first reply, warning window, ack-only gaps excluded, auth marker) (prompt v5, full re-run, $2.54) | **0.992** | **0.43** | 06 gold-13 (7 vs 10; model docks 06 for the rude repetition — arguably a defensible reading) |
+
+Note: the 05 boundary rule resolved gold-12; we report it, but treat it with suspicion as it was suggested by a reviewer after seeing that mismatch. The gold set is now saturated and no longer discriminative — new, harder labelled cases (ideally real dialogs labelled from the organizer's checklist text, `python -m cqa gold --dir <private dir>`) are the next step.
 
 **Tuning (one change, generic, not dialog-specific):** before tuning, all three 02 errors were `NA→NO`, and the
 justifications penalised the *answer* (an ignored question, a private paid offer) under 02. We added one rule to 02:
@@ -84,6 +87,18 @@ tokens dominate and the new evidence checks cause a few extra retries (55 vs 50 
 | Incomplete dialogs / needs-review flags | n/a | 0 / 0 |
 | Changed verdicts (of 520) | — | 28: 04 ×12, 02 ×8, 06 ×3, 07 ×3, 05 ×2; 01/03/08 unchanged |
 Most frequent changes: 04 20→15 (7; explicit "minor detail missed" anchor), 02 NO→NA (4) and NO→YES (3) (new 02 scope).
+
+### DEV v3 (prompt v5: FACTS block, request ledger, round-1/2 rule changes)
+`results/dev_jury_v3.json` — 65 dialogs, 0 errors, 0 incomplete, 0 juror failures, 275 s, $13.03.
+
+| | v1 | v2 | v3 |
+|---|---|---|---|
+| Mean total | 75.95 | 76.57 | 78.08 |
+| Gross-error flags | 5 | 5 | 5 (same dialogs) |
+| Changed verdicts vs v1 (of 520) | — | 28 | 34: 04 ×11, 06 ×10, 02 ×8, 07 ×3, 05 ×2 |
+| Decided by the judge | 81 | — | 72 |
+| `evidence_warning` (positive verdict kept without an operator quote after one retry) | n/a | 0 | 24 (05 YES ×7, 06 ×9, 04 ×6, 02 ×2) — shown in the UI, not hidden |
+Most frequent v1→v3 changes: 06 4→7 (6; pauses now computed by code, skipped questions moved to 04), 04 20→15 (5), 02 NO→YES (4) / NO→NA (3). 02 is NA in 42 of 65 dialogs.
 
 ## Manual review method
 DEV has no labelled ground truth, so accuracy was checked by hand on **8 dialogs** covering chats in RU/KZ/EN, calls, high and low totals, gross-error flags and jury disagreements:

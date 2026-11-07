@@ -42,5 +42,5 @@ OPENAI_BASE_URL = get("CQA_OPENAI_BASE_URL", "http://127.0.0.1:11434/v1")  # Oll
 OPENAI_API_KEY = get("CQA_OPENAI_API_KEY", "ollama")
 CONCURRENCY = int(get("CQA_CONCURRENCY", "24"))
 BATCH_DIALOGS = int(get("CQA_BATCH_DIALOGS", "6"))  # dialog-major batches keep prompt-cache hits within TTL
-JURORS_EXPLICIT = bool(get("CQA_JURORS", "")) and bool(get("CQA_JUDGE", ""))  # jury on local/OpenAI-compatible models
+JURORS_EXPLICIT = get("CQA_OPENAI_JURY", "0") == "1"  # opt-in jury on local/OpenAI-compatible models (CQA_JURORS/CQA_JUDGE = local ids)
 OPENAI_TOOLS = get("CQA_OPENAI_TOOLS", "1") == "1"  # use native tool calling on OpenAI-compatible servers

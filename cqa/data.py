@@ -208,7 +208,14 @@ def format_transcript(rec, mark_internal=True):
 
 KZ_LETTERS = set("әғқңөұүһі")
 WAIT_PHRASES = ("минут", "подожд", "ожидайт", "уточню", "проверю", "секунд", "момент", "одну минуту", "оставайтесь на линии",
-                "күте тұр", "күтіңіз", "тексеріп", "нақтылап", "wait", "moment", "hold on", "let me check", "one sec")
+                "сейчас посмотрю", "сейчас проверю", "запрошу", "уточняю", "проверяю",
+                "күте тұр", "күтіңіз", "тексеріп", "нақтылап", "бір сәт", "қазір қарайын",
+                "wait", "moment", "hold on", "let me check", "let me look", "checking", "one sec")
+ACK_ONLY = ("спасибо", "благодарю", "понял", "поняла", "понятно", "ок", "ok", "okay", "хорошо", "ясно", "ага",
+            "рақмет", "рахмет", "рахмет сізге", "түсіндім", "жарайды", "thanks", "thank you", "got it", "great")
+AUTH_MARKERS = ("авторизован", "верифицирован", "идентифицирован", "authenticated", "verified client", "client verified",
+                "сәйкестендірілді", "авторизацияланған")
+KZ_WORDS = ("сәлем", "салем", "рахмет", "рақмет", "жоқ", "иә", "калай", "қалай", "керек", "бар ма", "қайда", "кайда")
 END_MARKERS = ("завершил", "прерван", "отключ", "аяқтады", "ended", "left the chat", "hung up", "disconnected", "closed")
 TRIVIAL = {"оператор", "operator", "agent", "агент", "менеджер", "маман", "человек", "1", "2", "0"}
 
@@ -220,7 +227,7 @@ def detect_language(texts):
         low = tx.lower()
         if low.strip(" .!?") in TRIVIAL:
             continue
-        kz += sum(ch in KZ_LETTERS for ch in low)
+        kz += sum(ch in KZ_LETTERS for ch in low) + 2 * sum(w in low for w in KZ_WORDS)
         ru += sum("а" <= ch <= "я" or ch == "ё" for ch in low)
         en += sum("a" <= ch <= "z" for ch in low)
     if kz >= 2:
@@ -235,32 +242,55 @@ def compute_facts(rec):
     tr = rec["transcript"]
     ops = [t for t in tr if t["speaker"] == "operator" and not t.get("internal")]
     first_op = ops[0]["index"] if ops else None
-    facts = {"first_operator_turn": first_op,
-             "client_language_guess": detect_language([t.get("text", "") for t in tr if t["speaker"] == "client"]),
-             "language_metadata": rec.get("language")}
+    first_block = []   # consecutive operator messages before the next client message = one "first reply"
     if first_op is not None:
-        facts["first_operator_reply_language_guess"] = detect_language([ops[0].get("text", "")])
-    # longest wait for the operator after the operator's first reply (queue time before it is not scored)
+        for t in tr[first_op:]:
+            if t["speaker"] == "client":
+                break
+            if t["speaker"] == "operator" and not t.get("internal"):
+                first_block.append(t)
+    facts = {"first_operator_turn": first_op, "first_operator_turns": [t["index"] for t in first_block],
+             "client_language_guess": detect_language([t.get("text", "") for t in tr if t["speaker"] == "client"]),
+             "language_metadata": rec.get("language"),
+             "system_says_client_authenticated": any(
+                 t["speaker"] in ("system", "bot") and any(m in (t.get("text") or "").lower() for m in AUTH_MARKERS) for t in tr)}
+    if first_op is not None:
+        facts["first_operator_reply_language_guess"] = detect_language([t.get("text", "") for t in first_block])
+
+    def is_ack(t):
+        return (t.get("text") or "").lower().strip(" .!?,)(") in ACK_ONLY
+
+    # longest wait for the operator after the operator's first reply (queue time before it is not scored);
+    # a gap that starts from a pure acknowledgement ("спасибо") is not a wait for an answer
     best = None
     if first_op is not None:
-        pending = None   # first unanswered client turn after an operator turn
+        pending = None              # first unanswered, non-acknowledgement client turn after an operator turn
+        since_client = []           # operator turns since the last client turn (wait warning may be in any of them)
         last_op = None
+        ack_seen = False
         for t in tr:
             if t["index"] <= first_op:
                 if t["speaker"] == "operator":
                     last_op = t
+                    since_client.append(t)
                 continue
-            if t["speaker"] == "client" and pending is None:
-                pending = t
+            if t["speaker"] == "client":
+                if pending is None and not is_ack(t):
+                    pending = t
+                ack_seen = ack_seen or is_ack(t)
+                since_client = []
             elif t["speaker"] == "operator" and not t.get("internal"):
                 start = pending or last_op
-                if start is not None and start.get("offset") is not None and t.get("offset") is not None:
+                if start is not None and start.get("offset") is not None and t.get("offset") is not None and \
+                        not (pending is None and ack_seen):
                     gap = t["offset"] - start["offset"]
                     if best is None or gap > best["seconds"]:
-                        warned = last_op is not None and any(w in (last_op.get("text") or "").lower() for w in WAIT_PHRASES)
+                        recent = since_client or ([last_op] if last_op else [])
+                        warned = any(w in (o.get("text") or "").lower() for o in recent for w in WAIT_PHRASES)
                         best = {"seconds": round(gap), "from_turn": start["index"], "to_turn": t["index"],
                                 "operator_warned_before": bool(warned)}
-                pending, last_op = None, t
+                pending, last_op, ack_seen = None, t, False
+                since_client.append(t)
     facts["longest_wait_after_first_reply"] = best
     holds = []
     for t in tr:
@@ -284,8 +314,14 @@ def compute_facts(rec):
 
 def format_facts(f):
     lines = []
-    lines.append(f"- Первая реплика человека-оператора: №{f['first_operator_turn']}" if f["first_operator_turn"] is not None
-                 else "- Человек-оператор в диалоге не отвечал.")
+    if f["first_operator_turn"] is not None:
+        tb = f.get("first_operator_turns") or [f["first_operator_turn"]]
+        lines.append(f"- Первая реплика человека-оператора: №{f['first_operator_turn']}"
+                     + (f" (вместе с подряд идущими №{', №'.join(map(str, tb[1:]))} до ответа клиента)" if len(tb) > 1 else ""))
+    else:
+        lines.append("- Человек-оператор в диалоге не отвечал.")
+    if f.get("system_says_client_authenticated"):
+        lines.append("- Система/бот сообщает, что клиент авторизован/верифицирован.")
     lines.append(f"- Язык клиента (эвристика по алфавиту): {f['client_language_guess'] or 'не определён'}; "
                  f"язык в метаданных: {f['language_metadata']}"
                  + (f"; язык первой реплики оператора: {f.get('first_operator_reply_language_guess') or 'не определён'}"

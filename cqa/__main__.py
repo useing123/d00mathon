@@ -82,7 +82,7 @@ def cmd_stats(a):
 
 def cmd_gold(a):
     from .gold import format_report, run_gold
-    m = run_gold(mock=a.mock, out=a.out, use_cache=not a.fresh)
+    m = run_gold(mock=a.mock, gold_dir=a.dir, out=a.out, use_cache=not a.fresh)
     print(format_report(m))
     print(json.dumps({"report": m["report"], "meta": m["meta"]}, ensure_ascii=False))
 
@@ -113,6 +113,7 @@ def main():
     gd.add_argument("--mock", action="store_true")
     gd.add_argument("--fresh", action="store_true")
     gd.add_argument("--out")
+    gd.add_argument("--dir", help="directory with gold *.json (default examples/gold); e.g. a private labelled DEV subset")
     v = sub.add_parser("serve")
     v.add_argument("--host", default="127.0.0.1")
     v.add_argument("--port", type=int, default=8090)

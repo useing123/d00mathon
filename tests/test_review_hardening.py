@@ -291,3 +291,54 @@ def test_jury_all_fail_judge_alone_then_fail_closed():
     ev.judge = Boom([{}])
     with pytest.raises(RuntimeError):
         ev._jury(REC, tx, ckl.load("freedom_chat_v1"), _cr("05"), "k_h")
+
+
+# ---------- round-2 review ----------
+def test_facts_first_block_warning_window_ack_and_auth():
+    r = _rec([{"timestamp": "00:00", "speaker": "client", "text": "Где деньги?"},
+              {"timestamp": "01:00", "speaker": "operator", "text": "Здравствуйте!"},
+              {"timestamp": "01:05", "speaker": "operator", "text": "Меня зовут Ан."},
+              {"timestamp": "01:20", "speaker": "client", "text": "Вывод на 100 тыс"},
+              {"timestamp": "01:30", "speaker": "operator", "text": "Сейчас проверю"},
+              {"timestamp": "01:35", "speaker": "operator", "text": "по системе"},
+              {"timestamp": "06:35", "speaker": "operator", "text": "Деньги отправлены"},
+              {"timestamp": "06:40", "speaker": "client", "text": "Спасибо!"},
+              {"timestamp": "16:40", "speaker": "operator", "text": "До свидания"}])
+    f = data.compute_facts(r)
+    assert f["first_operator_turns"] == [1, 2] and f["system_says_client_authenticated"] is False
+    w = f["longest_wait_after_first_reply"]
+    assert w["to_turn"] == 6 and w["operator_warned_before"] is True    # warning 2 turns before the gap still counts
+    assert w["seconds"] == 300                                           # 10-min gap after "Спасибо!" ignored
+    assert "№2" in data.format_facts(f)
+
+
+def test_auth_fact_and_short_kazakh():
+    r = _rec([{"speaker": "bot", "text": "Вы авторизованы как клиент"}, {"speaker": "client", "text": "иә, рахмет"}])
+    f = data.compute_facts(r)
+    assert f["system_says_client_authenticated"] is True and f["client_language_guess"] == "KZ"
+
+
+def test_quote_with_copied_line_prefix_is_accepted():
+    from cqa.evaluator import validate_evidence
+    v, bad = validate_evidence(REC, [{"turn": 1, "quote": "[1] (00:30) OPERATOR: Здравствуйте, меня зовут Ан"}])
+    assert v and not bad
+
+
+def test_04_ledger_inconsistency_retried():
+    s = Scripted([{"value": "20", "evidence": [{"turn": 1, "quote": "Тариф"}],
+                   "client_requests": [{"text": "a", "essential": True, "status": "open"}]},
+                  {"value": "10", "evidence": [{"turn": 1, "quote": "Тариф"}],
+                   "client_requests": [{"text": "a", "essential": True, "status": "open"}]}])
+    tx = prompts.transcript_block(REC, data.format_transcript(REC))
+    out = Evaluator(llm=s, use_cache=False)._sample(REC, tx, ckl.load("freedom_chat_v1"), _cr("04"), 0)
+    assert out["value"] == 10 and "client_requests" in s.calls[1]
+
+
+def test_404_gives_actionable_error(monkeypatch):
+    class E404(Exception):
+        status_code = 404
+    m = llm.LLM.__new__(llm.LLM)
+    m.provider, m.model = "anthropic", "nope"
+    monkeypatch.setattr(m, "_anthropic", lambda *a: (_ for _ in ()).throw(E404()))
+    with pytest.raises(RuntimeError, match="not found.*CQA_JURORS"):
+        m.call("s", "c", "u", prompts.TOOL)

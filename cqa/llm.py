@@ -155,13 +155,18 @@ class LLM:
                     return self._anthropic(system, cached_user, user, tool, temperature)
                 return self._openai(system, cached_user, user, tool, temperature)
             except Exception as e:
+                if _status(e) == 404:
+                    raise RuntimeError(
+                        f"model {self.model!r} not found at provider {self.provider!r} (HTTP 404). Check CQA_MODEL / "
+                        "CQA_JURORS / CQA_JUDGE in .env against the provider's model list "
+                        "(e.g. GET /v1/models) or set CQA_ENSEMBLE=0.") from e
                 if attempt == MAX_ATTEMPTS - 1 or not retryable(e):
                     raise
                 time.sleep(backoff_delay(e, attempt))
 
     def _anthropic(self, system, cached_user, user, tool, temperature):
         r = self.client.messages.create(
-            model=self.model, max_tokens=1500,  # NB: this API endpoint rejects `temperature`; sampling is provider default
+            model=self.model, max_tokens=3000,  # NB: this API endpoint rejects `temperature`; sampling is provider default
             system=[{"type": "text", "text": system}],
             tools=[tool], tool_choice=({"type": "tool", "name": tool["name"]} if "haiku" in self.model
                                        else {"type": "auto"}),  # sonnet/opus 5-5 reject forced tool_choice

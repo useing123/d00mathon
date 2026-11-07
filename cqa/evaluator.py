@@ -33,7 +33,9 @@ def validate_evidence(rec, evidence):
     for e in evidence or []:
         if not isinstance(e, dict):
             continue
-        q = _norm(str(e.get("quote", "")))
+        raw_q = re.sub(r"^\s*(?:\[\d+\]\s*)?(?:\([\d:.?—-]*\)\s*)?(?:(?:OPERATOR|CLIENT|BOT|SYSTEM|UNKNOWN)\s*:\s*)?", "",
+                       str(e.get("quote", "")))   # models sometimes copy the "[N] (mm:ss) SPEAKER:" line prefix
+        q = _norm(raw_q)
         try:
             ti = int(e.get("turn"))
         except Exception:
@@ -70,6 +72,11 @@ def _check_evidence(cr, val, evidence, out):
     """Return a problem string (for a retry hint) or ''. Empty evidence is fine for NA / NO-by-omission
     if missing_where / na_reason is filled."""
     ops = [e for e in evidence if e.get("speaker") == "operator"]
+    reqs = out.get("client_requests")
+    if cr.get("request_ledger") and isinstance(reqs, list) and reqs and isinstance(val, int):
+        ess_open = [r for r in reqs if isinstance(r, dict) and r.get("essential") and r.get("status") == "open"]
+        if ess_open and val > 10:
+            return "ledger_inconsistent"
     if cr.get("gross") and val == "YES" and not ops:
         return "gross_no_operator_quote"
     if not evidence:
@@ -91,6 +98,8 @@ _HINTS = {
     "na_without_reason": "При value=NA заполни na_reason.",
     "omission_without_missing_where": "Если evidence пустой, укажи в missing_where, где ожидалось действие оператора.",
     "positive_without_evidence": "Положительная оценка требует цитат из реплик OPERATOR.",
+    "ledger_inconsistent": ("В client_requests есть существенный вопрос со статусом open, а значение выше 10. "
+                            "Согласуй список запросов и значение по якорям критерия."),
     "no_operator_evidence": "Критерий оценивает поведение оператора: приведи цитаты из реплик OPERATOR (а не клиента/бота).",
 }
 
@@ -188,6 +197,7 @@ class Evaluator:
         else:
             opinions = "\n".join(
                 f"- Эксперт {i+1}: значение {o['value']!r}. Обоснование: {o.get('justification','')} Рассуждение: {o.get('reasoning','')}"
+                + (" Цитаты: " + "; ".join(f"[{e['turn']}] «{e['quote']}»" for e in o.get("evidence") or []) if o.get("evidence") else "")
                 for i, o in enumerate(outs))
             extra = ("\n\nДва независимых эксперта разошлись во мнениях:\n" + opinions +
                      "\nПроверь транскрипт сам, строго по правилам критерия, и вынеси окончательное решение. "
@@ -206,6 +216,7 @@ class Evaluator:
             "confidence": float(chosen.get("confidence") or 0), "votes": all_votes,
             "jury": votes, "decided_by": decided_by,
             "evidence_warning": chosen.get("evidence_warning", ""), "needs_review": bool(chosen.get("needs_review")),
+            "client_requests": chosen.get("client_requests") or [],
             "self_consistency_disagreement": not agree, "juror_errors": chosen.get("juror_errors", []),
             "criterion_hash": key.split("_")[0], "cached": False,
         }
@@ -255,6 +266,7 @@ class Evaluator:
             "missing_where": chosen.get("missing_where", ""), "na_reason": chosen.get("na_reason", ""),
             "confidence": conf, "votes": votes, "self_consistency_disagreement": len(cnt) > 1,
             "evidence_warning": chosen.get("evidence_warning", ""), "needs_review": bool(chosen.get("needs_review")),
+            "client_requests": chosen.get("client_requests") or [],
             "criterion_hash": key.split("_")[0], "cached": False,
         }
         config.CACHE_DIR.mkdir(parents=True, exist_ok=True)

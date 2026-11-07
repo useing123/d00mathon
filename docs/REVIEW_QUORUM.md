@@ -9,6 +9,7 @@ suggestions that are correct and do not contradict the organizer rubric, and re-
 |---|---|---|---|---|
 | 0 (initial repo) | 77 | 65 | 86 | — |
 | 1 (after round-0 changes) | 76 | — | — | 93 |
+| 2 (after round-1 changes) | 79 | — | — | 95 |
 
 From round 1 the quorum is claude-fable-5-1 + gemini-4-argon.
 
@@ -68,3 +69,28 @@ Reviewers: claude-fable-5-1 (76), gemini-4-argon (93). fable's first response wa
 | 06: raise the pause threshold to ~5 min (fable) | No organizer basis for either number; kept 2 min, but the gap is now computed by code. |
 | Include jury config in `criterion_hash` (argon) | Already part of the cache key (`msig` = jurors + judge); cosmetic. |
 | Never-null total (fable) | Fail-closed was an explicit requirement; mitigated by the fallback chain + `provisional_total` column. |
+
+## Round 2 → changes
+### Accepted (implemented)
+| Suggestion (source) | Implementation |
+|---|---|
+| 04 structured request ledger (fable) | optional `client_requests` tool field (schema still shared), rule asks to fill it first; essential `open` + value > 10 → one retry; shown in the UI |
+| 02: referencing earlier client details in the answer is YES (fable) | examples added to the existing YES rule (NA rule unchanged) |
+| 03: client-provided ID without a check → NO; system-reported authentication counts (fable, argon) | rules of 03 + `system_says_client_authenticated` FACT |
+| 07: "если появятся вопросы — обращайтесь" = offer of help; system timeout after operator farewell is not a break (fable) | rules of 07 |
+| 05: incidental inconvenience inside a how-to question needs no separate apology (argon, 2nd time) | rules of 05 (see EVALUATION caveat) |
+| FACTS: multi-message first reply, wait warning in any operator turn since the client message, ack-only client turns don't start a "wait", short Kazakh words (argon) | `data.compute_facts`, `detect_language`; tests |
+| Strip copied `[N] (mm:ss) SPEAKER:` prefixes from quotes (argon) | `validate_evidence`; test |
+| Judge sees jurors' quotes (argon) | `_jury` opinions |
+| Actionable 404 message for unknown model ids (argon, fable) | `LLM.call`; test |
+| `max_tokens` 1500 → 3000 to avoid truncated tool calls on long calls (fable) | `_anthropic` |
+| OpenAI-provider jury only when explicitly enabled (fable: `.env.example` pitfall) | `CQA_OPENAI_JURY=1` |
+| `gold --dir` for a private labelled DEV subset (fable) | CLI |
+
+### Rejected / not done
+| Suggestion | Why |
+|---|---|
+| Configurable NA mode (full credit / zero) (fable) | The organizer rubric fixes it: NA weight is redistributed proportionally. |
+| 07 strictness switch (farewell alone = YES) (fable) | Rubric: (summary OR offer) AND goodbye. |
+| Hand-label real DEV dialogs (fable) | No organizer labels exist; labelling them ourselves would repeat the self-labelling bias. `--dir` support added instead. |
+| Criterion hash incl. jury models (argon) | Already in the cache key (`msig`). |
