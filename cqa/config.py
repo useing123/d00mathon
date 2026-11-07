@@ -32,7 +32,11 @@ def get(key, default=None):
 
 
 PROVIDER = get("CQA_PROVIDER", "anthropic")          # anthropic | openai
-MODEL = get("CQA_MODEL", "claude-sonnet-4-5-20250929")
+MODEL = get("CQA_MODEL", "claude-sonnet-5-5")
+# Ensemble ("jury") mode: two jurors vote in parallel, the frontier judge adjudicates disagreements.
+ENSEMBLE = get("CQA_ENSEMBLE", "1") == "1"
+JURORS = [m.strip() for m in get("CQA_JURORS", "claude-haiku-5-5,claude-sonnet-5-5").split(",") if m.strip()]
+JUDGE = get("CQA_JUDGE", "claude-opus-5-5")
 OPENAI_BASE_URL = get("CQA_OPENAI_BASE_URL", "http://127.0.0.1:11434/v1")  # Ollama default
 OPENAI_API_KEY = get("CQA_OPENAI_API_KEY", "ollama")
 CONCURRENCY = int(get("CQA_CONCURRENCY", "24"))

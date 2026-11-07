@@ -21,7 +21,16 @@ def validate_evidence(rec, evidence):
     if it is found in a different turn, the turn index is corrected."""
     turns = rec["transcript"]
     valid, invalid = [], []
+    if isinstance(evidence, str):          # sonnet/opus in tool_choice=auto sometimes send JSON as a string
+        try:
+            evidence = json.loads(evidence)
+        except Exception:
+            evidence = []
+    if isinstance(evidence, dict):
+        evidence = [evidence]
     for e in evidence or []:
+        if not isinstance(e, dict):
+            continue
         q = _norm(str(e.get("quote", "")))
         try:
             ti = int(e.get("turn"))
@@ -58,26 +67,34 @@ def _coerce(cr, v):
 
 
 class Evaluator:
-    def __init__(self, llm=None, use_cache=True, samples=None):
+    def __init__(self, llm=None, use_cache=True, samples=None, ensemble=None):
         self.llm = llm or LLM()
+        self.ensemble = config.ENSEMBLE if ensemble is None else ensemble
+        if self.ensemble and self.llm.provider == "anthropic" and llm is None:
+            self.jurors = [LLM(model=m) for m in config.JURORS]
+            self.judge = LLM(model=config.JUDGE)
+        else:
+            self.ensemble = False
         self.use_cache = use_cache
         self.samples = samples
 
     # ---- single sample with quote validation + retry ----
-    def _sample(self, rec, tx_block, checklist, cr, temperature):
+    def _sample(self, rec, tx_block, checklist, cr, temperature, llm=None, extra=""):
+        llm = llm or self.llm
         tool = prompts.tool_schema(cr)
-        user = prompts.criterion_block(checklist, cr)
+        base = prompts.criterion_block(checklist, cr) + extra
+        user = base
         out = None
         for attempt in range(3):
-            out = self.llm.call(prompts.SYSTEM, tx_block, user, tool, temperature)
+            out = llm.call(prompts.SYSTEM, tx_block, user, tool, temperature)
             val = _coerce(cr, out.get("value"))
             valid, invalid = validate_evidence(rec, out.get("evidence"))
             if val is None:
-                user = prompts.criterion_block(checklist, cr) + f"\n\nВНИМАНИЕ: значение {out.get('value')!r} недопустимо. Используй только: {prompts.allowed_values(cr)}."
+                user = base + f"\n\nВНИМАНИЕ: значение {out.get('value')!r} недопустимо. Используй только: {prompts.allowed_values(cr)}."
                 continue
             if invalid and attempt < 2:
                 bad = "; ".join(f"[{e.get('turn')}] «{e.get('quote')}»" for e in invalid)
-                user = prompts.criterion_block(checklist, cr) + (
+                user = base + (
                     f"\n\nВНИМАНИЕ: в прошлой попытке цитаты не найдены в транскрипте дословно: {bad}. "
                     "Цитируй ТОЛЬКО точные подстроки текста указанной реплики.")
                 continue
@@ -93,8 +110,40 @@ class Evaluator:
             return out
         raise RuntimeError(f"criterion {cr['id']}: model failed to return a valid value")
 
+    def _jury(self, rec, tx_block, checklist, cr, key):
+        """Jurors (haiku + sonnet) vote in parallel; on disagreement the frontier judge (opus) decides."""
+        with ThreadPoolExecutor(max_workers=len(self.jurors)) as ex:
+            outs = list(ex.map(lambda m: self._sample(rec, tx_block, checklist, cr, 0.0, llm=m), self.jurors))
+        votes = {m.model: o["value"] for m, o in zip(self.jurors, outs)}
+        agree = len(set(map(str, votes.values()))) == 1
+        if agree:
+            chosen, decided_by = outs[-1], "consensus"   # strongest juror's explanation
+        else:
+            opinions = "\n".join(
+                f"- Эксперт {i+1}: значение {o['value']!r}. Обоснование: {o.get('justification','')} Рассуждение: {o.get('reasoning','')}"
+                for i, o in enumerate(outs))
+            extra = ("\n\nДва независимых эксперта разошлись во мнениях:\n" + opinions +
+                     "\nПроверь транскрипт сам, строго по правилам критерия, и вынеси окончательное решение. "
+                     "Не усредняй и не выбирай по большинству: решай по фактам.")
+            chosen, decided_by = self._sample(rec, tx_block, checklist, cr, 0.0, llm=self.judge, extra=extra), self.judge.model
+        final = chosen["value"]
+        all_votes = list(votes.values()) + ([final] if not agree else [])
+        return {
+            "criterion_id": cr["id"], "name": cr["name"], "type": cr["type"], "value": final,
+            "is_na": final == "NA", "scale_step": final if cr["type"] == "scale" else None,
+            "justification": chosen.get("justification", ""), "reasoning": chosen.get("reasoning", ""),
+            "evidence": chosen.get("evidence", []), "rejected_quotes": chosen.get("rejected_quotes", []),
+            "missing_where": chosen.get("missing_where", ""), "na_reason": chosen.get("na_reason", ""),
+            "confidence": float(chosen.get("confidence") or 0), "votes": all_votes,
+            "jury": votes, "decided_by": decided_by,
+            "self_consistency_disagreement": not agree,
+            "criterion_hash": key.split("_")[0], "cached": False,
+        }
+
     def evaluate_criterion(self, rec, checklist, cr):
-        key = f"{ckl.criterion_hash(checklist, cr)}_{rec['hash']}"
+        import hashlib
+        msig = (f"J{config.JURORS}{config.JUDGE}" if self.ensemble else self.llm.model)
+        key = f"{ckl.criterion_hash(checklist, cr)}{hashlib.sha1(msig.encode()).hexdigest()[:6]}_{rec['hash']}"
         cp = config.CACHE_DIR / f"{key}.json"
         if self.use_cache and cp.exists():
             res = json.loads(cp.read_text())
@@ -104,6 +153,11 @@ class Evaluator:
         n = int(self.samples or a.get("self_consistency_samples", 3))
         thr = float(a.get("confidence_threshold", 0.8))
         tx_block = prompts.transcript_block(rec, data.format_transcript(rec, a.get("ignore_internal_hold_turns", True)))
+        if self.ensemble:
+            res = self._jury(rec, tx_block, checklist, cr, key)
+            config.CACHE_DIR.mkdir(parents=True, exist_ok=True)
+            cp.write_text(json.dumps(res, ensure_ascii=False))
+            return res
         first = self._sample(rec, tx_block, checklist, cr, 0.0)
         samples = [first]
         conf = float(first.get("confidence") or 0)
@@ -175,7 +229,7 @@ class Evaluator:
             cid = checklist_override or ckl.pick_for_channel(rec["kind"])
             out.append(build_dialog_result(rec, cls[cid], [results[rec["conversation_id"]][c["id"]] for c in cls[cid]["criteria"]]))
         meta = {"elapsed_s": round(time.time() - t0, 1), "usage": dict(USAGE), "cost_usd": cost_usd(),
-                "provider": self.llm.provider, "model": self.llm.model, "errors": errors}
+                "provider": self.llm.provider, "model": (f"jury[{'+'.join(config.JURORS)}] judge={config.JUDGE}" if self.ensemble else self.llm.model), "errors": errors}
         return out, meta
 
 
