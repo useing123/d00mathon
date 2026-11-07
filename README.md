@@ -10,6 +10,22 @@
 
 [English version ↓](#english) · [Pitch deck (PDF)](docs/CQA_Pitch_Deck.pdf) · [Presentation (HTML)](docs/presentation.html) · [Architecture](docs/ARCHITECTURE.md) · [Scoring](docs/SCORING.md) · [Assumptions](docs/ASSUMPTIONS.md) · [Evaluation](docs/EVALUATION.md) · [API](docs/API.md)
 
+## Submission / Сдача результатов (формат JSON 1.0)
+
+| Файл | Что внутри | Как получить |
+|---|---|---|
+| [`results/dev/results.json`](results/dev/results.json) | все 65 записей DEV (60 чатов + 5 звонков), прогон `dev_jury_v6` | `make submit-dev RUN=dev_jury_v6` (без вызовов LLM) |
+| `results/prod/results.json` | ровно 10 записей контрольного набора, включая ошибки | в контрольный час: `make submit GROUP=<id>` → `git push` |
+
+- Формат — приложение к студенческому гайду «Как сдать результаты»: `{"schema_version":"1.0","team_name":"d00mathon","model":{"mode","name"},"results":[…]}`; на диалог — `status:"ok"` с 8 критериями (`contact, discovery, identification, consultation, empathy, dialogue, closure, critical`; `true/false/null` или шаг шкалы до веса) и `score:{final_score, critical_flag}`, либо `status:"error"`, `criteria:[]`, `score:null`, `error:"<причина>"` (ошибка никогда не заменяется нулём).
+- `evidence_turns` — **нумерация с 1** по исходному массиву транскрипта (клиент, бот, оператор, системные события); вся система (промпт, UI, API, экспорт) использует ту же нумерацию.
+- Все правила — в одном месте: [`cqa/submission.py`](cqa/submission.py); JSON-схема — [`docs/results.schema.json`](docs/results.schema.json); проверка: `python -m cqa validate results/prod/results.json` (схема, домены значений, 8 критериев по одному разу, `critical_flag == critical`, 2 знака, без дублей ID, в prod ровно 10 записей; `--group <id>` — ID совпадают с API).
+- `make submit GROUP=<id>`: загрузка из API → оценка (пресет по умолчанию) → экспорт JSON 1.0 → валидация → `git add -f` + commit; push — вручную. В UI: «Ещё → Выгрузить results.json (v1.0)».
+- Заменённый в UI критерий выгружается под своим `id` (или `code:` из YAML); стандартные 01–08 → официальные коды.
+- **Модель и стоимость.** `results/dev/results.json`: жюри `claude-haiku-5-5` + `claude-sonnet-5-5`, судья `claude-opus-5-5` (`external_api`), $7.64 за 65 диалогов ≈ **$0.12 за диалог**, ≈ 5 мин. Пресет по умолчанию для новых прогонов (в т.ч. `make submit`) — `gpt-5.3-codex`, ≈ $0.058 за диалог (см. [docs/MODELS.md](docs/MODELS.md)); фактическая модель записывается в `model.name`.
+- **Апелляции** (два отдельных действия): «Оспорить» на карточке критерия (обязательный комментарий) → вкладка «Апелляции»: проверяющий подтверждает или меняет оценку с обязательной причиной → итог пересчитывается; карточка показывает исходную оценку, решение и итог. API: `POST /api/appeals`, `GET /api/appeals?group=&status=`, `POST /api/appeals/{id}/resolve`.
+- Точность на реальных DEV-диалогах **не измерена** человеком (нет разметки); измерено только на синтетических gold-наборах (см. [docs/EVALUATION.md](docs/EVALUATION.md)).
+
 Система оценивает работу **оператора-человека** (не бота) по гибкому чек-листу: чаты и голосовые звонки, RU / KZ / EN. Для каждого критерия — значение, обоснование, дословная цитата с номером реплики (или «где ожидалось действие»), итог 0–100 и отдельный флаг грубой ошибки. Веб-интерфейс без логина: дашборд, карточка диалога с подсветкой доказательств, аудиоплеер, ручная проверка (override), редактор чек-листов.
 
 ## Быстрый старт (3 команды)

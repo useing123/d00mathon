@@ -46,3 +46,11 @@ All routes are exercised in `tests/test_e2e_mock.py::test_http_api_end_to_end` (
   this layout is an assumption. Dialogs still incomplete after the rescue pass have an empty total unless
   `--fill-provisional` is given.
 - `out.diagnostics.csv` — status, failed / needs-review criteria, provisional total, warnings.
+
+## Submission JSON 1.0 and appeals
+
+- `GET /api/export/{group}/results.json[?run=]` — submission file (format: `cqa/submission.py`, schema `docs/results.schema.json`); every dialog of the group appears, failed ones as `status:"error"`.
+- `POST /api/appeals` `{group, conversation_id, criterion_id, comment (required), author, run}` → appeal `status:"open"` (one open appeal per criterion).
+- `GET /api/appeals?group=&status=open|resolved&fragment=true` → `{open, items}`; `fragment` adds the dialog turns around the AI evidence (1-based).
+- `POST /api/appeals/{id}/resolve` `{group, decision: confirm|change, value (for change), reason (required), reviewer}` → `{appeal, dialog, total}`; a change is stored as a human override (total recomputed); each appeal keeps an audit trail.
+- `DELETE /api/appeals/{id}?group=` — remove an appeal record (cleanup; does not undo an override).
