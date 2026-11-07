@@ -161,6 +161,13 @@ class LLM:
 
     def call(self, system: str, cached_user: str, user: str, tool: dict, temperature: float = 0.0) -> dict:
         """Run one structured evaluation call with up to 4 attempts (exponential-ish backoff)."""
+        from . import pii
+        if pii.enabled():   # CQA_PII_MASK=1: no raw PII leaves the process; quotes come back unmasked for validation/UI
+            system, cached_user, user = pii.mask(system), pii.mask(cached_user), pii.mask(user)
+            return pii.unmask(self._call(system, cached_user, user, tool, temperature))
+        return self._call(system, cached_user, user, tool, temperature)
+
+    def _call(self, system, cached_user, user, tool, temperature):
         if self.provider == "mock":
             return self._mock.call(system, cached_user, user, tool, temperature)
         for attempt in range(MAX_ATTEMPTS):

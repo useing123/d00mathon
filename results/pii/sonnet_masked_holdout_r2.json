@@ -1,0 +1,3695 @@
+{
+ "metrics": {
+  "dialogs": 10,
+  "per_criterion": {
+   "01": {
+    "n": 10,
+    "match": 10,
+    "agreement": 1.0
+   },
+   "02": {
+    "n": 10,
+    "match": 10,
+    "agreement": 1.0
+   },
+   "03": {
+    "n": 10,
+    "match": 10,
+    "agreement": 1.0
+   },
+   "04": {
+    "n": 10,
+    "match": 8,
+    "agreement": 0.8
+   },
+   "05": {
+    "n": 10,
+    "match": 9,
+    "agreement": 0.9
+   },
+   "06": {
+    "n": 10,
+    "match": 9,
+    "agreement": 0.9
+   },
+   "07": {
+    "n": 10,
+    "match": 10,
+    "agreement": 1.0
+   },
+   "08": {
+    "n": 10,
+    "match": 10,
+    "agreement": 1.0
+   }
+  },
+  "overall_agreement": 0.95,
+  "total_mae": 4.77,
+  "gross": {
+   "tn": 9,
+   "tp": 1,
+   "precision": 1.0,
+   "recall": 1.0
+  },
+  "na_confusion": {
+   "exp_NA/pred_NA": 17,
+   "exp_applicable/pred_applicable": 63
+  },
+  "incomplete": [],
+  "mismatches": [
+   {
+    "conversation_id": "hold-04-ru-transfer-minor-detail",
+    "criterion_id": "04",
+    "expected": 15,
+    "predicted": 20,
+    "rationale": "process fully explained; did not mention the sending broker's fee (secondary detail) → 15"
+   },
+   {
+    "conversation_id": "hold-10-ru-contradictory",
+    "criterion_id": "04",
+    "expected": 5,
+    "predicted": 0,
+    "rationale": "ended with a general hint, client still unsure → 5"
+   },
+   {
+    "conversation_id": "hold-10-ru-contradictory",
+    "criterion_id": "05",
+    "expected": "YES",
+    "predicted": "NO",
+    "rationale": ""
+   },
+   {
+    "conversation_id": "hold-10-ru-contradictory",
+    "criterion_id": "06",
+    "expected": 4,
+    "predicted": 0,
+    "rationale": "contradictory answers, client had to re-ask because of them → 4"
+   }
+  ],
+  "meta": {
+   "provider": "anthropic",
+   "model": "claude-sonnet-5-5",
+   "cost_usd": 0.8697,
+   "elapsed_s": 42.3,
+   "errors": []
+  },
+  "source": "examples/gold_holdout"
+ },
+ "dialogs": [
+  {
+   "conversation_id": "hold-01-en-bonds-clarify",
+   "channel": "agent chat",
+   "language": "EN",
+   "kind": "chat",
+   "dialog_hash": "5d87acc95c99be32",
+   "checklist_id": "freedom_chat_v1",
+   "checklist_version": "v?+4355ffb60ed7",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "В первой реплике оператор поздоровался по-английски и назвал своё имя и компанию.",
+     "reasoning": "Первая реплика оператора [5] на английском (язык клиента EN): \"Hello\" — приветствие, \"my name is Aidos\" — представление с именем (плейсхолдер имени). Оба условия выполнены.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Hello, my name is Aidos from Freedom Broker.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.96,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "c18e34c04986932a",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор уточнил, какие именно облигации интересуют (KASE или US Treasuries), до ответа, и ответил с учётом выбора клиента.",
+     "reasoning": "Клиент сказал только «I want to buy bonds» — запрос допускал минимум два толкования (облигации KASE или US Treasuries). Оператор в [5] задал нужное уточнение до ответа, клиент ответил в [6], затем оператор дал инструкцию по US Treasuries. Ранее клиент этих деталей не сообщал, переспроса уже сказанного нет.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Which bonds are you interested in — Kazakhstan bonds on KASE or US Treasuries?",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "In the app open Market → Bonds → USA, choose the issue",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.92,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "86d055675d96508b",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос общий (как купить облигации), оператор дал общую инструкцию без раскрытия данных счёта — идентификация не нужна.",
+     "reasoning": "Клиент хочет купить облигации; оператор дал общую инструкцию по приложению и информацию о минимальном лоте. Персональные данные клиента не раскрывались, защищённых действий оператор не выполнял. Идентификация не требовалась.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "In the app open Market → Bonds → USA, choose the issue, enter the quantity and confirm the order.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Общий вопрос о покупке облигаций; персональные данные не раскрывались, защищённых действий не было.",
+     "confidence": 0.93,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "210e13c2041f4cfe",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "Оператор уточнил тип облигаций и дал конкретную пошаговую инструкцию покупки US Treasuries с минимальным лотом; клиент подтвердил, что всё понятно.",
+     "reasoning": "Клиент хочет купить облигации. Оператор уточнил тип [5], клиент выбрал US Treasuries [6]. Оператор дал точный путь в приложении и минимальный лот [7]. Клиент подтвердил, что понятно [8]. Существенный запрос закрыт; вторичных вопросов клиент не задавал.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Which bonds are you interested in — Kazakhstan bonds on KASE or US Treasuries?",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "In the app open Market → Bonds → USA, choose the issue, enter the quantity and confirm the order. The minimum lot is one bond (1,000 USD face value).",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 8,
+       "quote": "Clear, thanks.",
+       "speaker": "client",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.9,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [
+      {
+       "text": "Хочет купить облигации (US Treasuries) — как это сделать",
+       "essential": true,
+       "status": "closed",
+       "turn": 1
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      20
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "fc69b21666b4cea9",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Жалоб и эмоций у клиента нет, оператор вежлив на протяжении всего диалога (приветствие, уточнение, помощь, прощание).",
+     "reasoning": "Клиент не выражал недовольства или тревоги: просто хочет купить облигации, затем попросил оператора. Оператор вежлив: поздоровался, представился, уточнил, дал инструкцию, попрощался. Грубости нет.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Hello, my name is Aidos from Freedom Broker. Which bonds are you interested in",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Glad to help! Anything else? Goodbye!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.93,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "35ce7fffa63bef7f",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответы оператора ясные, логичные и грамотные. Клиент не переспрашивал, явных ожиданий свыше 180 с не было.",
+     "reasoning": "Реплики оператора [5], [7], [9] ясные и связные: уточнил тип облигаций, затем дал пошаговую инструкцию. Клиент не переспрашивал, сказал «Clear, thanks». Самое долгое ожидание — 20 с, намного меньше 180 с, явного ожидания не было. Грамматических ошибок нет.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Which bonds are you interested in — Kazakhstan bonds on KASE or US Treasuries?",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "In the app open Market → Bonds → USA, choose the issue, enter the quantity and confirm the order.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.93,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "97278649951ccae3",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в последней реплике предложил дальнейшую помощь («Anything else?») и попрощался («Goodbye!»).",
+     "reasoning": "Последняя реплика оператора [9]: «Glad to help! Anything else? Goodbye!» — содержит предложение дальнейшей помощи («Anything else?») и прощание («Goodbye!»). Формула прощание + предложение помощи выполнена. Диалог завершился штатно, оператор мог закрыть диалог.",
+     "evidence": [
+      {
+       "turn": 9,
+       "quote": "Glad to help! Anything else? Goodbye!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "ee52cfd0e6bb5dfa",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Грубых ошибок в репликах оператора нет: ни оскорблений, ни личных платных предложений, ни раскрытия конфиденциальной информации.",
+     "reasoning": "Реплики оператора [5], [7], [9] — вежливые, информационные. Нет оскорблений, предложений платных услуг в обход компании или раскрытия конфиденциальных данных.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "Не применимо: грубых нарушений в репликах оператора [5], [7], [9] не обнаружено.",
+     "na_reason": "",
+     "confidence": 0.97,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "538653a4907eddc7",
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 100.0,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     100.0,
+     100.0
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "YES",
+     "03": "NA",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 100.0,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-02-call-ru-phone-change-no-id",
+   "channel": "voice call",
+   "language": "RU",
+   "kind": "call",
+   "dialog_hash": "ded40a1fda7f09d8",
+   "checklist_id": "freedom_call_v1",
+   "checklist_version": "v?+9f345f81f85a",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "В первой реплике оператор поздоровался по-русски и назвал своё имя.",
+     "reasoning": "Первая реплика оператора [4]: «Добрый день, Фридом Брокер, меня зовут Гульнара. Чем могу помочь?» Есть приветствие на русском (язык клиента RU) и представление по имени.",
+     "evidence": [
+      {
+       "turn": 4,
+       "quote": "Добрый день, Фридом Брокер, меня зовут Гульнара.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.97,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "819e091c6cfe28f5",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос был ясным и полным (смена номера, новый номер назван), уточнять было нечего, оператор не переспрашивал лишнего.",
+     "reasoning": "Клиент сразу чётко сформулировал запрос: поменять номер телефона в профиле и назвал новый номер. Для ответа по сути данных хватало, переспросов лишних оператор не задавал. Отсутствие верификации и сам ответ оцениваются в других критериях (03/08). По рубрике — NA.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "С самого начала данных было достаточно: клиент назвал действие и новый номер; оператор не переспрашивал.",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "d7eecbdca75ba23c",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Смена номера телефона — защищённое действие, но оператор выполнил его без какой-либо проверки личности клиента.",
+     "reasoning": "Клиент просит сменить номер телефона в профиле — защищённое действие, требующее идентификации. Оператор в [6] сразу подтвердил изменение номера, не запросив ни ФИО, ни ИИН, ни кодовое слово. Бот тоже ничего об авторизации клиента не сообщал. Идентификации нет.",
+     "evidence": [
+      {
+       "turn": 6,
+       "quote": "Хорошо, номер в профиле изменён на новый, SMS теперь будут приходить на него.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 5,
+       "quote": "Хочу поменять номер телефона в профиле на восемь семьсот один пятьсот пятьдесят пять ноль ноль ноль ноль.",
+       "speaker": "client",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "Реплика [6]: перед изменением номера ожидался запрос идентификационных данных (ФИО/ИИН/кодовое слово).",
+     "na_reason": "",
+     "confidence": 0.96,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "d443f335dfe21595",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "Запрос клиента на смену номера выполнен, оператор объяснил результат (SMS на новый номер), клиент поблагодарил. Отсутствие идентификации оценивается в критерии 03.",
+     "reasoning": "Клиент попросил поменять номер телефона в профиле [5]. Оператор сообщил, что номер изменён, и объяснил, что SMS будут приходить на новый номер [6]. Клиент поблагодарил [7]. Отсутствие идентификации относится к критерию 03, а не к 04. Содержательно запрос закрыт, действие объяснено.",
+     "evidence": [
+      {
+       "turn": 6,
+       "quote": "Хорошо, номер в профиле изменён на новый, SMS теперь будут приходить на него.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 8,
+       "quote": "Могу ещё чем-то помочь?",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [
+      {
+       "text": "Поменять номер телефона в профиле на новый",
+       "essential": true,
+       "status": "closed",
+       "turn": 5
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      20
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "29d758fdc4209712",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Клиент не выражал недовольства, оператор вежлив на протяжении всего диалога, поэтому достаточно вежливости.",
+     "reasoning": "Клиент просто просит сменить номер телефона, недовольства, тревоги или жалобы не выражает. Оператор вежлив: поздоровался, предложил помощь, ответил «Хорошо», «Пожалуйста», уточнил, нужна ли ещё помощь, попрощался. Грубости нет. Чек-лист требует только вежливости, поэтому YES. Отсутствие верификации оценивается в других критериях.",
+     "evidence": [
+      {
+       "turn": 4,
+       "quote": "Добрый день, Фридом Брокер, меня зовут Гульнара. Чем могу помочь?",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 8,
+       "quote": "Пожалуйста. Могу ещё чем-то помочь? Всего доброго, до свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.9,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "cea9fcd6bbf0ec3f",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответы оператора ясные и логичные, без неуместных выражений. Явных ожиданий и удержаний не было, клиент не переспрашивал.",
+     "reasoning": "Реплики оператора: [4] приветствие, [6] подтверждение изменения номера, [8] вежливое завершение. Все фразы ясные, связные и логичные. Удержания не было. Пауза 8 с намного меньше порога 180 с, это не явное ожидание. Клиент ничего не переспрашивал. Номер изменён без идентификации, но это вопрос содержания и безопасности, а не ясности и управления диалогом. В [8] оператор одновременно спрашивает «Могу ещё чем-то помочь?» и прощается, не дожидаясь ответа. Это шаблонная оговорка, и клиент всё понял. Я не считаю её заметным сбоем для 06.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.8,
+     "evidence_warning": "positive_without_evidence",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "f4fe2e966706cc90",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор предложил дальнейшую помощь и попрощался в последней реплике; клиент завершил звонок уже после этого.",
+     "reasoning": "Последняя реплика оператора [8]: «Пожалуйста. Могу ещё чем-то помочь? Всего доброго, до свидания!» — есть предложение дальнейшей помощи и прощание. Клиент завершил разговор после этой реплики оператора, значит оператор успел закрыть диалог. Также в [6] зафиксирован результат. Формула прощание + (итог или предложение помощи) выполнена.",
+     "evidence": [
+      {
+       "turn": 8,
+       "quote": "Могу ещё чем-то помочь? Всего доброго, до свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.93,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "d4a7dbf01dbe5f2e",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "В репликах оператора нет оскорблений, предложений платных услуг в обход компании и раскрытия конфиденциальной информации.",
+     "reasoning": "Реплики оператора [4], [6], [8] проверены: оскорблений, предложений платных услуг в обход компании и раскрытия чужих данных или внутренней информации нет. Смена номера без идентификации оценивается в 03, а не здесь.",
+     "evidence": [
+      {
+       "turn": 6,
+       "quote": "Хорошо, номер в профиле изменён на новый, SMS теперь будут приходить на него.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 8,
+       "quote": "Пожалуйста. Могу ещё чем-то помочь?",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "9a890cba03370ad1",
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [
+    "06: positive_without_evidence"
+   ],
+   "total": 76.47,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     76.47,
+     76.47
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": {
+    "operator_wpm": 86.2,
+    "speaker_changes": 4,
+    "overlap_rate": 0.0,
+    "operator_response_s": {
+     "median": 8.0,
+     "p90": 8.0,
+     "max": 8.0,
+     "n": 2
+    },
+    "note": "informational, estimated from turn start times only; not scored"
+   },
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "NO",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 76.47,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-03-kz-no-name",
+   "channel": "agent chat",
+   "language": "KZ",
+   "kind": "chat",
+   "dialog_hash": "10b97e633b821842",
+   "checklist_id": "freedom_chat_v1",
+   "checklist_version": "v?+4355ffb60ed7",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор поздоровался по-казахски, но не назвал своё имя в первой реплике.",
+     "reasoning": "Первая реплика оператора [5]: «Сәлеметсіз бе! Қалай көмектесе аламын?» — приветствие на казахском (язык клиента), но имя не названо. Представления нет, значит NO.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Сәлеметсіз бе! Қалай көмектесе аламын?",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "Реплика №5 — отсутствует представление (имя оператора)",
+     "na_reason": "",
+     "confidence": 0.97,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "c18e34c04986932a",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос о времени работы биржи был ясен, оператор сразу дал ответ по обеим основным площадкам без уточнений. Уточнять было нечего.",
+     "reasoning": "Клиент спросил про время работы биржи ([1], повторил [6]). Оператор в [5] спросил «Қалай көмектесе аламын?», хотя вопрос уже был задан боту — но это стандартное приветствие, клиент повторил вопрос. В [7] оператор ответил на оба рынка (KASE и США), не уточняя. Запрос допускал несколько толкований (какая биржа), но оператор покрыл оба варианта, ответ дан не наугад. Данных хватало для ответа, уточнений не требовалось — NA. Переспрос в [5] — приветствие, но формально заставил повторить вопрос; это скорее мелочь, не существенный переспрос.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "KASE 11:30-дан 17:00-ге дейін (Астана уақыты), ал АҚШ биржалары 19:30-дан 02:00-ге дейін жұмыс істейді.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Запрос ясен, данных достаточно для ответа без уточнений.",
+     "confidence": 0.7,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA",
+      "NA",
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "86d055675d96508b",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос общий (график работы биржи), персональные данные не раскрывались, идентификация не требовалась.",
+     "reasoning": "Клиент спросил о времени работы биржи — общий вопрос. Оператор сообщил общую информацию о часах работы KASE и бирж США, персональные данные не раскрывались, защищённых действий не было. Идентификация не требовалась.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Общий вопрос о времени работы биржи не требует идентификации клиента.",
+     "confidence": 0.97,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "210e13c2041f4cfe",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "Оператор конкретно ответил на вопрос о времени работы бирж (KASE и США), клиент поблагодарил — вопрос закрыт.",
+     "reasoning": "Клиент спросил о времени работы биржи [1], повторил [6]. Оператор [7] дал конкретные часы KASE и американских бирж. Клиент поблагодарил [8]. Информация правдоподобна, неверных данных нет. Вопрос закрыт полностью; уточнение про биржи не запрашивалось (клиент не указал конкретную биржу, но оператор охватил обе основные).",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "KASE 11:30-дан 17:00-ге дейін (Астана уақыты), ал АҚШ биржалары 19:30-дан 02:00-ге дейін жұмыс істейді.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Тағы сұрақтарыңыз болса, жазыңыз.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.9,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [
+      {
+       "text": "Биржа қай уақытта жұмыс істейді? / Биржа уақыты қандай?",
+       "essential": true,
+       "status": "closed",
+       "turn": 6
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      20
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "fc69b21666b4cea9",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Клиент недовольства не выражал. Оператор был вежлив на протяжении всего диалога: поприветствовал, дал точный ответ и вежливо завершил разговор.",
+     "reasoning": "Клиент задал только нейтральные вопросы о времени работы биржи, недовольства, тревоги или жалоб не выражал. Оператор в репликах 5, 7 и 9 вежлив: поздоровался, ответил по существу, попрощался. Грубости нет, поэтому достаточно вежливости.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Сәлеметсіз бе! Қалай көмектесе аламын?",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "KASE 11:30-дан 17:00-ге дейін (Астана уақыты)",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Тағы сұрақтарыңыз болса, жазыңыз. Сау болыңыз!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "35ce7fffa63bef7f",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответы оператора ясные и связные, явных ожиданий свыше порога не было, грамотных сбоев нет.",
+     "reasoning": "Реплики оператора: [5] приветствие, [7] чёткий ответ о времени работы KASE и американских бирж, [9] завершение. Самое долгое ожидание — 20 с, намного меньше 180 с, явного ожидания не было. Ответы ясные и связные, переспросов из-за формулировок нет (клиент в [6] повторил вопрос из-за того, что оператор в [5] только поприветствовал, и это не сбой формулировки). Грамотность в порядке.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "KASE 11:30-дан 17:00-ге дейін (Астана уақыты), ал АҚШ биржалары 19:30-дан 02:00-ге дейін жұмыс істейді.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Тағы сұрақтарыңыз болса, жазыңыз. Сау болыңыз!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.9,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "97278649951ccae3",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в последней реплике предложил дальнейшую помощь и попрощался.",
+     "reasoning": "Последняя реплика оператора [9]: «Тағы сұрақтарыңыз болса, жазыңыз. Сау болыңыз!» — предложение дальнейшей помощи («если будут вопросы, пишите») и прощание («Сау болыңыз» — до свидания). Формула YES выполнена. Диалог завершился штатно после «Рақмет» клиента.",
+     "evidence": [
+      {
+       "turn": 9,
+       "quote": "Тағы сұрақтарыңыз болса, жазыңыз. Сау болыңыз!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.96,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "ee52cfd0e6bb5dfa",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Грубых ошибок в репликах оператора нет: ни оскорблений, ни личных платных предложений, ни раскрытия конфиденциальных данных.",
+     "reasoning": "Реплики оператора [5], [7], [9]: приветствие, информация о времени работы бирж, прощание. Нет оскорблений, предложений платных услуг в обход компании или раскрытия конфиденциальных данных.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "KASE 11:30-дан 17:00-ге дейін (Астана уақыты), ал АҚШ биржалары 19:30-дан 02:00-ге дейін жұмыс істейді.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Тағы сұрақтарыңыз болса, жазыңыз. Сау болыңыз!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.97,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "538653a4907eddc7",
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 84.62,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     84.62,
+     84.62
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "NO",
+     "02": "NA",
+     "03": "NA",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 84.62,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-04-ru-transfer-minor-detail",
+   "channel": "agent chat",
+   "language": "RU",
+   "kind": "chat",
+   "dialog_hash": "ccf83e115f7a934a",
+   "checklist_id": "freedom_chat_v1",
+   "checklist_version": "v?+4355ffb60ed7",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "В первой реплике оператор поздоровался по-русски («Здравствуйте») и назвал своё имя («меня зовут Игорь»).",
+     "reasoning": "Первая реплика оператора [5]: «Здравствуйте, меня зовут Игорь.» Клиент пишет по-русски; приветствие на русском и представление с именем есть.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Игорь.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.97,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "c18e34c04986932a",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос был ясен с самого начала, уточнений не требовалось, и оператор лишнего не переспрашивал.",
+     "reasoning": "Клиент в [1] чётко спросил, как перевести акции от другого брокера и сколько это стоит. Данных хватало для ответа, уточнять было нечего. Оператор ничего не переспрашивал и сразу ответил [5], затем на уточнение о стоимости [7]. Критерий оценивает только этап до ответа, поэтому по правилам это NA.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Вопрос клиента о переводе акций и стоимости был полным, оператор ответил сразу и не переспрашивал.",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "86d055675d96508b",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос общий (процедура и стоимость перевода), данные счёта клиента не раскрывались, поэтому идентификация не требовалась.",
+     "reasoning": "Клиент спросил, как перевести акции от другого брокера и сколько это стоит. Это общий вопрос об инструкции и тарифе. Оператор [5] и [7] дал общую инструкцию и сообщил, что входящий перевод бесплатный. Персональные данные клиента или данные его счёта не раскрывались, защищённых действий не выполнялось. Идентификация не требовалась.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Чтобы перевести бумаги, подайте у текущего брокера поручение на перевод",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "С нашей стороны входящий перевод бесплатный.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Общий информационный вопрос о порядке и стоимости перевода ценных бумаг; персональные данные не раскрывались.",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "210e13c2041f4cfe",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "Оператор дал точную инструкцию по переводу и срок, а также ответил на вопрос о стоимости (входящий перевод бесплатный); клиент подтвердил, что понял.",
+     "reasoning": "Клиент спросил: как перевести акции от другого брокера и сколько это стоит. Оператор [5] дал чёткую инструкцию (поручение у текущего брокера, реквизиты из раздела в приложении, загрузка копии, срок 3–5 дней). На вопрос о стоимости [7] ответил: входящий перевод бесплатный. Упущено, что текущий брокер может взимать свою комиссию — но это второстепенная деталь, оператор оговорил «с нашей стороны». Клиент поблагодарил и подтвердил, что понял. Оба вопроса закрыты, инструкция точная. Формулировка «с нашей стороны» корректно ограничивает ответ.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "подайте у текущего брокера поручение на перевод, указав наши реквизиты из раздела «Перевод ценных бумаг» в приложении",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 5,
+       "quote": "Перевод занимает 3–5 рабочих дней.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "С нашей стороны входящий перевод бесплатный.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.6,
+     "evidence_warning": "",
+     "needs_review": true,
+     "client_requests": [
+      {
+       "text": "Как перевести акции от другого брокера к Freedom Broker",
+       "essential": true,
+       "status": "closed",
+       "turn": 1
+      },
+      {
+       "text": "Сколько стоит перевод",
+       "essential": true,
+       "status": "closed",
+       "turn": 6
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      15,
+      20,
+      20
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": true,
+     "cached": false,
+     "criterion_hash": "fc69b21666b4cea9",
+     "review_reasons": [
+      "jurors_disagreed",
+      "low_confidence_scale"
+     ]
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Клиент не выражал недовольства; оператор вежлив на протяжении всего диалога (приветствие, ясные ответы, вежливое прощание).",
+     "reasoning": "Клиент задал нейтральные вопросы о переводе акций и стоимости, недовольства или тревоги не выражал. Оператор поздоровался, представился, ответил по существу, вежливо попрощался. Грубости нет. Достаточно вежливости.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Игорь.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Обращайтесь, если будут вопросы. До свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.93,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "35ce7fffa63bef7f",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответы оператора ясные и связные, ожиданий дольше порога нет, грамотность хорошая, переспросов из-за формулировок нет.",
+     "reasoning": "Оператор в [5] ясно и связно описал порядок перевода и срок. Клиент уточнил стоимость [6] — вопрос из первого сообщения, оператор ответил в [7] кратко и понятно. Самое долгое ожидание 20 с, намного меньше 180 с, так что явного ожидания не было. Грубых ошибок и неясных формулировок нет. Клиент не переспрашивал из-за непонятных формулировок: «А стоимость?» — это вопрос, на который оператор не ответил в [5], и это оценивается в критерии 04.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Чтобы перевести бумаги, подайте у текущего брокера поручение на перевод, указав наши реквизиты из раздела «Перевод ценных бумаг» в приложении",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "С нашей стороны входящий перевод бесплатный.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.88,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "97278649951ccae3",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор попрощался («До свидания!») и предложил дальнейшую помощь («Обращайтесь, если будут вопросы»).",
+     "reasoning": "Последняя реплика оператора [9]: «Обращайтесь, если будут вопросы. До свидания!» — есть прощание и предложение дальнейшей помощи. Диалог завершился штатно после реплики клиента «Понял, спасибо». Условие YES выполнено.",
+     "evidence": [
+      {
+       "turn": 9,
+       "quote": "Обращайтесь, если будут вопросы. До свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.96,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "ee52cfd0e6bb5dfa",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Грубых ошибок у оператора нет: ни оскорблений, ни личных платных предложений, ни раскрытия конфиденциальной информации.",
+     "reasoning": "Реплики оператора [5], [7], [9] — информационные и вежливые: инструкция по переводу, сообщение о бесплатном входящем переводе, прощание. Нет оскорблений, предложений платных услуг в обход компании и раскрытия конфиденциальных данных.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "С нашей стороны входящий перевод бесплатный.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Обращайтесь, если будут вопросы. До свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.97,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "538653a4907eddc7",
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [
+    "04"
+   ],
+   "warnings": [],
+   "total": 100.0,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 7,
+    "criteria_total": 8,
+    "agreement": 0.875,
+    "score_range": [
+     92.31,
+     100.0
+    ],
+    "score_spread": 7.69,
+    "flagged_criteria": 1
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "NA",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 100.0,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-05-en-angry-order-cancelled",
+   "channel": "agent chat",
+   "language": "EN",
+   "kind": "chat",
+   "dialog_hash": "d4630de474101a65",
+   "checklist_id": "freedom_chat_v1",
+   "checklist_version": "v?+4355ffb60ed7",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "В первой реплике оператор поздоровался по-английски («Hello») и представился именем Madina.",
+     "reasoning": "Первая реплика оператора [5]: «Hello, I'm Madina from Freedom Broker.» Клиент пишет по-английски; приветствие на английском, имя названо.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Hello, I'm Madina from Freedom Broker.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.98,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "c18e34c04986932a",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор уточнил недостающие детали (тикер и дату ордера) до ответа, клиент ранее их не сообщал; затем ответил по сути.",
+     "reasoning": "Клиент написал только, что ордер отменён, без указания тикера и даты. Для ответа не хватало данных (какой ордер). Оператор в [5] запросил тикер и дату, клиент ответил в [6], и только после этого оператор дал ответ в [7]. Вопрос о конкретном ордере — нужное уточнение (не переспрос, так как бот этого не получал). Запрос ФИО и кодового слова относится к критерию 03, но уточнение ордера — к 02.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.9,
+     "evidence_warning": "positive_without_evidence",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "86d055675d96508b",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор запросил ФИО и кодовое слово, получил их и подтвердил верификацию до раскрытия статуса и причины отмены ордера.",
+     "reasoning": "Запрос касался статуса конкретного ордера клиента (TSLA), то есть требовал идентификации. Оператор в [5] запросил ФИО и кодовое слово, клиент предоставил их в [6], оператор подтвердил верификацию в [7] и только потом раскрыл причину отмены ордера. Идентификация проведена до раскрытия данных.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Please confirm your full name and code word, and tell me which order (ticker and date).",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Thank you, verified. Your TSLA order was cancelled at the close",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "210e13c2041f4cfe",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "Оператор объяснил причину отмены ордера TSLA и дал точную инструкцию, как сохранить ордер активным. Клиент подтвердил, что понял.",
+     "reasoning": "Клиент спросил, почему его ордер отменён (реплика 1). Оператор в [7] объяснил причину (дневной ордер, лимитная цена не достигнута, отмена на закрытии) и дал конкретный следующий шаг: выставить заново с GTC. Клиент поблагодарил и принял ответ. Неверной информации нет.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "Your TSLA order was cancelled at the close because it was a day order and the limit price was not reached.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "place it again with 'Good till cancelled' validity in the order form.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 8,
+       "quote": "Ah, ok. Thanks.",
+       "speaker": "client",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.9,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [
+      {
+       "text": "Объяснить, почему ордер был отменён",
+       "essential": true,
+       "status": "closed",
+       "turn": 1
+      },
+      {
+       "text": "Решить проблему / как поступить дальше с ордером TSLA",
+       "essential": true,
+       "status": "closed",
+       "turn": 6
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      20
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "fc69b21666b4cea9",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор конкретно признал проблему повторных обращений, извинился и пообещал разобраться, затем объяснил причину отмены; тон вежливый.",
+     "reasoning": "Клиент выразил явное недовольство [1]: третье обращение, заказ отменён без объяснений. Оператор в [5] извинился именно за повторные обращения, признал раздражение и пообещал разобраться. В [7] объяснил причину отмены и дал решение. Тон вежливый на протяжении всего диалога, в [9] повторное извинение.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "I'm sorry you've had to write several times — I understand how frustrating that is, I'll sort it out now.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Thank you, verified. Your TSLA order was cancelled at the close because it was a day order",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Sorry again for the trouble. Can I help with anything else?",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "35ce7fffa63bef7f",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответы оператора ясные и связные, клиент не переспрашивал, длинных ожиданий не было, ошибок грамотности нет.",
+     "reasoning": "Реплики оператора [5], [7], [9] ясные, связные, грамотные. Оператор в [5] запросил все данные одним сообщением, в [7] чётко объяснил причину отмены и что делать. Клиент не переспрашивал. Самая долгая пауза 20 с — меньше порога 180 с, предупреждение не требовалось. Явных ожиданий (уход на проверку) не было.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Please confirm your full name and code word, and tell me which order (ticker and date).",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Your TSLA order was cancelled at the close because it was a day order and the limit price was not reached.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "place it again with 'Good till cancelled' validity in the order form.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.93,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "97278649951ccae3",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в последней реплике предложил дальнейшую помощь и попрощался.",
+     "reasoning": "Последняя реплика оператора [9]: «Can I help with anything else? Goodbye!» — есть предложение дальнейшей помощи и прощание. Формула прощание + предложение помощи выполнена. Диалог завершился штатно.",
+     "evidence": [
+      {
+       "turn": 9,
+       "quote": "Can I help with anything else? Goodbye!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "ee52cfd0e6bb5dfa",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "В репликах оператора нет оскорблений, предложений платных услуг в обход компании и раскрытия конфиденциальных данных.",
+     "reasoning": "Реплики оператора [5], [7], [9] вежливы, без оскорблений, без предложения платных услуг в обход компании и без раскрытия конфиденциальной информации или данных третьих лиц. Запрос кодового слова — стандартная идентификация. Грубых ошибок нет.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "I'm sorry you've had to write several times — I understand how frustrating that is, I'll sort it out now.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Thank you, verified. Your TSLA order was cancelled at the close because it was a day order",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.97,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "538653a4907eddc7",
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [
+    "02: positive_without_evidence"
+   ],
+   "total": 100.0,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     100.0,
+     100.0
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "YES",
+     "03": "YES",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 100.0,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-06-ru-wrong-advice-close",
+   "channel": "agent chat",
+   "language": "RU",
+   "kind": "chat",
+   "dialog_hash": "f8607b5a55f67e3e",
+   "checklist_id": "freedom_chat_v1",
+   "checklist_version": "v?+4355ffb60ed7",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "В первой реплике оператор поздоровался по-русски и представился по имени.",
+     "reasoning": "Первая реплика оператора [5]: «Здравствуйте, меня зовут Олжас.» Клиент пишет по-русски, приветствие на русском, имя названо (плейсхолдер имени). Критерий выполнен.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Олжас.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.97,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "c18e34c04986932a",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос на закрытие брокерского счёта был ясен, уточнений не требовалось, оператор не переспрашивал лишнего; неверность совета оценивается в других критериях.",
+     "reasoning": "Клиент спросил: «Хочу закрыть брокерский счёт, как это сделать?». Запрос ясен, данных достаточно для ответа (общий порядок закрытия). Оператор в [5] сразу ответил без уточнений и без переспроса. Ответ неверный, но по правилам качество ответа оценивается в других критериях. Рубрика: если данных хватало — NA.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Данных в запросе хватало для ответа, оператор ничего лишнего не переспрашивал; качество ответа не относится к этому критерию.",
+     "confidence": 0.6,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA",
+      "NA",
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "86d055675d96508b",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос — общий вопрос «как закрыть счёт», оператор дал общую инструкцию без раскрытия данных клиента и без выполнения защищённого действия, идентификация не требовалась.",
+     "reasoning": "Клиент спросил, как закрыть брокерский счёт — это общий вопрос об инструкции. Оператор дал общий ответ, не раскрывая персональных данных и не выполняя защищённого действия (закрытие счёта оператором не проводилось). Идентификация не требовалась по правилам рубрики (общие инструкции → NA). Корректность совета на этот критерий не влияет.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Общий информационный вопрос о порядке закрытия счёта; персональные данные не раскрывались, защищённое действие оператором не выполнялось.",
+     "confidence": 0.7,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA",
+      "NA",
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "210e13c2041f4cfe",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 0,
+     "is_na": false,
+     "scale_step": 0,
+     "justification": "Оператор дал фактически неверную ключевую рекомендацию: удаление приложения не закрывает брокерский счёт. Реальной процедуры закрытия не названо.",
+     "reasoning": "Клиент спросил, как закрыть брокерский счёт. Оператор в [5] посоветовал просто удалить приложение — счёт якобы закроется автоматически. Это фактически неверная и вредная рекомендация: удаление приложения не закрывает брокерский счёт, он остаётся открытым (возможны комиссии/риски). Правильного пути (заявление на закрытие, вывод средств/закрытие позиций) не дано. Клиент ответил «Ок», но это не делает совет верным. По правилам — ключевая рекомендация неверна, значение 0.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Просто удалите приложение — счёт закроется автоматически.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "Реплика 5: ожидалась корректная инструкция/заявка на закрытие счёта",
+     "na_reason": "",
+     "confidence": 0.93,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [
+      {
+       "text": "Как закрыть брокерский счёт?",
+       "essential": true,
+       "status": "open",
+       "turn": 1
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      0
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "fc69b21666b4cea9",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Клиент не выражал недовольства, а оператор был вежлив: поздоровался, представился, ответил по делу и попрощался. Неверность совета на эмпатию не влияет.",
+     "reasoning": "Клиент задал нейтральный вопрос о закрытии счёта, недовольства или тревоги не выражал. Оператор поздоровался, представился, ответил и попрощался без грубости. Содержание совета неверно, но это относится к другим критериям. Здесь достаточно вежливости, тон корректный.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Олжас.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Всего доброго!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "35ce7fffa63bef7f",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответ оператора сформулирован ясно и связно, без ошибок, ожиданий и переспросов; неправильность совета оценивается в другом критерии.",
+     "reasoning": "Реплики оператора [5] и [7] ясные, связные, грамотные. Явных ожиданий после первой реплики не было, клиент не переспрашивал. Содержательная неверность совета (удалить приложение) оценивается в критерии 04, а не здесь.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Просто удалите приложение — счёт закроется автоматически.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Всего доброго!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "97278649951ccae3",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор лишь попрощался («Всего доброго!»), без итога и без предложения дальнейшей помощи.",
+     "reasoning": "Оператор в [7] написал только «Всего доброго!» — это прощание. Итога в последних репликах нет: [5] — это инструкция/ответ, а не заключительная фраза, фиксирующая результат; в [7] нет итога и нет предложения помощи («обращайтесь», «чем ещё помочь»). Диалог завершился штатно (клиент ответил «Ок», оператор закрыл). Правильность совета не оценивается. По формуле одно прощание без итога и предложения помощи — NO.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "Всего доброго!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "Реплика [7]: ожидались итог или предложение помощи вместе с прощанием",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "ee52cfd0e6bb5dfa",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Грубых ошибок (оскорбление, личные платные услуги, раскрытие конфиденциальных данных) нет; неверный совет относится к критерию 04.",
+     "reasoning": "Оператор в [5] дал неверный совет (удалить приложение — счёт закроется), но это фактическая ошибка (критерий 04), а не грубая ошибка по 08. Оскорблений, предложений платных услуг в обход компании или раскрытия конфиденциальной информации нет.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "Реплики оператора [5], [7] — оскорблений, личных предложений или раскрытия данных нет",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "538653a4907eddc7",
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 61.54,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     61.54,
+     61.54
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "NA",
+     "04": 0,
+     "05": "YES",
+     "06": 10,
+     "07": "NO",
+     "08": "NO"
+    },
+    "total": 61.54,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-07-call-kz-hangup-before-request",
+   "channel": "voice call",
+   "language": "KZ",
+   "kind": "call",
+   "dialog_hash": "7e993139704d9dd4",
+   "checklist_id": "freedom_call_v1",
+   "checklist_version": "v?+9f345f81f85a",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в первой реплике поздоровался по-казахски и назвал своё имя.",
+     "reasoning": "Первая реплика оператора [4]: «Сәлеметсіз бе, Фридом Брокер, менің атым Дана. Қалай көмектесе аламын?» Приветствие на казахском (язык клиента KZ) и представление именем («менің атым ...»). Условия выполнены.",
+     "evidence": [
+      {
+       "turn": 4,
+       "quote": "Сәлеметсіз бе, Фридом Брокер, менің атым Дана.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.96,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "819e091c6cfe28f5",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Клиент не успел озвучить запрос и сбросил звонок, поэтому этапа выявления потребности не было. Оператор лишь поприветствовал и предложил помощь.",
+     "reasoning": "Оператор только поприветствовал и спросил «Қалай көмектесе аламын?». Клиент начал фразу и сразу завершил звонок, запрос так и не был сформулирован. Выявлять потребность было нечего, оператор не переспрашивал лишнего и не отвечал наугад. Общий вопрос о помощи — это не уточнение деталей запроса. Критерий неприменим.",
+     "evidence": [
+      {
+       "turn": 4,
+       "quote": "Қалай көмектесе аламын?",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 5,
+       "quote": "Иә, сәлеметсіз бе, мен...",
+       "speaker": "client",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Клиент завершил разговор, не изложив запрос; уточнять и отвечать было нечего.",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "d7eecbdca75ba23c",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Клиент отключился до формулировки запроса; потребность в идентификации не возникла, данные не раскрывались.",
+     "reasoning": "Клиент завершил звонок, не успев сформулировать запрос ([5] «Иә, сәлеметсіз бе, мен...»). Запрос неизвестен, данные не раскрывались, действий, требующих идентификации, не было. Идентификация не требовалась, так как запроса нет.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Клиент завершил разговор до изложения запроса, идентификация не требовалась.",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "d443f335dfe21595",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": "NA",
+     "justification": "Клиент отключился до того, как изложил свой вопрос, поэтому консультация не оценивается.",
+     "reasoning": "Оператор поприветствовал и спросил, чем помочь [4]. Клиент начал фразу «мен...» [5] и сразу завершил разговор [6]. Запрос клиента не был сформулирован, поэтому оценивать консультацию нельзя — NA.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Диалог прервался (клиент завершил разговор [6]) до формулировки запроса: клиент сказал только «Иә, сәлеметсіз бе, мен...».",
+     "confidence": 0.96,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "29d758fdc4209712",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Клиент не выражал недовольства, звонок прервался до запроса. Оператор был вежлив в приветствии и предложил помощь.",
+     "reasoning": "Оператор поприветствовал вежливо и предложил помощь [4]. Клиент успел сказать только «Иә, сәлеметсіз бе, мен...» и завершил звонок, недовольства не выражал. Оператор вежлив, так что критерий выполнен.",
+     "evidence": [
+      {
+       "turn": 4,
+       "quote": "Сәлеметсіз бе, Фридом Брокер, менің атым Дана. Қалай көмектесе аламын?",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "cea9fcd6bbf0ec3f",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Единственная реплика оператора ясная, грамотная и уместная. Удержаний и пауз не было, клиент сам завершил звонок до запроса.",
+     "reasoning": "Оператор сказал только приветствие и вопрос «Қалай көмектесе аламын?» [4]. Клиент начал говорить и отключился [5-6]. Удержаний и ожиданий не было, фразы ясные и грамотные, неуместных выражений нет. Оценивать больше нечего, сбоев нет.",
+     "evidence": [
+      {
+       "turn": 4,
+       "quote": "Сәлеметсіз бе, Фридом Брокер, менің атым Дана. Қалай көмектесе аламын?",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.8,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "f4fe2e966706cc90",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Клиент завершил разговор сразу после своей незаконченной реплики, до обсуждения вопроса. У оператора не было реальной возможности завершить диалог.",
+     "reasoning": "Оператор лишь поприветствовал и спросил, чем помочь [4]. Клиент начал реплику [5] и сразу завершил разговор [6]. До обсуждения вопроса дело не дошло, у оператора не было возможности подвести итог и попрощаться. По правилам это NA.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Клиент положил трубку сразу после реплики «Иә, сәлеметсіз бе, мен...», не успев изложить вопрос; завершение было невозможно.",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "d4a7dbf01dbe5f2e",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор лишь поприветствовал клиента и спросил, чем помочь; грубых ошибок нет.",
+     "reasoning": "Единственная реплика оператора [4] — стандартное приветствие и вопрос о помощи. Оскорблений, предложений платных услуг в обход компании и раскрытия конфиденциальной информации нет. Клиент сразу завершил разговор.",
+     "evidence": [
+      {
+       "turn": 4,
+       "quote": "Сәлеметсіз бе, Фридом Брокер, менің атым Дана. Қалай көмектесе аламын?",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.98,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "9a890cba03370ad1",
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 100.0,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     100.0,
+     100.0
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": {
+    "operator_wpm": 75.0,
+    "speaker_changes": 1,
+    "overlap_rate": 0.0,
+    "operator_response_s": {
+     "median": null,
+     "p90": null,
+     "max": null,
+     "n": 0
+    },
+    "note": "informational, estimated from turn start times only; not scored"
+   },
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "NA",
+     "04": "NA",
+     "05": "YES",
+     "06": 10,
+     "07": "NA",
+     "08": "NO"
+    },
+    "total": 100.0,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-08-ru-third-party-data",
+   "channel": "agent chat",
+   "language": "RU",
+   "kind": "chat",
+   "dialog_hash": "96ca54cdd3d9ea0b",
+   "checklist_id": "freedom_chat_v1",
+   "checklist_version": "v?+4355ffb60ed7",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "В первой реплике оператор поздоровался по-русски и назвал своё имя.",
+     "reasoning": "Первая реплика оператора [5]: «Здравствуйте, меня зовут Тимур...» — приветствие на русском (язык клиента RU) и представление с именем (имя замаскировано плейсхолдером, но это называние имени).",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Тимур.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.96,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "c18e34c04986932a",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос о балансе был ясен, оператор не переспрашивал лишнего; запрос идентификации относится к критерию 03, а неуместная информация о муже — к другим критериям.",
+     "reasoning": "Клиент спросил «Какой у меня баланс?». Оператор запросил ФИО и кодовое слово (это критерий 03, не 02), затем назвал баланс. Запрос ясен, уточнять детали (счёт и т.п.) особо не требовалось; оператор не переспрашивал уже сказанное. Раскрытие данных мужа — вопрос других критериев. Поэтому NA.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Данных для ответа на вопрос о балансе хватало, уточнений по сути не требовалось, лишних переспросов не было.",
+     "confidence": 0.7,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA",
+      "NA",
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "86d055675d96508b",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор запросил ФИО и кодовое слово до раскрытия баланса и подтвердил личность. Раскрытие данных мужа — отдельное нарушение, не влияющее на этот критерий.",
+     "reasoning": "Клиент спросил баланс — нужна идентификация. Оператор в [5] запросил ФИО и кодовое слово, клиент предоставил в [6], оператор подтвердил личность в [7] и только затем раскрыл баланс. Идентификация проведена до раскрытия данных. Последующее раскрытие данных третьего лица (мужа) — нарушение, но оно относится к другому критерию; по критерию 03 идентификация выполнена.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Назовите, пожалуйста, ФИО и кодовое слово.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Спасибо, личность подтверждена. На вашем счёте 1 250 000 тенге.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "210e13c2041f4cfe",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "Единственный вопрос клиента (баланс) закрыт оператором конкретной суммой. Раскрытие данных мужа — нарушение другого критерия (конфиденциальность), а не ошибка консультации по балансу.",
+     "reasoning": "Клиент спросил баланс [1]. Оператор после идентификации назвал баланс 1 250 000 тенге [7] — вопрос закрыт по содержанию. Но оператор раскрыл данные третьего лица (счёт мужа 2 млн) — это нарушение конфиденциальности/03, а не ошибка консультации по правилам. Неверной информации о балансе нет. Для 04 оценивается содержательная правильность и полнота: основной вопрос закрыт. Раскрытие данных мужа — вредное содержание, но правило велит относить раскрытие без идентификации к 03. Здесь же предложение «вложить вместе» — навязанная рекомендация, но не ключевая. Ставлю 20, возможно 15 из-за лишнего/некорректного совета; склоняюсь к 20.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.6,
+     "evidence_warning": "positive_without_evidence",
+     "needs_review": true,
+     "client_requests": [
+      {
+       "text": "Какой у меня баланс?",
+       "essential": true,
+       "status": "closed",
+       "turn": 1
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      20,
+      20,
+      20
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "fc69b21666b4cea9",
+     "review_reasons": [
+      "low_confidence_scale"
+     ]
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Клиент не выражал недовольства; оператор был вежлив на протяжении диалога (приветствие, «Спасибо», «До свидания»). Раскрытие данных третьего лица оценивается другим критерием.",
+     "reasoning": "Клиент недовольства не выражал, задал простой вопрос о балансе. Оператор вежлив: поздоровался, представился, поблагодарил, попрощался. Нарушение конфиденциальности (раскрытие данных мужа) — это вопрос другого критерия (безопасность/08), тон при этом не резкий и не пренебрежительный. По рубрике эмпатии — вежливость есть, жалоб нет.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Тимур. Назовите, пожалуйста, ФИО и кодовое слово.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Спасибо, личность подтверждена.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Чем ещё могу помочь? До свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "35ce7fffa63bef7f",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответы оператора понятны и связны, ожиданий свыше порога нет, переспросов из-за формулировок не было. Разглашение данных третьего лица оценивается в другом критерии.",
+     "reasoning": "Реплики оператора [5], [7], [9] ясные и связные, грамотные. Ожиданий дольше 180 с нет (макс. 20 с), явного ухода на проверку не было. Клиент не переспрашивал из-за формулировок; «Э... спасибо» — реакция на разглашение данных о муже (это вопрос к другим критериям — нарушение конфиденциальности, не ясность). Реплика [9] «Чем ещё могу помочь? До свидания!» немного нелогична (вопрос и сразу прощание), но не мешает пониманию, клиент не переспрашивал. Ясность и связность в целом сохранены.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Назовите, пожалуйста, ФИО и кодовое слово.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "На вашем счёте 1 250 000 тенге.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.75,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10,
+      10,
+      10
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "97278649951ccae3",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в последней реплике предложил дальнейшую помощь и попрощался: «Чем ещё могу помочь? До свидания!».",
+     "reasoning": "Последняя реплика оператора [9]: «Чем ещё могу помочь? До свидания!» — содержит и предложение дальнейшей помощи, и прощание. Условие формулы выполнено. Нарушение приватности в [7] относится к другим критериям, не к 07.",
+     "evidence": [
+      {
+       "turn": 9,
+       "quote": "Чем ещё могу помочь? До свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.93,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "ee52cfd0e6bb5dfa",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор раскрыл сведения о счёте другого клиента (мужа) — остаток 2 млн тенге, без подтверждения его согласия.",
+     "reasoning": "В реплике [7] оператор сообщил клиентке баланс её мужа на счёте в компании (2 млн тенге) — это данные другого клиента, то есть раскрытие конфиденциальной информации третьего лица. Это грубая ошибка по рубрике.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "Кстати, у вашего мужа на счёте у нас 2 млн тенге, можете вместе вложить.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.96,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "538653a4907eddc7",
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [
+    "04"
+   ],
+   "warnings": [
+    "04: positive_without_evidence"
+   ],
+   "total": 100.0,
+   "provisional_total": null,
+   "gross_error": true,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     100.0,
+     100.0
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 1
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "YES",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "YES"
+    },
+    "total": 100.0,
+    "gross_error": true,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-09-en-long-gap-no-warning",
+   "channel": "agent chat",
+   "language": "EN",
+   "kind": "chat",
+   "dialog_hash": "0e4defa53f9f3a58",
+   "checklist_id": "freedom_chat_v1",
+   "checklist_version": "v?+4355ffb60ed7",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "В первой реплике оператор поздоровался по-английски («Hello») и представился именем (Arman).",
+     "reasoning": "Первая реплика оператора [5]: «Hello, this is Arman from Freedom Broker.» Клиент пишет по-английски; приветствие на английском и названо имя Arman. Критерий выполнен.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Hello, this is Arman from Freedom Broker.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.98,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "c18e34c04986932a",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос был ясен с самого начала, оператор ответил сразу и не переспрашивал лишнего, поэтому уточнения не требовались.",
+     "reasoning": "Клиент спросил, как включить двухфакторную аутентификацию. Запрос ясен, данных достаточно для ответа без уточнений. Оператор сразу дал инструкцию [5] и ничего лишнего не переспрашивал. Позже, когда клиент не нашёл раздел, оператор предложил обновить приложение [7] — это уже качество ответа (критерии 04/08), а не выявление потребности. По правилам это NA.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Запрос «How do I enable two-factor authentication?» был достаточно ясен для ответа без уточнений; оператор ответил сразу и не переспрашивал.",
+     "confidence": 0.8,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "86d055675d96508b",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос — общая инструкция по включению 2FA, без раскрытия данных счёта и без защищённого действия со стороны оператора; идентификация не требовалась.",
+     "reasoning": "Клиент спросил, как включить двухфакторную аутентификацию — это общий вопрос-инструкция. Оператор дал общие инструкции (Profile → Security), персональные данные не раскрывал, защищённых действий сам не выполнял. Идентификация не требовалась.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Вопрос «как включить 2FA» — общий вопрос о том, где найти раздел/как работает функция; данные клиента не раскрывались.",
+     "confidence": 0.93,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "210e13c2041f4cfe",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "Оператор дал точную инструкцию и решил возникшее препятствие (обновление до версии 5.2+); клиент подтвердил результат.",
+     "reasoning": "Клиент спросил, как включить 2FA [1]. Оператор дал точный путь [5]. Клиент не нашёл раздел Security [6]; оператор объяснил, что нужно обновить приложение до версии 5.2+ [7]. Клиент подтвердил, что нашёл и поблагодарил [8]. Все вопросы закрыты, неверной информации нет. Задержка ответа относится к другим критериям, а не к содержательности консультации.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Go to Profile → Security → Two-factor authentication and switch it on.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Please update the app to the latest version — the Security section appears in version 5.2 and later.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 8,
+       "quote": "Updated, found it. Thanks!",
+       "speaker": "client",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.93,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [
+      {
+       "text": "How do I enable two-factor authentication?",
+       "essential": true,
+       "status": "closed",
+       "turn": 1
+      },
+      {
+       "text": "I don't see Security in Profile (где найти раздел Security)",
+       "essential": true,
+       "status": "closed",
+       "turn": 6
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      20
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "fc69b21666b4cea9",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Клиент недовольства не выражал, оператор был вежлив и помог по существу; грубости нет.",
+     "reasoning": "Клиент задал обычные вопросы (\"How do I enable 2FA\", \"I don't see Security in Profile\") — это запросы/«не могу найти», а не недовольство, явных жалоб или тревоги нет. Оператор вежлив: поздоровался, представился, дал точные инструкции, в конце поблагодарил/попрощался. Длинная пауза (250 с) без предупреждения — вопрос к другим критериям (удержание), а не к тону. Грубости нет.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Hello, this is Arman from Freedom Broker.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Please update the app to the latest version",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Great! Anything else I can help with? Goodbye!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "35ce7fffa63bef7f",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 7,
+     "is_na": false,
+     "scale_step": 7,
+     "justification": "Ответы ясные, но на сообщение клиента [6] оператор ответил через 250 с без предупреждения об ожидании, поэтому максимум 7.",
+     "reasoning": "Ответы оператора ясные и связные ([5], [7], [9]). Клиент не переспрашивал из-за формулировок. Но по фактам: после [6] клиента оператор ответил только через 250 с (>180 с) без предупреждения об ожидании. По правилам максимум 7.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Go to Profile → Security → Two-factor authentication and switch it on.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Please update the app to the latest version — the Security section appears in version 5.2 and later.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "Между репликами [6] и [7]: ожидалось предупреждение об ожидании (250 с без ответа).",
+     "na_reason": "",
+     "confidence": 0.9,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      7
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "97278649951ccae3",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в последней реплике предложил дальнейшую помощь («Anything else I can help with?») и попрощался («Goodbye!»).",
+     "reasoning": "Последняя реплика оператора [9]: «Great! Anything else I can help with? Goodbye!» — содержит предложение дальнейшей помощи и прощание. Условие YES (прощание + предложение помощи) выполнено. Долгое ожидание не относится к критерию 07.",
+     "evidence": [
+      {
+       "turn": 9,
+       "quote": "Great! Anything else I can help with? Goodbye!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.96,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "ee52cfd0e6bb5dfa",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор вёл себя корректно: ни оскорблений, ни личных платных предложений, ни раскрытия конфиденциальных данных.",
+     "reasoning": "Реплики оператора [5], [7], [9] содержат только инструкции по включению 2FA, совет обновить приложение и прощание. Нет оскорблений, предложений платных услуг в обход компании или раскрытия конфиденциальной информации. Долгое ожидание без предупреждения относится к другим критериям.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "Please update the app to the latest version — the Security section appears in version 5.2 and later.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.97,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "538653a4907eddc7",
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 93.08,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     93.08,
+     93.08
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "NA",
+     "04": 20,
+     "05": "YES",
+     "06": 7,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 93.08,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-10-ru-contradictory",
+   "channel": "agent chat",
+   "language": "RU",
+   "kind": "chat",
+   "dialog_hash": "1e7a6a6a8ecbf862",
+   "checklist_id": "freedom_chat_v1",
+   "checklist_version": "v?+4355ffb60ed7",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "В первой реплике оператор поздоровался по-русски и назвал имя.",
+     "reasoning": "Первая реплика оператора [5]: «Здравствуйте, меня зовут Ержан.» Клиент пишет по-русски, приветствие на русском, имя названо. Критерий выполнен.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Ержан.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.97,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "c18e34c04986932a",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Вопрос о комиссии на KASE был ясен, оператор ответил сразу без переспросов. Качество и противоречивость ответа оцениваются в других критериях.",
+     "reasoning": "Клиент спросил: «Какая комиссия за сделки с акциями на KASE?». Запрос ясен, данных хватало для ответа (хотя тариф мог влиять, это вопрос полноты ответа — критерии 04/08). Оператор сразу ответил, ничего не переспрашивал и не заставлял клиента повторяться. По правилам: если данных хватало — NA, даже если ответ плохой (противоречивый).",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Запрос ясен с самого начала, уточнений не требовалось, оператор лишнего не переспрашивал.",
+     "confidence": 0.6,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA",
+      "NA",
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "86d055675d96508b",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос про общую комиссию (тарифы) не требует идентификации; данные счёта клиента не раскрывались.",
+     "reasoning": "Клиент спросил об общей комиссии за сделки на KASE — это общий тарифный вопрос. Оператор не раскрывал персональных данных клиента и не совершал защищённых действий, поэтому идентификация не требовалась.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Общий вопрос о тарифах/комиссии, без раскрытия персональных данных и без защищённых действий.",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "210e13c2041f4cfe",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 0,
+     "is_na": false,
+     "scale_step": 0,
+     "justification": "Оператор дал противоречивые значения комиссии (0,1% и 0,2%), на прямое уточнение ответил расплывчато «зависит от тарифа, посмотрите в приложении» без пути. Клиент так и не получил корректной комиссии.",
+     "reasoning": "Клиент спросил о комиссии за сделки с акциями на KASE. Оператор сначала назвал 0,1% [5], затем после уточнения клиента противоречиво заявил 0,2% (200 тенге) [7], а на прямой вопрос «Так 0,1 или 0,2?» ответил «Зависит от тарифа, посмотрите в приложении» [9] — без конкретного пути и тарифов. Информация противоречивая, вероятно неверная; клиент остался без ясного ответа («Ладно...»). Основной вопрос не закрыт, конкретного следующего шага нет. Это хуже, чем «общая подсказка» (5): оператор дал взаимоисключающие цифры, то есть содержательно неверную/вводящую в заблуждение ключевую информацию. Ставлю 0.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Комиссия 0,1% от суммы сделки.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Нет, комиссия 0,2%, то есть 200 тенге.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Зависит от тарифа, посмотрите в приложении.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "Реплики [7]–[9]: ожидалась корректная единая ставка комиссии или конкретная инструкция, где посмотреть тариф.",
+     "na_reason": "",
+     "confidence": 0.7,
+     "evidence_warning": "",
+     "needs_review": true,
+     "client_requests": [
+      {
+       "text": "Какая комиссия за сделки с акциями на KASE?",
+       "essential": true,
+       "status": "open",
+       "turn": 1
+      },
+      {
+       "text": "Подтвердить расчёт: с 100 000 тенге — 100 тенге?",
+       "essential": true,
+       "status": "open",
+       "turn": 6
+      },
+      {
+       "text": "Уточнение: так 0,1% или 0,2%?",
+       "essential": true,
+       "status": "open",
+       "turn": 8
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      0,
+      5,
+      0
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": true,
+     "cached": false,
+     "criterion_hash": "fc69b21666b4cea9",
+     "review_reasons": [
+      "jurors_disagreed"
+     ]
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор противоречил себе (0,1% и 0,2%), а на недоумение клиента ответил отпиской без извинения и признания путаницы; на «Ладно...» дал шаблонное прощание.",
+     "reasoning": "Клиент задаёт вопросы о комиссии; явного недовольства в начале нет. После противоречивых ответов оператора клиент спрашивает «Так 0,1 или 0,2?» — это раздражение/недоумение, вызванное самим оператором. Оператор ответил сухо «Зависит от тарифа, посмотрите в приложении», не извинился и не признал путаницу. Затем «Ладно...» — клиент недоволен, оператор шаблонно закрыл «Чем ещё могу помочь? До свидания!». Грубости нет, но реакции на возникшую проблему (собственное противоречие) нет. Строго — NO.",
+     "evidence": [
+      {
+       "turn": 9,
+       "quote": "Зависит от тарифа, посмотрите в приложении.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 11,
+       "quote": "Чем ещё могу помочь? До свидания!",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Нет, комиссия 0,2%, то есть 200 тенге.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "Реплика 9 (после «Так 0,1 или 0,2?») и реплика 11 (после «Ладно...») — ожидалось извинение/признание путаницы и точное разъяснение.",
+     "na_reason": "",
+     "confidence": 0.7,
+     "evidence_warning": "",
+     "needs_review": true,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO",
+      "NO",
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": true,
+     "cached": false,
+     "criterion_hash": "35ce7fffa63bef7f",
+     "review_reasons": [
+      "jurors_disagreed"
+     ]
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 0,
+     "is_na": false,
+     "scale_step": 0,
+     "justification": "Оператор дал противоречивые цифры (0,1% и 0,2%), клиент переспросил, а уточнение «зависит от тарифа, посмотрите в приложении» ничего не прояснило. Ход диалога остался непонятным.",
+     "reasoning": "Оператор в [5] назвал комиссию 0,1%, в [7] без пояснений сказал 0,2% (200 тенге), клиент переспросил «Так 0,1 или 0,2?» [8]. В [9] оператор не прояснил, а лишь сказал «Зависит от тарифа, посмотрите в приложении». Ответы противоречивы, клиент вынужден переспрашивать из-за этого, и ход диалога остаётся непонятным: клиент закрывает беседу словом «Ладно...» без ясного ответа. Правило: если противоречия сделали ход диалога непонятным — 0; если оператор прояснил — 4. Здесь не прояснил по-настоящему, ясности нет, клиент остался без понимания. Явных ожиданий свыше 180 с нет.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Комиссия 0,1% от суммы сделки.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Нет, комиссия 0,2%, то есть 200 тенге.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Зависит от тарифа, посмотрите в приложении.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.7,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      0,
+      0,
+      0
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "97278649951ccae3",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в последней реплике предложил дальнейшую помощь («Чем ещё могу помочь?») и попрощался («До свидания!») — формула прощание + предложение помощи выполнена.",
+     "reasoning": "Последняя реплика оператора [11]: «Чем ещё могу помочь? До свидания!» — есть прощание и предложение дальнейшей помощи. Корректность ответов (противоречивые данные о комиссии) в критерии 07 не оценивается. Диалог завершился штатно, оператор закрыл его.",
+     "evidence": [
+      {
+       "turn": 11,
+       "quote": "Чем ещё могу помочь? До свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.93,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "ee52cfd0e6bb5dfa",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор противоречил себе по комиссии, но не оскорблял клиента, не предлагал услуги в обход компании и не раскрывал конфиденциальные данные. Противоречие относится к критерию 04.",
+     "reasoning": "Реплики оператора [5], [7], [9], [11]: противоречивая информация о комиссии (0,1% и 0,2%) — это фактическая ошибка (критерий 04), а не грубая ошибка по 08. Оскорблений, предложений платных услуг в обход компании или раскрытия конфиденциальных данных нет.",
+     "evidence": [
+      {
+       "turn": 9,
+       "quote": "Зависит от тарифа, посмотрите в приложении.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Нет, комиссия 0,2%, то есть 200 тенге.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "Грубых ошибок в репликах оператора нет",
+     "na_reason": "",
+     "confidence": 0.96,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "538653a4907eddc7",
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [
+    "04",
+    "05"
+   ],
+   "warnings": [],
+   "total": 23.08,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 6,
+    "criteria_total": 8,
+    "agreement": 0.75,
+    "score_range": [
+     23.08,
+     53.85
+    ],
+    "score_spread": 30.77,
+    "flagged_criteria": 2
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "NA",
+     "04": 0,
+     "05": "NO",
+     "06": 0,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 23.08,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  }
+ ]
+}

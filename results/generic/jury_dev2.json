@@ -1,0 +1,570 @@
+{
+ "group": "DEV",
+ "created_at": "2026-11-07T22:47:35",
+ "meta": {
+  "elapsed_s": 19.0,
+  "usage": {
+   "input_tokens": 15205,
+   "output_tokens": 14035,
+   "cache_read_input_tokens": 77270,
+   "cache_creation_input_tokens": 8646,
+   "calls": 23,
+   "usd": 0.18873845
+  },
+  "cost_usd": 0.1887,
+  "provider": "anthropic",
+  "model": "jury[claude-haiku-5-5+claude-sonnet-5-5] judge=claude-opus-5-5",
+  "reproducibility": {
+   "prompt_version": "v10",
+   "jurors": [
+    "claude-haiku-5-5",
+    "claude-sonnet-5-5"
+   ],
+   "judge": "claude-opus-5-5",
+   "sampling": "provider default (Anthropic endpoint rejects temperature)",
+   "self_consistency_samples": null,
+   "batch_dialogs": 6,
+   "judge_confirms_consensus_on": [],
+   "scale_samples": 1,
+   "judge_samples_scale": 3,
+   "scale_sample_criteria": [
+    "04",
+    "06"
+   ],
+   "checklists": {
+    "generic_sales_v1": {
+     "version_hash": "eeb087bfdf0c",
+     "criterion_hashes": {
+      "S1": "e70bd72ebcd231cf",
+      "S2": "76d1f1cecc67a571",
+      "S3": "4b4172507582eabd",
+      "S4": "010f892a4587857a",
+      "S5": "66278ea13860311b"
+     },
+     "weights": {
+      "S1": 15,
+      "S2": 25,
+      "S3": 25,
+      "S4": 20,
+      "S5": 15
+     }
+    }
+   }
+  },
+  "errors": [],
+  "incomplete_dialogs": [],
+  "turn_base": 1
+ },
+ "dialogs": [
+  {
+   "conversation_id": "p1-ru-001",
+   "channel": "agent chat",
+   "language": "RU",
+   "kind": "chat",
+   "dialog_hash": "f58543759c4e6eb9",
+   "checklist_id": "generic_sales_v1",
+   "checklist_version": "1.0.0+eeb087bfdf0c",
+   "criteria": [
+    {
+     "criterion_id": "S1",
+     "name": "Greeting & agenda",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор поздоровался, представился по имени и сразу перешёл к теме обращения клиента (где найти тариф), что обозначает повестку; компания не названа, но по правилу достаточно имени и цели.",
+     "reasoning": "Первая реплика оператора [10]: приветствие («Здравствуйте!»), самопредставление («Меня зовут Алина»). Цель/повестка: сразу отвечает на вопрос клиента о тарифе, но явно цель разговора не формулирует и разрешения не спрашивает; название компании не названо. Рубрика требует приветствие, представление (себя и/или компании) и цель или запрос разрешения. Контекст: клиент уже задал вопрос, а оператор сразу даёт инструкцию по нему — это фактически работа по повестке клиента, но явного заявления цели нет. Строго по рубрике — NO? Однако в входящем чате повестка клиента известна, и ответ на неё в первой реплике подразумевает цель. Строгое прочтение: «states the purpose ... or asks permission» — оператор не заявил. Но ответ сразу по запросу клиента — де-факто обозначает тему. Колеблюсь; склоняюсь к YES, так как повестка (тариф в кабинете) прямо озвучена: «Название тарифа будет под вашим ФИО».",
+     "evidence": [
+      {
+       "turn": 10,
+       "quote": "Здравствуйте! Меня зовут Алина.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 10,
+       "quote": "Название тарифа будет под вашим ФИО.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.55,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES",
+      "YES"
+     ],
+     "jury": {
+      "0:claude-haiku-5-5": "YES",
+      "1:claude-sonnet-5-5": "YES"
+     },
+     "decided_by": "consensus",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "blind_judge_value": null,
+     "judge_samples": [],
+     "criterion_hash": "e70bd72ebcd231cf",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "S2",
+     "name": "Need discovery",
+     "type": "scale",
+     "value": 0,
+     "is_na": false,
+     "scale_step": 0,
+     "justification": "Оператор не задал ни одного вопроса о ситуации или целях клиента и сразу дал инструкцию. Клиент не уходил раньше времени, поэтому NA по определению рубрики не подходит.",
+     "reasoning": "У оператора две реплики: [10] — приветствие и сразу инструкция, где найти тариф, и [12] — прощание. Вопросов о ситуации, целях или текущем решении клиента он не задал ни одного. По рубрике NA ставится только если клиент ушёл раньше, чем выявление потребностей стало возможным. Здесь клиент оставался в диалоге и ответил в [11], так что возможность спросить была, и NA не подходит. То, что это обращение в поддержку, а не продажа, в рубрике не названо основанием для NA. Суть шкалы — были ли вопросы для выявления потребностей. Их не было, оператор сразу дал ответ, поэтому ставлю 0.",
+     "evidence": [
+      {
+       "turn": 10,
+       "quote": "В веб-версии откройте вкладку «Кабинет». Название тарифа будет под вашим ФИО.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 12,
+       "quote": "Пожалуйста. Хорошего вечера!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "Реплика [10] — вопросы для выявления потребностей ожидались до того, как оператор дал ответ/предложение.",
+     "na_reason": "",
+     "confidence": 0.6,
+     "evidence_warning": "",
+     "needs_review": true,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      0,
+      "NA",
+      0
+     ],
+     "jury": {
+      "0:claude-haiku-5-5": 0,
+      "1:claude-sonnet-5-5": "NA"
+     },
+     "decided_by": "claude-opus-5-5",
+     "self_consistency_disagreement": true,
+     "cached": false,
+     "blind_judge_value": null,
+     "judge_samples": [
+      0,
+      0,
+      0
+     ],
+     "criterion_hash": "76d1f1cecc67a571",
+     "review_reasons": [
+      "jurors_disagreed",
+      "judge_decided",
+      "low_confidence_scale"
+     ]
+    },
+    {
+     "criterion_id": "S3",
+     "name": "Product pitch fit",
+     "type": "scale",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": "NA",
+     "justification": "Обращение сервисное (где найти тариф), продажной ситуации нет; оператор лишь подсказал навигацию, питч был неуместен и невозможен.",
+     "reasoning": "Диалог — запрос поддержки (где посмотреть тариф), а не продажа. Оператор дал инструкцию, где найти тариф, никакого предложения продукта не делал. Возможность питча не предусматривалась контекстом, но разговор не оборвался до питча — он просто не является продажным. Рубрика: 0 — нет питча; NA — разговор закончился до возможности питча. Это сервисный звонок/чат, продажного контекста нет, поэтому питч неприменим. Строго по рубрике: 0 при отсутствии питча, но здесь критерий неприменим к сервисному обращению; склоняюсь к NA.",
+     "evidence": [
+      {
+       "turn": 10,
+       "quote": "В веб-версии откройте вкладку «Кабинет». Название тарифа будет под вашим ФИО.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Разговор — запрос поддержки, закрытый после помощи с навигацией; возможности для продуктового питча в нём не было.",
+     "confidence": 0.6,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA",
+      "NA"
+     ],
+     "jury": {
+      "0:claude-haiku-5-5": "NA",
+      "1:claude-sonnet-5-5": "NA"
+     },
+     "decided_by": "consensus",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "blind_judge_value": null,
+     "judge_samples": [],
+     "criterion_hash": "4b4172507582eabd",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "S4",
+     "name": "Objection handling",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Клиент не высказывал возражений против продукта или предложения. Он просто хотел найти тариф без скачивания отчёта.",
+     "reasoning": "Это не продажный разговор: клиент спрашивает, где найти тариф. Фраза «отчёт качать не хочу» — предпочтение клиента, а не возражение против покупки (цена, сроки, доверие, «подумаю», конкурент). Оператор всё равно дал альтернативу (вкладка «Кабинет»). Возражений нет, поэтому NA.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Клиент не возражал против покупки или предложения. Его реплика «отчёт качать не хочу» — предпочтение по способу получения информации.",
+     "confidence": 0.8,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA",
+      "NA"
+     ],
+     "jury": {
+      "0:claude-haiku-5-5": "NA",
+      "1:claude-sonnet-5-5": "NA"
+     },
+     "decided_by": "consensus",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "blind_judge_value": null,
+     "judge_samples": [],
+     "criterion_hash": "010f892a4587857a",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "S5",
+     "name": "Next step agreed",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Диалог закончился прощанием без согласованного конкретного следующего шага и без разрешения на повторный контакт.",
+     "reasoning": "Диалог — поддержка по вопросу о тарифе, оператор подсказал, где найти тариф, клиент нашёл. Оператор завершил словами «Пожалуйста. Хорошего вечера!» — без конкретного следующего шага (покупка, встреча, звонок с датой, материалы с датой повторного контакта) и без явного согласованного отказа с разрешением на повторный контакт. По рубрике — NO.",
+     "evidence": [
+      {
+       "turn": 12,
+       "quote": "Пожалуйста. Хорошего вечера!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "Реплика №12 — при завершении диалога следующий шаг не оговорён.",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO",
+      "NO"
+     ],
+     "jury": {
+      "0:claude-haiku-5-5": "NO",
+      "1:claude-sonnet-5-5": "NO"
+     },
+     "decided_by": "consensus",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "blind_judge_value": null,
+     "judge_samples": [],
+     "criterion_hash": "66278ea13860311b",
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [
+    "S2"
+   ],
+   "warnings": [],
+   "total": 27.27,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 4,
+    "criteria_total": 5,
+    "agreement": 0.8,
+    "score_range": [
+     27.27,
+     50.0
+    ],
+    "score_spread": 22.73,
+    "flagged_criteria": 1
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "S1": "YES",
+     "S2": 0,
+     "S3": "NA",
+     "S4": "NA",
+     "S5": "NO"
+    },
+    "total": 27.27,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "p4-ru-001",
+   "channel": "voice call",
+   "language": "RU",
+   "kind": "call",
+   "dialog_hash": "0655d27f458d65e6",
+   "checklist_id": "generic_sales_v1",
+   "checklist_version": "1.0.0+eeb087bfdf0c",
+   "criteria": [
+    {
+     "criterion_id": "S1",
+     "name": "Greeting & agenda",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор поздоровался, представился по имени (ASR исказил компанию) и спросил, чем помочь, — это задаёт повестку входящего разговора на русском языке.",
+     "reasoning": "Первая реплика оператора [13]: «Компания в виду меня зовут [Имя скрыто] Здравствуйте, чем могу вам помочь.» Есть приветствие и представление себя (имя скрыто, ASR искажён; название компании искажено). Цель/повестка: вопрос «чем могу вам помочь» — это открытый запрос повестки, а не заявление цели. Это входящий звонок; оператор спрашивает цель клиента. Вторая реплика [15] — только имя «Пирас». Рубрика требует: приветствие, имя/компания и цель разговора или просьба продолжить. «Чем могу помочь» в входящем звонке обычно засчитывается как приглашение к повестке. Но по строгому прочтению цель не заявлена и разрешение не запрошено. Компания названа неясно («Компания в виду» — вероятно искажённое «Фридом брокер»). Склоняюсь к YES: приветствие + самопредставление + предложение помощи (вопрос о повестке) на языке клиента.",
+     "evidence": [
+      {
+       "turn": 13,
+       "quote": "Компания в виду меня зовут [Имя скрыто] Здравствуйте, чем могу вам помочь.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.6,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES",
+      "YES"
+     ],
+     "jury": {
+      "0:claude-haiku-5-5": "YES",
+      "1:claude-sonnet-5-5": "YES"
+     },
+     "decided_by": "consensus",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "blind_judge_value": null,
+     "judge_samples": [],
+     "criterion_hash": "e70bd72ebcd231cf",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "S2",
+     "name": "Need discovery",
+     "type": "scale",
+     "value": 0,
+     "is_na": false,
+     "scale_step": 0,
+     "justification": "Оператор не задавал открытых вопросов о ситуации, целях или текущем решении клиента; сразу объяснял, что поддержка техническая. Единственные вопросы ([30] общий и [43] про впечатления) не являются выявлением потребностей.",
+     "reasoning": "Диалог — входящий звонок в техподдержку, не продажа. Оператор вопросов о ситуации/целях клиента не задавал до [43]. Единственный вопрос — в конце [43] «в связи с чем у вас остались такие впечатления об этом?» — он касается впечатлений, а не потребностей, и задан после объяснений. В [30] есть «Возможно, у вас возникнут какие либо вопросы?» — закрытый общий вопрос, не discovery. Клиент не ушёл до возможности discovery (у оператора было много времени), поэтому NA не подходит. Выявления потребностей практически нет: оценка 0, максимум 1 за один поверхностный вопрос после объяснений. Вопрос в [43] поверхностный и поздний, по рубрике это «1 — один поверхностный вопрос или вопросы после питча». Но он не про ситуацию/цели клиента, а про причины впечатлений; строго — ближе к 0. Однако буквально это один вопрос о ситуации клиента, заданный после «питча». Выбираю 0, так как оператор по сути сразу объяснял ограничения и не выяснял потребности.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "Реплики [24]–[31]: после вопроса клиента о помощи оператор не уточнил цели, опыт, размер портфеля, что клиенту нужно.",
+     "na_reason": "",
+     "confidence": 0.6,
+     "evidence_warning": "",
+     "needs_review": true,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      0,
+      0
+     ],
+     "jury": {
+      "0:claude-haiku-5-5": 0,
+      "1:claude-sonnet-5-5": 0
+     },
+     "decided_by": "consensus",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "blind_judge_value": null,
+     "judge_samples": [],
+     "criterion_hash": "76d1f1cecc67a571",
+     "review_reasons": [
+      "low_confidence_scale"
+     ]
+    },
+    {
+     "criterion_id": "S3",
+     "name": "Product pitch fit",
+     "type": "scale",
+     "value": 0,
+     "is_na": false,
+     "scale_step": 0,
+     "justification": "Оператор не предложил продукт или решение под потребность клиента (рекомендации по покупке). Он лишь объяснил, что поддержка техническая и консультаций не даёт.",
+     "reasoning": "Клиентка хотела получать рекомендации по покупке ценных бумаг, как у прежнего брокера. Оператор объяснил, что он только техподдержка, и описал, чем она занимается (помощь с выводом денег, технические вопросы). Он не предложил ничего, что отвечало бы потребности клиента. Не упомянул ни услугу персонального менеджера, ни условия её получения, ни другие варианты. Звонок не оборвался до возможности питча: у оператора было время, и клиент прямо назвал потребность. Формально продуктового питча нет, есть только отказ и описание ограничений. Значит, 0.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "Реплики 26–43: после запроса клиента о рекомендациях по покупке не было предложения подходящего решения.",
+     "na_reason": "",
+     "confidence": 0.75,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      0,
+      0
+     ],
+     "jury": {
+      "0:claude-haiku-5-5": 0,
+      "1:claude-sonnet-5-5": 0
+     },
+     "decided_by": "consensus",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "blind_judge_value": null,
+     "judge_samples": [],
+     "criterion_hash": "4b4172507582eabd",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "S4",
+     "name": "Objection handling",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Клиент возражал, что его «отфутболили» и что поддержка не рекомендует покупки. Оператор отвечал сухо («Нет, не делаем»), не предлагал решения и частично возлагал вину на неверную информацию. Возражение не отработано.",
+     "reasoning": "Клиент выразил возражения/недовольство: что его «отфутболили», что оператор не рекомендует покупки, как прежний брокер [34], [37], [39], [42]. Это возражения против предложения/формата сервиса. Оператор отвечает: [26]-[31] объясняет роль техподдержки; [40] «Нет, не делаем.» — сухой отказ; [43] «Да я вас понимаю, но видимо вас неправильно проинформировали... Мы такими делами не занимаемся» — частично признаёт, но отвергает, перекладывая вину на информирование, не предлагает альтернативу (например, как получить персонального менеджера, условия закрепления), хотя есть уточняющий вопрос в конце. Реакция на фразу «отфутболили» [34] — отсутствует (ответ [36] про вывод денег уходит в сторону). Возражение в целом не отработано релевантным аргументом, а частично отвергнуто. Это ближе к NO.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "Реплики [34]–[43]: после жалобы клиента на «отфутболили» не предложено решение (персональный менеджер, альтернативы), ответ [40] — сухой отказ.",
+     "na_reason": "",
+     "confidence": 0.7,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO",
+      "NO"
+     ],
+     "jury": {
+      "0:claude-haiku-5-5": "NO",
+      "1:claude-sonnet-5-5": "NO"
+     },
+     "decided_by": "consensus",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "blind_judge_value": null,
+     "judge_samples": [],
+     "criterion_hash": "010f892a4587857a",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "S5",
+     "name": "Next step agreed",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Диалог закончился без согласованного следующего шага. Оператор в последней реплике только объяснил роль техподдержки и задал вопрос, после чего клиент завершил звонок.",
+     "reasoning": "Разговор завершился тем, что клиент повесил трубку после последней реплики оператора [43]. В ней оператор объяснил, что поддержка техническая, и задал открытый вопрос о впечатлениях. Конкретного следующего шага он не предложил: ни обратного звонка, ни встречи, ни материалов, ни передачи персональному менеджеру. Явного согласованного отказа с разрешением на повторный контакт тоже нет. Правило про ранний обрыв клиентом даёт NO.",
+     "evidence": [
+      {
+       "turn": 43,
+       "quote": "Мы такими делами не занимаемся. Мы изначально были технической поддержкой и так и являемся.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "Реплика №43 (последняя реплика оператора): ожидалось предложение следующего шага, например передача персональному менеджеру, обратный звонок или отправка материалов.",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO",
+      "NO"
+     ],
+     "jury": {
+      "0:claude-haiku-5-5": "NO",
+      "1:claude-sonnet-5-5": "NO"
+     },
+     "decided_by": "consensus",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "blind_judge_value": null,
+     "judge_samples": [],
+     "criterion_hash": "66278ea13860311b",
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [
+    "S2"
+   ],
+   "warnings": [],
+   "total": 15.0,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 5,
+    "criteria_total": 5,
+    "agreement": 1.0,
+    "score_range": [
+     15.0,
+     15.0
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 1
+   },
+   "call_metrics": {
+    "operator_wpm": 100.3,
+    "speaker_changes": 20,
+    "overlap_rate": 0.35,
+    "operator_response_s": {
+     "median": 9.3,
+     "p90": 19.2,
+     "max": 32.5,
+     "n": 10
+    },
+    "note": "informational, estimated from turn start times only; not scored"
+   },
+   "human": {
+    "overrides": {},
+    "values": {
+     "S1": "YES",
+     "S2": 0,
+     "S3": 0,
+     "S4": "NO",
+     "S5": "NO"
+    },
+    "total": 15.0,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  }
+ ]
+}

@@ -1,0 +1,752 @@
+{
+ "group": "DEV",
+ "created_at": "2026-11-07T22:47:09",
+ "meta": {
+  "elapsed_s": 0.4,
+  "usage": {
+   "input_tokens": 26700,
+   "output_tokens": 750,
+   "cache_read_input_tokens": 0,
+   "cache_creation_input_tokens": 0,
+   "calls": 15,
+   "usd": 0.0
+  },
+  "cost_usd": 0.0,
+  "provider": "mock",
+  "model": "mock-heuristic",
+  "reproducibility": {
+   "prompt_version": "v10",
+   "jurors": [
+    "mock-heuristic"
+   ],
+   "judge": null,
+   "sampling": "temperature 0 (first sample)",
+   "self_consistency_samples": null,
+   "batch_dialogs": 6,
+   "judge_confirms_consensus_on": [],
+   "scale_samples": 1,
+   "judge_samples_scale": 3,
+   "scale_sample_criteria": [
+    "04",
+    "06"
+   ],
+   "checklists": {
+    "generic_sales_v1": {
+     "version_hash": "eeb087bfdf0c",
+     "criterion_hashes": {
+      "S1": "e70bd72ebcd231cf",
+      "S2": "76d1f1cecc67a571",
+      "S3": "4b4172507582eabd",
+      "S4": "010f892a4587857a",
+      "S5": "66278ea13860311b"
+     },
+     "weights": {
+      "S1": 15,
+      "S2": 25,
+      "S3": 25,
+      "S4": 20,
+      "S5": 15
+     }
+    }
+   }
+  },
+  "errors": [],
+  "incomplete_dialogs": [],
+  "turn_base": 1
+ },
+ "dialogs": [
+  {
+   "conversation_id": "p4-ru-003",
+   "channel": "voice call",
+   "language": "RU",
+   "kind": "call",
+   "dialog_hash": "1d2c01b02fea7491",
+   "checklist_id": "generic_sales_v1",
+   "checklist_version": "1.0.0+eeb087bfdf0c",
+   "criteria": [
+    {
+     "criterion_id": "S1",
+     "name": "Greeting & agenda",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "[mock] эвристика по ключевым словам, критерий S1",
+     "reasoning": "mock heuristic for criterion S1",
+     "evidence": [
+      {
+       "turn": 76,
+       "quote": "Ответа от профильного, отдела я предоставлю вам обратно здес",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "mock-heuristic",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "e70bd72ebcd231cf",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "S2",
+     "name": "Need discovery",
+     "type": "scale",
+     "value": 2,
+     "is_na": false,
+     "scale_step": 2,
+     "justification": "[mock] эвристика по ключевым словам, критерий S2",
+     "reasoning": "mock heuristic for criterion S2",
+     "evidence": [
+      {
+       "turn": 76,
+       "quote": "Ответа от профильного, отдела я предоставлю вам обратно здес",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      2
+     ],
+     "jury": {},
+     "decided_by": "mock-heuristic",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "76d1f1cecc67a571",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "S3",
+     "name": "Product pitch fit",
+     "type": "scale",
+     "value": 2,
+     "is_na": false,
+     "scale_step": 2,
+     "justification": "[mock] эвристика по ключевым словам, критерий S3",
+     "reasoning": "mock heuristic for criterion S3",
+     "evidence": [
+      {
+       "turn": 76,
+       "quote": "Ответа от профильного, отдела я предоставлю вам обратно здес",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      2
+     ],
+     "jury": {},
+     "decided_by": "mock-heuristic",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "4b4172507582eabd",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "S4",
+     "name": "Objection handling",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "[mock] эвристика по ключевым словам, критерий S4",
+     "reasoning": "mock heuristic for criterion S4",
+     "evidence": [
+      {
+       "turn": 76,
+       "quote": "Ответа от профильного, отдела я предоставлю вам обратно здес",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "mock-heuristic",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "010f892a4587857a",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "S5",
+     "name": "Next step agreed",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "[mock] эвристика по ключевым словам, критерий S5",
+     "reasoning": "mock heuristic for criterion S5",
+     "evidence": [
+      {
+       "turn": 76,
+       "quote": "Ответа от профильного, отдела я предоставлю вам обратно здес",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "mock-heuristic",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "66278ea13860311b",
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 100.0,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 5,
+    "criteria_total": 5,
+    "agreement": 1.0,
+    "score_range": [
+     100.0,
+     100.0
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": {
+    "operator_wpm": 99.9,
+    "speaker_changes": 34,
+    "overlap_rate": 0.382,
+    "operator_response_s": {
+     "median": 3.5,
+     "p90": 12.1,
+     "max": 32.5,
+     "n": 17
+    },
+    "note": "informational, estimated from turn start times only; not scored"
+   },
+   "human": {
+    "overrides": {},
+    "values": {
+     "S1": "YES",
+     "S2": 2,
+     "S3": 2,
+     "S4": "YES",
+     "S5": "YES"
+    },
+    "total": 100.0,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "p4-ru-002",
+   "channel": "voice call",
+   "language": "RU",
+   "kind": "call",
+   "dialog_hash": "8c4bf5d11dcf8f25",
+   "checklist_id": "generic_sales_v1",
+   "checklist_version": "1.0.0+eeb087bfdf0c",
+   "criteria": [
+    {
+     "criterion_id": "S1",
+     "name": "Greeting & agenda",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "[mock] эвристика по ключевым словам, критерий S1",
+     "reasoning": "mock heuristic for criterion S1",
+     "evidence": [
+      {
+       "turn": 71,
+       "quote": "Благодарю вас за уделенное время всего хорошего до свидания.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "mock-heuristic",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "e70bd72ebcd231cf",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "S2",
+     "name": "Need discovery",
+     "type": "scale",
+     "value": 2,
+     "is_na": false,
+     "scale_step": 2,
+     "justification": "[mock] эвристика по ключевым словам, критерий S2",
+     "reasoning": "mock heuristic for criterion S2",
+     "evidence": [
+      {
+       "turn": 71,
+       "quote": "Благодарю вас за уделенное время всего хорошего до свидания.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      2
+     ],
+     "jury": {},
+     "decided_by": "mock-heuristic",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "76d1f1cecc67a571",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "S3",
+     "name": "Product pitch fit",
+     "type": "scale",
+     "value": 2,
+     "is_na": false,
+     "scale_step": 2,
+     "justification": "[mock] эвристика по ключевым словам, критерий S3",
+     "reasoning": "mock heuristic for criterion S3",
+     "evidence": [
+      {
+       "turn": 71,
+       "quote": "Благодарю вас за уделенное время всего хорошего до свидания.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      2
+     ],
+     "jury": {},
+     "decided_by": "mock-heuristic",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "4b4172507582eabd",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "S4",
+     "name": "Objection handling",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "[mock] эвристика по ключевым словам, критерий S4",
+     "reasoning": "mock heuristic for criterion S4",
+     "evidence": [
+      {
+       "turn": 71,
+       "quote": "Благодарю вас за уделенное время всего хорошего до свидания.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "mock-heuristic",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "010f892a4587857a",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "S5",
+     "name": "Next step agreed",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "[mock] эвристика по ключевым словам, критерий S5",
+     "reasoning": "mock heuristic for criterion S5",
+     "evidence": [
+      {
+       "turn": 71,
+       "quote": "Благодарю вас за уделенное время всего хорошего до свидания.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "mock-heuristic",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "66278ea13860311b",
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 100.0,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 5,
+    "criteria_total": 5,
+    "agreement": 1.0,
+    "score_range": [
+     100.0,
+     100.0
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": {
+    "operator_wpm": 76.9,
+    "speaker_changes": 24,
+    "overlap_rate": 0.333,
+    "operator_response_s": {
+     "median": 4.2,
+     "p90": 14.2,
+     "max": 431.7,
+     "n": 12
+    },
+    "note": "informational, estimated from turn start times only; not scored"
+   },
+   "human": {
+    "overrides": {},
+    "values": {
+     "S1": "YES",
+     "S2": 2,
+     "S3": 2,
+     "S4": "YES",
+     "S5": "YES"
+    },
+    "total": 100.0,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "p4-ru-001",
+   "channel": "voice call",
+   "language": "RU",
+   "kind": "call",
+   "dialog_hash": "0655d27f458d65e6",
+   "checklist_id": "generic_sales_v1",
+   "checklist_version": "1.0.0+eeb087bfdf0c",
+   "criteria": [
+    {
+     "criterion_id": "S1",
+     "name": "Greeting & agenda",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "[mock] эвристика по ключевым словам, критерий S1",
+     "reasoning": "mock heuristic for criterion S1",
+     "evidence": [
+      {
+       "turn": 43,
+       "quote": "Да я вас понимаю, но видимо вас неправильно проинформировали",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "mock-heuristic",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "e70bd72ebcd231cf",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "S2",
+     "name": "Need discovery",
+     "type": "scale",
+     "value": 2,
+     "is_na": false,
+     "scale_step": 2,
+     "justification": "[mock] эвристика по ключевым словам, критерий S2",
+     "reasoning": "mock heuristic for criterion S2",
+     "evidence": [
+      {
+       "turn": 43,
+       "quote": "Да я вас понимаю, но видимо вас неправильно проинформировали",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      2
+     ],
+     "jury": {},
+     "decided_by": "mock-heuristic",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "76d1f1cecc67a571",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "S3",
+     "name": "Product pitch fit",
+     "type": "scale",
+     "value": 2,
+     "is_na": false,
+     "scale_step": 2,
+     "justification": "[mock] эвристика по ключевым словам, критерий S3",
+     "reasoning": "mock heuristic for criterion S3",
+     "evidence": [
+      {
+       "turn": 43,
+       "quote": "Да я вас понимаю, но видимо вас неправильно проинформировали",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      2
+     ],
+     "jury": {},
+     "decided_by": "mock-heuristic",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "4b4172507582eabd",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "S4",
+     "name": "Objection handling",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "[mock] эвристика по ключевым словам, критерий S4",
+     "reasoning": "mock heuristic for criterion S4",
+     "evidence": [
+      {
+       "turn": 43,
+       "quote": "Да я вас понимаю, но видимо вас неправильно проинформировали",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "mock-heuristic",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "010f892a4587857a",
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "S5",
+     "name": "Next step agreed",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "[mock] эвристика по ключевым словам, критерий S5",
+     "reasoning": "mock heuristic for criterion S5",
+     "evidence": [
+      {
+       "turn": 43,
+       "quote": "Да я вас понимаю, но видимо вас неправильно проинформировали",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "mock-heuristic",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "criterion_hash": "66278ea13860311b",
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 100.0,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 5,
+    "criteria_total": 5,
+    "agreement": 1.0,
+    "score_range": [
+     100.0,
+     100.0
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": {
+    "operator_wpm": 100.3,
+    "speaker_changes": 20,
+    "overlap_rate": 0.35,
+    "operator_response_s": {
+     "median": 9.3,
+     "p90": 19.2,
+     "max": 32.5,
+     "n": 10
+    },
+    "note": "informational, estimated from turn start times only; not scored"
+   },
+   "human": {
+    "overrides": {},
+    "values": {
+     "S1": "YES",
+     "S2": 2,
+     "S3": 2,
+     "S4": "YES",
+     "S5": "YES"
+    },
+    "total": 100.0,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  }
+ ]
+}

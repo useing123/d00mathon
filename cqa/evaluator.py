@@ -585,7 +585,7 @@ def build_dialog_result(rec, checklist, crit_results, overrides=None):
     warns = [f"{r['criterion_id']}: {r['evidence_warning']}" for r in crit_results if r.get("evidence_warning")]
     res = {"conversation_id": rec["conversation_id"], "channel": rec.get("channel"), "language": rec.get("language"),
            "kind": rec["kind"], "dialog_hash": rec["hash"], "checklist_id": checklist["id"],
-           "criteria": crit_results, "status": "incomplete" if failed else "complete",
+           "checklist_version": ckl.version_hash(checklist), "criteria": crit_results, "status": "incomplete" if failed else "complete",
            "failed_criteria": failed, "needs_review": flags,
            "warnings": list(rec.get("warnings") or []) + warns,
            "total": None if failed else ai["total"], "provisional_total": ai["total"] if failed else None,

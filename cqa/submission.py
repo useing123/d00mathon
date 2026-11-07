@@ -156,7 +156,7 @@ def _same(a, b):   # True == 1 in Python; keep JSON types distinct
     return type(a) is type(b) and a == b
 
 
-def validate(obj, prod=False, expected_ids=None, custom_ok=False):
+def validate(obj, prod=False, expected_ids=None, custom_ok=False, custom_checklist=False):
     """Return (errors, warnings): schema + semantic rules of the appendix. prod=True enforces exactly 10 records.
     custom_ok: a replaced/custom criterion code is a warning instead of an error (control-step criterion swap)."""
     errs, warns = [], []
@@ -191,7 +191,7 @@ def validate(obj, prod=False, expected_ids=None, custom_ok=False):
             errs.append(f"{where}: criterion repeated: {codes}")
         if set(codes) != set(CODES):
             msg = f"{where}: criteria {sorted(map(str, codes))} != official 8 {sorted(CODES)}"
-            (warns if custom_ok and "critical" in codes else errs).append(msg)
+            (warns if custom_checklist or (custom_ok and "critical" in codes) else errs).append(msg)
         for c in crits:
             dom = SPEC["domains"].get(c.get("criterion_id"))
             if dom is not None and not any(_same(c.get("value"), x) for x in dom):

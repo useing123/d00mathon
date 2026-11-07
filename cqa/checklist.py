@@ -13,6 +13,16 @@ DEFAULT_ASSUMPTIONS = {"rounding": "half_up", "decimals": 2, "first_reply": "fir
                        "confidence_threshold": 0.8}
 
 
+# Criterion 07 formula, selected by `assumptions.closure_mode` and substituted as {closure_rule}.
+# strict = literal official text «подвёл итог или предложил дальнейшую помощь и попрощался».
+CLOSURE_RULES = {
+    "strict": "оператор попрощался И сделал хотя бы ОДНО из двух: подвёл итог ИЛИ предложил дальнейшую помощь "
+              "(формула: прощание + (итог ИЛИ предложение помощи)); одно прощание без итога и без предложения помощи — NO",
+    "lenient": "оператор вежливо попрощался ИЛИ предложил дальнейшую помощь (достаточно ОДНОГО элемента: "
+               "«Хорошего дня!» или «Если появятся вопросы — пишите»); итог не требуется",
+}
+
+
 def list_checklists():
     out = []
     for p in sorted(config.CHECKLIST_DIR.glob("*.yaml")):
@@ -69,6 +79,9 @@ def validate(c):
         raise ValueError("assumptions.long_wait_seconds must be a positive number")
     if lw is None and any("{long_wait_" in str(cr.get(k, "")) for cr in c["criteria"] for k in ("rubric", "rules")):
         raise ValueError("rubric uses {long_wait_*} but assumptions.long_wait_seconds is not set")
+    cm = a.get("closure_mode")
+    if cm is not None and cm not in CLOSURE_RULES:
+        raise ValueError("assumptions.closure_mode must be strict|lenient")
     ids = set()
     for cr in c["criteria"]:
         cr["id"] = str(cr["id"])
@@ -118,11 +131,13 @@ def long_wait_seconds(c):
 def rubric_vars(c):
     """Values substituted into rubric/rules text ({long_wait_seconds}, {long_wait_minutes})."""
     a = c.get("assumptions") or {}
+    out = {"closure_rule": CLOSURE_RULES[a.get("closure_mode") or "strict"]}
     s = a.get("long_wait_seconds")
     if s is None:
-        return {}
+        return out
     m = s / 60
-    return {"long_wait_seconds": s, "long_wait_minutes": int(m) if float(m).is_integer() else round(m, 1)}
+    out.update({"long_wait_seconds": s, "long_wait_minutes": int(m) if float(m).is_integer() else round(m, 1)})
+    return out
 
 
 def render(text, c):
@@ -206,13 +221,26 @@ def criterion_hash(checklist, cr):
     reweighting only changes scoring, not the per-criterion value; `code` is the export name only)."""
     payload = {k: v for k, v in cr.items() if k not in ("weight", "code")}
     payload["_desc"] = checklist.get("description", "")
-    payload["_assumptions"] = {k: v for k, v in checklist["assumptions"].items() if k not in ("rounding", "decimals")}
+    uses_closure = any("{closure_" in str(cr.get(k, "")) for k in ("rubric", "rules"))
+    # closure_mode only affects criteria whose text uses {closure_rule}; keep other criteria's cache valid
+    payload["_assumptions"] = {k: v for k, v in checklist["assumptions"].items()
+                               if k not in ("rounding", "decimals") and (k != "closure_mode" or uses_closure)}
+    if uses_closure:
+        payload["_closure_rule"] = rubric_vars(checklist)["closure_rule"]
     # model / jury identity is NOT part of this hash: it is added to the cache key in Evaluator.evaluate_criterion
     from .prompts import PROMPT_VERSION, SYSTEM, TOOL
     payload["_pv"] = PROMPT_VERSION
     # hash the actual prompt content too, so an edit without a version bump cannot reuse stale cache entries
     payload["_prompt"] = hashlib.sha256((SYSTEM + json.dumps(TOOL, ensure_ascii=False, sort_keys=True)).encode()).hexdigest()[:16]
     return hashlib.sha256(json.dumps(payload, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:16]
+
+
+def version_hash(checklist):
+    """Stable checklist version id stored with every result: ``<version or 'v?'>+<12-hex hash of all criterion hashes>``.
+    The hash changes on ANY rubric/weight/scale/prompt edit, even when the human-readable version is not bumped."""
+    h = hashlib.sha256(json.dumps({cr["id"]: criterion_hash(checklist, cr) for cr in checklist["criteria"]},
+                                  sort_keys=True).encode()).hexdigest()[:12]
+    return f"{checklist.get('version') or 'v?'}+{h}"
 
 
 def pick_for_channel(kind, chat_id=None, call_id=None):
