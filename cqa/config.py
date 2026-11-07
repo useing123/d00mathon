@@ -27,11 +27,12 @@ def _load_env():
 _load_env()
 
 
-def get(key, default=None):
+def get(key: str, default: str | None = None) -> str | None:
+    """Read a setting from the environment (``.env`` values are loaded as defaults)."""
     return os.environ.get(key, default)
 
 
-PROVIDER = get("CQA_PROVIDER", "anthropic")          # anthropic | openai
+PROVIDER = get("CQA_PROVIDER", "anthropic")          # anthropic | openai | mock (offline heuristic)
 MODEL = get("CQA_MODEL", "claude-sonnet-5-5")
 # Ensemble ("jury") mode: two jurors vote in parallel, the frontier judge adjudicates disagreements.
 ENSEMBLE = get("CQA_ENSEMBLE", "1") == "1"

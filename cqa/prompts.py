@@ -1,5 +1,4 @@
 """Prompt templates (one focused prompt per criterion)."""
-import json
 
 PROMPT_VERSION = "v2"
 

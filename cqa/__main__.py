@@ -15,6 +15,9 @@ def _progress(done, total):
 
 
 def cmd_evaluate(a):
+    """Evaluate a fetched group or a local JSON file; writes results JSON + CSV."""
+    if a.mock:
+        config.PROVIDER = "mock"
     if a.input:
         recs = data.load_file(a.input)
         group = a.group or a.input.rsplit("/", 1)[-1].split(".")[0]
@@ -26,7 +29,8 @@ def cmd_evaluate(a):
         recs = [r for r in recs if r["conversation_id"] in want]
     if a.limit:
         recs = recs[: a.limit]
-    print(f"Evaluating {len(recs)} dialogs (group={group}, provider={config.PROVIDER}, model={config.MODEL}, cache={'off' if a.fresh else 'on'})", file=sys.stderr)
+    print(f"Evaluating {len(recs)} dialogs (group={group}, provider={config.PROVIDER}, model={config.MODEL}, "
+          f"cache={'off' if a.fresh else 'on'})", file=sys.stderr)
     ev = Evaluator(use_cache=not a.fresh, samples=a.samples)
     t0 = time.time()
     dialogs, meta = ev.evaluate_many(recs, checklist_override=a.checklist, progress=_progress, concurrency=a.concurrency)
@@ -62,11 +66,13 @@ def cmd_stats(a):
     tot = sorted(d["total"] for d in ds if d["total"] is not None)
     bins = Counter(min(int(t // 10) * 10, 90) for t in tot)
     if not tot:
-        print("no totals"); return
-    print("totals: n=%d min=%.2f median=%.2f max=%.2f mean=%.2f" % (len(tot), tot[0], tot[len(tot)//2], tot[-1], sum(tot)/len(tot)))
+        print("no totals")
+        return
+    print(f"totals: n={len(tot)} min={tot[0]:.2f} median={tot[len(tot) // 2]:.2f} max={tot[-1]:.2f} mean={sum(tot) / len(tot):.2f}")
     print("histogram:", {f"{k}-{k+10}": bins[k] for k in sorted(bins)})
     print("gross:", [d["conversation_id"] for d in ds if d["gross_error"]])
-    dis = [(d["conversation_id"], r["criterion_id"], r.get("votes")) for d in ds for r in d["criteria"] if r.get("self_consistency_disagreement")]
+    dis = [(d["conversation_id"], r["criterion_id"], r.get("votes"))
+           for d in ds for r in d["criteria"] if r.get("self_consistency_disagreement")]
     print("self-consistency disagreements:", len(dis))
     for x in dis:
         print("  ", x)
@@ -89,7 +95,9 @@ def main():
     e.add_argument("--concurrency", type=int)
     e.add_argument("--refresh", action="store_true", help="re-fetch group even if data/<group>.json exists")
     e.add_argument("--fresh", action="store_true", help="ignore per-criterion cache (re-run everything)")
-    e.add_argument("--reeval", action="store_true", help="re-evaluate with current checklist: only changed criteria hit the LLM (default behaviour with cache)")
+    e.add_argument("--mock", action="store_true", help="offline deterministic heuristic backend (no API key; same as CQA_PROVIDER=mock)")
+    e.add_argument("--reeval", action="store_true",
+                   help="re-evaluate with current checklist: only changed criteria hit the LLM (default behaviour with cache)")
     r = sub.add_parser("rescore", help="recompute totals after reweighting (no LLM)")
     r.add_argument("--group", required=True)
     s = sub.add_parser("stats")

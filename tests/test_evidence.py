@@ -28,3 +28,23 @@ def test_hold_marking():
         {"timestamp": "2026-11-03T15:50:14.19+00:00", "speaker": "operator", "text": "c"}]}, 0)
     assert [t["internal"] for t in r["transcript"]] == [False, False, True, False, False]
     assert abs(r["transcript"][2]["offset"] - 20.0) < 0.01
+
+
+def test_evidence_as_json_string_and_dict():
+    v, _ = validate_evidence(REC, '[{"turn": 1, "quote": "Меня зовут Алина"}]')
+    assert v and v[0]["speaker"] == "operator"
+    v, _ = validate_evidence(REC, {"turn": 1, "quote": "меня   зовут алина"})
+    assert v
+
+
+def test_evidence_garbage_ignored():
+    v, bad = validate_evidence(REC, ["x", {"turn": "abc", "quote": ""}, None])
+    assert v == [] and bad == []
+    v, bad = validate_evidence(REC, "not json")
+    assert v == [] and bad == []
+
+
+def test_yo_and_quotes_normalised():
+    r = normalize({"transcript": [{"speaker": "operator", "text": "Всё «готово»"}]}, 0)
+    v, _ = validate_evidence(r, [{"turn": 0, "quote": "все \"готово\""}])
+    assert v

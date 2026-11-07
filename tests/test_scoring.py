@@ -1,6 +1,7 @@
 import pytest
-from cqa.scoring import compute_total
+
 from cqa.checklist import load
+from cqa.scoring import compute_total
 
 CL = load("freedom_chat_v1")["criteria"]
 ALL_YES = {"01": "YES", "02": "YES", "03": "YES", "04": 20, "05": "YES", "06": 10, "07": "YES", "08": "NO"}

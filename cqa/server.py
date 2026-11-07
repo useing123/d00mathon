@@ -39,8 +39,8 @@ def checklists():
 def get_checklist(cid: str):
     try:
         c = ckl.load(cid)
-    except FileNotFoundError:
-        raise HTTPException(404)
+    except FileNotFoundError as e:
+        raise HTTPException(404) from e
     return {"checklist": c, "yaml": (config.CHECKLIST_DIR / f"{cid}.yaml").read_text(encoding="utf-8")}
 
 
@@ -51,7 +51,7 @@ def put_checklist(cid: str, body: dict = Body(...)):
         c["id"] = c.get("id") or cid
         c = ckl.save(c)
     except Exception as e:
-        raise HTTPException(400, str(e))
+        raise HTTPException(400, str(e)) from e
     return {"ok": True, "id": c["id"]}
 
 
@@ -81,7 +81,7 @@ def fetch(body: dict = Body(...)):
     try:
         recs = data.fetch_group(g)
     except Exception as e:
-        raise HTTPException(502, f"fetch failed: {e}")
+        raise HTTPException(502, f"fetch failed: {e}") from e
     return {"group": g, "dialogs": len(recs)}
 
 
@@ -91,7 +91,7 @@ async def upload(file: UploadFile = File(...), group: str = "UPLOAD"):
         obj = json.loads((await file.read()).decode("utf-8"))
         recs = data.load_json(obj)
     except Exception as e:
-        raise HTTPException(400, f"bad JSON: {e}")
+        raise HTTPException(400, f"bad JSON: {e}") from e
     _save_group(group, recs)
     return {"group": group, "dialogs": len(recs)}
 
@@ -183,7 +183,7 @@ def override(group: str, conv: str, crit: str, body: dict = Body(...)):
         store.save_override(group, conv, crit, body.get("value"), body.get("justification", ""), body.get("reviewer", ""))
         doc = store.load_results(group)
     except Exception as e:
-        raise HTTPException(400, str(e))
+        raise HTTPException(400, str(e)) from e
     return next(d for d in doc["dialogs"] if d["conversation_id"] == conv)
 
 

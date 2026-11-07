@@ -1,5 +1,5 @@
 """Deterministic scoring (no LLM)."""
-from decimal import Decimal, ROUND_HALF_UP, ROUND_HALF_EVEN
+from decimal import ROUND_HALF_EVEN, ROUND_HALF_UP, Decimal
 
 
 def criterion_points(cr, value):

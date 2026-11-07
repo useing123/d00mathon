@@ -40,7 +40,7 @@ def validate_evidence(rec, evidence):
             continue
         q = q.strip("… .")
         parts = [p.strip() for p in re.split(r"\s*(?:\.\.\.|…)\s*", q) if p.strip()]
-        def ok(t):
+        def ok(t, parts=parts):
             tn = _norm(t.get("text", ""))
             return all(p in tn for p in parts)
         if 0 <= ti < len(turns) and ok(turns[ti]):
@@ -114,7 +114,7 @@ class Evaluator:
         """Jurors (haiku + sonnet) vote in parallel; on disagreement the frontier judge (opus) decides."""
         with ThreadPoolExecutor(max_workers=len(self.jurors)) as ex:
             outs = list(ex.map(lambda m: self._sample(rec, tx_block, checklist, cr, 0.0, llm=m), self.jurors))
-        votes = {m.model: o["value"] for m, o in zip(self.jurors, outs)}
+        votes = {m.model: o["value"] for m, o in zip(self.jurors, outs, strict=True)}
         agree = len(set(map(str, votes.values()))) == 1
         if agree:
             chosen, decided_by = outs[-1], "consensus"   # strongest juror's explanation
@@ -206,7 +206,7 @@ class Evaluator:
         # Two phases: first criterion of every dialog warms the prompt cache (transcript block),
         # then the remaining criteria of that dialog read it at 10% of the input price.
         first_ids = {}
-        for rec, cid, cr in jobs:
+        for rec, _cid, cr in jobs:
             first_ids.setdefault(rec["conversation_id"], cr["id"])
         phase1 = [j for j in jobs if first_ids[j[0]["conversation_id"]] == j[2]["id"]]
         phase2 = [j for j in jobs if first_ids[j[0]["conversation_id"]] != j[2]["id"]]
@@ -229,7 +229,9 @@ class Evaluator:
             cid = checklist_override or ckl.pick_for_channel(rec["kind"])
             out.append(build_dialog_result(rec, cls[cid], [results[rec["conversation_id"]][c["id"]] for c in cls[cid]["criteria"]]))
         meta = {"elapsed_s": round(time.time() - t0, 1), "usage": dict(USAGE), "cost_usd": cost_usd(),
-                "provider": self.llm.provider, "model": (f"jury[{'+'.join(config.JURORS)}] judge={config.JUDGE}" if self.ensemble else self.llm.model), "errors": errors}
+                "provider": self.llm.provider,
+                "model": (f"jury[{'+'.join(config.JURORS)}] judge={config.JUDGE}" if self.ensemble else self.llm.model),
+                "errors": errors}
         return out, meta
 
 

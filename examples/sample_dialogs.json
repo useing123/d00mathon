@@ -1,0 +1,183 @@
+{
+ "data": {
+  "records": [
+   {
+    "conversation_id": "demo-ru-chat-good",
+    "channel": "agent chat",
+    "language": "RU",
+    "audio_url": null,
+    "transcript": [
+     {
+      "timestamp": "00:00",
+      "speaker": "bot",
+      "text": "Здравствуйте! Я виртуальный помощник. Чем могу помочь?"
+     },
+     {
+      "timestamp": "00:12",
+      "speaker": "client",
+      "text": "Не могу вывести деньги со счёта, заявка висит третий день"
+     },
+     {
+      "timestamp": "00:15",
+      "speaker": "bot",
+      "text": "Перевожу вас на оператора."
+     },
+     {
+      "timestamp": "01:02",
+      "speaker": "operator",
+      "text": "Здравствуйте! Меня зовут Айгерим, я специалист поддержки. Понимаю, как неприятно ждать. Подскажите, пожалуйста, ФИО и номер договора для идентификации."
+     },
+     {
+      "timestamp": "01:40",
+      "speaker": "client",
+      "text": "Иванов Пётр Сергеевич, договор 000-DEMO"
+     },
+     {
+      "timestamp": "02:10",
+      "speaker": "operator",
+      "text": "Спасибо, данные подтверждены. Ваша заявка на вывод на проверке комплаенса, срок до 3 рабочих дней. Сегодня она будет исполнена, уведомление придёт в приложении."
+     },
+     {
+      "timestamp": "02:30",
+      "speaker": "client",
+      "text": "Понял, спасибо"
+     },
+     {
+      "timestamp": "02:41",
+      "speaker": "operator",
+      "text": "Рада помочь! Если появятся вопросы — пишите. Всего доброго!"
+     }
+    ]
+   },
+   {
+    "conversation_id": "demo-en-chat-weak",
+    "channel": "agent chat",
+    "language": "EN",
+    "audio_url": null,
+    "transcript": [
+     {
+      "timestamp": "00:00",
+      "speaker": "client",
+      "text": "How do I change the tariff plan?"
+     },
+     {
+      "timestamp": "03:20",
+      "speaker": "operator",
+      "text": "go to settings"
+     },
+     {
+      "timestamp": "03:45",
+      "speaker": "client",
+      "text": "Which settings? I don't see it"
+     },
+     {
+      "timestamp": "05:10",
+      "speaker": "operator",
+      "text": "profile, tariffs"
+     }
+    ]
+   },
+   {
+    "conversation_id": "demo-kz-chat",
+    "channel": "agent chat",
+    "language": "KZ",
+    "audio_url": null,
+    "transcript": [
+     {
+      "timestamp": "00:00",
+      "speaker": "client",
+      "text": "Сәлеметсіз бе, қосымшаға кіре алмай жүрмін"
+     },
+     {
+      "timestamp": "00:40",
+      "speaker": "operator",
+      "text": "Сәлеметсіз бе! Менің атым Данияр. Қандай қате шығады?"
+     },
+     {
+      "timestamp": "01:05",
+      "speaker": "client",
+      "text": "Құпия сөз қате деп шығады"
+     },
+     {
+      "timestamp": "01:30",
+      "speaker": "operator",
+      "text": "Кіру бетінде «Құпия сөзді ұмыттым» батырмасын басып, SMS арқылы жаңа құпия сөз орнатыңыз."
+     },
+     {
+      "timestamp": "02:10",
+      "speaker": "client",
+      "text": "Болды, рахмет!"
+     },
+     {
+      "timestamp": "02:20",
+      "speaker": "operator",
+      "text": "Оқасы жоқ! Сау болыңыз!"
+     }
+    ]
+   },
+   {
+    "conversation_id": "demo-ru-call",
+    "channel": "voice call",
+    "language": "RU",
+    "audio_url": null,
+    "transcript": [
+     {
+      "timestamp": "2026-01-15T10:00:00.0000000+00:00",
+      "speaker": "bot",
+      "text": "Здравствуйте, вы позвонили в службу поддержки. Соединяю с оператором."
+     },
+     {
+      "timestamp": "2026-01-15T10:00:20.0000000+00:00",
+      "speaker": "operator",
+      "text": "Добрый день, меня зовут Марат, чем могу помочь?"
+     },
+     {
+      "timestamp": "2026-01-15T10:00:28.0000000+00:00",
+      "speaker": "client",
+      "text": "Хочу узнать комиссию за покупку американских акций"
+     },
+     {
+      "timestamp": "2026-01-15T10:00:40.0000000+00:00",
+      "speaker": "operator",
+      "text": "Подскажите, какой у вас тарифный план?"
+     },
+     {
+      "timestamp": "2026-01-15T10:00:47.0000000+00:00",
+      "speaker": "client",
+      "text": "Не помню, стандартный наверное"
+     },
+     {
+      "timestamp": "2026-01-15T10:00:55.0000000+00:00",
+      "speaker": "system",
+      "text": "Инициирована консультация с агентом."
+     },
+     {
+      "timestamp": "2026-01-15T10:01:05.0000000+00:00",
+      "speaker": "operator",
+      "text": "Коллега, подскажи комиссию по стандартному тарифу на US"
+     },
+     {
+      "timestamp": "2026-01-15T10:01:30.0000000+00:00",
+      "speaker": "system",
+      "text": "Клиент больше не находится на удержании."
+     },
+     {
+      "timestamp": "2026-01-15T10:01:35.0000000+00:00",
+      "speaker": "operator",
+      "text": "Спасибо за ожидание. На стандартном тарифе комиссия указана в разделе «Тарифы» приложения, могу продиктовать актуальные условия."
+     },
+     {
+      "timestamp": "2026-01-15T10:01:50.0000000+00:00",
+      "speaker": "client",
+      "text": "Да, всё, нашёл, спасибо"
+     },
+     {
+      "timestamp": "2026-01-15T10:01:55.0000000+00:00",
+      "speaker": "operator",
+      "text": "Всего доброго, до свидания!"
+     }
+    ]
+   }
+  ]
+ }
+}
