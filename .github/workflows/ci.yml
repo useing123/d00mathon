@@ -22,3 +22,5 @@ jobs:
       - run: python -m pytest -q
       - name: CLI smoke (mock, synthetic data)
         run: python -m cqa evaluate --mock --fresh --input examples/sample_dialogs.json --group DEMO
+      - name: Gold-set pipeline smoke (mock; plumbing, not accuracy)
+        run: python -m cqa gold --mock --fresh

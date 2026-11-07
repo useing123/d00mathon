@@ -231,3 +231,63 @@ def test_safe_path_stays_inside(tmp_path):
         with pytest.raises(HTTPException):
             safe_id(bad)
     assert config.RESULTS_DIR  # fixture isolation still active
+
+
+# ---------- round-1 review: facts, hold bug, jury tolerance, text fallback ----------
+def test_english_hold_end_not_reopened():
+    r = _rec([{"speaker": "operator", "text": "one moment"}, {"speaker": "system", "text": "Client is on hold"},
+              {"speaker": "operator", "text": "internal"}, {"speaker": "system", "text": "Client is no longer on hold"},
+              {"speaker": "operator", "text": "back"}])
+    assert [t["internal"] for t in r["transcript"]] == [False, False, True, False, False]
+
+
+def test_facts_gap_language_ending():
+    r = _rec([{"timestamp": "00:00", "speaker": "client", "text": "Сәлеметсіз бе, шотты қалай толтырамын?"},
+              {"timestamp": "05:00", "speaker": "operator", "text": "Сәлеметсіз бе! Менің атым Әсел."},
+              {"timestamp": "05:20", "speaker": "client", "text": "Иә?"},
+              {"timestamp": "09:20", "speaker": "operator", "text": "Жауап"},
+              {"timestamp": "09:30", "speaker": "system", "text": "Клиент завершил разговор."}])
+    f = data.compute_facts(r)
+    assert f["first_operator_turn"] == 1 and f["client_language_guess"] == "KZ"
+    w = f["longest_wait_after_first_reply"]
+    assert w == {"seconds": 240, "from_turn": 2, "to_turn": 3, "operator_warned_before": False}   # queue time excluded
+    assert f["ending"] == {"last_speaker": "operator", "last_operator_turn": 3, "system_end_event_turn": 4}
+    txt = data.format_facts(f)
+    assert "240 с" in txt and "№1" in txt
+    assert "ФАКТЫ" in prompts.transcript_block(r, data.format_transcript(r), txt)
+
+
+def test_hold_fact_with_warning():
+    r = _rec([{"timestamp": "00:00", "speaker": "operator", "text": "Минутку, уточню"},
+              {"timestamp": "00:05", "speaker": "system", "text": "Клиент находится на удержании."},
+              {"timestamp": "03:05", "speaker": "system", "text": "Клиент больше не находится на удержании."}], channel="call")
+    assert data.compute_facts(r)["holds"] == [{"start_turn": 1, "operator_warned_before": True, "end_turn": 2, "seconds": 180}]
+
+
+class Boom(Scripted):
+    def call(self, *a, **k):
+        raise RuntimeError("juror down")
+
+
+def test_jury_one_juror_fails_judge_reviews():
+    ok = Scripted([{"value": "YES", "evidence": [{"turn": 1, "quote": "Тариф"}]}])
+    judge = Scripted([{"value": "NO", "evidence": [], "missing_where": "[1]"}])
+    judge.model = "judge"
+    ev = Evaluator(use_cache=False)
+    ev.jurors, ev.judge, ev.ensemble = [Boom([{}]), ok], judge, True
+    tx = prompts.transcript_block(REC, data.format_transcript(REC))
+    res = ev._jury(REC, tx, ckl.load("freedom_chat_v1"), _cr("05"), "k_h")
+    assert res["value"] == "NO" and res["decided_by"] == "judge" and res["jury"] == {"1:scripted": "YES"}
+    assert res["evidence_warning"] == "juror_failed" and "juror down" in res["juror_errors"][0]
+
+
+def test_jury_all_fail_judge_alone_then_fail_closed():
+    judge = Scripted([{"value": "YES", "evidence": [{"turn": 1, "quote": "Тариф"}]}])
+    ev = Evaluator(use_cache=False)
+    ev.jurors, ev.judge, ev.ensemble = [Boom([{}]), Boom([{}])], judge, True
+    tx = prompts.transcript_block(REC, data.format_transcript(REC))
+    res = ev._jury(REC, tx, ckl.load("freedom_chat_v1"), _cr("05"), "k_h")
+    assert res["value"] == "YES" and res["decided_by"].startswith("judge_only")
+    ev.judge = Boom([{}])
+    with pytest.raises(RuntimeError):
+        ev._jury(REC, tx, ckl.load("freedom_chat_v1"), _cr("05"), "k_h")

@@ -47,6 +47,12 @@ NA-vs-applicable confusion, list of disagreements.
 | NA predicted for applicable / applicable for NA | 0 / 3 | 0 / 0 |
 | Cost / wall time | $2.45 / 68 s | $0.27 / 20 s (only 02 re-evaluated, criterion cache) |
 
+### Later rounds (after review round 1; still the same 16 dialogs, nothing dialog-specific)
+| Change | Agreement | Total MAE | Remaining disagreements |
+|---|---|---|---|
+| + 06 rule: a skipped question counts only in 04, not 06 | 0.969 | 3.41 | 06 gold-05, 06 gold-13, 05 gold-12, 05 gold-16 |
+| + code-computed FACTS block (first operator turn, language heuristic, longest wait & warning, holds, ending), 01 naming examples, 06 literacy rule (prompt v4, full re-run, $2.30) | **0.992** | **1.44** | 05 gold-12 (model treats "takes too long" as a complaint needing acknowledgement) |
+
 **Tuning (one change, generic, not dialog-specific):** before tuning, all three 02 errors were `NA→NO`, and the
 justifications penalised the *answer* (an ignored question, a private paid offer) under 02. We added one rule to 02:
 it judges only the pre-answer stage; answer quality belongs to 04/08; if the client's data were sufficient → NA.

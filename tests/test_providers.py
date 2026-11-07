@@ -65,6 +65,7 @@ def test_anthropic_missing_tool_use_raises_after_retries(monkeypatch):
 
 def _openai_llm(monkeypatch, bodies):
     monkeypatch.setattr(config, "OPENAI_BASE_URL", "http://local/v1")
+    monkeypatch.setattr(config, "OPENAI_TOOLS", False)
     m = llm.LLM.__new__(llm.LLM)
     m.provider, m.model = "openai", "qwen"
     seq = list(bodies)
@@ -81,6 +82,21 @@ def _ok(content):
     return (200, {"choices": [{"message": {"content": content}}], "usage": {"prompt_tokens": 3, "completion_tokens": 2}})
 
 
+def test_openai_native_tool_call(monkeypatch):
+    monkeypatch.setattr(config, "OPENAI_TOOLS", True)
+    call = {"choices": [{"message": {"tool_calls": [{"function": {"name": "submit_evaluation",
+                                                                  "arguments": json.dumps({"value": "10"})}}]}}]}
+    m, seq = _openai_llm(monkeypatch, [(200, call)])
+    monkeypatch.setattr(config, "OPENAI_TOOLS", True)
+    assert m.call("s", "c", "u", prompts.TOOL)["value"] == "10" and not seq
+
+
+def test_openai_tools_400_falls_back_to_json_mode(monkeypatch):
+    m, seq = _openai_llm(monkeypatch, [(400, {"error": "tools unsupported"}), _ok('{"value": "YES"}')])
+    monkeypatch.setattr(config, "OPENAI_TOOLS", True)
+    assert m.call("s", "c", "u", prompts.TOOL)["value"] == "YES" and not seq
+
+
 def test_openai_json_in_prose(monkeypatch):
     m, _ = _openai_llm(monkeypatch, [_ok('Sure: {"value": "15", "evidence": []} done')])
     assert m.call("s", "c", "u", prompts.TOOL)["value"] == "15"
@@ -89,3 +105,24 @@ def test_openai_json_in_prose(monkeypatch):
 def test_openai_malformed_json_retried(monkeypatch):
     m, seq = _openai_llm(monkeypatch, [_ok("{not json"), (503, {}), _ok(json.dumps({"value": "NA"}))])
     assert m.call("s", "c", "u", prompts.TOOL)["value"] == "NA" and not seq
+
+
+def test_csv_formula_injection_guard():
+    from cqa import store
+    doc = {"dialogs": [{"conversation_id": "=HYPERLINK(1)", "channel": "@x", "language": "RU", "checklist_id": "c",
+                        "criteria": [], "total": 1, "gross_error": False}]}
+    line = store.to_csv(doc).splitlines()[1]
+    assert line.startswith("'=HYPERLINK(1),'@x,RU")
+
+
+def test_wrong_turn_index_prefers_operator_turn():
+    from cqa import data
+    from cqa.evaluator import validate_evidence
+    r = data.normalize({"transcript": [{"speaker": "client", "text": "спасибо"}, {"speaker": "operator", "text": "спасибо"}]}, 0)
+    v, _ = validate_evidence(r, [{"turn": 7, "quote": "спасибо"}])
+    assert v[0]["turn"] == 1 and v[0]["speaker"] == "operator"
+
+
+def test_anthropic_text_json_fallback(monkeypatch):
+    m, _ = _anth_llm(monkeypatch, [_resp([SimpleNamespace(type="text", text='Ответ: {"value": "NA", "evidence": []}')])])
+    assert m.call("s", "c", "u", prompts.TOOL)["value"] == "NA"

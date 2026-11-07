@@ -8,8 +8,11 @@ import httpx
 
 from . import config
 
-HOLD_START = ("инициирована консультация", "клиент находится на удержании", "consultation initiated", "on hold")
-HOLD_END = ("клиент больше не находится на удержании", "no longer on hold", "removed from hold")
+HOLD_START = ("инициирована консультация", "клиент находится на удержании", "consultation initiated", "is on hold",
+              "placed on hold", "client on hold", "customer on hold",
+              "клиент поставлен на удержание", "кеңес басталды", "күту режимінде")
+HOLD_END = ("клиент больше не находится на удержании", "no longer on hold", "removed from hold",
+            "снят с удержания", "күту режимінен шығарылды")
 
 
 def _records(obj):
@@ -164,11 +167,13 @@ def normalize(rec, i):
                 off = (val.replace(tzinfo=None) - first.replace(tzinfo=None)).total_seconds()
         t["offset"] = off
         low = (t.get("text") or "").lower()
-        if sp == "system" and any(k in low for k in HOLD_END):
+        if sp == "system" and any(k in low for k in HOLD_END):   # check END first: "no longer on hold" ⊃ "on hold"
             internal = False
-        t["internal"] = bool(internal and sp == "operator")
-        if sp == "system" and any(k in low for k in HOLD_START):
+            t["hold_event"] = "end"
+        elif sp == "system" and any(k in low for k in HOLD_START):
             internal = True
+            t["hold_event"] = "start"
+        t["internal"] = bool(internal and sp == "operator")
         turns.append(t)
     if unknown:
         warnings.append("unknown speaker roles (kept as UNKNOWN, not credited to operator): " +
@@ -198,4 +203,105 @@ def format_transcript(rec, mark_internal=True):
         if mark_internal and t.get("internal"):
             sp += " [ВНУТРЕННИЕ ПЕРЕГОВОРЫ НА УДЕРЖАНИИ — клиент не слышит]"
         lines.append(f"[{t['index']}] ({fmt_offset(t.get('offset'))}) {sp}: {t.get('text','')}")
+    return "\n".join(lines)
+
+
+KZ_LETTERS = set("әғқңөұүһі")
+WAIT_PHRASES = ("минут", "подожд", "ожидайт", "уточню", "проверю", "секунд", "момент", "одну минуту", "оставайтесь на линии",
+                "күте тұр", "күтіңіз", "тексеріп", "нақтылап", "wait", "moment", "hold on", "let me check", "one sec")
+END_MARKERS = ("завершил", "прерван", "отключ", "аяқтады", "ended", "left the chat", "hung up", "disconnected", "closed")
+TRIVIAL = {"оператор", "operator", "agent", "агент", "менеджер", "маман", "человек", "1", "2", "0"}
+
+
+def detect_language(texts):
+    """Script heuristic: Kazakh-specific letters → KZ, other Cyrillic → RU, Latin → EN; None if no signal."""
+    kz = ru = en = 0
+    for tx in texts:
+        low = tx.lower()
+        if low.strip(" .!?") in TRIVIAL:
+            continue
+        kz += sum(ch in KZ_LETTERS for ch in low)
+        ru += sum("а" <= ch <= "я" or ch == "ё" for ch in low)
+        en += sum("a" <= ch <= "z" for ch in low)
+    if kz >= 2:
+        return "KZ"
+    if ru == 0 and en == 0:
+        return None
+    return "RU" if ru >= en else "EN"
+
+
+def compute_facts(rec):
+    """Deterministic facts the LLM should not have to derive (offsets arithmetic, roles, language, ending)."""
+    tr = rec["transcript"]
+    ops = [t for t in tr if t["speaker"] == "operator" and not t.get("internal")]
+    first_op = ops[0]["index"] if ops else None
+    facts = {"first_operator_turn": first_op,
+             "client_language_guess": detect_language([t.get("text", "") for t in tr if t["speaker"] == "client"]),
+             "language_metadata": rec.get("language")}
+    if first_op is not None:
+        facts["first_operator_reply_language_guess"] = detect_language([ops[0].get("text", "")])
+    # longest wait for the operator after the operator's first reply (queue time before it is not scored)
+    best = None
+    if first_op is not None:
+        pending = None   # first unanswered client turn after an operator turn
+        last_op = None
+        for t in tr:
+            if t["index"] <= first_op:
+                if t["speaker"] == "operator":
+                    last_op = t
+                continue
+            if t["speaker"] == "client" and pending is None:
+                pending = t
+            elif t["speaker"] == "operator" and not t.get("internal"):
+                start = pending or last_op
+                if start is not None and start.get("offset") is not None and t.get("offset") is not None:
+                    gap = t["offset"] - start["offset"]
+                    if best is None or gap > best["seconds"]:
+                        warned = last_op is not None and any(w in (last_op.get("text") or "").lower() for w in WAIT_PHRASES)
+                        best = {"seconds": round(gap), "from_turn": start["index"], "to_turn": t["index"],
+                                "operator_warned_before": bool(warned)}
+                pending, last_op = None, t
+    facts["longest_wait_after_first_reply"] = best
+    holds = []
+    for t in tr:
+        if t.get("hold_event") == "start":
+            prev_op = next((p for p in reversed(tr[:t["index"]]) if p["speaker"] == "operator"), None)
+            holds.append({"start_turn": t["index"], "operator_warned_before": bool(
+                prev_op and any(w in (prev_op.get("text") or "").lower() for w in WAIT_PHRASES))})
+        elif t.get("hold_event") == "end" and holds and "end_turn" not in holds[-1]:
+            holds[-1]["end_turn"] = t["index"]
+            s0, s1 = tr[holds[-1]["start_turn"]].get("offset"), t.get("offset")
+            if s0 is not None and s1 is not None:
+                holds[-1]["seconds"] = round(s1 - s0)
+    facts["holds"] = holds
+    non_sys = [t for t in tr if t["speaker"] in ("operator", "client", "bot")]
+    end_sys = [t["index"] for t in tr if t["speaker"] == "system" and any(m in (t.get("text") or "").lower() for m in END_MARKERS)]
+    facts["ending"] = {"last_speaker": non_sys[-1]["speaker"] if non_sys else None,
+                       "last_operator_turn": ops[-1]["index"] if ops else None,
+                       "system_end_event_turn": end_sys[-1] if end_sys else None}
+    return facts
+
+
+def format_facts(f):
+    lines = []
+    lines.append(f"- Первая реплика человека-оператора: №{f['first_operator_turn']}" if f["first_operator_turn"] is not None
+                 else "- Человек-оператор в диалоге не отвечал.")
+    lines.append(f"- Язык клиента (эвристика по алфавиту): {f['client_language_guess'] or 'не определён'}; "
+                 f"язык в метаданных: {f['language_metadata']}"
+                 + (f"; язык первой реплики оператора: {f.get('first_operator_reply_language_guess') or 'не определён'}"
+                    if f["first_operator_turn"] is not None else ""))
+    w = f["longest_wait_after_first_reply"]
+    if w:
+        lines.append(f"- Самое долгое ожидание ответа оператора после его первой реплики: {w['seconds']} с "
+                     f"(реплики №{w['from_turn']} → №{w['to_turn']}); оператор предупреждал об ожидании перед этим: "
+                     f"{'да' if w['operator_warned_before'] else 'нет'}.")
+    for h in f["holds"]:
+        lines.append(f"- Удержание (системное событие) с реплики №{h['start_turn']}"
+                     + (f" до №{h['end_turn']}" if "end_turn" in h else "")
+                     + (f", {h['seconds']} с" if "seconds" in h else "")
+                     + f"; оператор предупредил перед удержанием: {'да' if h['operator_warned_before'] else 'нет'}.")
+    e = f["ending"]
+    lines.append(f"- Последний говорящий (без системы): {e['last_speaker']}; последняя реплика оператора: №{e['last_operator_turn']}; "
+                 "системное событие завершения: "
+                 f"{('№' + str(e['system_end_event_turn'])) if e['system_end_event_turn'] is not None else 'нет'}.")
     return "\n".join(lines)

@@ -29,11 +29,11 @@ flowchart TB
 | Module | Responsibility |
 |---|---|
 | `config.py` | Reads `.env` + env vars: provider, models, jury, paths, concurrency. |
-| `data.py` | Accepts API envelope / list / single record; normalises speakers (`operator`, `client`, `bot`, `system`), indexes turns, marks operator turns between “consultation initiated / on hold” and “no longer on hold” as internal, computes audio offsets, hashes dialog content. |
+| `data.py` | Accepts API envelope / list / single record; normalises speaker aliases to `operator`/`client`/`bot`/`system` (unknown → `unknown` + warning), parses mm:ss / hh:mm:ss / ISO-with-tz timestamps, marks operator turns during hold/consultation as internal, computes audio offsets, hashes dialog content incl. timestamps, and computes deterministic FACTS (first operator turn, client-language heuristic, longest wait after the first reply and whether it was announced, holds, ending). |
 | `checklist.py` | Loads/validates YAML checklists (unique ids, types, scales, defaults), saves edits, picks checklist by channel, computes a hash per criterion over the *semantic* fields (name, type, scale, NA, rubric, rules, assumptions, prompt version, model) — not weight. |
-| `prompts.py` | System prompt (role rules, evidence format) + one criterion block + JSON tool schema with an `enum` of allowed values. The transcript part is sent as a cacheable prefix. |
+| `prompts.py` | System prompt (role rules, evidence format, untrusted-data boundary) + one criterion block (with its allowed values) + ONE stable tool schema shared by all criteria (`value` is a string; exact values enforced by `checklist.strict_value` + retry). The transcript block (delimited, ASR caveat for calls, code-computed FACTS) is sent as a cacheable prefix. |
 | `llm.py` | `LLM.call()` → dict. Anthropic tool use (forced `tool_choice` for Haiku, `auto` for Sonnet/Opus 5-5 which reject forced choice), OpenAI-compatible JSON mode, or offline `MockBackend`. Token/cost accounting. |
-| `evaluator.py` | Per criterion: jury (parallel jurors, judge on disagreement) or single model with self-consistency on low confidence; evidence validation with retry; cache read/write; aggregates per dialog and computes score. |
+| `evaluator.py` | Per criterion: jury (parallel jurors, judge on disagreement; a failing juror → judge reviews the surviving verdict; all jurors fail → judge alone) or single model with self-consistency on low confidence; strict value check + evidence validation (verbatim, operator quotes, 08 needs-review) with retry; dialog-major batches for prompt-cache hits; cache read/write; fail-closed aggregation (`incomplete`, `total: null`) and score. |
 | `scoring.py` | Pure deterministic scoring (see [SCORING.md](SCORING.md)). |
 | `store.py` | Results JSON, overrides kept separately, human totals and AI→Human diff, CSV export (ai / human / both). |
 | `server.py` | FastAPI routes (see [API.md](API.md)), background jobs with progress. |

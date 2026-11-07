@@ -4,7 +4,7 @@
 > LLM jury scores every checklist criterion separately, backs each verdict with verified verbatim quotes, and computes the score in deterministic code.
 
 ![CI](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&logoColor=white)
-![tests](https://img.shields.io/badge/tests-75%20passed-brightgreen)
+![tests](https://img.shields.io/badge/tests-91%20passed-brightgreen)
 ![python](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue?logo=python&logoColor=white)
 ![ruff](https://img.shields.io/badge/lint-ruff-261230)
 ![license](https://img.shields.io/badge/license-MIT-green)
@@ -94,7 +94,8 @@ sequenceDiagram
 ## Как максимизируется точность
 - **Один критерий — один запрос.** В промпте только рубрика и правила принятия решения этого критерия.
 - **Жюри + судья.** Haiku и Sonnet голосуют параллельно; при расхождении решает Opus. На DEV жюри согласилось в 84.4% из 520 вердиктов, судья решил 81.
-- **Строгий JSON** через tool use: `enum` допустимых значений, NA только там, где разрешён.
+- **Строгий JSON** через tool use: одна стабильная схема инструмента для всех критериев (общий кэш промпта); допустимые значения перечислены в блоке критерия и проверяются в коде (`checklist.strict_value`) — недопустимое значение → повтор с подсказкой; NA только там, где разрешён.
+- **Факты, вычисленные кодом** (первая реплика оператора, эвристика языка клиента, самая долгая пауза после первого ответа и было ли предупреждение, удержания, как закончился диалог) передаются модели, чтобы она не считала время и роли сама.
 - **Проверка цитат.** Цитата обязана быть дословной подстрокой указанной реплики (нормализация пробелов/кавычек/ё, фрагменты через «…»); неверный номер реплики исправляется, выдуманная цитата → повтор запроса, затем отбрасывается (`rejected_quotes`).
 - **Роли и удержание.** Бот/система исключены; реплики во время консультации агентов помечены `[ВНУТРЕННИЕ ПЕРЕГОВОРЫ НА УДЕРЖАНИИ]`; ошибки ASR не наказываются.
 - **Детерминированный скоринг** в коде, а не в LLM.
@@ -144,7 +145,7 @@ CQA_PROVIDER=openai CQA_OPENAI_BASE_URL=http://127.0.0.1:11434/v1 CQA_MODEL=qwen
 Подробно: [docs/ASSUMPTIONS.md](docs/ASSUMPTIONS.md).
 
 ## Результаты на DEV
-**Gold-набор (16 размеченных синтетических диалогов, `python -m cqa gold`):** точное совпадение 0.969 (128 вердиктов), MAE итога 3.64, грубые ошибки precision/recall 1.0/1.0 — см. [docs/EVALUATION.md](docs/EVALUATION.md) (это проверка регрессий, а не оценка совпадения со скрытой разметкой).
+**Gold-набор (16 размеченных синтетических диалогов, `python -m cqa gold`):** точное совпадение 0.992 (127/128 вердиктов), MAE итога 1.44, грубые ошибки precision/recall 1.0/1.0 — см. [docs/EVALUATION.md](docs/EVALUATION.md) (это проверка регрессий, а не оценка совпадения со скрытой разметкой).
 **DEV v2** (после правок по ревью): 65 диалогов, 0 ошибок, 0 неполных, средний балл 76.57, 5 флагов грубых ошибок, $11.60 / 245 с.
 
 65 диалогов (60 чатов: RU 30 / KZ 15 / EN 15; 5 звонков RU), 0 ошибок, средний балл 75.95, 5 флагов грубых ошибок. Полный прогон ≈ 5 мин и ≈ $13; 10 диалогов ≈ 1 мин и ≈ $2. Методика: [docs/EVALUATION.md](docs/EVALUATION.md).
@@ -173,7 +174,7 @@ cqa/
   __main__.py    CLI: evaluate / stats / rescore / serve
 checklists/      freedom_chat_v1.yaml, freedom_call_v1.yaml
 examples/        sample_dialogs.json — 4 синтетических диалога (RU/EN/KZ чат + RU звонок)
-tests/           40 тестов: скоринг, цитаты, чек-листы, кэш-ключ, mock e2e, HTTP API
+tests/           91 тест: скоринг, цитаты, чек-листы, кэш-ключ, fail-closed, строгие значения, роли/время, факты, жюри, провайдеры, безопасность путей, gold, mock e2e, HTTP API
 docs/            ARCHITECTURE, SCORING, ASSUMPTIONS, EVALUATION, API, презентация + PDF
 Makefile · pyproject.toml · Dockerfile · docker-compose.yml · .github/workflows/ci.yml
 ```
@@ -199,6 +200,6 @@ Makefile · pyproject.toml · Dockerfile · docker-compose.yml · .github/workfl
 
 **Limitations:** no labelled ground truth for DEV (accuracy checked by manual review of a sample); criteria 07/04/05 are the most subjective; audio offsets are approximate; local-model accuracy not measured.
 
-**Gold set:** 16 hand-labelled synthetic dialogs, `python -m cqa gold` → exact agreement 0.969, total MAE 3.64, gross-flag P/R 1.0/1.0. **Robustness:** fail-closed `incomplete` status, strict values, operator-quote checks, untrusted-transcript boundary, path-safe ids, atomic writes. Review history: [docs/REVIEW_QUORUM.md](docs/REVIEW_QUORUM.md).
+**Gold set:** 16 hand-labelled synthetic dialogs, `python -m cqa gold` → exact agreement 0.992 (127/128), total MAE 1.44, gross-flag P/R 1.0/1.0. **Robustness:** fail-closed `incomplete` status, strict values, operator-quote checks, untrusted-transcript boundary, path-safe ids, atomic writes. Review history: [docs/REVIEW_QUORUM.md](docs/REVIEW_QUORUM.md).
 
 Docs: [Architecture](docs/ARCHITECTURE.md) · [Scoring](docs/SCORING.md) · [Assumptions](docs/ASSUMPTIONS.md) · [Evaluation](docs/EVALUATION.md) · [API](docs/API.md) · [Deck](docs/CQA_Pitch_Deck.pdf). License: [MIT](LICENSE).

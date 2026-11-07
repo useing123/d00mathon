@@ -172,9 +172,45 @@ class LLM:
         for b in r.content:
             if b.type == "tool_use":
                 return b.input
+        # tool_choice=auto models sometimes answer with the JSON as text: accept it if it parses
+        for b in r.content:
+            if b.type == "text":
+                m = re.search(r"\{.*\}", b.text or "", re.S)
+                if m:
+                    try:
+                        js = json.loads(m.group(0))
+                    except json.JSONDecodeError:
+                        continue
+                    if isinstance(js, dict) and "value" in js:
+                        return js
         raise RuntimeError("no tool_use in response")
 
+    def _openai_tools(self, system, cached_user, user, tool, temperature):
+        body = {"model": self.model, "temperature": temperature,
+                "messages": [{"role": "system", "content": system},
+                             {"role": "user", "content": cached_user + "\n\n" + user}],
+                "tools": [{"type": "function", "function": {"name": tool["name"], "description": tool["description"],
+                                                            "parameters": tool["input_schema"]}}],
+                "tool_choice": {"type": "function", "function": {"name": tool["name"]}}}
+        r = httpx.post(config.OPENAI_BASE_URL.rstrip("/") + "/chat/completions", json=body,
+                       headers={"Authorization": f"Bearer {config.OPENAI_API_KEY}"}, timeout=600)
+        r.raise_for_status()
+        j = r.json()
+        u = j.get("usage") or {}
+        _add_usage({"input_tokens": u.get("prompt_tokens"), "output_tokens": u.get("completion_tokens")})
+        calls = j["choices"][0]["message"].get("tool_calls") or []
+        if not calls:
+            raise RuntimeError("no tool_calls in response")
+        args = calls[0]["function"]["arguments"]
+        return json.loads(args) if isinstance(args, str) else args
+
     def _openai(self, system, cached_user, user, tool, temperature):
+        if config.OPENAI_TOOLS:   # native function calling (vLLM/Ollama/OpenAI); falls back to JSON mode on 400
+            try:
+                return self._openai_tools(system, cached_user, user, tool, temperature)
+            except httpx.HTTPStatusError as e:
+                if e.response.status_code != 400:
+                    raise
         body = {"model": self.model, "temperature": temperature,
                 "messages": [{"role": "system", "content": system + "\nВерни ТОЛЬКО JSON-объект по схеме: " +
                               json.dumps(tool["input_schema"], ensure_ascii=False)},

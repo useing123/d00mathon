@@ -48,7 +48,8 @@ def validate_evidence(rec, evidence):
         if 0 <= ti < len(turns) and ok(turns[ti]):
             valid.append({"turn": ti, "quote": e["quote"], "speaker": turns[ti].get("speaker")})
             continue
-        hit = next((t for t in turns if ok(t)), None)
+        # wrong turn index: prefer an operator turn containing the quote, then any turn
+        hit = next((t for t in turns if t.get("speaker") == "operator" and ok(t)), None) or next((t for t in turns if ok(t)), None)
         if hit:
             valid.append({"turn": hit["index"], "quote": e["quote"], "speaker": hit.get("speaker"), "turn_corrected": True})
         else:
@@ -94,11 +95,15 @@ _HINTS = {
 }
 
 
+SC_TEMPERATURE = 0.4   # extra self-consistency samples (OpenAI-compatible providers; Anthropic endpoint ignores it)
+
+
 class Evaluator:
     def __init__(self, llm=None, use_cache=True, samples=None, ensemble=None):
         self.llm = llm or LLM()
         self.ensemble = config.ENSEMBLE if ensemble is None else ensemble
-        if self.ensemble and self.llm.provider == "anthropic" and llm is None:
+        jury_ok = self.llm.provider == "anthropic" or (self.llm.provider == "openai" and config.JURORS_EXPLICIT)
+        if self.ensemble and jury_ok and llm is None:
             self.jurors = [LLM(model=m) for m in config.JURORS]
             self.judge = LLM(model=config.JUDGE)
         else:
@@ -153,11 +158,32 @@ class Evaluator:
 
     def _jury(self, rec, tx_block, checklist, cr, key):
         """Jurors (haiku + sonnet) vote in parallel; on disagreement the frontier judge (opus) decides."""
+        def safe(m):
+            try:
+                return self._sample(rec, tx_block, checklist, cr, 0.0, llm=m), None
+            except Exception as e:   # one juror failing must not fail the criterion
+                return None, f"{m.model}: {e}"
         with ThreadPoolExecutor(max_workers=len(self.jurors)) as ex:
-            outs = list(ex.map(lambda m: self._sample(rec, tx_block, checklist, cr, 0.0, llm=m), self.jurors))
-        votes = {f"{i}:{m.model}": o["value"] for i, (m, o) in enumerate(zip(self.jurors, outs, strict=True))}
-        agree = len(set(map(str, votes.values()))) == 1
-        if agree:
+            pairs = list(ex.map(safe, self.jurors))
+        juror_errors = [err for _, err in pairs if err]
+        live = [(i, m, o) for i, (m, (o, _)) in enumerate(zip(self.jurors, pairs, strict=True)) if o is not None]
+        outs = [o for _, _, o in live]
+        votes = {f"{i}:{m.model}": o["value"] for i, m, o in live}
+        agree = len(outs) >= 2 and len(set(map(str, votes.values()))) == 1
+        if not outs:   # all jurors failed → the judge decides alone (raises if it fails too → fail-closed)
+            chosen, decided_by = self._sample(rec, tx_block, checklist, cr, 0.0, llm=self.judge), f"judge_only:{self.judge.model}"
+            chosen["evidence_warning"] = "jurors_failed"
+        elif len(outs) == 1:   # one juror failed → the judge reviews the surviving verdict
+            o = outs[0]
+            extra = (f"\n\nМнение эксперта: значение {o['value']!r}. Обоснование: {o.get('justification','')}\n"
+                     "Проверь транскрипт сам, строго по правилам критерия, и вынеси окончательное решение.")
+            try:
+                chosen, decided_by = self._sample(rec, tx_block, checklist, cr, 0.0, llm=self.judge, extra=extra), self.judge.model
+            except Exception as e:
+                juror_errors.append(f"{self.judge.model}: {e}")
+                chosen, decided_by = o, f"single:{live[0][1].model}"
+            chosen["evidence_warning"] = chosen.get("evidence_warning") or "juror_failed"
+        elif agree:
             chosen, decided_by = outs[-1], "consensus"   # strongest juror's explanation
         else:
             opinions = "\n".join(
@@ -168,6 +194,8 @@ class Evaluator:
                      "Не усредняй и не выбирай по большинству: решай по фактам.")
             chosen, decided_by = self._sample(rec, tx_block, checklist, cr, 0.0, llm=self.judge, extra=extra), self.judge.model
         final = chosen["value"]
+        if juror_errors:
+            chosen = {**chosen, "juror_errors": juror_errors}
         all_votes = list(votes.values()) + ([final] if not agree else [])
         return {
             "criterion_id": cr["id"], "name": cr["name"], "type": cr["type"], "value": final,
@@ -178,7 +206,7 @@ class Evaluator:
             "confidence": float(chosen.get("confidence") or 0), "votes": all_votes,
             "jury": votes, "decided_by": decided_by,
             "evidence_warning": chosen.get("evidence_warning", ""), "needs_review": bool(chosen.get("needs_review")),
-            "self_consistency_disagreement": not agree,
+            "self_consistency_disagreement": not agree, "juror_errors": chosen.get("juror_errors", []),
             "criterion_hash": key.split("_")[0], "cached": False,
         }
 
@@ -194,7 +222,8 @@ class Evaluator:
         a = checklist["assumptions"]
         n = int(self.samples or a.get("self_consistency_samples", 3))
         thr = float(a.get("confidence_threshold", 0.8))
-        tx_block = prompts.transcript_block(rec, data.format_transcript(rec, a.get("ignore_internal_hold_turns", True)))
+        tx_block = prompts.transcript_block(rec, data.format_transcript(rec, a.get("ignore_internal_hold_turns", True)),
+                                            data.format_facts(data.compute_facts(rec)))
         if self.ensemble:
             res = self._jury(rec, tx_block, checklist, cr, key)
             config.CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -205,7 +234,7 @@ class Evaluator:
         conf = float(first.get("confidence") or 0)
         if n > 1 and conf < thr:
             with ThreadPoolExecutor(max_workers=n - 1) as ex2:   # extra samples in parallel
-                samples += list(ex2.map(lambda _: self._sample(rec, tx_block, checklist, cr, 1.0), range(n - 1)))
+                samples += list(ex2.map(lambda _: self._sample(rec, tx_block, checklist, cr, SC_TEMPERATURE), range(n - 1)))
         votes = [s["value"] for s in samples]
         cnt = Counter(votes)
         top_n = cnt.most_common(1)[0][1]

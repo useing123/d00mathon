@@ -64,6 +64,13 @@ def save_override(group, conv_id, crit_id, value, justification, reviewer="", ch
     return ov
 
 
+def _cell(v):
+    """Neutralise spreadsheet formula injection (=, +, -, @, tab, CR at the start of a text cell)."""
+    if isinstance(v, str) and v[:1] in ("=", "+", "-", "@", "\t", "\r"):
+        return "'" + v
+    return v
+
+
 def to_csv(doc, which="ai"):
     """Flat CSV: one row per dialog, one column per criterion + total + gross. which = ai | human | both"""
     crit_ids = []
@@ -75,7 +82,7 @@ def to_csv(doc, which="ai"):
     w = csv.writer(buf)
     head = ["conversation_id", "channel", "language", "checklist_id", "status", "failed_criteria", "needs_review"]
     if which in ("ai", "both"):
-        head += [f"c{c}" for c in crit_ids] + ["total", "gross_error"]
+        head += [f"c{c}" for c in crit_ids] + ["total", "provisional_total", "gross_error"]
     if which in ("human", "both"):
         head += [f"human_c{c}" for c in crit_ids] + ["human_total", "human_gross_error", "reviewed"]
     w.writerow(head)
@@ -84,10 +91,11 @@ def to_csv(doc, which="ai"):
                d.get("status", "complete"), ";".join(d.get("failed_criteria") or []), ";".join(d.get("needs_review") or [])]
         vals = {r["criterion_id"]: r.get("value") for r in d["criteria"]}
         if which in ("ai", "both"):
-            row += [vals.get(c, "") for c in crit_ids] + [d.get("total"), "YES" if d.get("gross_error") else "NO"]
+            row += [vals.get(c, "") for c in crit_ids] + [d.get("total"), d.get("provisional_total"),
+                                                          "YES" if d.get("gross_error") else "NO"]
         if which in ("human", "both"):
             h = d.get("human", {})
             row += [h.get("values", {}).get(c, "") for c in crit_ids] + [h.get("total"),
                     "YES" if h.get("gross_error") else "NO", "YES" if h.get("reviewed") else "NO"]
-        w.writerow(row)
+        w.writerow([_cell(x) for x in row])
     return buf.getvalue()
