@@ -1,0 +1,29 @@
+Gold set: 10 dialogs | overall agreement 0.787 | total MAE 10.43
+  01: 10/10 = 1.0
+  02: 4/10 = 0.4
+  03: 9/10 = 0.9
+  04: 5/10 = 0.5
+  05: 10/10 = 1.0
+  06: 9/10 = 0.9
+  07: 8/10 = 0.8
+  08: 8/10 = 0.8
+  08 gross flag: precision 0.0 recall 0.0 (tp=0 fp=1 fn=1)
+  NA confusion: exp_NA/pred_NA=9, exp_NA/pred_applicable=8, exp_applicable/pred_applicable=63
+  ✗ hold-01-en-bonds-clarify 04: expected 20 got 15
+  ✗ hold-01-en-bonds-clarify 06: expected 10 got 7
+  ✗ hold-02-call-ru-phone-change-no-id 08: expected NO got YES
+  ✗ hold-03-kz-no-name 02: expected NA got NO
+  ✗ hold-04-ru-transfer-minor-detail 02: expected NA got NO
+  ✗ hold-04-ru-transfer-minor-detail 04: expected 15 got 20
+  ✗ hold-05-en-angry-order-cancelled 04: expected 20 got 15
+  ✗ hold-06-ru-wrong-advice-close 02: expected NA got NO
+  ✗ hold-06-ru-wrong-advice-close 03: expected NA got NO
+  ✗ hold-06-ru-wrong-advice-close 07: expected NO got YES
+  ✗ hold-07-call-kz-hangup-before-request 02: expected NA got NO
+  ✗ hold-07-call-kz-hangup-before-request 07: expected NA got NO
+  ✗ hold-08-ru-third-party-data 02: expected NA got YES
+  ✗ hold-08-ru-third-party-data 04: expected 20 got 15
+  ✗ hold-08-ru-third-party-data 08: expected YES got NO
+  ✗ hold-10-ru-contradictory 02: expected NA got NO
+  ✗ hold-10-ru-contradictory 04: expected 5 got 10
+{"report": "results/finetune/holdout_lora.json", "meta": {"provider": "openai", "model": "cqa", "cost_usd": 0.0, "elapsed_s": 173.6, "errors": []}}

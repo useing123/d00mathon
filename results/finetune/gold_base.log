@@ -1,0 +1,39 @@
+Gold set: 16 dialogs | overall agreement 0.789 | total MAE 14.77
+  01: 16/16 = 1.0
+  02: 8/16 = 0.5
+  03: 13/16 = 0.812
+  04: 13/16 = 0.812
+  05: 14/16 = 0.875
+  06: 12/16 = 0.75
+  07: 11/16 = 0.688
+  08: 14/16 = 0.875
+  08 gross flag: precision 0.6666666666666666 recall 0.6666666666666666 (tp=2 fp=1 fn=1)
+  NA confusion: exp_NA/pred_NA=14, exp_NA/pred_applicable=12, exp_applicable/pred_FAILED=1, exp_applicable/pred_applicable=101
+  ✗ gold-01-ru-tariff-good 07: expected YES got NO
+  ✗ gold-02-kz-wrong-language 07: expected YES got NO
+  ✗ gold-03-en-balance-verified 02: expected NA got YES
+  ✗ gold-05-ru-multi-question-partial 06: expected 10 got 7
+  ✗ gold-06-kz-hold-no-warning 02: expected NA got NO
+  ✗ gold-06-kz-hold-no-warning 04: expected 20 got 15
+  ✗ gold-06-kz-hold-no-warning 05: expected YES got NO
+  ✗ gold-06-kz-hold-no-warning 07: expected YES got NO
+  ✗ gold-06-kz-hold-no-warning 08: expected NO got YES
+  ✗ gold-07-ru-client-left-before-request 02: expected NA got NO
+  ✗ gold-07-ru-client-left-before-request 07: expected NA got NO
+  ✗ gold-10-ru-complaint-no-empathy 02: expected NA got NO
+  ✗ gold-10-ru-complaint-no-empathy 06: expected 10 got 4
+  ✗ gold-11-ru-paid-private-consult 02: expected NA got NO
+  ✗ gold-11-ru-paid-private-consult 06: expected 10 got 7
+  ✗ gold-12-en-personal-card-transfer 02: expected NA got NO
+  ✗ gold-12-en-personal-card-transfer 03: expected NA got NO
+  ✗ gold-12-en-personal-card-transfer 04: expected 0 got 15
+  ✗ gold-12-en-personal-card-transfer 05: expected YES got NO
+  ✗ gold-12-en-personal-card-transfer 08: expected YES got None
+  ✗ gold-13-kz-insult 02: expected NA got NO
+  ✗ gold-13-kz-insult 03: expected NA got NO
+  ✗ gold-13-kz-insult 04: expected 20 got 0
+  ✗ gold-13-kz-insult 06: expected 10 got 4
+  ✗ gold-15-call-ru-hold-hangup 02: expected NA got YES
+  ✗ gold-15-call-ru-hold-hangup 03: expected YES got NO
+  ✗ gold-15-call-ru-hold-hangup 07: expected NA got NO
+{"report": "results/finetune/gold_base.json", "meta": {"provider": "openai", "model": "Qwen/Qwen3-8B", "cost_usd": 0.0, "elapsed_s": 327.5, "errors": ["gold-12-en-personal-card-transfer/08: criterion 08: model failed to return a valid value (last: None)", "rescue gold-12-en-personal-card-transfer/08 via Qwen/Qwen3-8B: criterion 08: model failed to return a valid value (last: None)", "rescue gold-12-en-personal-card-transfer/08 via Qwen/Qwen3-8B: criterion 08: model failed to return a valid value (last: None)"]}}

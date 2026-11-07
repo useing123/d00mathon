@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# QLoRA fine-tune on a RunPod GPU pod (NOT run yet — costs money). See docs/FINETUNE.md.
+# QLoRA fine-tune on a RunPod GPU pod (executed once 2026-11-08, see docs/FINETUNE.md). See docs/FINETUNE.md.
 #
 # RunPod template (create in the console → Templates → New):
 #   name            cqa-qlora
@@ -23,7 +23,7 @@ if [[ "${ESTIMATE_ONLY:-0}" == "1" ]]; then
   exec $PY scripts/finetune_lora.py --estimate-only --base "$BASE" "$@"
 fi
 
-$PY -m pip install -q "transformers>=4.51" "peft>=0.14" "trl>=0.19" "bitsandbytes>=0.45" "accelerate>=1.3" datasets pyyaml httpx
+$PY -m pip install -q "transformers==5.20.2" "peft==0.21.2" "trl==1.17.1" "bitsandbytes==0.50.2" "accelerate==1.15.0" datasets pyyaml httpx  # pinned: measured run 2026-11-08 (torch 2.14)
 [[ -f data/finetune/train.jsonl ]] || $PY scripts/finetune_dataset.py
 $PY scripts/finetune_lora.py --estimate-only --base "$BASE"
 # single GPU; for multi-GPU: accelerate launch --num_processes N (DDP; each rank loads its own 4-bit copy)

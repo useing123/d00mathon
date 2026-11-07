@@ -38,3 +38,8 @@ htmlcov/
 
 # human labels for real DEV dialogs (contain real client data references)
 examples/dev_labels.json
+
+# fine-tuned adapter weights (published on HF / GitHub Release, not in git)
+models/*/adapter_model.safetensors
+models/*/tokenizer.json
+models/*.tar.gz

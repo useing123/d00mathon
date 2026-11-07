@@ -1,0 +1,9 @@
+tokenized train=798 (dropped>8192: 0) val=82 (dropped 0)
+prompt-masked label share: 0.942
+100%|██████████| 16/16 [21:37<00:00, 80.42s/it]{'loss': '1.072', 'grad_norm': '0.459', 'learning_rate': '9.045e-05', 'entropy': '0.3412', 'mean_token_accuracy': '0.7911', 'num_tokens': '2.502e+05', 'epoch': '0.1003'}
+{'loss': '0.6986', 'grad_norm': '0.2695', 'learning_rate': '4.477e-05', 'entropy': '0.5429', 'mean_token_accuracy': '0.8503', 'num_tokens': '5.061e+05', 'epoch': '0.2005'}
+{'loss': '0.6657', 'grad_norm': '0.2832', 'learning_rate': '4.323e-06', 'entropy': '0.6464', 'mean_token_accuracy': '0.8518', 'num_tokens': '7.596e+05', 'epoch': '0.3008'}
+100%|██████████| 82/82 [01:40<00:00,  1.17s/it][A{'eval_loss': '0.6223', 'eval_runtime': '100.9', 'eval_samples_per_second': '0.812', 'eval_steps_per_second': '0.812', 'eval_entropy': '0.6513', 'eval_mean_token_accuracy': '0.8454', 'eval_num_tokens': '8.081e+05', 'epoch': '0.3208'}
+[eval step 16] agreement=0.5 parse=0.75 per_criterion={'01': 1.0, '02': 0.0, '03': 1.0, '04': 0.0, '05': 1.0, '06': 0.0, '07': 1.0, '08': 0.0}
+{'train_runtime': '1615', 'train_samples_per_second': '0.159', 'train_steps_per_second': '0.01', 'train_loss': '0.8018', 'epoch': '0.3208'}
+{"train": {"train_runtime": 1614.9721, "train_samples_per_second": 0.159, "train_steps_per_second": 0.01, "total_flos": 3.694890273792e+16, "train_loss": 0.8018191009759903, "epoch": 0.3208020050125313}}

@@ -1,0 +1,135 @@
+{
+ "base": "Qwen/Qwen3-8B",
+ "adapter": "QLoRA r16 a32, 4-bit nf4",
+ "gpu": "1x RTX A5000 24GB (RunPod secure, $0.27/h)",
+ "training": {
+  "max_steps": 16,
+  "effective_batch": 16,
+  "epoch_fraction": 0.321,
+  "rows_seen": 256,
+  "train_rows_total": 798,
+  "train_runtime_s": 1615,
+  "train_loss": 0.802,
+  "loss_curve": {
+   "step5": 1.072,
+   "step10": 0.699,
+   "step15": 0.666
+  },
+  "eval_loss": 0.6223,
+  "eval_mean_token_accuracy": 0.845,
+  "eval_agreement_8_val_rows": 0.5,
+  "eval_json_parse_rate_8_rows": 0.75,
+  "note": "in-training agreement on 8 val rows with max_new_tokens=400 (truncation => parse failures); not meaningful"
+ },
+ "pod_cost_usd_approx": 0.22,
+ "serving": "vLLM 0.33.0, bf16 base + LoRA, enable_thinking=false, CQA_OPENAI_TOOLS=0, base and adapter evaluated concurrently on one GPU",
+ "versions": {
+  "torch": "2.14.0",
+  "transformers": "5.20.2",
+  "peft": "0.21.2",
+  "trl": "1.17.1",
+  "bitsandbytes": "0.50.2",
+  "accelerate": "1.15.0",
+  "vllm": "0.33.0"
+ },
+ "results": {
+  "holdout": {
+   "base": {
+    "overall": 0.787,
+    "mae": 12.17,
+    "per_criterion": {
+     "01": 1.0,
+     "02": 0.5,
+     "03": 0.7,
+     "04": 0.7,
+     "05": 1.0,
+     "06": 0.8,
+     "07": 0.9,
+     "08": 0.7
+    },
+    "gross": {
+     "p": 0.0,
+     "r": 0.0,
+     "tp": 0.0,
+     "fp": 2.0,
+     "fn": 1.0
+    },
+    "wall_s": 166.9
+   },
+   "lora": {
+    "overall": 0.787,
+    "mae": 10.43,
+    "per_criterion": {
+     "01": 1.0,
+     "02": 0.4,
+     "03": 0.9,
+     "04": 0.5,
+     "05": 1.0,
+     "06": 0.9,
+     "07": 0.8,
+     "08": 0.8
+    },
+    "gross": {
+     "p": 0.0,
+     "r": 0.0,
+     "tp": 0.0,
+     "fp": 1.0,
+     "fn": 1.0
+    },
+    "wall_s": 173.6
+   }
+  },
+  "gold": {
+   "base": {
+    "overall": 0.789,
+    "mae": 14.77,
+    "per_criterion": {
+     "01": 1.0,
+     "02": 0.5,
+     "03": 0.812,
+     "04": 0.812,
+     "05": 0.875,
+     "06": 0.75,
+     "07": 0.688,
+     "08": 0.875
+    },
+    "gross": {
+     "p": 0.6666666666666666,
+     "r": 0.6666666666666666,
+     "tp": 2.0,
+     "fp": 1.0,
+     "fn": 1.0
+    },
+    "wall_s": 327.5
+   },
+   "lora": {
+    "overall": 0.805,
+    "mae": 8.95,
+    "per_criterion": {
+     "01": 1.0,
+     "02": 0.562,
+     "03": 0.875,
+     "04": 0.688,
+     "05": 0.875,
+     "06": 0.625,
+     "07": 0.875,
+     "08": 0.938
+    },
+    "gross": {
+     "p": 0.75,
+     "r": 1.0,
+     "tp": 3.0,
+     "fp": 1.0,
+     "fn": 0.0
+    },
+    "wall_s": 268.6
+   }
+  }
+ },
+ "jev_1_14_holdout": {
+  "overall": 0.934,
+  "mae": 4.83,
+  "gross_p": 1.0,
+  "gross_r": 1.0
+ }
+}

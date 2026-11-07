@@ -1,0 +1,37 @@
+Gold set: 16 dialogs | overall agreement 0.805 | total MAE 8.95
+  01: 16/16 = 1.0
+  02: 9/16 = 0.562
+  03: 14/16 = 0.875
+  04: 11/16 = 0.688
+  05: 14/16 = 0.875
+  06: 10/16 = 0.625
+  07: 14/16 = 0.875
+  08: 15/16 = 0.938
+  08 gross flag: precision 0.75 recall 1.0 (tp=3 fp=1 fn=0)
+  NA confusion: exp_NA/pred_NA=16, exp_NA/pred_applicable=10, exp_applicable/pred_applicable=102
+  ✗ gold-02-kz-wrong-language 02: expected NA got YES
+  ✗ gold-02-kz-wrong-language 06: expected 10 got 7
+  ✗ gold-03-en-balance-verified 02: expected NA got YES
+  ✗ gold-04-ru-balance-no-verification 04: expected 20 got 15
+  ✗ gold-05-ru-multi-question-partial 06: expected 10 got 7
+  ✗ gold-06-kz-hold-no-warning 02: expected NA got NO
+  ✗ gold-06-kz-hold-no-warning 08: expected NO got YES
+  ✗ gold-07-ru-client-left-before-request 06: expected 10 got 7
+  ✗ gold-08-en-farewell-only 04: expected 20 got 15
+  ✗ gold-10-ru-complaint-no-empathy 02: expected NA got NO
+  ✗ gold-10-ru-complaint-no-empathy 06: expected 10 got 4
+  ✗ gold-11-ru-paid-private-consult 02: expected NA got NO
+  ✗ gold-11-ru-paid-private-consult 06: expected 10 got 7
+  ✗ gold-11-ru-paid-private-consult 07: expected NO got YES
+  ✗ gold-12-en-personal-card-transfer 02: expected NA got NO
+  ✗ gold-12-en-personal-card-transfer 03: expected NA got NO
+  ✗ gold-12-en-personal-card-transfer 04: expected 0 got 15
+  ✗ gold-12-en-personal-card-transfer 05: expected YES got NO
+  ✗ gold-13-kz-insult 03: expected NA got NO
+  ✗ gold-13-kz-insult 04: expected 20 got 5
+  ✗ gold-13-kz-insult 05: expected NO got YES
+  ✗ gold-13-kz-insult 06: expected 10 got 7
+  ✗ gold-15-call-ru-hold-hangup 04: expected 20 got 15
+  ✗ gold-15-call-ru-hold-hangup 07: expected NA got NO
+  ✗ gold-16-en-no-greeting-injection 02: expected NA got NO
+{"report": "results/finetune/gold_lora.json", "meta": {"provider": "openai", "model": "cqa", "cost_usd": 0.0, "elapsed_s": 268.6, "errors": []}}

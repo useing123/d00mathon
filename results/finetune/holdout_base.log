@@ -1,0 +1,29 @@
+Gold set: 10 dialogs | overall agreement 0.787 | total MAE 12.17
+  01: 10/10 = 1.0
+  02: 5/10 = 0.5
+  03: 7/10 = 0.7
+  04: 7/10 = 0.7
+  05: 10/10 = 1.0
+  06: 8/10 = 0.8
+  07: 9/10 = 0.9
+  08: 7/10 = 0.7
+  08 gross flag: precision 0.0 recall 0.0 (tp=0 fp=2 fn=1)
+  NA confusion: exp_NA/pred_NA=9, exp_NA/pred_applicable=8, exp_applicable/pred_applicable=63
+  ✗ hold-02-call-ru-phone-change-no-id 08: expected NO got YES
+  ✗ hold-04-ru-transfer-minor-detail 02: expected NA got NO
+  ✗ hold-04-ru-transfer-minor-detail 04: expected 15 got 20
+  ✗ hold-05-en-angry-order-cancelled 03: expected YES got NO
+  ✗ hold-06-ru-wrong-advice-close 02: expected NA got NO
+  ✗ hold-06-ru-wrong-advice-close 03: expected NA got NO
+  ✗ hold-07-call-kz-hangup-before-request 02: expected NA got NO
+  ✗ hold-07-call-kz-hangup-before-request 03: expected NA got NO
+  ✗ hold-07-call-kz-hangup-before-request 07: expected NA got NO
+  ✗ hold-07-call-kz-hangup-before-request 08: expected NO got YES
+  ✗ hold-08-ru-third-party-data 04: expected 20 got 15
+  ✗ hold-08-ru-third-party-data 08: expected YES got NO
+  ✗ hold-09-en-long-gap-no-warning 02: expected NA got YES
+  ✗ hold-09-en-long-gap-no-warning 06: expected 7 got 10
+  ✗ hold-10-ru-contradictory 02: expected NA got NO
+  ✗ hold-10-ru-contradictory 04: expected 5 got 15
+  ✗ hold-10-ru-contradictory 06: expected 4 got 7
+{"report": "results/finetune/holdout_base.json", "meta": {"provider": "openai", "model": "Qwen/Qwen3-8B", "cost_usd": 0.0, "elapsed_s": 166.9, "errors": []}}

@@ -183,6 +183,22 @@ sequenceDiagram
 ```
 Сохранить → «Re-evaluate with current checklist» (к LLM уйдёт только новый критерий) или «Пересчитать веса» (без LLM). Валидация: уникальные id, тип, шкала (`tests/test_checklist.py`).
 
+## Run on your own GPU (fine-tuned adapter, prototype)
+
+QLoRA adapter for Qwen3-8B: https://huggingface.co/useing/cqa-qwen3-8b-lora (mirror:
+https://github.com/useing123/d00mathon/releases/download/finetune-v1/cqa-qwen3-8b-lora.tar.gz). You need one 24 GB GPU.
+
+```bash
+vllm serve Qwen/Qwen3-8B --enable-lora --lora-modules cqa=./cqa-qwen3-8b-lora --max-lora-rank 16 \
+     --max-model-len 16384 --default-chat-template-kwargs '{"enable_thinking": false}'
+export CQA_PROVIDER=openai CQA_OPENAI_BASE_URL=http://127.0.0.1:8000/v1 CQA_OPENAI_API_KEY=x CQA_OPENAI_TOOLS=0
+CQA_ENSEMBLE=0 CQA_MODEL=cqa python -m cqa gold --dir examples/gold_holdout              # single model
+CQA_LOCAL_ADAPTER=cqa CQA_ROUTER_LOCAL_MODEL=cqa python -m cqa evaluate --preset cascade ...  # cascade tier 1
+```
+
+Measured after 0.32 epoch (16 steps, A5000, ≈$0.22): held-out agreement **0.787 → 0.787** (no gain), MAE 12.17 → 10.43.
+Jev 1.14 scores 0.934 / 4.83 on the same set, so the adapter does not beat it yet. Details: [docs/FINETUNE.md](docs/FINETUNE.md).
+
 ## Локальная LLM (Ollama / vLLM)
 ```bash
 CQA_PROVIDER=openai CQA_OPENAI_BASE_URL=http://127.0.0.1:11434/v1 CQA_MODEL=qwen2.5:14b \

@@ -153,7 +153,7 @@ def train(a):
 
     common = dict(output_dir=a.out, per_device_train_batch_size=a.batch_size, per_device_eval_batch_size=a.batch_size,
                   gradient_accumulation_steps=1 if dry else a.grad_accum, learning_rate=a.lr, lr_scheduler_type="cosine",
-                  warmup_ratio=0.03, num_train_epochs=a.epochs, max_steps=2 if dry else -1, logging_steps=1 if dry else 5,
+                  warmup_ratio=0.03, num_train_epochs=a.epochs, max_steps=2 if dry else a.max_steps, logging_steps=1 if dry else 5,
                   eval_strategy="steps", eval_steps=1 if dry else a.eval_steps, save_strategy="steps",
                   save_steps=1 if dry else a.eval_steps, save_total_limit=2, load_best_model_at_end=True,
                   metric_for_best_model=a.select_on, greater_is_better=a.select_on != "eval_loss",
@@ -230,6 +230,7 @@ def parse_args(argv=None):
     ap.add_argument("--out", default="runs/cqa-lora")
     ap.add_argument("--max-len", type=int, default=8192)
     ap.add_argument("--epochs", type=float, default=2)
+    ap.add_argument("--max-steps", type=int, default=-1, help="cap optimizer steps (time budget); -1 = full epochs")
     ap.add_argument("--lr", type=float, default=1e-4)
     ap.add_argument("--batch-size", type=int, default=1)
     ap.add_argument("--grad-accum", type=int, default=16)
