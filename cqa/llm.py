@@ -210,7 +210,7 @@ class LLM:
         raise RuntimeError("no tool_use in response")
 
     def _openai_tools(self, system, cached_user, user, tool, temperature):
-        body = {"model": self.model, "temperature": temperature,
+        body = {"model": self.model, "temperature": temperature, "max_tokens": int(config.get("CQA_OPENAI_MAX_TOKENS") or 2000),
                 "messages": [{"role": "system", "content": system},
                              {"role": "user", "content": cached_user + "\n\n" + user}],
                 "tools": [{"type": "function", "function": {"name": tool["name"], "description": tool["description"],
@@ -235,7 +235,7 @@ class LLM:
             except httpx.HTTPStatusError as e:
                 if e.response.status_code != 400:
                     raise
-        body = {"model": self.model, "temperature": temperature,
+        body = {"model": self.model, "temperature": temperature, "max_tokens": int(config.get("CQA_OPENAI_MAX_TOKENS") or 2000),
                 "messages": [{"role": "system", "content": system + "\nВерни ТОЛЬКО JSON-объект по схеме: " +
                               json.dumps(tool["input_schema"], ensure_ascii=False)},
                              {"role": "user", "content": cached_user + "\n\n" + user}],

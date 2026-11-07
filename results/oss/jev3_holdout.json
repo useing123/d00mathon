@@ -1,0 +1,4627 @@
+{
+ "tag": "jev3",
+ "suite": "holdout",
+ "settings": {
+  "first": "jev",
+  "local_model": "qwen3-14b-awq",
+  "adapter": "",
+  "escalate": "claude-haiku-5-5",
+  "judge": "claude-sonnet-5-5",
+  "t1": 0.7,
+  "hard": "04,05,06",
+  "hard_conf": 0.9,
+  "t2": 0.7,
+  "haiku_low": 0.0,
+  "gross_yes": true,
+  "mode": "quality",
+  "local_timeout": 0.0,
+  "logprobs": true,
+  "force": ""
+ },
+ "routing": {
+  "settings": {
+   "first": "jev",
+   "local_model": "qwen3-14b-awq",
+   "adapter": "",
+   "escalate": "claude-haiku-5-5",
+   "judge": "claude-sonnet-5-5",
+   "t1": 0.7,
+   "hard": "04,05,06",
+   "hard_conf": 0.9,
+   "t2": 0.7,
+   "haiku_low": 0.0,
+   "gross_yes": true,
+   "mode": "quality",
+   "local_timeout": 0.0,
+   "logprobs": true,
+   "force": ""
+  },
+  "criteria": 80,
+  "tier_counts": {
+   "1": 66,
+   "2": 12,
+   "3": 2
+  },
+  "tier_share": {
+   "1": 0.825,
+   "2": 0.15,
+   "3": 0.025
+  },
+  "escalated_share": 0.175,
+  "reasons": {
+   "hard_criterion": 9,
+   "low_conf": 7,
+   "disagree_low_conf": 2,
+   "gross_yes": 1
+  },
+  "cloud_usd_by_model": {
+   "claude-haiku-5-5": 0.01061,
+   "claude-sonnet-5-5": 0.02642
+  },
+  "cloud_usd": 0.03703
+ },
+ "wall_s": 12.8,
+ "dialogs": 10,
+ "sec_per_dialog": 1.28,
+ "incomplete": [],
+ "errors": [],
+ "metrics": {
+  "overall_agreement": 0.963,
+  "total_mae": 2.46,
+  "gross": {
+   "tn": 9,
+   "tp": 1,
+   "precision": 1.0,
+   "recall": 1.0
+  },
+  "na_confusion": {
+   "exp_NA/pred_NA": 17,
+   "exp_applicable/pred_applicable": 63
+  },
+  "mismatches": [
+   {
+    "conversation_id": "hold-04-ru-transfer-minor-detail",
+    "criterion_id": "04",
+    "expected": 15,
+    "predicted": 20,
+    "rationale": "process fully explained; did not mention the sending broker's fee (secondary detail) → 15"
+   },
+   {
+    "conversation_id": "hold-10-ru-contradictory",
+    "criterion_id": "04",
+    "expected": 5,
+    "predicted": 0,
+    "rationale": "ended with a general hint, client still unsure → 5"
+   },
+   {
+    "conversation_id": "hold-10-ru-contradictory",
+    "criterion_id": "06",
+    "expected": 4,
+    "predicted": 0,
+    "rationale": "contradictory answers, client had to re-ask because of them → 4"
+   }
+  ],
+  "per_criterion": {
+   "01": 1.0,
+   "02": 1.0,
+   "03": 1.0,
+   "04": 0.8,
+   "05": 1.0,
+   "06": 0.9,
+   "07": 1.0,
+   "08": 1.0
+  }
+ },
+ "dialogs_detail": [
+  {
+   "conversation_id": "hold-01-en-bonds-clarify",
+   "channel": "agent chat",
+   "language": "EN",
+   "kind": "chat",
+   "dialog_hash": "5d87acc95c99be32",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.41,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=0.98",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.98,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.98,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.41,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=0.99",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.99,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.99,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.41,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "decision model (Jev) p=0.97",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.97,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      20
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 20,
+      "local_conf": 0.97,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.41,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.41,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответы оператора ясные и связные: уточняющий вопрос [5], пошаговая инструкция [7], корректное завершение [9]. Клиент не переспрашивал, явных ожиданий без предупреждения не было (максимальная пауза 20 с).",
+     "reasoning": "Релевантные реплики оператора: [5] задаёт уточняющий вопрос (KZ bonds vs US Treasuries) — ясно. [7] даёт пошаговую инструкцию (Market → Bonds → USA, выбрать выпуск, количество, подтвердить; минимальный лот 1 облигация, 1000 USD) — связно и понятно. [9] завершает диалог — ясно. Явного ожидания после первой реплики оператора нет: самая длинная пауза 20 с (ответ на сообщение клиента), порог 180 с не превышен; клиент не переспрашивал. Противоречий, опечаток, искажающих смысл, нет. Содержательная полнота ответа — критерий 04, не здесь. Оценка 10.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Which bonds are you interested in — Kazakhstan bonds on KASE or US Treasuries?",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "In the app open Market → Bonds → USA, choose the issue, enter the quantity and confirm the order. The minimum lot is one bond (1,000 USD face value).",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Glad to help! Anything else? Goodbye!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10,
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "hard_criterion"
+      ],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 0.84,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.41,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": 10,
+       "confidence": 0.85,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "jev-1.14",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.41,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.41,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 100.0,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     100.0,
+     100.0
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "YES",
+     "03": "NA",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 100.0,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-02-call-ru-phone-change-no-id",
+   "channel": "voice call",
+   "language": "RU",
+   "kind": "call",
+   "dialog_hash": "ded40a1fda7f09d8",
+   "checklist_id": "freedom_call_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.57,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=0.93",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.93,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.93,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.57,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.57,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "decision model (Jev) p=0.95",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      20
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 20,
+      "local_conf": 0.95,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.57,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.57,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "decision model (Jev) p=0.96",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.96,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 0.96,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.57,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.57,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.57,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 76.47,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     76.47,
+     76.47
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": {
+    "operator_wpm": 86.2,
+    "speaker_changes": 4,
+    "overlap_rate": 0.0,
+    "operator_response_s": {
+     "median": 8.0,
+     "p90": 8.0,
+     "max": 8.0,
+     "n": 2
+    },
+    "note": "informational, estimated from turn start times only; not scored"
+   },
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "NO",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 76.47,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-03-kz-no-name",
+   "channel": "agent chat",
+   "language": "KZ",
+   "kind": "chat",
+   "dialog_hash": "10b97e633b821842",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.4,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Вопрос о времени работы биржи был ясен с самого начала; оператор сразу дал корректный ответ без лишних переспросов, уточнять было нечего.",
+     "reasoning": "Запрос клиента: «Биржа қай уақытта жұмыс істейді?» (вопрос о времени работы биржи) и далее «Биржа уақыты қандай?». Вопрос общий, но он ясен и не требует уточнений: без указания конкретной биржи оператор дал полный ответ по основным рынкам (KASE и US-биржи). Оператор [5] поздоровался и спросил, чем помочь — это приветствие, а не лишнее уточнение по сути, поскольку клиент уже сформулировал вопрос до этого (в [1] и [6]). В [7] оператор ответил сразу, без переспроса. Данных для ответа хватало с самого начала, уточнять было нечего → NA.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "KASE 11:30-дан 17:00-ге дейін (Астана уақыты), ал АҚШ биржалары 19:30-дан 02:00-ге дейін жұмыс істейді.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.75,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO",
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 0.57,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.4,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "NA",
+       "confidence": 0.75,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "jev-1.14",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.4,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "decision model (Jev) p=0.94",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.94,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      20
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 20,
+      "local_conf": 0.94,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.4,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.4,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответы оператора ясные и связные (например, [7] чётко перечисляет время KASE и США), переспросов из-за формулировок нет, явного ожидания более 3 мин не было.",
+     "reasoning": "Релевантные реплики оператора: [5] приветствие и вопрос; [7] ответ на вопрос о времени бирж — ясный, связный; [9] закрытие. Ожидание 20 с между [6] и [7] — ниже порога 180 с, явного ожидания (проверки у коллег/в системе, задержки >3 мин) нет. Противоречий, переспросов клиента из-за формулировки нет: клиент после [7] просто поблагодарил. Ответы ясные, последовательные. Рубрика 10: ответы ясные и связные; явного ожидания не было.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "KASE 11:30-дан 17:00-ге дейін (Астана уақыты), ал АҚШ биржалары 19:30-дан 02:00-ге дейін жұмыс істейді.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Тағы сұрақтарыңыз болса, жазыңыз. Сау болыңыз!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10,
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "hard_criterion"
+      ],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 0.88,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.4,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": 10,
+       "confidence": 0.85,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "jev-1.14",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.4,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.4,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 84.62,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 7,
+    "criteria_total": 8,
+    "agreement": 0.875,
+    "score_range": [
+     68.75,
+     84.62
+    ],
+    "score_spread": 15.87,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "NO",
+     "02": "NA",
+     "03": "NA",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 84.62,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-04-ru-transfer-minor-detail",
+   "channel": "agent chat",
+   "language": "RU",
+   "kind": "chat",
+   "dialog_hash": "ccf83e115f7a934a",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=0.96",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.96,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.96,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "decision model (Jev) p=0.96",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.96,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      20
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 20,
+      "local_conf": 0.96,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответы оператора ясные, связные и в правильном порядке; ожиданий дольше порога не было, клиент не переспрашивал из-за формулировок.",
+     "reasoning": "Релевантные реплики оператора: [5] объясняет процедуру перевода (поручение у текущего брокера, реквизиты из раздела «Перевод ценных бумаг» в приложении, срок 3–5 дней) — ясно и связно. [7] отвечает на вопрос о стоимости — кратко и понятно. [9] — завершение. Ожидание ответа на сообщение клиента [6]→[7] составило 20 с, что ниже порога 180 с; явного ожидания (проверки у коллег/в системе) не было. Клиент не переспрашивал из-за путаных формулировок: после [7] сразу написал «Понял, спасибо». Единственное замечание — ссылка «в приложении» без уточнения, но клиент её понял и продолжил, сбоя ясности это не составляет. Противоречий нет.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Чтобы перевести бумаги, подайте у текущего брокера поручение на перевод, указав наши реквизиты из раздела «Перевод ценных бумаг» в приложении, и загрузите копию поручения туда же. Перевод занимает 3–5 рабочих дней.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "С нашей стороны входящий перевод бесплатный.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10,
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "hard_criterion"
+      ],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 0.87,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": 10,
+       "confidence": 0.85,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "jev-1.14",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 100.0,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     100.0,
+     100.0
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "NA",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 100.0,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-05-en-angry-order-cancelled",
+   "channel": "agent chat",
+   "language": "EN",
+   "kind": "chat",
+   "dialog_hash": "d4630de474101a65",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=0.97",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.97,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.97,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=0.99",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.99,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.99,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "decision model (Jev) p=0.98",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.98,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      20
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 20,
+      "local_conf": 0.98,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответы оператора ясные, связные и по порядку; объяснение причины отмены и порядок действий понятны клиенту, он сразу подтвердил понимание. Ожидания 20 с недостаточно для «явного ожидания».",
+     "reasoning": "Релевантные реплики оператора: [5] представление, извинение, запрос данных — ясно. [7] объяснение причины отмены (day order, лимит не достигнут) и инструкция переоформить с GTC — связно и понятно клиенту. [9] завершающая реплика — ясна. Ожидание 20 с (№6→№7) — короткое, не превышает порог 180 с и не относится к явному ожиданию (оператор не уходил проверять информацию, видно, что подтверждение дано сразу). Переспросов клиента из-за формулировок нет: клиент ответил «Ah, ok. Thanks.». Порядок ответов логичен. Сбоев ясности не выявлено.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "Your TSLA order was cancelled at the close because it was a day order and the limit price was not reached. To keep it active, place it again with 'Good till cancelled' validity in the order form.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 5,
+       "quote": "Please confirm your full name and code word, and tell me which order (ticker and date).",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10,
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "hard_criterion"
+      ],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 0.76,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": 10,
+       "confidence": 0.85,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "jev-1.14",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 100.0,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     100.0,
+     100.0
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "YES",
+     "03": "YES",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 100.0,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-06-ru-wrong-advice-close",
+   "channel": "agent chat",
+   "language": "RU",
+   "kind": "chat",
+   "dialog_hash": "f8607b5a55f67e3e",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.35,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=0.79",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.79,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.79,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.35,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос — общий вопрос «как закрыть счёт»; оператор дал общую инструкцию без раскрытия данных клиента и без выполнения действия по счёту, идентификация не требовалась.",
+     "reasoning": "Клиент спросил, как закрыть брокерский счёт — общий процедурный вопрос. Оператор дал общую (хотя и неверную) инструкцию, персональные данные не раскрывал. Корректность совета не относится к этому критерию. Хотя закрытие счёта — защищённое действие, оператор его не выполнял, только дал инструкцию. По правилам: общие инструкции — NA.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Общий информационный вопрос о порядке закрытия счёта; персональные данные не раскрывались, защищённое действие оператором не выполнялось.",
+     "confidence": 0.7,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO",
+      "NA",
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier3:claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 3,
+      "route": "sonnet",
+      "reasons": [
+       "low_conf"
+      ],
+      "tier2_reasons": [
+       "disagree_low_conf"
+      ],
+      "local_value": "NO",
+      "local_conf": 0.69,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.35,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "NA",
+       "confidence": 0.6,
+       "error": null
+      },
+      "sonnet": {
+       "value": "NA",
+       "confidence": 0.7,
+       "error": null
+      },
+      "models": [
+       "jev-1.14",
+       "claude-haiku-5-5",
+       "claude-sonnet-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 0,
+     "is_na": false,
+     "scale_step": 0,
+     "justification": "Оператор дал фактически неверную ключевую рекомендацию: удаление приложения не закрывает брокерский счёт. Существенный вопрос клиента остался без корректного ответа.",
+     "reasoning": "Клиент спросил, как закрыть брокерский счёт (существенный вопрос). Оператор в [5] ответил: «Просто удалите приложение — счёт закроется автоматически». Это неверная ключевая рекомендация: удаление приложения не закрывает брокерский счёт, требуется заявка/процедура через компанию. По правилам, фактически неверная ключевая рекомендация → запрос open, значение 0. Оператор в [7] просто попрощался, без проверки и без корректного следующего шага.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Просто удалите приложение — счёт закроется автоматически.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Всего доброго!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.9,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [
+      {
+       "text": "Хочу закрыть брокерский счёт, как это сделать?",
+       "essential": true,
+       "status": "open",
+       "turn": 1
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      0,
+      0
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "hard_criterion"
+      ],
+      "tier2_reasons": [],
+      "local_value": 0,
+      "local_conf": 0.78,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.35,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": 0,
+       "confidence": 0.9,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "jev-1.14",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=0.97",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.97,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.97,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.35,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "decision model (Jev) p=0.92",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.92,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 0.92,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.35,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=0.97",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.97,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 0.97,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.35,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.35,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 61.54,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 7,
+    "criteria_total": 8,
+    "agreement": 0.875,
+    "score_range": [
+     47.06,
+     61.54
+    ],
+    "score_spread": 14.48,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "NA",
+     "04": 0,
+     "05": "YES",
+     "06": 10,
+     "07": "NO",
+     "08": "NO"
+    },
+    "total": 61.54,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-07-call-kz-hangup-before-request",
+   "channel": "voice call",
+   "language": "KZ",
+   "kind": "call",
+   "dialog_hash": "7e993139704d9dd4",
+   "checklist_id": "freedom_call_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.41,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=0.76",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.76,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.76,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.41,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=0.76",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.76,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.76,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.41,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": "NA",
+     "justification": "decision model (Jev) p=0.97",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.97,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.97,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.41,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.41,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 1.0,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.41,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=0.99",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.99,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.99,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.41,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.41,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 100.0,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     100.0,
+     100.0
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": {
+    "operator_wpm": 75.0,
+    "speaker_changes": 1,
+    "overlap_rate": 0.0,
+    "operator_response_s": {
+     "median": null,
+     "p90": null,
+     "max": null,
+     "n": 0
+    },
+    "note": "informational, estimated from turn start times only; not scored"
+   },
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "NA",
+     "04": "NA",
+     "05": "YES",
+     "06": 10,
+     "07": "NA",
+     "08": "NO"
+    },
+    "total": 100.0,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-08-ru-third-party-data",
+   "channel": "agent chat",
+   "language": "RU",
+   "kind": "chat",
+   "dialog_hash": "96ca54cdd3d9ea0b",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.39,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос баланса был ясен с самого начала; оператор после идентификации сразу ответил на него, не переспрашивая лишнего и не требуя повторов. Уточнений не требовалось — NA.",
+     "reasoning": "Клиент запросил баланс (реплика 1), бот уже знал запрос. Оператор в [5] запросил ФИО и кодовое слово (это идентификация — критерий 03, не 02). Далее клиент сообщил ФИО и кодовое слово [6], оператор в [7] назвал баланс 1 250 000 тенге — ответ на запрос без лишних переспросов. Потребность (баланс по счёту) была ясна с самого начала; уточнять что-либо по сути запроса не требовалось, оператор не переспрашивал лишнего. Оператор также не игнорировал детали. Согласно правилам, при ясном запросе без необходимости уточнений — NA. Замечание про упоминание мужа в [7] относится к этике/безопасности (04/08), а не к выявлению потребности.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Назовите, пожалуйста, ФИО и кодовое слово.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "На вашем счёте 1 250 000 тенге.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.7,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES",
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.67,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.39,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "NA",
+       "confidence": 0.7,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "jev-1.14",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=0.98",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.98,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.98,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.39,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "decision model (Jev) p=0.96",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.96,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      20
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 20,
+      "local_conf": 0.96,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.39,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=0.96",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.96,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.96,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.39,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответы оператора ясные, связные и по порядку, явных ожиданий не было, клиент не переспрашивал из-за формулировок. Нарушение с данными третьего лица относится к другим критериям.",
+     "reasoning": "Реплики оператора [5], [7], [9] ясные и связные. Самое долгое ожидание 20 с, явных ожиданий (проверка, уход к коллегам, задержка более 180 с) не было. Клиент не переспрашивал из-за формулировок: «Э... спасибо» — реакция на лишнюю информацию, а не переспрос. Раскрытие данных мужа — нарушение, но оно оценивается в 08, не здесь. По ясности, связности и управлению ожиданием замечаний нет.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Назовите, пожалуйста, ФИО и кодовое слово.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Спасибо, личность подтверждена. На вашем счёте 1 250 000 тенге.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.8,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10,
+      7,
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier3:claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 3,
+      "route": "sonnet",
+      "reasons": [
+       "hard_criterion"
+      ],
+      "tier2_reasons": [
+       "disagree_low_conf"
+      ],
+      "local_value": 10,
+      "local_conf": 0.7,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.39,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": 7,
+       "confidence": 0.6,
+       "error": null
+      },
+      "sonnet": {
+       "value": 10,
+       "confidence": 0.8,
+       "error": null
+      },
+      "models": [
+       "jev-1.14",
+       "claude-haiku-5-5",
+       "claude-sonnet-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.39,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в реплике [7] раскрыл данные третьего лица (счёт мужа клиента, 2 млн тенге) и предложил совместно вкладывать, не проверив полномочия на доступ к этим данным. Это раскрытие конфиденциальной информации о другом клиенте/лице.",
+     "reasoning": "Оператор: реплики №5, №7, №9. В №7 оператор раскрывает баланс клиента (1 250 000 тенге) после идентификации — это данные самого клиента, не третьих лиц. Однако далее он сообщает, что у мужа клиента на счёте 2 млн тенге, и предлагает вложить вместе. Это раскрытие данных третьего лица (мужа) — конфиденциальной информации другого клиента компании, без проверки прав доступа. Это попадает под «раскрытие конфиденциальной информации (данные других клиентов)». Оскорблений и предложений платных услуг в обход компании нет. Вывод: YES.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "Кстати, у вашего мужа на счёте у нас 2 млн тенге, можете вместе вложить.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.8,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES",
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "gross_yes"
+      ],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.91,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.39,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "YES",
+       "confidence": 0.8,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "jev-1.14",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 100.0,
+   "provisional_total": null,
+   "gross_error": true,
+   "stability": {
+    "criteria_unanimous": 6,
+    "criteria_total": 8,
+    "agreement": 0.75,
+    "score_range": [
+     94.71,
+     100.0
+    ],
+    "score_spread": 5.29,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "YES",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "YES"
+    },
+    "total": 100.0,
+    "gross_error": true,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-09-en-long-gap-no-warning",
+   "channel": "agent chat",
+   "language": "EN",
+   "kind": "chat",
+   "dialog_hash": "0e4defa53f9f3a58",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.38,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=0.98",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.98,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.98,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.38,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=0.96",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.96,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.96,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.38,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "decision model (Jev) p=0.99",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.99,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      20
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 20,
+      "local_conf": 0.99,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.38,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=0.99",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.99,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.99,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.38,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 7,
+     "is_na": false,
+     "scale_step": 7,
+     "justification": "decision model (Jev) p=0.97",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.97,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      7
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 7,
+      "local_conf": 0.97,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.38,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.38,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.38,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 93.08,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     93.08,
+     93.08
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "NA",
+     "04": 20,
+     "05": "YES",
+     "06": 7,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 93.08,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-10-ru-contradictory",
+   "channel": "agent chat",
+   "language": "RU",
+   "kind": "chat",
+   "dialog_hash": "1e7a6a6a8ecbf862",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос о комиссии за сделки с акциями на KASE был ясен с самого начала; оператор сразу ответил без лишних переспросов. Проблемы с противоречивым ответом относятся к критериям 04/08, а не к выявлению потребности.",
+     "reasoning": "Запрос клиента: \"Какая комиссия за сделки с акциями на KASE?\" Данных было достаточно для ответа (рынок KASE, акции, комиссия за сделки) — уточнять особо нечего. Оператор в [5] сразу дал ответ \"Комиссия 0,1% от суммы сделки\", не переспрашивал лишнего. Далее клиент уточнял пример расчёта и противоречие, оператор ответил, но это относится к этапу ответа (критерии 04/08), а не к выявлению потребности. Нужного уточнения, которого не хватало бы для ответа на исходный запрос, не было. По рубрике: NA.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Комиссия 0,1% от суммы сделки.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.7,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA",
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.61,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "NA",
+       "confidence": 0.7,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "jev-1.14",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 0,
+     "is_na": false,
+     "scale_step": 0,
+     "justification": "Оператор дал противоречивые данные о комиссии (0,1% и затем 0,2%) и на прямой уточняющий вопрос ответил отсылкой к приложению без конкретики. Существенный вопрос о размере комиссии остался закрытым неверно/неясно.",
+     "reasoning": "Оператор в [5] назвал комиссию 0,1%, в [7] тут же заявил 0,2% — противоречие, ключевая информация неверна или непоследовательна. На уточнение клиента [8] оператор в [9] ответил «Зависит от тарифа, посмотрите в приложении» — без конкретного ответа и пути. Существенный вопрос (размер комиссии) не закрыт, ключевая рекомендация противоречива, поэтому 0.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Комиссия 0,1% от суммы сделки.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Нет, комиссия 0,2%, то есть 200 тенге.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Зависит от тарифа, посмотрите в приложении.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.8,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [
+      {
+       "text": "Какая комиссия за сделки с акциями на KASE?",
+       "essential": true,
+       "status": "partial",
+       "turn": 1
+      },
+      {
+       "text": "То есть с 100 000 тенге — 100 тенге? (уточнение расчёта комиссии)",
+       "essential": true,
+       "status": "open",
+       "turn": 6
+      },
+      {
+       "text": "Так 0,1 или 0,2? (запрос точного значения комиссии)",
+       "essential": true,
+       "status": "open",
+       "turn": 8
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      10,
+      0
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "hard_criterion",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 0.43,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": 0,
+       "confidence": 0.8,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "jev-1.14",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор вежлив на протяжении всего диалога; клиент не выражал явной жалобы или раздражения, а только задавал уточняющие вопросы, на которые оператор отвечал. Признание путаницы отсутствует, но по рубрике для запроса этого достаточно.",
+     "reasoning": "Оператор вежлив: «Здравствуйте, меня зовут Ержан», «Нет, комиссия 0,2%...», «До свидания!». Клиент в ходе диалога задаёт уточняющие вопросы ([6], [8]) и говорит «Так 0,1 или 0,2?», «Ладно...». Явной жалобы, раздражения, тревоги или сообщения о сбое нет; это запросы информации. Однако реплика [8] содержит недоумение из-за противоречивой информации, а оператор в [9] отвечает «Зависит от тарифа, посмотрите в приложении» — без признания неудобства. По правилам приоритета вопрос без слов тревоги/упрёка — это запрос, поэтому достаточно вежливости. Тон вежливый на протяжении всего диалога, без резкости. Итог: YES, с умеренной уверенностью, так как оператор противоречил себе в [5]/[7] и не признал путаницу, что аудитор может счесть отсутствием эмпатии.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Ержан. Комиссия 0,1% от суммы сделки.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Нет, комиссия 0,2%, то есть 200 тенге.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Зависит от тарифа, посмотрите в приложении.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 11,
+       "quote": "Чем ещё могу помочь? До свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.55,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES",
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "hard_criterion",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.57,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "YES",
+       "confidence": 0.55,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "jev-1.14",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 0,
+     "is_na": false,
+     "scale_step": 0,
+     "justification": "Оператор дал два противоречивых ответа о размере комиссии (0,1% в [5] и 0,2% в [7]), на уточнение клиента [8] ответил уклончиво «Зависит от тарифа», не прояснив ситуацию. Ход диалога из-за этого стал непонятен.",
+     "reasoning": "Оператор в реплике [5] называет комиссию 0,1%, в [7] говорит 0,2% (200 тенге), в [9] на прямой вопрос клиента о противоречии отвечает \"Зависит от тарифа, посмотрите в приложении\". Ответы противоречат друг другу, клиенту пришлось переспрашивать [8], и оператор не прояснил ситуацию, а отослал в приложение. Из-за противоречивых реплик ход диалога стал непонятен клиенту: он не может определить, какая комиссия верна. По правилам: противоречивые ответы, из-за которых ход диалога непонятен — 0. Ожиданий дольше 180 с нет, поэтому ограничение 7 не применяется. Оценка 0.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Комиссия 0,1% от суммы сделки.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Нет, комиссия 0,2%, то есть 200 тенге.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Зависит от тарифа, посмотрите в приложении.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.8,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      4,
+      0
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "hard_criterion",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": 4,
+      "local_conf": 0.69,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": 0,
+       "confidence": 0.8,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "jev-1.14",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "decision model (Jev) p=1.00",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:jev-1.14",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1,
+      "local_conf_source": "jev",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 0.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "jev-1.14"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 46.15,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 6,
+    "criteria_total": 8,
+    "agreement": 0.75,
+    "score_range": [
+     46.15,
+     70.77
+    ],
+    "score_spread": 24.62,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "NA",
+     "04": 0,
+     "05": "YES",
+     "06": 0,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 46.15,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  }
+ ]
+}

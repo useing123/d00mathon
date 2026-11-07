@@ -1,0 +1,6334 @@
+{
+ "tag": "q8_3",
+ "suite": "holdout",
+ "settings": {
+  "first": "local",
+  "local_model": "qwen3-8b-awq",
+  "adapter": "",
+  "escalate": "claude-haiku-5-5",
+  "judge": "claude-sonnet-5-5",
+  "t1": 0.999,
+  "hard": "04,05,06",
+  "hard_conf": 1.01,
+  "t2": 0.7,
+  "haiku_low": 0.0,
+  "gross_yes": true,
+  "mode": "quality",
+  "local_timeout": 0.0,
+  "logprobs": true,
+  "force": ""
+ },
+ "routing": {
+  "settings": {
+   "first": "local",
+   "local_model": "qwen3-8b-awq",
+   "adapter": "",
+   "escalate": "claude-haiku-5-5",
+   "judge": "claude-sonnet-5-5",
+   "t1": 0.999,
+   "hard": "04,05,06",
+   "hard_conf": 1.01,
+   "t2": 0.7,
+   "haiku_low": 0.0,
+   "gross_yes": true,
+   "mode": "quality",
+   "local_timeout": 0.0,
+   "logprobs": true,
+   "force": ""
+  },
+  "criteria": 80,
+  "tier_counts": {
+   "1": 27,
+   "2": 52,
+   "3": 1
+  },
+  "tier_share": {
+   "1": 0.338,
+   "2": 0.65,
+   "3": 0.013
+  },
+  "escalated_share": 0.662,
+  "reasons": {
+   "low_conf": 36,
+   "decision_disagree": 18,
+   "evidence_failed": 15,
+   "hard_criterion": 30,
+   "disagree_low_conf": 1
+  },
+  "cloud_usd_by_model": {
+   "claude-haiku-5-5": 0.01717
+  },
+  "cloud_usd": 0.01717
+ },
+ "wall_s": 69.8,
+ "dialogs": 10,
+ "sec_per_dialog": 6.98,
+ "incomplete": [],
+ "errors": [],
+ "metrics": {
+  "overall_agreement": 0.863,
+  "total_mae": 13.91,
+  "gross": {
+   "tn": 9,
+   "tp": 1,
+   "precision": 1.0,
+   "recall": 1.0
+  },
+  "na_confusion": {
+   "exp_NA/pred_NA": 11,
+   "exp_NA/pred_applicable": 6,
+   "exp_applicable/pred_applicable": 63
+  },
+  "mismatches": [
+   {
+    "conversation_id": "hold-04-ru-transfer-minor-detail",
+    "criterion_id": "04",
+    "expected": 15,
+    "predicted": 20,
+    "rationale": "process fully explained; did not mention the sending broker's fee (secondary detail) → 15"
+   },
+   {
+    "conversation_id": "hold-06-ru-wrong-advice-close",
+    "criterion_id": "01",
+    "expected": "YES",
+    "predicted": "NO",
+    "rationale": ""
+   },
+   {
+    "conversation_id": "hold-06-ru-wrong-advice-close",
+    "criterion_id": "02",
+    "expected": "NA",
+    "predicted": "NO",
+    "rationale": ""
+   },
+   {
+    "conversation_id": "hold-06-ru-wrong-advice-close",
+    "criterion_id": "03",
+    "expected": "NA",
+    "predicted": "NO",
+    "rationale": ""
+   },
+   {
+    "conversation_id": "hold-07-call-kz-hangup-before-request",
+    "criterion_id": "02",
+    "expected": "NA",
+    "predicted": "NO",
+    "rationale": ""
+   },
+   {
+    "conversation_id": "hold-07-call-kz-hangup-before-request",
+    "criterion_id": "07",
+    "expected": "NA",
+    "predicted": "NO",
+    "rationale": "client hung up → NA"
+   },
+   {
+    "conversation_id": "hold-08-ru-third-party-data",
+    "criterion_id": "04",
+    "expected": 20,
+    "predicted": 0,
+    "rationale": ""
+   },
+   {
+    "conversation_id": "hold-09-en-long-gap-no-warning",
+    "criterion_id": "02",
+    "expected": "NA",
+    "predicted": "NO",
+    "rationale": ""
+   },
+   {
+    "conversation_id": "hold-10-ru-contradictory",
+    "criterion_id": "02",
+    "expected": "NA",
+    "predicted": "NO",
+    "rationale": ""
+   },
+   {
+    "conversation_id": "hold-10-ru-contradictory",
+    "criterion_id": "04",
+    "expected": 5,
+    "predicted": 0,
+    "rationale": "ended with a general hint, client still unsure → 5"
+   },
+   {
+    "conversation_id": "hold-10-ru-contradictory",
+    "criterion_id": "06",
+    "expected": 4,
+    "predicted": 0,
+    "rationale": "contradictory answers, client had to re-ask because of them → 4"
+   }
+  ],
+  "per_criterion": {
+   "01": 0.9,
+   "02": 0.6,
+   "03": 0.9,
+   "04": 0.7,
+   "05": 1.0,
+   "06": 0.9,
+   "07": 0.9,
+   "08": 1.0
+  }
+ },
+ "dialogs_detail": [
+  {
+   "conversation_id": "hold-01-en-bonds-clarify",
+   "channel": "agent chat",
+   "language": "EN",
+   "kind": "chat",
+   "dialog_hash": "5d87acc95c99be32",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в первой своей реплике (№5) использовал язык клиента (EN) и представился, что соответствует требованиям критерия.",
+     "reasoning": "В первой реплике оператора (реплика №5) он поздоровался на языке клиента (EN) и представился, назвав своё имя. Это соответствует критерию 01: YES.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Hello, my name is Aidos from Freedom Broker.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 1.0,
+       "NO": 0.0,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 4.15,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не повторял информацию, которую клиент уже сообщил боту, а вместо этого уточнил, какие именно облигации клиент хочет приобрести. Это соответствует критерию YES.",
+     "reasoning": "Оператор задал уточняющий вопрос о типе облигаций (Kazakhstan bonds на KASE или US Treasuries) до того, как предоставил инструкции. Это соответствует критерию YES, так как он учёл уже известные из диалога детали (клиент запросил облигации) и уточнил недостающие детали перед ответом.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Which bonds are you interested in — Kazakhstan bonds on KASE or US Treasuries?",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.9998,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.9998,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.9998,
+       "NO": 0.0002,
+       "NA": 0.0,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 9.84,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Клиент задал общий вопрос о порядке покупки облигаций; оператор дал общую инструкцию без раскрытия данных счёта, поэтому идентификация не требовалась.",
+     "reasoning": "Клиент спрашивает, как купить облигации US Treasuries. Оператор отвечает общими инструкциями: открыть Market → Bonds → USA, выбрать выпуск, ввести количество, подтвердить; минимальный лот 1 облигация. Персональные или счётные данные клиента не запрашивались и не раскрывались, защищённых действий оператор не выполнял. Согласно рубрике, общая инструкция «зайдите в кабинет» не раскрывает данных — идентификация не требуется. Система/бот не сообщали об авторизации, но это не нужно, так как запрос не требовал идентификации.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "In the app open Market → Bonds → USA, choose the issue, enter the quantity and confirm the order. The minimum lot is one bond (1,000 USD face value).",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA",
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.9964,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 0.0036,
+       "NA": 0.9964,
+       "_emitted": "NA",
+       "_aligned": true
+      },
+      "decision_value": "NA",
+      "local_s": 12.75,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "NA",
+       "confidence": 0.85,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "Оператор дал точный пошаговый путь покупки US Treasuries и минимальный лот; клиент подтвердил, что всё понятно. Существенный вопрос закрыт, ошибок нет.",
+     "reasoning": "Клиент хотел купить облигации; уточнил, что интересуют US Treasuries [6]. Оператор [7] дал точную инструкцию: Market → Bonds → USA, выбрать выпуск, ввести количество, подтвердить, и указал минимальный лот (1 облигация, 1000 USD). Клиент подтвердил понимание [8]. Неверной информации нет, существенный вопрос закрыт, действия объяснены. Второстепенные детали (например, сроки исполнения) клиент не спрашивал.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "In the app open Market → Bonds → USA, choose the issue, enter the quantity and confirm the order. The minimum lot is one bond (1,000 USD face value).",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 8,
+       "quote": "Clear, thanks.",
+       "speaker": "client",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [
+      {
+       "text": "I want to buy bonds (which bonds: Kazakhstan on KASE or US Treasuries)",
+       "essential": true,
+       "status": "closed",
+       "turn": 1
+      },
+      {
+       "text": "US Treasuries — how to buy them (choose option)",
+       "essential": true,
+       "status": "closed",
+       "turn": 6
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      15,
+      20
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "decision_disagree",
+       "evidence_failed",
+       "hard_criterion",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": 15,
+      "local_conf": 0.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "0": 0.0,
+       "5": 0.0,
+       "10": 0.0,
+       "15": 0.0,
+       "20": 1.0,
+       "NA": 0.0,
+       "_emitted": "20",
+       "_aligned": true
+      },
+      "decision_value": "20",
+      "local_s": 24.71,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": {
+       "value": 20,
+       "confidence": 0.85,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Клиент не выражал недовольства; оператор вежлив на всём протяжении диалога (приветствие, уточняющий вопрос, понятная инструкция, «Glad to help!»).",
+     "reasoning": "Клиент не выражал недовольства, раздражения или тревоги: запросы «I want to buy bonds», «US Treasuries», «Clear, thanks». Оператор на протяжении диалога вежлив: представился, задал уточняющий вопрос, дал точную инструкцию, попрощался и предложил помощь. Резкости, пренебрежения или сарказма нет. По правилу «если клиент не выражал недовольства, достаточно вежливости» — YES.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Hello, my name is Aidos from Freedom Broker.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "The minimum lot is one bond (1,000 USD face value).",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Glad to help! Anything else? Goodbye!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.9,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES",
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "hard_criterion"
+      ],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 1.0,
+       "NO": 0.0,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 12.2,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "YES",
+       "confidence": 0.9,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответы оператора ясные и связные: уточняющий вопрос [5], пошаговая инструкция [7], корректное завершение [9]. Клиент не переспрашивал, явных ожиданий без предупреждения не было (максимальная пауза 20 с).",
+     "reasoning": "Релевантные реплики оператора: [5] задаёт уточняющий вопрос (KZ bonds vs US Treasuries) — ясно. [7] даёт пошаговую инструкцию (Market → Bonds → USA, выбрать выпуск, количество, подтвердить; минимальный лот 1 облигация, 1000 USD) — связно и понятно. [9] завершает диалог — ясно. Явного ожидания после первой реплики оператора нет: самая длинная пауза 20 с (ответ на сообщение клиента), порог 180 с не превышен; клиент не переспрашивал. Противоречий, опечаток, искажающих смысл, нет. Содержательная полнота ответа — критерий 04, не здесь. Оценка 10.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Which bonds are you interested in — Kazakhstan bonds on KASE or US Treasuries?",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "In the app open Market → Bonds → USA, choose the issue, enter the quantity and confirm the order. The minimum lot is one bond (1,000 USD face value).",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Glad to help! Anything else? Goodbye!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10,
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "hard_criterion"
+      ],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "0": 0.0,
+       "4": 0.0,
+       "7": 0.0,
+       "10": 1.0,
+       "_emitted": "10",
+       "_aligned": true
+      },
+      "decision_value": "10",
+      "local_s": 13.72,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": 10,
+       "confidence": 0.85,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор сделал оба действия: попрощался и предложил дальнейшую помощь. Это подтверждается репликой №9: «Glad to help! Anything else? Goodbye!».",
+     "reasoning": "Оператор попрощался в последней реплике («Glad to help! Anything else? Goodbye!»), и в этой реплике также было предложение дальнейшей помощи («Anything else?»). Это соответствует критерию YES.",
+     "evidence": [
+      {
+       "turn": 9,
+       "quote": "Glad to help! Anything else? Goodbye!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 1.0,
+       "NO": 0.0,
+       "NA": 0.0,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 8.42,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не проявил грубых ошибок, таких как оскорбление клиента, раскрытие конфиденциальной информации или предложение платных услуг вне рамок компании. Все его реплики соответствуют профессиональным стандартам.",
+     "reasoning": "В диалоге нет ни одного упоминания оскорблений, раскрытия конфиденциальной информации или предложений платных услуг вне рамок компании. Оператор вежлив и предоставляет точную информацию без нарушений.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Hello, my name is Aidos from Freedom Broker. Which bonds are you interested in — Kazakhstan bonds on KASE or US Treasuries?",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Glad to help! Anything else? Goodbye!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 1.0,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 10.59,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 100.0,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 7,
+    "criteria_total": 8,
+    "agreement": 0.875,
+    "score_range": [
+     93.75,
+     100.0
+    ],
+    "score_spread": 6.25,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "YES",
+     "03": "NA",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 100.0,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-02-call-ru-phone-change-no-id",
+   "channel": "voice call",
+   "language": "RU",
+   "kind": "call",
+   "dialog_hash": "ded40a1fda7f09d8",
+   "checklist_id": "freedom_call_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в первой своей реплике (№4) сказал: «Добрый день, Фридом Брокер, меня зовут Гульнара. Чем могу помочь?» — это приветствие на языке клиента (русском) и представление.",
+     "reasoning": "В первой реплике оператора (реплика №4) он поздоровался на языке клиента (русском) и представился. Это соответствует критерию 01: «YES — в своей ПЕРВОЙ реплике оператор (speaker=operator) поздоровался на языке клиента И представился (назвал имя).»",
+     "evidence": [
+      {
+       "turn": 4,
+       "quote": "Добрый день, Фридом Брокер, меня зовут Гульнара. Чем могу помочь?",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 1.0,
+       "NO": 0.0,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 5.43,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос клиента на смену номера телефона и новый номер были указаны сразу; оператор ответил без лишних уточнений, недостающих данных не было.",
+     "reasoning": "Запрос клиента: «Хочу поменять номер телефона в профиле на 8 800 ... (новый номер)». С самого начала запрос полностью ясен: тип операции (смена телефона в профиле) и новый номер указаны. Оператор [6] сразу подтвердил изменение, ничего не переспрашивая. Уточнять было нечего, избыточных переспросов нет. Критерий 02 → NA. Замечание: при смене контактных данных обычно требуется верификация, но это относится к критерию 03, не к 02.",
+     "evidence": [
+      {
+       "turn": 6,
+       "quote": "Хорошо, номер в профиле изменён на новый, SMS теперь будут приходить на него.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.8,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO",
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "decision_disagree",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 0.0117,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.9883,
+       "NO": 0.0117,
+       "NA": 0.0,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 15.91,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "NA",
+       "confidence": 0.8,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Клиент попросил сменить номер телефона в профиле (защищённое действие), but оператор не запросил и не проверил никаких идентифицирующих данных, сразу выполнил смену.",
+     "reasoning": "Клиент просит сменить номер телефона в профиле — это защищённое действие (смена контактных данных), требующее идентификации. Оператор в репликах [4], [6], [8] не запросил ФИО, ИИН, кодовое слово, SMS или иные данные для проверки клиента. Оператор сразу сообщает [6], что номер в профиле изменён. Система/бот не фиксирует авторизацию клиента в блоке ФАКТЫ. Значит идентификация не проведена до защищённого действия → NO.",
+     "evidence": [
+      {
+       "turn": 6,
+       "quote": "Хорошо, номер в профиле изменён на новый, SMS теперь будут приходить на него.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "Между репликой клиента [5] и изменением данных в реплике [6] — проверка личности (запрос ФИО/ИИН/кодового слова или SMS-подтверждение) до смены номера телефона.",
+     "na_reason": "",
+     "confidence": 0.9,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO",
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 0.5416,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0093,
+       "NO": 0.5416,
+       "NA": 0.449,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 9.63,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "NO",
+       "confidence": 0.9,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "Единственный существенный запрос клиента (смена номера в профиле) закрыт: оператор подтвердил изменение и объяснил, что SMS будут приходить на новый номер; клиент поблагодарил.",
+     "reasoning": "Клиент запросил смену номера телефона в профиле. Оператор [6] подтвердил, что номер в профиле изменён и SMS будут приходить на новый номер. Клиент поблагодарил [7], оператор попрощался [8]. Существенный вопрос закрыт, корректное действие и пояснение о последствии (SMS на новый номер) даны. Второстепенных вопросов клиент не задавал. Неверной информации нет. Однако оператор не сообщил, как клиент может проверить изменение или что нужно было для подтверждения (в транскрипте не видно, проводилась ли идентификация, это относится к критерию 03, не к 04). По критерию 04 запрос закрыт полностью.",
+     "evidence": [
+      {
+       "turn": 6,
+       "quote": "Хорошо, номер в профиле изменён на новый, SMS теперь будут приходить на него.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 8,
+       "quote": "Пожалуйста. Могу ещё чем-то помочь? Всего доброго, до свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.8,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [
+      {
+       "text": "Поменять номер телефона в профиле на новый (8 701 550 00 00)",
+       "essential": true,
+       "status": "closed",
+       "turn": 5
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      20,
+      20
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "evidence_failed",
+       "hard_criterion"
+      ],
+      "tier2_reasons": [],
+      "local_value": 20,
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "0": 0.0,
+       "5": 0.0,
+       "10": 0.0,
+       "15": 0.0,
+       "20": 1.0,
+       "NA": 0.0,
+       "_emitted": "20",
+       "_aligned": true
+      },
+      "decision_value": "20",
+      "local_s": 26.51,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": {
+       "value": 20,
+       "confidence": 0.8,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Клиент не выражал недовольства, только запросил смену номера; оператор был вежлив на протяжении всего диалога (приветствие, подтверждение, прощание).",
+     "reasoning": "Оператор: реплики [4], [6], [8]. Клиент в [5] только запрашивает смену номера телефона, без недовольства, тревоги или жалобы. Оператор вежлив: «Добрый день», «Пожалуйста... Всего доброго, до свидания!». Ответ по сути вежливый и точный. По рубрике, если недовольства нет, достаточно вежливости — YES.",
+     "evidence": [
+      {
+       "turn": 4,
+       "quote": "Добрый день, Фридом Брокер, меня зовут Гульнара. Чем могу помочь?",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 8,
+       "quote": "Пожалуйста. Могу ещё чем-то помочь? Всего доброго, до свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.9,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES",
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "hard_criterion"
+      ],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 1.0,
+       "NO": 0.0,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 13.79,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "YES",
+       "confidence": 0.9,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответы оператора ясные, связные и логичные; клиент не переспрашивал, ожиданий и удержаний без предупреждения не было.",
+     "reasoning": "Релевантные реплики оператора: [4] приветствие и вопрос «Чем могу помочь?» — ясно. [6] «Хорошо, номер в профиле изменён на новый, SMS теперь будут приходить на него.» — ясно, связно, логично, клиент ответил «Спасибо» без переспроса. [8] «Пожалуйста. Могу ещё чем-то помочь? Всего доброго, до свидания!» — связно, уместно. Ожиданий дольше 180 с нет, самое долгое 8 с между сообщениями (ответ на запрос клиента), удержания не было. Неуместных выражений и путаницы нет. Ошибок в логике нет.",
+     "evidence": [
+      {
+       "turn": 4,
+       "quote": "Добрый день, Фридом Брокер, меня зовут Гульнара. Чем могу помочь?",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 6,
+       "quote": "Хорошо, номер в профиле изменён на новый, SMS теперь будут приходить на него.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 8,
+       "quote": "Пожалуйста. Могу ещё чем-то помочь? Всего доброго, до свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10,
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "hard_criterion"
+      ],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "0": 0.0,
+       "4": 0.0,
+       "7": 0.0,
+       "10": 1.0,
+       "_emitted": "10",
+       "_aligned": true
+      },
+      "decision_value": "10",
+      "local_s": 16.14,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": 10,
+       "confidence": 0.85,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор произнёс фразу «Пожалуйста. Могу ещё чем-то помочь? Всего доброго, до свидания!», что включает прощание и предложение дальнейшей помощи. Это соответствует критерию завершения.",
+     "reasoning": "Оператор попрощался с клиентом и сделал предложение дальнейшей помощи. В реплике №8 оператор сказал: «Пожалуйста. Могу ещё чем-то помочь? Всего доброго, до свидания!», что соответствует критерию завершения. Клиент завершил разговор, но оператор уже попрощался и предложил помощь.",
+     "evidence": [
+      {
+       "turn": 8,
+       "quote": "Пожалуйста. Могу ещё чем-то помочь? Всего доброго, до свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 1.0,
+       "NO": 0.0,
+       "NA": 0.0,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 11.26,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор вел себя корректно, не проявлял грубости, не оскорблял клиента и не раскрывал конфиденциальной информации. В диалоге не было предложений платных услуг вне рамок компании.",
+     "reasoning": "В диалоге нет признаков грубых ошибок оператора. Он не оскорбил клиента, не раскрыл конфиденциальной информации и не предложил платную услугу в обход компании. Все реплики оператора соответствуют профессиональной манере общения.",
+     "evidence": [
+      {
+       "turn": 4,
+       "quote": "Добрый день, Фридом Брокер, меня зовут Гульнара. Чем могу помочь?",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 6,
+       "quote": "Хорошо, номер в профиле изменён на новый, SMS теперь будут приходить на него.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 8,
+       "quote": "Пожалуйста. Могу ещё чем-то помочь? Всего доброго, до свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 1.0,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 13.25,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 76.47,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 7,
+    "criteria_total": 8,
+    "agreement": 0.875,
+    "score_range": [
+     65.0,
+     76.47
+    ],
+    "score_spread": 11.47,
+    "flagged_criteria": 0
+   },
+   "call_metrics": {
+    "operator_wpm": 86.2,
+    "speaker_changes": 4,
+    "overlap_rate": 0.0,
+    "operator_response_s": {
+     "median": 8.0,
+     "p90": 8.0,
+     "max": 8.0,
+     "n": 2
+    },
+    "note": "informational, estimated from turn start times only; not scored"
+   },
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "NO",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 76.47,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-03-kz-no-name",
+   "channel": "agent chat",
+   "language": "KZ",
+   "kind": "chat",
+   "dialog_hash": "10b97e633b821842",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор приветствовал клиента на языке клиента, но не представился (не назвал своё имя или идентификатор).",
+     "reasoning": "Первая реплика оператора — №5: «Сәлеметсіз бе! Қалай көмектесе аламын?» — содержит приветствие на языке клиента (казахском). Однако в этой реплике нет представления оператора (названия имени или идентификации). Таким образом, критерий не выполнен.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "5",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 1.0,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 4.44,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Вопрос о времени работы биржи был ясен с самого начала; оператор сразу дал корректный ответ без лишних переспросов, уточнять было нечего.",
+     "reasoning": "Запрос клиента: «Биржа қай уақытта жұмыс істейді?» (вопрос о времени работы биржи) и далее «Биржа уақыты қандай?». Вопрос общий, но он ясен и не требует уточнений: без указания конкретной биржи оператор дал полный ответ по основным рынкам (KASE и US-биржи). Оператор [5] поздоровался и спросил, чем помочь — это приветствие, а не лишнее уточнение по сути, поскольку клиент уже сформулировал вопрос до этого (в [1] и [6]). В [7] оператор ответил сразу, без переспроса. Данных для ответа хватало с самого начала, уточнять было нечего → NA.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "KASE 11:30-дан 17:00-ге дейін (Астана уақыты), ал АҚШ биржалары 19:30-дан 02:00-ге дейін жұмыс істейді.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.75,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA",
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "decision_disagree",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.0006,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0803,
+       "NO": 0.9191,
+       "NA": 0.0006,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 15.8,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "NA",
+       "confidence": 0.75,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Клиент задал общий вопрос о часах работы биржи; оператор дал общую информацию, без раскрытия данных счёта и защищённых действий, поэтому идентификация не требовалась.",
+     "reasoning": "Клиент спрашивает общие вопросы: время работы биржи (реплики 1, 6). Оператор отвечает общей информацией о часах работы KASE и US-бирж (реплики 5, 7, 9). Нет запроса персональных/счётных данных клиента, нет защищённых действий (баланс, сделки, вывод, смена данных). Идентификация не требовалась — NA.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "KASE 11:30-дан 17:00-ге дейін (Астана уақыты), ал АҚШ биржалары 19:30-дан 02:00-ге дейін жұмыс істейді.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.93,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA",
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.9679,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 0.0321,
+       "NA": 0.9679,
+       "_emitted": "NA",
+       "_aligned": true
+      },
+      "decision_value": "NA",
+      "local_s": 13.13,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "NA",
+       "confidence": 0.93,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "Оператор дал точное время работы KASE и американских бирж на вопрос клиента, клиент поблагодарил — все существенные вопросы закрыты.",
+     "reasoning": "Клиент спрашивал о времени работы биржи (реплики 1 и 6). Оператор в реплике 7 дал конкретные часы: KASE 11:30–17:00 (Астана), США 19:30–02:00. Клиент в реплике 8 поблагодарил, что говорит о закрытии вопроса. Ошибок в информации не видно, существенные вопросы закрыты.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "KASE 11:30-дан 17:00-ге дейін (Астана уақыты), ал АҚШ биржалары 19:30-дан 02:00-ге дейін жұмыс істейді.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Тағы сұрақтарыңыз болса, жазыңыз. Сау болыңыз!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [
+      {
+       "text": "Биржа қай уақытта жұмыс істейді? (В какое время работает биржа?)",
+       "essential": true,
+       "status": "closed",
+       "turn": 1
+      },
+      {
+       "text": "Биржа уақыты қандай? (Какое время работы биржи?)",
+       "essential": true,
+       "status": "closed",
+       "turn": 6
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      20,
+      20
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "evidence_failed",
+       "hard_criterion"
+      ],
+      "tier2_reasons": [],
+      "local_value": 20,
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "0": 0.0,
+       "5": 0.0,
+       "10": 0.0,
+       "15": 0.0,
+       "20": 1.0,
+       "NA": 0.0,
+       "_emitted": "20",
+       "_aligned": true
+      },
+      "decision_value": "20",
+      "local_s": 25.27,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": {
+       "value": 20,
+       "confidence": 0.85,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Клиент задавал только информационный вопрос без недовольства; оператор вежлив на всём протяжении диалога и ответил точно по сути.",
+     "reasoning": "Оператор: [5] «Сәлеметсіз бе! Қалай көмектесе аламын?», [7] «KASE 11:30-дан 17:00-ге дейін ... АҚШ биржалары 19:30-дан 02:00-ге дейін жұмыс істейді.», [9] «Тағы сұрақтарыңыз болса, жазыңыз. Сау болыңыз!». Клиент выражал только запрос (вопрос о времени работы биржи), без недовольства, тревоги или жалобы. Оператор вежлив на протяжении диалога (приветствие, «Сау болыңыз!»), ответ по существу. По правилам — YES.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Сәлеметсіз бе! Қалай көмектесе аламын?",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "KASE 11:30-дан 17:00-ге дейін (Астана уақыты), ал АҚШ биржалары 19:30-дан 02:00-ге дейін жұмыс істейді.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Тағы сұрақтарыңыз болса, жазыңыз. Сау болыңыз!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.9,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES",
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "hard_criterion",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.9679,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.9679,
+       "NO": 0.0321,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 10.36,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "YES",
+       "confidence": 0.9,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответы оператора ясные и связные (например, [7] чётко перечисляет время KASE и США), переспросов из-за формулировок нет, явного ожидания более 3 мин не было.",
+     "reasoning": "Релевантные реплики оператора: [5] приветствие и вопрос; [7] ответ на вопрос о времени бирж — ясный, связный; [9] закрытие. Ожидание 20 с между [6] и [7] — ниже порога 180 с, явного ожидания (проверки у коллег/в системе, задержки >3 мин) нет. Противоречий, переспросов клиента из-за формулировки нет: клиент после [7] просто поблагодарил. Ответы ясные, последовательные. Рубрика 10: ответы ясные и связные; явного ожидания не было.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "KASE 11:30-дан 17:00-ге дейін (Астана уақыты), ал АҚШ биржалары 19:30-дан 02:00-ге дейін жұмыс істейді.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Тағы сұрақтарыңыз болса, жазыңыз. Сау болыңыз!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10,
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "hard_criterion",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 0.9846,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "0": 0.0,
+       "4": 0.0,
+       "7": 0.0154,
+       "10": 0.9846,
+       "_emitted": "10",
+       "_aligned": true
+      },
+      "decision_value": "10",
+      "local_s": 14.54,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": 10,
+       "confidence": 0.85,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор попрощался («Сау болыңыз!») и предложил дальнейшую помощь («Тағы сұрақтарыңыз болса, жазыңыз»), а также дал итоговый ответ по времени работы бирж. Диалог завершён штатно.",
+     "reasoning": "Последние реплики оператора: [7] сообщает итог — время работы KASE и US-бирж (ответ на вопрос клиента); [9] «Тағы сұрақтарыңыз болса, жазыңыз. Сау болыңыз!» — прощание («Сау болыңыз!») и предложение дальнейшей помощи («Тағы сұрақтарыңыз болса, жазыңыз»). Клиент ответил «Рақмет», диалог завершён штатно. Формула прощание + (итог или предложение помощи) выполнена.",
+     "evidence": [
+      {
+       "turn": 9,
+       "quote": "Тағы сұрақтарыңыз болса, жазыңыз. Сау болыңыз!",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "KASE 11:30-дан 17:00-ге дейін (Астана уақыты), ал АҚШ биржалары 19:30-дан 02:00-ге дейін жұмыс істейді.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.93,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES",
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.9985,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.9985,
+       "NO": 0.0015,
+       "NA": 0.0,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 10.79,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "YES",
+       "confidence": 0.93,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор вежливо ответил на вопрос о времени работы биржи, никаких оскорблений, платных услуг в обход компании или раскрытия конфиденциальной информации не было.",
+     "reasoning": "Реплики оператора: [5], [7], [9]. Оскорблений клиента нет: приветствие, справка о времени работы бирж, прощание. Предложения платных услуг в обход компании нет. Раскрытия данных других клиентов или внутренних паролей/систем нет: сообщено только публичное расписание бирж. Грубой ошибки нет.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "KASE 11:30-дан 17:00-ге дейін (Астана уақыты), ал АҚШ биржалары 19:30-дан 02:00-ге дейін жұмыс істейді.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Тағы сұрақтарыңыз болса, жазыңыз. Сау болыңыз!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO",
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "evidence_failed"
+      ],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 1.0,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 13.79,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": {
+       "value": "NO",
+       "confidence": 0.95,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 84.62,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     84.62,
+     84.62
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "NO",
+     "02": "NA",
+     "03": "NA",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 84.62,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-04-ru-transfer-minor-detail",
+   "channel": "agent chat",
+   "language": "RU",
+   "kind": "chat",
+   "dialog_hash": "ccf83e115f7a934a",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в первой своей реплике (№5) сказал: «Здравствуйте, меня зовут Игорь», что соответствует требованиям критерия: приветствие на языке клиента и представление имени.",
+     "reasoning": "В первой реплике оператора (реплика №5) он поздоровался на языке клиента (русском) и представился, назвав своё имя. Это соответствует критерию 01: «YES — в своей ПЕРВОЙ реплике оператор (speaker=operator) поздоровался на языке клиента И представился (назвал имя).»",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Игорь",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 1.0,
+       "NO": 0.0,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 5.28,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос клиента был ясен с самого начала (перевод акций от другого брокера и стоимость); оператор сразу ответил без лишних переспросов, уточнять было нечего.",
+     "reasoning": "Клиент в [1] задал вопрос: как перевести акции от другого брокера и сколько это стоит. Бот в [2] не уточнял. Оператор в [5] сразу дал процедуру перевода (поручение у текущего брокера, реквизиты из приложения, 3–5 дней), без переспрашивания. В [7] ответил на вопрос о стоимости (входящий перевод бесплатный). Данных из запроса было достаточно для ответа: клиент уже сказал, что бумаги у другого брокера, и спросил о переводе и стоимости. Уточнять было нечего; лишних переспросов нет. Согласно правилам, это NA, а не YES, поскольку уточнение не требовалось и не делалось. Качество самого ответа (например, не уточнено, какой брокер) оценивается в других критериях.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Чтобы перевести бумаги, подайте у текущего брокера поручение на перевод",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "С нашей стороны входящий перевод бесплатный.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.8,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA",
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "decision_disagree",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.0012,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.6506,
+       "NO": 0.3482,
+       "NA": 0.0012,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 16.0,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "NA",
+       "confidence": 0.8,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос общий (как перевести бумаги и сколько стоит), оператор не раскрывает данные конкретного счёта клиента и не совершает защищённых действий, поэтому идентификация не требовалась.",
+     "reasoning": "Клиент спрашивает общую инструкцию по переводу акций и стоимость перевода. Оператор не раскрывает персональных или счётных данных клиента (баланс, сделки, статус заявки, данные счёта) и не совершает защищённых действий. Реплики оператора [5], [7] содержат общие условия и инструкции (реквизиты из приложения, сроки 3–5 дней, входящий перевод бесплатный). Идентификация не требовалась, поэтому критерий NA.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "С нашей стороны входящий перевод бесплатный.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 5,
+       "quote": "Чтобы перевести бумаги, подайте у текущего брокера поручение на перевод, указав наши реквизиты из раздела «Перевод ценных бумаг» в приложении",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Общие вопросы о процедуре перевода и тарифах; данные счёта клиента не раскрывались, защищённых действий не производилось.",
+     "confidence": 0.9,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA",
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.852,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 0.148,
+       "NA": 0.852,
+       "_emitted": "NA",
+       "_aligned": true
+      },
+      "decision_value": "NA",
+      "local_s": 10.54,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "NA",
+       "confidence": 0.9,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "Оператор дал точную инструкцию по переводу акций и ответил на вопрос о стоимости (входящий перевод бесплатный); клиент подтвердил понимание.",
+     "reasoning": "Оператор [5] дал конкретную инструкцию: подать поручение на перевод у текущего брокера с реквизитами из раздела «Перевод ценных бумаг», загрузить копию, срок 3–5 рабочих дней. На вопрос о стоимости [7] ответил: со стороны компании входящий перевод бесплатный. Оба существенных вопроса закрыты, неверной информации нет. Клиент подтвердил понимание [8]. Срок назван, что дополнительно. Второстепенных деталей, о которых клиент спрашивал, не осталось.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Чтобы перевести бумаги, подайте у текущего брокера поручение на перевод, указав наши реквизиты из раздела «Перевод ценных бумаг» в приложении, и загрузите копию поручения туда же. Перевод занимает 3–5 рабочих дней.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "С нашей стороны входящий перевод бесплатный.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [
+      {
+       "text": "Как перевести мои акции от другого брокера к вам",
+       "essential": true,
+       "status": "closed",
+       "turn": 1
+      },
+      {
+       "text": "Сколько это стоит (стоимость перевода)",
+       "essential": true,
+       "status": "closed",
+       "turn": 6
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      20,
+      20
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "evidence_failed",
+       "hard_criterion"
+      ],
+      "tier2_reasons": [],
+      "local_value": 20,
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "0": 0.0,
+       "5": 0.0,
+       "10": 0.0,
+       "15": 0.0,
+       "20": 1.0,
+       "NA": 0.0,
+       "_emitted": "20",
+       "_aligned": true
+      },
+      "decision_value": "20",
+      "local_s": 25.41,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": {
+       "value": 20,
+       "confidence": 0.85,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор вежлив на протяжении диалога (представился, ответил на оба вопроса, попрощался). Клиент не выражал недовольства или тревоги, поэтому дополнительного признания проблемы не требовалось.",
+     "reasoning": "Оператор: реплики №5, №7, №9. Тон вежливый: представился, ответил на вопрос о стоимости, попрощался. Клиент в диалоге не выражал недовольства, тревоги или жалобы: вопросы «Как перевести...», «А стоимость?», нейтральное «Понял, спасибо». Значит, достаточно вежливости. Рубрика: если недовольства нет — YES.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Игорь.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "С нашей стороны входящий перевод бесплатный.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Обращайтесь, если будут вопросы. До свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.9,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES",
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "hard_criterion"
+      ],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.9999,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.9999,
+       "NO": 0.0001,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 13.08,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "YES",
+       "confidence": 0.9,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответы оператора ясные, связные и в правильном порядке; ожиданий дольше порога не было, клиент не переспрашивал из-за формулировок.",
+     "reasoning": "Релевантные реплики оператора: [5] объясняет процедуру перевода (поручение у текущего брокера, реквизиты из раздела «Перевод ценных бумаг» в приложении, срок 3–5 дней) — ясно и связно. [7] отвечает на вопрос о стоимости — кратко и понятно. [9] — завершение. Ожидание ответа на сообщение клиента [6]→[7] составило 20 с, что ниже порога 180 с; явного ожидания (проверки у коллег/в системе) не было. Клиент не переспрашивал из-за путаных формулировок: после [7] сразу написал «Понял, спасибо». Единственное замечание — ссылка «в приложении» без уточнения, но клиент её понял и продолжил, сбоя ясности это не составляет. Противоречий нет.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Чтобы перевести бумаги, подайте у текущего брокера поручение на перевод, указав наши реквизиты из раздела «Перевод ценных бумаг» в приложении, и загрузите копию поручения туда же. Перевод занимает 3–5 рабочих дней.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "С нашей стороны входящий перевод бесплатный.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10,
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "hard_criterion"
+      ],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 0.9998,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "0": 0.0,
+       "4": 0.0,
+       "7": 0.0002,
+       "10": 0.9998,
+       "_emitted": "10",
+       "_aligned": true
+      },
+      "decision_value": "10",
+      "local_s": 10.84,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": 10,
+       "confidence": 0.85,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор сделал прощание и предложил дальнейшую помощь в последней реплике.",
+     "reasoning": "Оператор попрощался в реплике №9: «Обращайтесь, если будут вопросы. До свидания!». Это прощание, и в нем есть предложение дальнейшей помощи («Обращайтесь, если будут вопросы»). Таким образом, оператор выполнил оба условия завершения: прощание и предложение помощи.",
+     "evidence": [
+      {
+       "turn": 9,
+       "quote": "Обращайтесь, если будут вопросы. До свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 1.0,
+       "NO": 0.0,
+       "NA": 0.0,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 7.09,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не проявляет грубости, не оскорбляет клиента и не раскрывает конфиденциальную информацию. Все ответы соответствуют стандартам обслуживания.",
+     "reasoning": "В диалоге нет грубых ошибок, таких как оскорбление клиента, раскрытие конфиденциальной информации или предложение платной услуги в обход компании. Оператор отвечает профессионально и корректно, не нарушая установленных правил.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Игорь. Чтобы перевести бумаги, подайте у текущего брокера поручение на перевод, указав наши реквизиты из раздела «Перевод ценных бумаг» в приложении, и загрузите копию поручения туда же. Перевод занимает 3–5 рабочих дней.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "С нашей стороны входящий перевод бесплатный.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 1.0,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 10.15,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 100.0,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     100.0,
+     100.0
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "NA",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 100.0,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-05-en-angry-order-cancelled",
+   "channel": "agent chat",
+   "language": "EN",
+   "kind": "chat",
+   "dialog_hash": "d4630de474101a65",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор (реплика №5): 'Hello, I'm Madina from Freedom Broker. I'm sorry you've had to write several times — I understand how frustrating that is, I'll sort it out now.' — поздоровался на языке клиента (EN) и представился.",
+     "reasoning": "В первой реплике оператора (реплика №5) он поздоровался на языке клиента (EN) и представился, назвав своё имя. Это соответствует критерию 01: Установление контакта. Оператор использовал язык клиента и представился в первой реплике.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Hello, I'm Madina from Freedom Broker. I'm sorry you've had to write several times — I understand how frustrating that is, I'll sort it out now.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 1.0,
+       "NO": 0.0,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 5.33,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в реплике №5 спрашивает: 'Please confirm your full name and code word, and tell me which order (ticker and date)'. Это уточнение необходимо для корректного ответа, и клиент предоставляет эту информацию в реплике №6. Оператор использует эти данные в ответе, что подтверждает YES.",
+     "reasoning": "Оператор уточнил необходимые детали (имя, кодовое слово, тикер и дату ордера) перед ответом. Это соответствует критерию YES, так как он использовал информацию, предоставленную клиентом, и уточнил недостающие данные.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Please confirm your full name and code word, and tell me which order (ticker and date).",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 6,
+       "quote": "Peter Novak, code word 'river'. TSLA buy order yesterday.",
+       "speaker": "client",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Your TSLA order was cancelled at the close because it was a day order and the limit price was not reached.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 1.0,
+       "NO": 0.0,
+       "NA": 0.0,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 10.61,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор запросил подтверждение личности («Please confirm your full name and code word») и получил ответ от клиента («Peter Novak, code word 'river'»). Это подтверждает идентификацию перед раскрытием информации.",
+     "reasoning": "Оператор запросил и получил идентифицирующие данные клиента (ФИО и кодовое слово) перед предоставлением информации о статусе заявки. Это соответствует критерию YES.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Please confirm your full name and code word",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 6,
+       "quote": "Peter Novak, code word 'river'",
+       "speaker": "client",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.9999,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.9999,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.9999,
+       "NO": 0.0001,
+       "NA": 0.0,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 7.26,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "Оператор объяснил причину отмены и дал точную инструкцию по переоформлению заявки с validity GTC; клиент подтвердил понимание, существенные вопросы закрыты.",
+     "reasoning": "Клиент писал о причине отмены заявки на TSLA и требовал решения. Оператор [5] извинился и запросил верификацию, [7] объяснил причину (day order, лимитная цена не достигнута, отмена на закрытии) и дал точную инструкцию: переоформить заявку с validity 'Good till cancelled'. Клиент в [8] подтвердил понимание (\"Ah, ok. Thanks.\"). Существенные вопросы закрыты, дан конкретный корректный следующий шаг. Неверной информации не видно. Срока или второстепенных деталей клиент не спрашивал.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "Your TSLA order was cancelled at the close because it was a day order and the limit price was not reached. To keep it active, place it again with 'Good till cancelled' validity in the order form.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 8,
+       "quote": "Ah, ok. Thanks.",
+       "speaker": "client",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [
+      {
+       "text": "Why was my order cancelled? Nobody explains why (TSLA buy order)",
+       "essential": true,
+       "status": "closed",
+       "turn": 1
+      },
+      {
+       "text": "Resolve the cancelled order / get it active again",
+       "essential": true,
+       "status": "closed",
+       "turn": 6
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      20,
+      20
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "evidence_failed",
+       "hard_criterion"
+      ],
+      "tier2_reasons": [],
+      "local_value": 20,
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "0": 0.0,
+       "5": 0.0,
+       "10": 0.0,
+       "15": 0.0,
+       "20": 1.0,
+       "NA": 0.0,
+       "_emitted": "20",
+       "_aligned": true
+      },
+      "decision_value": "20",
+      "local_s": 16.93,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": {
+       "value": 20,
+       "confidence": 0.85,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор вежливо признал повторные обращения клиента и извинился, затем объяснил причину отмены заявки и предложил решение; тон вежливый на протяжении диалога.",
+     "reasoning": "Клиент выразил явное недовольство: \"This is the third time I'm writing!!! My order was cancelled and nobody explains why!\" — жалоба на повторные обращения и отсутствие объяснений. Оператор в [5] прямо признал: \"I'm sorry you've had to write several times — I understand how frustrating that is\", то есть отреагировал на повторные обращения. Далее в [7] объяснил конкретную причину отмены (day order, лимит не достигнут) и дал решение, что соответствует жалобе \"nobody explains why\". В [9] \"Sorry again for the trouble\" — извинение, связанное с проблемой. Тон вежливый на всём протяжении, без резкости. Выполняются условия YES.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "I'm sorry you've had to write several times — I understand how frustrating that is",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Your TSLA order was cancelled at the close because it was a day order and the limit price was not reached.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Sorry again for the trouble.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES",
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "hard_criterion"
+      ],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 1.0,
+       "NO": 0.0,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 8.25,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "YES",
+       "confidence": 0.85,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответы оператора ясные, связные и по порядку; объяснение причины отмены и порядок действий понятны клиенту, он сразу подтвердил понимание. Ожидания 20 с недостаточно для «явного ожидания».",
+     "reasoning": "Релевантные реплики оператора: [5] представление, извинение, запрос данных — ясно. [7] объяснение причины отмены (day order, лимит не достигнут) и инструкция переоформить с GTC — связно и понятно клиенту. [9] завершающая реплика — ясна. Ожидание 20 с (№6→№7) — короткое, не превышает порог 180 с и не относится к явному ожиданию (оператор не уходил проверять информацию, видно, что подтверждение дано сразу). Переспросов клиента из-за формулировок нет: клиент ответил «Ah, ok. Thanks.». Порядок ответов логичен. Сбоев ясности не выявлено.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "Your TSLA order was cancelled at the close because it was a day order and the limit price was not reached. To keep it active, place it again with 'Good till cancelled' validity in the order form.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 5,
+       "quote": "Please confirm your full name and code word, and tell me which order (ticker and date).",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      7,
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "decision_disagree",
+       "hard_criterion",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": 7,
+      "local_conf": 0.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "0": 0.0,
+       "4": 0.0,
+       "7": 0.0,
+       "10": 1.0,
+       "_emitted": "10",
+       "_aligned": true
+      },
+      "decision_value": "10",
+      "local_s": 9.27,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": 10,
+       "confidence": 0.85,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор завершил диалог с прощанием и предложением дальнейшей помощи, что соответствует критерию YES.",
+     "reasoning": "Оператор попрощался в реплике №9: «Sorry again for the trouble. Can I help with anything else? Goodbye!». Он также сделал предложение дальнейшей помощи: «Can I help with anything else?». Это соответствует критерию YES, так как оператор попрощался и предложил дальнейшую помощь.",
+     "evidence": [
+      {
+       "turn": 9,
+       "quote": "Sorry again for the trouble. Can I help with anything else? Goodbye!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 1.0,
+       "NO": 0.0,
+       "NA": 0.0,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 6.3,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не использует оскорбительных выражений, не раскрывает конфиденциальной информации и не предлагает платные услуги вне рамок компании. Все ответы соответствуют стандартам клиентской поддержки.",
+     "reasoning": "В диалоге нет грубых ошибок, таких как оскорбление клиента, раскрытие конфиденциальной информации или предложение платной услуги в обход компании. Оператор отвечает профессионально и вежливо, не унижает клиента и не нарушает конфиденциальность.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "I'm sorry you've had to write several times — I understand how frustrating that is, I'll sort it out now.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Sorry again for the trouble. Can I help with anything else? Goodbye!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 1.0,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 7.6,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 100.0,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 7,
+    "criteria_total": 8,
+    "agreement": 0.875,
+    "score_range": [
+     95.5,
+     100.0
+    ],
+    "score_spread": 4.5,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "YES",
+     "03": "YES",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 100.0,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-06-ru-wrong-advice-close",
+   "channel": "agent chat",
+   "language": "RU",
+   "kind": "chat",
+   "dialog_hash": "f8607b5a55f67e3e",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не представился в первой реплике, хотя поздоровался на языке клиента. Представление произошло позже, что нарушает правило.",
+     "reasoning": "Первая реплика оператора — №5: «Здравствуйте, меня зовут Олжас. Просто удалите приложение — счёт закроется автоматически». Оператор поздоровался на языке клиента (русском), но представился только в более поздней реплике. Согласно правилам, представление должно быть в первой реплике оператора. Таким образом, критерий не выполнен.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "5",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 1.0,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 4.74,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не уточнил ключевые детали запроса клиента (например, какой именно счёт, какие бумаги, и т.д.) и дал совет без проверки, что может быть недостаточно для корректного закрытия счёта. Это соответствует критерию NO.",
+     "reasoning": "Оператор не уточнил детали запроса клиента, не учёл информацию, уже известную из диалога. Вместо этого дал простой совет, не проверив, достаточно ли информации для корректного ответа. Клиент запросил закрытие счёта, но оператор не уточнил, какой именно счёт, какие бумаги, или другие детали, что может привести к неправильному действию.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Просто удалите приложение — счёт закроется автоматически.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "5",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 1.0,
+       "NA": 0.0,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 8.08,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не провёл идентификацию клиента перед выполнением действия. В диалоге нет подтверждения личности клиента, что является нарушением правил.",
+     "reasoning": "В диалоге оператор не провёл идентификацию клиента перед выполнением действия (закрытие счёта). Оператор дал инструкцию по удалению приложения, но не запросил и не проверил идентификаторы (ФИО, ИИН, номер счёта и т.п.). Запрос клиента требовал идентификации, так как речь шла о защищённом действии (закрытие счёта), но оператор не подтвердил личность.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Просто удалите приложение — счёт закроется автоматически.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "5",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 1.0,
+       "NA": 0.0,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 7.85,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 0,
+     "is_na": false,
+     "scale_step": 0,
+     "justification": "Оператор дал фактически неверную ключевую рекомендацию: удаление приложения не закрывает брокерский счёт. Существенный вопрос клиента остался без корректного ответа.",
+     "reasoning": "Клиент спросил, как закрыть брокерский счёт (существенный вопрос). Оператор в [5] ответил: «Просто удалите приложение — счёт закроется автоматически». Это неверная ключевая рекомендация: удаление приложения не закрывает брокерский счёт, требуется заявка/процедура через компанию. По правилам, фактически неверная ключевая рекомендация → запрос open, значение 0. Оператор в [7] просто попрощался, без проверки и без корректного следующего шага.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Просто удалите приложение — счёт закроется автоматически.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Всего доброго!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.9,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [
+      {
+       "text": "Хочу закрыть брокерский счёт, как это сделать?",
+       "essential": true,
+       "status": "open",
+       "turn": 1
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      5,
+      0
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "decision_disagree",
+       "evidence_failed",
+       "hard_criterion",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": 5,
+      "local_conf": 0.018,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "0": 0.982,
+       "5": 0.018,
+       "10": 0.0,
+       "15": 0.0,
+       "20": 0.0,
+       "NA": 0.0,
+       "_emitted": "0",
+       "_aligned": true
+      },
+      "decision_value": "0",
+      "local_s": 11.32,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": {
+       "value": 0,
+       "confidence": 0.9,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Клиент задал нейтральный запрос без недовольства; оператор был вежлив (приветствие, представление, прощание), резкости или пренебрежения не было.",
+     "reasoning": "Оператор: [5] «Здравствуйте, меня зовут Олжас. Просто удалите приложение — счёт закроется автоматически.», [7] «Всего доброго!». Клиент выражал только запрос (как закрыть счёт), без жалобы, раздражения или тревоги. Оператор вежлив: поздоровался, представился, попрощался. Для запроса достаточно вежливости — YES. Замечание: ответ [5] по существу может быть некорректным (закрытие счёта простым удалением приложения), но критерий 05 оценивает тон и реакцию на эмоции, а не точность информации.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Олжас. Просто удалите приложение — счёт закроется автоматически.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Всего доброго!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.8,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO",
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "hard_criterion"
+      ],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 1.0,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 7.75,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "YES",
+       "confidence": 0.8,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответы оператора ясные и связные, клиент сразу принял ответ без переспросов; явных ожиданий без предупреждения не было.",
+     "reasoning": "Релевантные реплики оператора: [5] «Здравствуйте, меня зовут Олжас. Просто удалите приложение — счёт закроется автоматически.» и [7] «Всего доброго!». Ответ в [5] ясный и связный, отвечает на вопрос клиента о закрытии счёта. Явного ожидания после первой реплики оператора по фактам нет (ожиданий дольше 180 с нет). Клиент в [6] ответил «Ок», переспросов нет. Противоречий и бессвязности нет. Сухость/краткость не снижают оценку. Содержательная корректность (что удаление приложения закрывает счёт) оценивается в 04, не здесь.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Олжас. Просто удалите приложение — счёт закроется автоматически.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Всего доброго!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.8,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10,
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "decision_disagree",
+       "hard_criterion",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 0.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "0": 0.0,
+       "4": 0.0003,
+       "7": 0.9997,
+       "10": 0.0,
+       "_emitted": "7",
+       "_aligned": true
+      },
+      "decision_value": "7",
+      "local_s": 6.37,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": 10,
+       "confidence": 0.8,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не предоставил итог или предложение помощи, несмотря на прощание. Это не соответствует критерию YES.",
+     "reasoning": "Оператор попрощался в реплике №7: «Всего доброго!», но не сделал ни подведение итога, ни предложения дальнейшей помощи. По правилам, для YES требуется прощание + (итог ИЛИ предложение помощи). Оператор не выполнил вторую часть формулы, поэтому оценка NO.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "7",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 1.0,
+       "NA": 0.0,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 4.76,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не оскорблял клиента, не предлагал платных услуг в обход компании и не раскрывал конфиденциальных данных. Некорректный совет об удалении приложения относится к критерию 04.",
+     "reasoning": "Реплики оператора: [5] «Здравствуйте, меня зовут Олжас. Просто удалите приложение — счёт закроется автоматически.»; [7] «Всего доброго!». Оскорблений клиента нет, унизительных замечаний нет, данные других клиентов или внутренние системы не раскрыты, платная услуга в обход компании не предлагалась. Фактическая неточность рекомендации (удаление приложения не закрывает счёт) — это критерий 04, не 08. Значит, грубой ошибки нет.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Просто удалите приложение — счёт закроется автоматически.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Всего доброго!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.9,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO",
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "evidence_failed"
+      ],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 1.0,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 8.91,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": {
+       "value": "NO",
+       "confidence": 0.9,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 30.0,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 6,
+    "criteria_total": 8,
+    "agreement": 0.75,
+    "score_range": [
+     15.0,
+     35.0
+    ],
+    "score_spread": 20.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "NO",
+     "02": "NO",
+     "03": "NO",
+     "04": 0,
+     "05": "YES",
+     "06": 10,
+     "07": "NO",
+     "08": "NO"
+    },
+    "total": 30.0,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-07-call-kz-hangup-before-request",
+   "channel": "voice call",
+   "language": "KZ",
+   "kind": "call",
+   "dialog_hash": "7e993139704d9dd4",
+   "checklist_id": "freedom_call_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Первая реплика оператора [4] содержит приветствие на казахском (языке клиента) и представление по имени («менің атым Дана»), что соответствует рубрике YES.",
+     "reasoning": "Первая реплика оператора — [4]: \"Сәлеметсіз бе, Фридом Брокер, менің атым Дана. Қалай көмектесе аламын?\" Приветствие «Сәлеметсіз бе» на казахском (язык клиента KZ, клиент говорит по-казахски в [5]). Представление «менің атым Дана» — назвал имя. Оба условия YES выполнены в первой реплике оператора.",
+     "evidence": [
+      {
+       "turn": 4,
+       "quote": "Сәлеметсіз бе, Фридом Брокер, менің атым Дана.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES",
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "decision_disagree",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.3141,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.3141,
+       "NO": 0.6859,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 4.19,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "YES",
+       "confidence": 0.95,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не уточнил детали запроса клиента, который не успел ответить. Ответ не был дан на основе известных данных, и оператор не получил необходимую информацию для корректного ответа.",
+     "reasoning": "Оператор (реплика №4) приветствует клиента и задаёт вопрос о том, как может помочь, но не уточняет конкретную потребность клиента. В диалоге нет уточнений по деталям запроса клиента, так как клиент не успевает ответить, и разговор завершается. Оператор не задаёт необходимые уточнения, чтобы понять, что именно требуется клиенту. Таким образом, не хватает данных для корректного ответа, и это не соответствует критерию YES.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "4",
+     "na_reason": "",
+     "confidence": 0.9998,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 0.9998,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0002,
+       "NO": 0.9998,
+       "NA": 0.0,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 10.96,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Оператор только поприветствовал и предложил помощь; клиент не успел изложить запрос и отключился. Раскрытия данных клиента и защищённых действий не было, идентификация не требовалась.",
+     "reasoning": "Оператор произнёс одну реплику [4]: приветствие и предложение помочь. Клиент лишь начал говорить [5] и завершил разговор [6]. Запрос клиента не был сформулирован, данные счёта не запрашивались и не раскрывались, защищённых действий не производилось. Идентификация не требовалась (запрос не раскрыт), поэтому критерий неприменим.",
+     "evidence": [
+      {
+       "turn": 4,
+       "quote": "Қалай көмектесе аламын?",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA",
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "decision_disagree",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.1097,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0001,
+       "NO": 0.8902,
+       "NA": 0.1097,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 9.68,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "NA",
+       "confidence": 0.85,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": "NA",
+     "justification": "Клиент прервал разговор до формулировки запроса (реплика [5] оборвана, далее завершение в [6]); оператор лишь поприветствовал и предложил помощь.",
+     "reasoning": "Клиент начал формулировать запрос (\"Иә, сәлеметсіз бе, мен...\") в реплике [5], но не успел сказать, что ему нужно, и завершил разговор в [6]. Оператор в [4] only greeted and offered help (\"Қалай көмектесе аламын?\"). Запрос клиентом не сформулирован, поэтому по правилу NA: диалог прервался до того, как клиент сформулировал запрос.",
+     "evidence": [
+      {
+       "turn": 4,
+       "quote": "Қалай көмектесе аламын?",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Диалог прервался до того, как клиент сформулировал запрос: в [5] клиент сказал только «мен...», после чего завершил звонок в [6].",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA",
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "decision_disagree",
+       "evidence_failed",
+       "hard_criterion",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.0003,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "0": 0.0038,
+       "5": 0.0016,
+       "10": 0.0136,
+       "15": 0.598,
+       "20": 0.3827,
+       "NA": 0.0003,
+       "_emitted": "15",
+       "_aligned": true
+      },
+      "decision_value": "15",
+      "local_s": 14.21,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": {
+       "value": "NA",
+       "confidence": 0.85,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор вежливо поздоровался, представился и предложил помощь; клиент не выражал недовольства, поэтому вежливости достаточно.",
+     "reasoning": "Оператор говорит только в реплике [4]: вежливое приветствие, представление по имени и предложение помощи. Клиент в [5] лишь начинает фразу «Иә, сәлеметсіз бе, мен...» и обрывается; недовольства, тревоги или жалобы не выражено. Значит, достаточно вежливости. Реплика оператора вежлива, без резкости. Клиент завершил разговор в [6] без выраженной эмоции.",
+     "evidence": [
+      {
+       "turn": 4,
+       "quote": "Сәлеметсіз бе, Фридом Брокер, менің атым Дана. Қалай көмектесе аламын?",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES",
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "hard_criterion",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.9669,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.9669,
+       "NO": 0.0331,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 12.07,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "YES",
+       "confidence": 0.85,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Единственная реплика оператора ясная и связная, без неуместных выражений; удержаний и длительных пауз не было. Диалог прервал клиент, что не относится к формулировкам оператора.",
+     "reasoning": "Оператор произнёс одну реплику [4]: представился, предложил помощь — ясно, связно, без неуместных выражений. Клиент сказал «мен...» и завершил звонок [6]; ожиданий, удержаний и пауз со стороны оператора нет. Логика и ясность ответа в норме; сбоя нет. Оценка по рубрике — 10. Отсутствие дальнейшего диалога связано с действиями клиента, а не с формулировками оператора.",
+     "evidence": [
+      {
+       "turn": 4,
+       "quote": "Сәлеметсіз бе, Фридом Брокер, менің атым Дана. Қалай көмектесе аламын?",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.7,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10,
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "hard_criterion",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 0.9935,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "0": 0.0,
+       "4": 0.0,
+       "7": 0.0065,
+       "10": 0.9935,
+       "_emitted": "10",
+       "_aligned": true
+      },
+      "decision_value": "10",
+      "local_s": 11.66,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": 10,
+       "confidence": 0.7,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не попрощался и не предложил дальнейшую помощь. Диалог завершился без завершающего действия со стороны оператора.",
+     "reasoning": "Оператор не попрощался с клиентом и не сделал ни резюме, ни предложения дальнейшей помощи. Диалог завершился системным событием 'Клиент завершил разговор' (реплика №6), что указывает на обрыв диалога до завершения. Оператор сделал только одну реплику (№4), которая не содержит прощания или предложения помощи.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "6",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 1.0,
+       "NA": 0.0,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 9.11,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор вел себя корректно, не проявляя грубости или нарушений конфиденциальности. В диалоге отсутствуют признаки оскорблений или неправомерных действий.",
+     "reasoning": "В диалоге нет никаких признаков грубых ошибок оператора. Он не оскорбил клиента, не раскрыл конфиденциальной информации и не предложил платную услугу в обход компании. Все реплики оператора соответствуют профессиональным стандартам.",
+     "evidence": [
+      {
+       "turn": 4,
+       "quote": "Сәлеметсіз бе, Фридом Брокер, менің атым Дана. Қалай көмектесе аламын?",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 1.0,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 11.06,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 66.67,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     66.67,
+     66.67
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": {
+    "operator_wpm": 75.0,
+    "speaker_changes": 1,
+    "overlap_rate": 0.0,
+    "operator_response_s": {
+     "median": null,
+     "p90": null,
+     "max": null,
+     "n": 0
+    },
+    "note": "informational, estimated from turn start times only; not scored"
+   },
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NO",
+     "03": "NA",
+     "04": "NA",
+     "05": "YES",
+     "06": 10,
+     "07": "NO",
+     "08": "NO"
+    },
+    "total": 66.67,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-08-ru-third-party-data",
+   "channel": "agent chat",
+   "language": "RU",
+   "kind": "chat",
+   "dialog_hash": "96ca54cdd3d9ea0b",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "В первой реплике оператор [5] поздоровался по-русски («Здравствуйте») и назвал своё имя («меня зовут Тимур»), что соответствует языку клиента.",
+     "reasoning": "Первая реплика оператора — [5]: \"Здравствуйте, меня зовут Тимур. Назовите, пожалуйста, ФИО и кодовое слово.\" Клиент пишет по-русски (метаданные RU, сообщения RU). Приветствие «Здравствуйте» на русском, имя «Тимур» названо в той же первой реплике. Оба условия рубрики выполнены.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Тимур.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES",
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.6077,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.6077,
+       "NO": 0.3923,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 4.18,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "YES",
+       "confidence": 0.95,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос баланса был ясен с самого начала; оператор после идентификации сразу ответил на него, не переспрашивая лишнего и не требуя повторов. Уточнений не требовалось — NA.",
+     "reasoning": "Клиент запросил баланс (реплика 1), бот уже знал запрос. Оператор в [5] запросил ФИО и кодовое слово (это идентификация — критерий 03, не 02). Далее клиент сообщил ФИО и кодовое слово [6], оператор в [7] назвал баланс 1 250 000 тенге — ответ на запрос без лишних переспросов. Потребность (баланс по счёту) была ясна с самого начала; уточнять что-либо по сути запроса не требовалось, оператор не переспрашивал лишнего. Оператор также не игнорировал детали. Согласно правилам, при ясном запросе без необходимости уточнений — NA. Замечание про упоминание мужа в [7] относится к этике/безопасности (04/08), а не к выявлению потребности.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Назовите, пожалуйста, ФИО и кодовое слово.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "На вашем счёте 1 250 000 тенге.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.7,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO",
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "decision_disagree",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 0.0103,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.9897,
+       "NO": 0.0103,
+       "NA": 0.0,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 14.95,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "NA",
+       "confidence": 0.7,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор запросил ФИО и кодовое слово (реплика №5), клиент предоставил их (реплика №6), оператор подтвердил личность перед раскрытием данных (реплика №7). Это соответствует требованиям критерия 03: идентификация проведена до раскрытия данных.",
+     "reasoning": "Оператор запросил ФИО и кодовое слово, что является частью идентификации. Клиент предоставил эти данные, и оператор подтвердил личность перед раскрытием информации о балансе. Это соответствует критерию YES.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Назовите, пожалуйста, ФИО и кодовое слово.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 6,
+       "quote": "Иванова Анна Сергеевна, кодовое слово «луна».",
+       "speaker": "client",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Спасибо, личность подтверждена.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.9999,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.9999,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.9999,
+       "NO": 0.0001,
+       "NA": 0.0,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 13.01,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 0,
+     "is_na": false,
+     "scale_step": 0,
+     "justification": "Баланс назван, но оператор предложил вложить средства с счёта мужа клиента — вредная и некорректная рекомендация, раскрытие данных третьего лица; запрос не закрыт корректно, значение 0.",
+     "reasoning": "Клиент спросил баланс (существенный запрос). Оператор после идентификации назвал баланс 1 250 000 тенге [7] — запрос закрыт по сути. Однако оператор добавил неверную/вредную рекомендацию: предложил вместе вкладывать с баланса мужа (счёт третьего лица, данные раскрыты без надлежащей идентификации мужа). По правилам: выполнение действия или раскрытие данных без идентификации — это нарушение 03, а не 04; в 04 оценивается содержательная правильность. Предложение вложить деньги мужа — рекомендация, которая по сути вредна и идёт в обход компании/правил (оператор предложил использовать чужой счёт), поэтому запрос переводится в open и значение 0. Ключевая рекомендация клиенту неверна/вредна.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "На вашем счёте 1 250 000 тенге. Кстати, у вашего мужа на счёте у нас 2 млн тенге, можете вместе вложить.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Чем ещё могу помочь? До свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.7,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [
+      {
+       "text": "Какой у меня баланс?",
+       "essential": true,
+       "status": "open",
+       "turn": 1
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      10,
+      0
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "decision_disagree",
+       "evidence_failed",
+       "hard_criterion",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 0.003,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "0": 0.0,
+       "5": 0.0,
+       "10": 0.003,
+       "15": 0.003,
+       "20": 0.9939,
+       "NA": 0.0,
+       "_emitted": "20",
+       "_aligned": true
+      },
+      "decision_value": "20",
+      "local_s": 19.5,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": {
+       "value": 0,
+       "confidence": 0.7,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор вежлив на протяжении диалога («Здравствуйте, меня зовут Тимур», «Спасибо, личность подтверждена»); клиент не выражал недовольства, только запрос и краткое «спасибо». Замечание: предложение вложить деньги мужа — некорректно, но это не критерий эмпатии.",
+     "reasoning": "Оператор: [5] «Здравствуйте, меня зовут Тимур. Назовите, пожалуйста, ФИО и кодовое слово.» — вежливо. [7] «Спасибо, личность подтверждена.» — вежливо. [9] «Чем ещё могу помочь? До свидания!» — вежливо, но без «пожалуйста»; тон нейтрально-вежливый. Клиент не выражал недовольства или тревоги: [1] «Какой у меня баланс?» — запрос; [8] «Э... спасибо.» — без жалобы. Значит достаточно вежливости. Однако оператор в [7] сообщил конфиденциальные данные (баланс) и без проверки предложил вложить деньги мужа — это нарушение конфиденциальности и тона уважения к клиенту, но критерий 05 оценивает именно эмпатию/вежливость. Реплика [7] про мужа — неуместная, но не грубость. Вывод: вежливость сохранена, жалобы нет → YES, с умеренной неуверенностью.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Тимур. Назовите, пожалуйста, ФИО и кодовое слово.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Спасибо, личность подтверждена.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.7,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES",
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "hard_criterion",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.9982,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.9982,
+       "NO": 0.0018,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 13.73,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "YES",
+       "confidence": 0.7,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответы оператора ясные, связные и по порядку, явных ожиданий не было, клиент не переспрашивал из-за формулировок. Нарушение с данными третьего лица относится к другим критериям.",
+     "reasoning": "Реплики оператора [5], [7], [9] ясные и связные. Самое долгое ожидание 20 с, явных ожиданий (проверка, уход к коллегам, задержка более 180 с) не было. Клиент не переспрашивал из-за формулировок: «Э... спасибо» — реакция на лишнюю информацию, а не переспрос. Раскрытие данных мужа — нарушение, но оно оценивается в 08, не здесь. По ясности, связности и управлению ожиданием замечаний нет.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Назовите, пожалуйста, ФИО и кодовое слово.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Спасибо, личность подтверждена. На вашем счёте 1 250 000 тенге.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.8,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10,
+      7,
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier3:claude-sonnet-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 3,
+      "route": "sonnet",
+      "reasons": [
+       "decision_disagree",
+       "hard_criterion",
+       "low_conf"
+      ],
+      "tier2_reasons": [
+       "disagree_low_conf"
+      ],
+      "local_value": 10,
+      "local_conf": 0.1009,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "0": 0.0,
+       "4": 0.0,
+       "7": 0.8991,
+       "10": 0.1009,
+       "_emitted": "7",
+       "_aligned": true
+      },
+      "decision_value": "7",
+      "local_s": 14.94,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": 7,
+       "confidence": 0.6,
+       "error": null
+      },
+      "sonnet": {
+       "value": 10,
+       "confidence": 0.8,
+       "error": null
+      },
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5",
+       "claude-sonnet-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор попрощался («До свидания!») и предложил дальнейшую помощь («Чем ещё могу помочь?») в последней реплике; клиент ответил благодарностью, диалог завершён штатно.",
+     "reasoning": "Последние реплики оператора: [7] \"Спасибо, личность подтверждена. На вашем счёте 1 250 000 тенге...\" (итоговая фраза по результату обращения — сообщение баланса), [9] \"Чем ещё могу помочь? До свидания!\" — прощание и предложение дальнейшей помощи. Клиент ответил [8] \"Э... спасибо.\" и диалог завершён штатно оператором. Формула прощание + (итог ИЛИ предложение помощи) выполнена. Диалог не оборван клиентом.",
+     "evidence": [
+      {
+       "turn": 9,
+       "quote": "Чем ещё могу помочь? До свидания!",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "На вашем счёте 1 250 000 тенге.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES",
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.9989,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.9989,
+       "NO": 0.0011,
+       "NA": 0.0,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 10.23,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "YES",
+       "confidence": 0.95,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в реплике [7] раскрыл данные третьего лица (счёт мужа клиента, 2 млн тенге) и предложил совместно вкладывать, не проверив полномочия на доступ к этим данным. Это раскрытие конфиденциальной информации о другом клиенте/лице.",
+     "reasoning": "Оператор: реплики №5, №7, №9. В №7 оператор раскрывает баланс клиента (1 250 000 тенге) после идентификации — это данные самого клиента, не третьих лиц. Однако далее он сообщает, что у мужа клиента на счёте 2 млн тенге, и предлагает вложить вместе. Это раскрытие данных третьего лица (мужа) — конфиденциальной информации другого клиента компании, без проверки прав доступа. Это попадает под «раскрытие конфиденциальной информации (данные других клиентов)». Оскорблений и предложений платных услуг в обход компании нет. Вывод: YES.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "Кстати, у вашего мужа на счёте у нас 2 млн тенге, можете вместе вложить.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.8,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO",
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "evidence_failed"
+      ],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 1.0,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 13.52,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": {
+       "value": "YES",
+       "confidence": 0.8,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 76.47,
+   "provisional_total": null,
+   "gross_error": true,
+   "stability": {
+    "criteria_unanimous": 4,
+    "criteria_total": 8,
+    "agreement": 0.5,
+    "score_range": [
+     60.5,
+     88.24
+    ],
+    "score_spread": 27.74,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "YES",
+     "04": 0,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "YES"
+    },
+    "total": 76.47,
+    "gross_error": true,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-09-en-long-gap-no-warning",
+   "channel": "agent chat",
+   "language": "EN",
+   "kind": "chat",
+   "dialog_hash": "0e4defa53f9f3a58",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Первая реплика оператора [5] содержит приветствие «Hello» на языке клиента (EN) и представление по имени «this is Arman from Freedom Broker».",
+     "reasoning": "Client writes in English (metadata EN, client messages in English). First operator message is [5]: \"Hello, this is Arman from Freedom Broker. Go to Profile → Security → Two-factor authentication and switch it on.\" It contains a greeting in English (\"Hello\") and self-identification by name (\"this is Arman\"). Both conditions met in the first operator reply. Bot's greeting [2] doesn't count, but it doesn't matter here.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Hello, this is Arman from Freedom Broker.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES",
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.9019,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.9019,
+       "NO": 0.0981,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 3.28,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "YES",
+       "confidence": 0.95,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не уточнил, какое приложение использует клиент, и сразу дал рекомендацию об обновлении, не проверив, какая версия у клиента. Это может быть рассмотрено как ответ без уточнения недостающих данных.",
+     "reasoning": "Оператор не уточнил недостающие детали перед ответом. Клиент сообщил, что не видит раздел Security в профиле, а оператор сразу дал рекомендацию об обновлении приложения, не спросив, какое приложение используется или какие версии были установлены. Это можно считать ответом «наугад», так как не хватало ключевой информации для точного ответа.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Hello, this is Arman from Freedom Broker. Go to Profile → Security → Two-factor authentication and switch it on.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 6,
+       "quote": "I don't see Security in Profile.",
+       "speaker": "client",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Please update the app to the latest version — the Security section appears in version 5.2 and later.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "6",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 1.0,
+       "NA": 0.0,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 13.09,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос — общая инструкция по включению 2FA через интерфейс приложения; персональные/счётные данные клиента не раскрывались и защищённых действий оператор не выполнял, поэтому идентификация не требовалась.",
+     "reasoning": "Клиент спросил, как включить двухфакторную аутентификацию. Это общая инструкция: оператор направляет по разделам приложения (Profile → Security → Two-factor authentication), не раскрывает данные счёта, баланса, сделок или статуса заявок и не выполняет защищённых действий над аккаунтом. Идентификация по рубрике не требовалась. Остальные реплики оператора (обновить приложение до версии 5.2, благодарность/прощание) тоже не раскрывают персональных данных клиента.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Go to Profile → Security → Two-factor authentication and switch it on.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Please update the app to the latest version — the Security section appears in version 5.2 and later.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.85,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA",
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.9073,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 0.0927,
+       "NA": 0.9073,
+       "_emitted": "NA",
+       "_aligned": true
+      },
+      "decision_value": "NA",
+      "local_s": 11.81,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "NA",
+       "confidence": 0.85,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "Оператор дал точный путь включения 2FA и корректное решение проблемы с отсутствующим разделом (обновление приложения); клиент подтвердил, что нашёл раздел и поблагодарил.",
+     "reasoning": "Клиент спросил, как включить 2FA (реплика 1). Оператор дал точный путь Profile → Security → Two-factor authentication (реплика 5). Клиент сообщил, что раздела Security нет (реплика 6); оператор после 250-секундной паузы (без предупреждения) указал обновить приложение до версии 5.2+ (реплика 7). Клиент подтвердил: «Updated, found it. Thanks!» (реплика 8). Существенный вопрос закрыт, корректная конкретная инструкция дана, ошибок нет. Долгая пауза — это нарушение другого критерия (тайминг), не содержания. Второстепенных деталей, о которых спрашивали, нет.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Go to Profile → Security → Two-factor authentication and switch it on.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Please update the app to the latest version — the Security section appears in version 5.2 and later.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Great! Anything else I can help with? Goodbye!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.9,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [
+      {
+       "text": "How do I enable two-factor authentication?",
+       "essential": true,
+       "status": "closed",
+       "turn": 1
+      },
+      {
+       "text": "I don't see Security in Profile.",
+       "essential": true,
+       "status": "closed",
+       "turn": 6
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      20,
+      20
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "evidence_failed",
+       "hard_criterion",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": 20,
+      "local_conf": 0.99,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "0": 0.0,
+       "5": 0.0,
+       "10": 0.005,
+       "15": 0.005,
+       "20": 0.99,
+       "NA": 0.0,
+       "_emitted": "20",
+       "_aligned": true
+      },
+      "decision_value": "20",
+      "local_s": 17.65,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": {
+       "value": 20,
+       "confidence": 0.9,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор вежлив на протяжении диалога (\"Hello, this is Arman...\", \"Please update the app...\"). Клиент лишь спросил, где найти раздел (обычный запрос, не жалоба), и оператор дал конкретное решение. Долгое ожидание без предупреждения — минус по сервису, но не по эмпатии, так как клиент не выразил недовольства.",
+     "reasoning": "Operator lines: [5] polite greeting, clear instructions; [7] \"Please update the app...\" after a 250s wait with no apology; [9] \"Great! Anything else I can help with? Goodbye!\" Client in [6] said \"I don't see Security in Profile\" — this is a simple \"can't find\" inquiry, per rules not a complaint, so polite helpful answer suffices. Operator was polite throughout, addressed the problem with a concrete solution. The 250s silence without warning is a service issue, but client did not express frustration about it. Tone remains courteous; no rudeness. Per rubric: polite throughout + response to the expressed issue → YES. Some risk an auditor penalizes the unannounced long wait, hence moderate confidence.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Hello, this is Arman from Freedom Broker.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Please update the app to the latest version — the Security section appears in version 5.2 and later.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Great! Anything else I can help with? Goodbye!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.6,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES",
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "decision_disagree",
+       "hard_criterion",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.0567,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0567,
+       "NO": 0.9433,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 10.98,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "YES",
+       "confidence": 0.6,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 7,
+     "is_na": false,
+     "scale_step": 7,
+     "justification": "Ответы оператора ясные и связные, но ожидание ответа клиенту на [6] составило 250 с без предупреждения, что по правилам ограничивает оценку максимумом 7.",
+     "reasoning": "Релевантные реплики оператора: [5] четкая инструкция; [7] объяснение, что раздел появляется в версии 5.2+ — ясно и связно; [9] завершение. Ответ на сообщение клиента [6] задержался с 01:55 до 06:05 — 250 с (>180 с), без предупреждения о ожидании (факт подтверждён кодом). По правилу: при наличии ожидания дольше порога без предупреждения — максимум 7. Ясность ответов при этом не нарушена, клиент понял и продолжил (обновил приложение, нашёл раздел), поэтому снижение только до 7, а не ниже. Переспроса из-за формулировок нет.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Go to Profile → Security → Two-factor authentication and switch it on.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Please update the app to the latest version — the Security section appears in version 5.2 and later.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.8,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10,
+      7
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "decision_disagree",
+       "hard_criterion",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 0.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "0": 0.0,
+       "4": 0.0,
+       "7": 1.0,
+       "10": 0.0,
+       "_emitted": "7",
+       "_aligned": true
+      },
+      "decision_value": "7",
+      "local_s": 14.3,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": 7,
+       "confidence": 0.8,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор сделал прощание и предложил дальнейшую помощь, что соответствует требованиям критерия 07.",
+     "reasoning": "Оператор попрощался в последней реплике: «Great! Anything else I can help with? Goodbye!». Это соответствует критерию завершения, так как есть прощание и предложение дальнейшей помощи («Anything else I can help with?»).",
+     "evidence": [
+      {
+       "turn": 9,
+       "quote": "Great! Anything else I can help with? Goodbye!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.9998,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.9998,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.9998,
+       "NO": 0.0002,
+       "NA": 0.0,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 8.31,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор давал инструкции по включению 2FA, просил обновить приложение и вежливо завершил диалог; оскорблений, платных услуг в обход компании и раскрытия конфиденциальных данных нет.",
+     "reasoning": "Проверяю реплики оператора (№5, №7, №9) на оскорбления, предложение платных услуг в обход компании, раскрытие конфиденциальной информации. №5: инструкция по настройке 2FA — ничего лишнего. №7: просьба обновить приложение, версия 5.2 — публичная информация о функциональности, не внутренний пароль и не данные другого клиента. №9: «Great! Anything else I can help with? Goodbye!» — вежливо. Грубых ошибок нет.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Go to Profile → Security → Two-factor authentication and switch it on.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Please update the app to the latest version — the Security section appears in version 5.2 and later.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Great! Anything else I can help with? Goodbye!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO",
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "evidence_failed"
+      ],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 1.0,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 13.31,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": {
+       "value": "NO",
+       "confidence": 0.95,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 75.63,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 7,
+    "criteria_total": 8,
+    "agreement": 0.875,
+    "score_range": [
+     75.63,
+     81.25
+    ],
+    "score_spread": 5.62,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NO",
+     "03": "NA",
+     "04": 20,
+     "05": "YES",
+     "06": 7,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 75.63,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-10-ru-contradictory",
+   "channel": "agent chat",
+   "language": "RU",
+   "kind": "chat",
+   "dialog_hash": "1e7a6a6a8ecbf862",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "В первой реплике оператор [5] поздоровался по-русски («Здравствуйте») и назвал имя («меня зовут Ержан»), язык совпадает с языком клиента.",
+     "reasoning": "Первая реплика оператора — [5]: «Здравствуйте, меня зовут Ержан. Комиссия 0,1% от суммы сделки.» Клиент пишет по-русски (метаданные RU, сообщения [1], [6], [8] на русском). Приветствие «Здравствуйте» на русском языке клиента, имя «Ержан» названо в этой же первой реплике. Оба условия рубрики выполнены.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Ержан.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES",
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.7982,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.7982,
+       "NO": 0.2018,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 4.17,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "YES",
+       "confidence": 0.95,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не уточнил ключевые детали запроса клиента, не учёл уже известные из диалога данные и не задал нужное уточнение перед ответом. Вместо этого он просто повторил информацию, не проверив её корректность и не уточнив, о какой именно сделке идёт речь.",
+     "reasoning": "Оператор не уточнил детали запроса клиента, не учёл уже известные из диалога детали и не задал нужное уточнение перед ответом. Клиент уже сообщил сумму (100 000 тенге), а оператор не уточнил, о какой именно сделке идёт речь, не проверил, не было ли ошибки в предыдущем ответе и не дал точного ответа. Оператор просто повторил информацию, не уточнив ключевые детали.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Комиссия 0,1% от суммы сделки.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Нет, комиссия 0,2%, то есть 200 тенге.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Зависит от тарифа, посмотрите в приложении.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "5",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:qwen3-8b-awq",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 1.0,
+       "NA": 0.0,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 14.39,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Вопрос о комиссии по тарифам — общий, персональные/счётные данные клиента не раскрывались, идентификация не требовалась.",
+     "reasoning": "Клиент спрашивал общую комиссию за сделки с акциями на KASE (тарифы). Рубрика: тарифы — общие вопросы, идентификация не требуется. Оператор в репликах [5], [7], [9] называет тарифы и комиссию, не раскрывая персональных или счётных данных клиента (баланс, сделки, статус). Идентификации не требовалось, значит NA.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Комиссия 0,1% от суммы сделки.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Зависит от тарифа, посмотрите в приложении.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.9,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA",
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.9864,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 0.0136,
+       "NA": 0.9864,
+       "_emitted": "NA",
+       "_aligned": true
+      },
+      "decision_value": "NA",
+      "local_s": 11.54,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "NA",
+       "confidence": 0.9,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 0,
+     "is_na": false,
+     "scale_step": 0,
+     "justification": "Оператор дал противоречивые данные о комиссии (0,1% и затем 0,2%) и на прямой уточняющий вопрос ответил отсылкой к приложению без конкретики. Существенный вопрос о размере комиссии остался закрытым неверно/неясно.",
+     "reasoning": "Оператор в [5] назвал комиссию 0,1%, в [7] тут же заявил 0,2% — противоречие, ключевая информация неверна или непоследовательна. На уточнение клиента [8] оператор в [9] ответил «Зависит от тарифа, посмотрите в приложении» — без конкретного ответа и пути. Существенный вопрос (размер комиссии) не закрыт, ключевая рекомендация противоречива, поэтому 0.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Комиссия 0,1% от суммы сделки.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Нет, комиссия 0,2%, то есть 200 тенге.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Зависит от тарифа, посмотрите в приложении.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.8,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [
+      {
+       "text": "Какая комиссия за сделки с акциями на KASE?",
+       "essential": true,
+       "status": "partial",
+       "turn": 1
+      },
+      {
+       "text": "То есть с 100 000 тенге — 100 тенге? (уточнение расчёта комиссии)",
+       "essential": true,
+       "status": "open",
+       "turn": 6
+      },
+      {
+       "text": "Так 0,1 или 0,2? (запрос точного значения комиссии)",
+       "essential": true,
+       "status": "open",
+       "turn": 8
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      15,
+      0
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "decision_disagree",
+       "evidence_failed",
+       "hard_criterion",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": 15,
+      "local_conf": 0.2867,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "0": 0.0001,
+       "5": 0.0028,
+       "10": 0.7097,
+       "15": 0.2867,
+       "20": 0.0008,
+       "NA": 0.0,
+       "_emitted": "10",
+       "_aligned": true
+      },
+      "decision_value": "10",
+      "local_s": 18.61,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": {
+       "value": 0,
+       "confidence": 0.8,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор вежлив на протяжении всего диалога; клиент не выражал явной жалобы или раздражения, а только задавал уточняющие вопросы, на которые оператор отвечал. Признание путаницы отсутствует, но по рубрике для запроса этого достаточно.",
+     "reasoning": "Оператор вежлив: «Здравствуйте, меня зовут Ержан», «Нет, комиссия 0,2%...», «До свидания!». Клиент в ходе диалога задаёт уточняющие вопросы ([6], [8]) и говорит «Так 0,1 или 0,2?», «Ладно...». Явной жалобы, раздражения, тревоги или сообщения о сбое нет; это запросы информации. Однако реплика [8] содержит недоумение из-за противоречивой информации, а оператор в [9] отвечает «Зависит от тарифа, посмотрите в приложении» — без признания неудобства. По правилам приоритета вопрос без слов тревоги/упрёка — это запрос, поэтому достаточно вежливости. Тон вежливый на протяжении всего диалога, без резкости. Итог: YES, с умеренной уверенностью, так как оператор противоречил себе в [5]/[7] и не признал путаницу, что аудитор может счесть отсутствием эмпатии.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Ержан. Комиссия 0,1% от суммы сделки.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Нет, комиссия 0,2%, то есть 200 тенге.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Зависит от тарифа, посмотрите в приложении.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 11,
+       "quote": "Чем ещё могу помочь? До свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.55,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES",
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "decision_disagree",
+       "hard_criterion",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.0001,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0001,
+       "NO": 0.9999,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 6.83,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "YES",
+       "confidence": 0.55,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 0,
+     "is_na": false,
+     "scale_step": 0,
+     "justification": "Оператор дал два противоречивых ответа о размере комиссии (0,1% в [5] и 0,2% в [7]), на уточнение клиента [8] ответил уклончиво «Зависит от тарифа», не прояснив ситуацию. Ход диалога из-за этого стал непонятен.",
+     "reasoning": "Оператор в реплике [5] называет комиссию 0,1%, в [7] говорит 0,2% (200 тенге), в [9] на прямой вопрос клиента о противоречии отвечает \"Зависит от тарифа, посмотрите в приложении\". Ответы противоречат друг другу, клиенту пришлось переспрашивать [8], и оператор не прояснил ситуацию, а отослал в приложение. Из-за противоречивых реплик ход диалога стал непонятен клиенту: он не может определить, какая комиссия верна. По правилам: противоречивые ответы, из-за которых ход диалога непонятен — 0. Ожиданий дольше 180 с нет, поэтому ограничение 7 не применяется. Оценка 0.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Комиссия 0,1% от суммы сделки.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Нет, комиссия 0,2%, то есть 200 тенге.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Зависит от тарифа, посмотрите в приложении.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.8,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      0,
+      0
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "decision_disagree",
+       "hard_criterion",
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": 0,
+      "local_conf": 0.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "0": 0.0,
+       "4": 0.0003,
+       "7": 0.9997,
+       "10": 0.0,
+       "_emitted": "7",
+       "_aligned": true
+      },
+      "decision_value": "7",
+      "local_s": 6.47,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": 0,
+       "confidence": 0.8,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в последней реплике предложил дальнейшую помощь и попрощался («Чем ещё могу помочь? До свидания!»), что по рубрике достаточно для YES.",
+     "reasoning": "Последние реплики оператора: [9] \"Зависит от тарифа, посмотрите в приложении.\" (не итог и не предложение помощи), [11] \"Чем ещё могу помочь? До свидания!\" — есть и предложение дальнейшей помощи, и прощание. Клиент ответил [10] \"Ладно...\" и чат завершился штатно после прощания оператора. Формула выполнена: прощание + предложение помощи → YES.",
+     "evidence": [
+      {
+       "turn": 11,
+       "quote": "Чем ещё могу помочь? До свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.9,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES",
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "low_conf"
+      ],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.9985,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.9985,
+       "NO": 0.0015,
+       "NA": 0.0,
+       "_emitted": "YES",
+       "_aligned": true
+      },
+      "decision_value": "YES",
+      "local_s": 4.22,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": {
+       "value": "YES",
+       "confidence": 0.9,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не оскорблял клиента, не раскрывал конфиденциальные данные и не предлагал платных услуг в обход компании. Фактическая путаница в комиссии относится к 04, сухой тон — к 05.",
+     "reasoning": "Реплики оператора: [5] представление и ответ про комиссию; [7] исправление расчёта; [9] \"Зависит от тарифа, посмотрите в приложении.\"; [11] \"Чем ещё могу помочь? До свидания!\". Оскорблений клиента нет, унизительных замечаний нет. Раскрытия данных других клиентов или внутренних систем нет; предложения платных услуг в обход компании нет. Фактические ошибки в ответе (0,1% vs 0,2%) относятся к критерию 04, а не 08. Тон сухой, но без унижения — это 05.",
+     "evidence": [
+      {
+       "turn": 9,
+       "quote": "Зависит от тарифа, посмотрите в приложении.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 11,
+       "quote": "Чем ещё могу помочь? До свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.93,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO",
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier2:claude-haiku-5-5",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 2,
+      "route": "haiku",
+      "reasons": [
+       "evidence_failed"
+      ],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "logprob",
+      "local_option_probs": {
+       "YES": 0.0,
+       "NO": 1.0,
+       "_emitted": "NO",
+       "_aligned": true
+      },
+      "decision_value": "NO",
+      "local_s": 6.65,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": {
+       "value": "NO",
+       "confidence": 0.93,
+       "error": null
+      },
+      "sonnet": null,
+      "models": [
+       "qwen3-8b-awq",
+       "claude-haiku-5-5"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [],
+   "total": 37.5,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 7,
+    "criteria_total": 8,
+    "agreement": 0.875,
+    "score_range": [
+     37.5,
+     56.25
+    ],
+    "score_spread": 18.75,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NO",
+     "03": "NA",
+     "04": 0,
+     "05": "YES",
+     "06": 0,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 37.5,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  }
+ ]
+}
