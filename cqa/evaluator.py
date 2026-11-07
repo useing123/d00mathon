@@ -46,7 +46,13 @@ def validate_evidence(rec, evidence):
         parts = [p.strip() for p in re.split(r"\s*(?:\.\.\.|…)\s*", q) if p.strip()]
         def ok(t, parts=parts):
             tn = _norm(t.get("text", ""))
-            return all(p in tn for p in parts)
+            pos = 0
+            for p in parts:   # fragments separated by "..." must occur in the quoted order
+                i = tn.find(p, pos)
+                if i < 0:
+                    return False
+                pos = i + len(p)
+            return True
         if 0 <= ti < len(turns) and ok(turns[ti]):
             valid.append({"turn": ti, "quote": e["quote"], "speaker": turns[ti].get("speaker"),
                           "internal": bool(turns[ti].get("internal"))})
@@ -166,6 +172,21 @@ class Evaluator:
     @staticmethod
     def _finish(cr, out, val, valid, invalid, attempts, problem):
         out = dict(out)
+        # shape hygiene: never let malformed model fields reach aggregation/UI
+        try:
+            c = float(out.get("confidence"))
+            out["confidence"] = min(1.0, max(0.0, c)) if c == c and c not in (float("inf"), float("-inf")) else 0.0
+        except (TypeError, ValueError):
+            out["confidence"] = 0.0
+        reqs = out.get("client_requests")
+        out["client_requests"] = [
+            {"text": str(r.get("text", "")), "essential": bool(r.get("essential")),
+             "status": r.get("status") if r.get("status") in ("closed", "partial", "open") else "open",
+             "turn": r.get("turn") if isinstance(r.get("turn"), int) else None}
+            for r in (reqs if isinstance(reqs, list) else []) if isinstance(r, dict)] if cr.get("request_ledger") else []
+        for k in ("justification", "reasoning", "missing_where", "na_reason"):
+            if not isinstance(out.get(k, ""), str):
+                out[k] = json.dumps(out[k], ensure_ascii=False)
         out["value"], out["evidence"], out["rejected_quotes"], out["attempts"] = val, valid, invalid, attempts
         if problem == "gross_no_operator_quote":
             out["needs_review"] = True   # do NOT silently flip YES -> NO; a human must decide
@@ -209,6 +230,15 @@ class Evaluator:
                      "\nПроверь сам строго по правилам: подтверди YES только при явной цитате оператора, подпадающей под определение.")
             chosen, decided_by = self._sample(rec, tx_block, checklist, cr, 0.0, llm=self.judge, extra=extra), \
                 f"judge_confirm:{self.judge.model}"
+        elif agree and cr["id"] in config.confirm_criteria():
+            # optional (control/final runs): the judge also re-checks unanimous verdicts on high-weight criteria
+            o = outs[-1]
+            extra = (f"\n\nОба эксперта единогласно поставили {o['value']!r}. Обоснование: {o.get('justification', '')} Цитаты: "
+                     + "; ".join(f"[{e['turn']}] «{e['quote']}»" for e in o.get("evidence") or [])
+                     + "\nНезависимо проверь транскрипт строго по правилам критерия и вынеси окончательное решение "
+                       "(согласие с экспертами не обязательно).")
+            chosen, decided_by = self._sample(rec, tx_block, checklist, cr, 0.0, llm=self.judge, extra=extra), \
+                f"judge_confirm:{self.judge.model}"
         elif agree:
             chosen, decided_by = outs[-1], "consensus"   # strongest juror's explanation
         else:
@@ -245,7 +275,7 @@ class Evaluator:
 
     def evaluate_criterion(self, rec, checklist, cr):
         import hashlib
-        msig = (f"J{config.JURORS}{config.JUDGE}" if self.ensemble else self.llm.model)
+        msig = (f"J{config.JURORS}{config.JUDGE}C{sorted(config.confirm_criteria())}" if self.ensemble else self.llm.model)
         key = f"{ckl.criterion_hash(checklist, cr)}{hashlib.sha1(msig.encode()).hexdigest()[:6]}_{rec['hash']}"
         cp = config.CACHE_DIR / f"{key}.json"
         if self.use_cache and cp.exists():
@@ -297,6 +327,7 @@ class Evaluator:
 
     def evaluate_many(self, records, checklist_override=None, progress=None, concurrency=None, batch_dialogs=None):
         """Flatten (dialog x criterion) into one thread pool -> ~10 dialogs in a couple of minutes."""
+        usage_before = dict(USAGE)   # report THIS run only (USAGE is process-global)
         t0 = time.time()
         jobs = []
         cls = {}
@@ -365,7 +396,8 @@ class Evaluator:
         for rec in records:
             cid = checklist_override or ckl.pick_for_channel(rec["kind"])
             out.append(build_dialog_result(rec, cls[cid], [results[rec["conversation_id"]][c["id"]] for c in cls[cid]["criteria"]]))
-        meta = {"elapsed_s": round(time.time() - t0, 1), "usage": dict(USAGE), "cost_usd": cost_usd(),
+        run_usage = {k: (v - usage_before.get(k, 0)) if isinstance(v, (int, float)) else v for k, v in USAGE.items()}
+        meta = {"elapsed_s": round(time.time() - t0, 1), "usage": run_usage, "cost_usd": cost_usd(run_usage),
                 "provider": self.llm.provider,
                 "model": (f"jury[{'+'.join(config.JURORS)}] judge={config.JUDGE}" if self.ensemble else self.llm.model),
                 "reproducibility": {
@@ -376,6 +408,7 @@ class Evaluator:
                     else "temperature 0 (first sample)",
                     "self_consistency_samples": self.samples,
                     "batch_dialogs": batch_dialogs or config.BATCH_DIALOGS,
+                    "judge_confirms_consensus_on": sorted(config.confirm_criteria()) if self.ensemble else [],
                     "checklists": {c: {"version_hash": hashlib.sha256(json.dumps(
                         {cr["id"]: ckl.criterion_hash(cl, cr) for cr in cl["criteria"]}, sort_keys=True).encode()).hexdigest()[:12],
                         "criterion_hashes": {cr["id"]: ckl.criterion_hash(cl, cr) for cr in cl["criteria"]},

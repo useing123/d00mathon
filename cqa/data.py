@@ -213,28 +213,50 @@ WAIT_PHRASES = ("минут", "подожд", "ожидайт", "уточню", 
                 "wait", "moment", "hold on", "let me check", "let me look", "checking", "one sec")
 ACK_ONLY = ("спасибо", "благодарю", "понял", "поняла", "понятно", "ок", "ok", "okay", "хорошо", "ясно", "ага",
             "рақмет", "рахмет", "рахмет сізге", "түсіндім", "жарайды", "thanks", "thank you", "got it", "great")
-AUTH_MARKERS = ("авторизован", "верифицирован", "идентифицирован", "authenticated", "verified client", "client verified",
-                "сәйкестендірілді", "авторизацияланған")
+AUTH_RE = re.compile(
+    r"(?<![а-яёa-z])(?:клиент|пользователь|вы)\s+(?:успешно\s+)?(?:авторизован[аоы]?|верифицирован[аоы]?|идентифицирован[аоы]?)"
+    r"|(?:client|customer|user)\s+(?:is\s+|has\s+been\s+)?(?:successfully\s+)?(?:authenticated|verified)"
+    r"|клиент\s+сәйкестендірілді", re.I)
+AUTH_NEG_RE = re.compile(r"\bне\s+(?:авторизован|верифицирован|идентифицирован|прош[её]л)|not\s+(?:authenticated|verified)"
+                         r"|для\s+авторизации|to\s+authenticate|failed", re.I)
+
+
+def says_authenticated(text):
+    """Affirmative, non-negated authentication statement (e.g. «Клиент авторизован»); negated/conditional → False."""
+    t = text or ""
+    return bool(AUTH_RE.search(t)) and not AUTH_NEG_RE.search(t)
 KZ_WORDS = ("сәлем", "салем", "рахмет", "рақмет", "жоқ", "иә", "калай", "қалай", "керек", "бар ма", "қайда", "кайда")
 END_MARKERS = ("завершил", "прерван", "отключ", "аяқтады", "ended", "left the chat", "hung up", "disconnected", "closed")
 TRIVIAL = {"оператор", "operator", "agent", "агент", "менеджер", "маман", "человек", "1", "2", "0"}
 
 
-def detect_language(texts):
-    """Script heuristic: Kazakh-specific letters → KZ, other Cyrillic → RU, Latin → EN; None if no signal."""
-    kz = ru = en = 0
-    for tx in texts:
-        low = tx.lower()
-        if low.strip(" .!?") in TRIVIAL:
-            continue
-        kz += sum(ch in KZ_LETTERS for ch in low) + 2 * sum(w in low for w in KZ_WORDS)
-        ru += sum("а" <= ch <= "я" or ch == "ё" for ch in low)
-        en += sum("a" <= ch <= "z" for ch in low)
-    if kz >= 2:
-        return "KZ"
-    if ru == 0 and en == 0:
+def _msg_language(tx):
+    low = (tx or "").lower()
+    if low.strip(" .!?") in TRIVIAL:
         return None
-    return "RU" if ru >= en else "EN"
+    kz_letters = sum(ch in KZ_LETTERS for ch in low)
+    kz_words = sum(w in low for w in KZ_WORDS)
+    ru = sum("а" <= ch <= "я" or ch == "ё" for ch in low)
+    en = sum("a" <= ch <= "z" for ch in low)
+    cyr = ru + kz_letters
+    if kz_words or (kz_letters >= 2 and kz_letters >= 0.03 * max(cyr, 1)):   # a Kazakh name in Russian text is not enough
+        return "KZ"
+    if cyr == 0 and en == 0:
+        return None
+    return "RU" if cyr >= en else "EN"
+
+
+def detect_language(texts):
+    """Per-message script heuristic, majority by characters; None if no signal. Kazakh-specific letters must be a
+    noticeable share of the Cyrillic text (or a common Kazakh word must occur)."""
+    weights = {}
+    for tx in texts:
+        lang = _msg_language(tx)
+        if lang:
+            weights[lang] = weights.get(lang, 0) + len(tx or "")
+    if not weights:
+        return None
+    return max(sorted(weights), key=lambda k: weights[k])
 
 
 def compute_facts(rec):
@@ -256,7 +278,7 @@ def compute_facts(rec):
              "client_mixed_languages": sorted(per_msg) if len(per_msg) > 1 else [],
              "language_metadata": rec.get("language"),
              "system_says_client_authenticated": any(
-                 t["speaker"] in ("system", "bot") and any(m in (t.get("text") or "").lower() for m in AUTH_MARKERS) for t in tr)}
+                 t["speaker"] in ("system", "bot") and says_authenticated(t.get("text")) for t in tr)}
     if first_op is not None:
         facts["first_operator_reply_language_guess"] = detect_language([t.get("text", "") for t in first_block])
 
@@ -278,10 +300,12 @@ def compute_facts(rec):
                     since_client.append(t)
                 continue
             if t["speaker"] == "client":
-                if pending is None and not is_ack(t):
-                    pending = t
+                if pending is None:
+                    since_client = []      # a new request: earlier warnings no longer apply
+                    if not is_ack(t):
+                        pending = t
+                # a follow-up ping ("жду", "алло?") while already waiting keeps the operator's earlier warning
                 ack_seen = ack_seen or is_ack(t)
-                since_client = []
             elif t["speaker"] == "operator" and not t.get("internal"):
                 start = pending or last_op
                 if start is not None and start.get("offset") is not None and t.get("offset") is not None and \

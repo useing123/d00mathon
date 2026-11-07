@@ -44,3 +44,8 @@ CONCURRENCY = int(get("CQA_CONCURRENCY", "24"))
 BATCH_DIALOGS = int(get("CQA_BATCH_DIALOGS", "6"))  # dialog-major batches keep prompt-cache hits within TTL
 JURORS_EXPLICIT = get("CQA_OPENAI_JURY", "0") == "1"  # opt-in jury on local/OpenAI-compatible models (CQA_JURORS/CQA_JUDGE = local ids)
 OPENAI_TOOLS = get("CQA_OPENAI_TOOLS", "1") == "1"  # use native tool calling on OpenAI-compatible servers
+CONFIRM = get("CQA_CONFIRM", "")  # e.g. "03,04": judge re-checks unanimous jury verdicts on these criteria (08=YES always)
+
+
+def confirm_criteria():
+    return {x.strip() for x in CONFIRM.split(",") if x.strip()}

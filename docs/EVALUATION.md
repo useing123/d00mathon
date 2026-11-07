@@ -73,6 +73,46 @@ re-asked an ignored question, which the model attributes to 06; defensible eithe
 dialogs with clear-cut cases. This is a regression/consistency check, not an estimate of agreement with the
 organizer's hidden ground truth, which is likely lower on 04/05/06.
 
+## Held-out split (never used for tuning)
+`examples/gold_holdout/` — 10 further synthetic dialogs (RU 4 / KZ 2 / EN 4 incl. 2 calls) written after the tuning
+rounds, labelled strictly by the organizer rubric, and **not used to change any rule**. Scenarios: needed
+clarification asked, protected action (phone change) without ID, greeting without a name, secondary detail missed,
+angry complaint handled well, wrong key recommendation, call ending before the request, third-party data
+disclosure, long pause without warning, contradictory answers. Caveat: written by the same team (agent) that wrote
+the rules, so it is less independent than real labelled data.
+
+| Metric (prompt v8, jury) | Tuned set (16) | **Held-out (10)** |
+|---|---|---|
+| Overall exact agreement | 0.992 | **0.925** (74/80) |
+| 01 / 02 / 03 / 04 | 1.0 / 1.0 / 1.0 / 1.0 | 1.0 / 0.9 / 1.0 / 0.8 |
+| 05 / 06 / 07 / 08 | 1.0 / 0.938 / 1.0 / 1.0 | 0.9 / 0.8 / 1.0 / 1.0 |
+| Total MAE | 0.43 | **7.32** |
+| Gross flag P / R | 1.0 / 1.0 | 1.0 / 1.0 (1 TP) |
+| Cost / time | $2.45 / 55 s | $1.77 / 47 s |
+
+Held-out disagreements: hold-10 (contradictory answers) — model is harsher on 04 (0 vs 5), 06 (0 vs 4), 05, 02;
+hold-02 04 = 0 vs 20 (the model treats changing the phone without ID as a wrong key action, which our label keeps in
+03 only); hold-08 06 = 7 vs 10. The gap between 0.992 and 0.925 is the honest estimate of how much the tuned-set
+number is inflated; real agreement with the organizer's labels may be lower still.
+
+### Human labels for real DEV dialogs
+`python -m cqa label --group DEV -n 10 --labeller NAME` shows each transcript and asks for the 8 values (only
+allowed values accepted), saving to `examples/dev_labels.json` (git-ignored: real data). Then
+`python -m cqa gold --labels examples/dev_labels.json --group DEV` reports the same metrics on those dialogs.
+We did **not** create these labels ourselves — they need a human labeller.
+
+### Optional: judge re-checks unanimous verdicts on 03/04 (`--confirm 03,04`)
+By default a unanimous haiku+sonnet verdict is final (except 08=YES, which the judge always confirms).
+`python -m cqa evaluate … --confirm 03,04` (or `CQA_CONFIRM=03,04`) sends those verdicts to opus too.
+
+| | default | `--confirm 03,04` |
+|---|---|---|
+| Tuned set: agreement / MAE / cost / time | 0.992 / 0.43 / $2.45 / 55 s | 0.992 / 0.43 / $2.98 / 63 s |
+| Held-out: agreement / MAE / cost / time | 0.925 / 7.32 / $1.77 / 47 s | 0.938 / 6.88 / $1.92 / 46 s |
+| 03 / 04 agreement on held-out | 1.0 / 0.8 | 1.0 / 0.8 |
+On these sets it changed no 03/04 verdict (the held-out difference is in 02, i.e. run-to-run noise) and cost +8–22%.
+We recommend it for a final control run where cost is secondary, but cannot claim an accuracy gain from it.
+
 ## Prompt-cache measurement (3 DEV dialogs, `--fresh`, jury)
 | | Per-criterion tool schema (v2) | One stable tool schema + dialog-major batches (v3) |
 |---|---|---|
@@ -93,6 +133,11 @@ tokens dominate and the new evidence checks cause a few extra retries (55 vs 50 
 | Incomplete dialogs / needs-review flags | n/a | 0 / 0 |
 | Changed verdicts (of 520) | — | 28: 04 ×12, 02 ×8, 06 ×3, 07 ×3, 05 ×2; 01/03/08 unchanged |
 Most frequent changes: 04 20→15 (7; explicit "minor detail missed" anchor), 02 NO→NA (4) and NO→YES (3) (new 02 scope).
+
+### DEV v4 (prompt v8, after review round 4)
+`results/dev_jury_v4.json` — 65 dialogs, 0 errors, 0 incomplete, 0 rescued, 267 s, $13.37. Mean 78.08, 5 gross flags
+(same 5 dialogs as v1), judge decided 75 verdicts, 27 evidence warnings, 02 = NA in 43/65. Changed verdicts: 43 vs v1
+(04 ×14, 06 ×13, 02 ×8, 05 ×5, 07 ×2, 03 ×1), 31 vs v3.
 
 ### DEV v3 (prompt v5: FACTS block, request ledger, round-1/2 rule changes)
 `results/dev_jury_v3.json` — 65 dialogs, 0 errors, 0 incomplete, 0 juror failures, 275 s, $13.03.

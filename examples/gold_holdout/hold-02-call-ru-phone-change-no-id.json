@@ -1,0 +1,72 @@
+{
+ "title": "protected action without ID",
+ "synthetic": true,
+ "split": "holdout",
+ "dialog": {
+  "conversation_id": "hold-02-call-ru-phone-change-no-id",
+  "channel": "voice call",
+  "language": "RU",
+  "transcript": [
+   {
+    "timestamp": "2026-10-21T11:00:08.000+00:00",
+    "speaker": "system",
+    "text": "Запись и транскрибирование запущены."
+   },
+   {
+    "timestamp": "2026-10-21T11:00:16.000+00:00",
+    "speaker": "bot",
+    "text": "Здравствуйте, вы позвонили в Фридом Брокер."
+   },
+   {
+    "timestamp": "2026-10-21T11:00:36.000+00:00",
+    "speaker": "system",
+    "text": "Агент присоединился к разговору с клиентом."
+   },
+   {
+    "timestamp": "2026-10-21T11:00:44.000+00:00",
+    "speaker": "operator",
+    "text": "Добрый день, Фридом Брокер, меня зовут Гульнара. Чем могу помочь?"
+   },
+   {
+    "timestamp": "2026-10-21T11:00:52.000+00:00",
+    "speaker": "client",
+    "text": "Хочу поменять номер телефона в профиле на восемь семьсот один пятьсот пятьдесят пять ноль ноль ноль ноль."
+   },
+   {
+    "timestamp": "2026-10-21T11:01:00.000+00:00",
+    "speaker": "operator",
+    "text": "Хорошо, номер в профиле изменён на новый, SMS теперь будут приходить на него."
+   },
+   {
+    "timestamp": "2026-10-21T11:01:08.000+00:00",
+    "speaker": "client",
+    "text": "Спасибо."
+   },
+   {
+    "timestamp": "2026-10-21T11:01:16.000+00:00",
+    "speaker": "operator",
+    "text": "Пожалуйста. Могу ещё чем-то помочь? Всего доброго, до свидания!"
+   },
+   {
+    "timestamp": "2026-10-21T11:01:24.000+00:00",
+    "speaker": "system",
+    "text": "Клиент завершил разговор."
+   }
+  ]
+ },
+ "expected": {
+  "01": "YES",
+  "02": "NA",
+  "03": "NO",
+  "04": 20,
+  "05": "YES",
+  "06": 10,
+  "07": "YES",
+  "08": "NO"
+ },
+ "expected_total": 76.47,
+ "expected_gross_error": false,
+ "rationale": {
+  "03": "protected action (phone change) done without identity verification → NO"
+ }
+}

@@ -1,0 +1,58 @@
+{
+ "title": "call ends before request",
+ "synthetic": true,
+ "split": "holdout",
+ "dialog": {
+  "conversation_id": "hold-07-call-kz-hangup-before-request",
+  "channel": "voice call",
+  "language": "KZ",
+  "transcript": [
+   {
+    "timestamp": "2026-10-21T11:00:08.000+00:00",
+    "speaker": "system",
+    "text": "Запись и транскрибирование запущены."
+   },
+   {
+    "timestamp": "2026-10-21T11:00:16.000+00:00",
+    "speaker": "bot",
+    "text": "Сәлеметсіз бе, Фридом Брокерге хабарластыңыз."
+   },
+   {
+    "timestamp": "2026-10-21T11:00:36.000+00:00",
+    "speaker": "system",
+    "text": "Агент присоединился к разговору с клиентом."
+   },
+   {
+    "timestamp": "2026-10-21T11:00:44.000+00:00",
+    "speaker": "operator",
+    "text": "Сәлеметсіз бе, Фридом Брокер, менің атым Дана. Қалай көмектесе аламын?"
+   },
+   {
+    "timestamp": "2026-10-21T11:00:52.000+00:00",
+    "speaker": "client",
+    "text": "Иә, сәлеметсіз бе, мен..."
+   },
+   {
+    "timestamp": "2026-10-21T11:00:55.000+00:00",
+    "speaker": "system",
+    "text": "Клиент завершил разговор."
+   }
+  ]
+ },
+ "expected": {
+  "01": "YES",
+  "02": "NA",
+  "03": "NA",
+  "04": "NA",
+  "05": "YES",
+  "06": 10,
+  "07": "NA",
+  "08": "NO"
+ },
+ "expected_total": 100.0,
+ "expected_gross_error": false,
+ "rationale": {
+  "04": "call ended before the request was formulated → NA",
+  "07": "client hung up → NA"
+ }
+}

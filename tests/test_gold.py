@@ -1,15 +1,21 @@
 """Gold pipeline + metrics run offline (mock). Checks plumbing, not accuracy."""
 import json
 
+import pytest
+
 from cqa import checklist as ckl, scoring
-from cqa.gold import compute_metrics, load_gold, run_gold
+from cqa.gold import GOLD_DIR, compute_metrics, load_gold, run_gold
 
 
-def test_gold_files_are_consistent():
-    gold = load_gold()
-    assert 12 <= len(gold) <= 16
+@pytest.mark.parametrize("d,lo,hi", [(GOLD_DIR, 12, 16), (GOLD_DIR.parent / "gold_holdout", 8, 10)])
+def test_gold_files_are_consistent(d, lo, hi):
+    gold = load_gold(d)
+    assert lo <= len(gold) <= hi
     langs = {g["dialog"]["language"] for g in gold}
     assert {"RU", "KZ", "EN"} <= langs and sum("call" in g["dialog"]["channel"] for g in gold) >= 2
+    ids = {g["dialog"]["conversation_id"] for g in load_gold(GOLD_DIR)}
+    if d != GOLD_DIR:
+        assert not ids & {g["dialog"]["conversation_id"] for g in gold}   # held-out split is disjoint
     for g in gold:
         cl = ckl.load("freedom_call_v1" if "call" in g["dialog"]["channel"] else "freedom_chat_v1")
         assert set(g["expected"]) == {c["id"] for c in cl["criteria"]}
@@ -40,3 +46,22 @@ def test_metrics_perfect_and_failed():
     m = compute_metrics(g, failed)
     assert m["overall_agreement"] == 0 and m["gross"]["recall"] == 0 and m["incomplete"] == ["a"]
     assert m["na_confusion"]["exp_NA/pred_applicable"] == 1 and m["na_confusion"]["exp_applicable/pred_FAILED"] == 1
+
+
+def test_label_dialog_and_labels_roundtrip(tmp_path, monkeypatch):
+    from cqa import data
+    from cqa.gold import label_dialog, load_labels, run_gold
+    rec = data.normalize(load_gold()[0]["dialog"], 0)
+    cl = ckl.load("freedom_chat_v1")
+    answers = iter(["7.5", "YES", "", "NA", "", "NA", "", "20", "", "YES", "", "10", "", "YES", "", "NO", "ok"])
+    out = []
+    lab = label_dialog(rec, cl, ask=lambda _: next(answers), say=out.append)
+    assert lab["expected"]["01"] == "YES" and lab["expected"]["04"] == 20 and lab["notes"] == {"08": "ok"}
+    assert any("invalid" in str(x) for x in out)          # 7.5 was rejected and re-asked
+    monkeypatch.setattr(data, "load_group", lambda g, refresh=False: [rec])
+    p = tmp_path / "labels.json"
+    p.write_text(json.dumps({rec["conversation_id"]: lab}))
+    items = load_labels(p, "X")
+    assert items[0]["expected_total"] == 100.0
+    m = run_gold(mock=True, labels=p, group="X", out=tmp_path / "r.json")
+    assert m["dialogs"] == 1 and m["source"].startswith("labels:")

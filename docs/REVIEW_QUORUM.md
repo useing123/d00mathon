@@ -5,14 +5,19 @@ outputs). Each receives the full repo and returns scores, risks and concrete imp
 suggestions that are correct and do not contradict the organizer rubric, and re-ran the review.
 
 ## Score history (overall, 0–100)
-| Round | claude-fable-5-1 | gpt-6-luna | gemini-3.8-flash | gemini-4-argon |
-|---|---|---|---|---|
-| 0 (initial repo) | 77 | 65 | 86 | — |
-| 1 (after round-0 changes) | 76 | — | — | 93 |
-| 2 (after round-1 changes) | 79 | — | — | 95 |
-| 3 (after round-2 changes) | 80 | — | — | 97 |
+| Round | claude-fable-5-1 | claude-opus-5-5 | gemini-4-argon | gpt-6-luna | gemini-3.8-flash |
+|---|---|---|---|---|---|
+| 0 (initial repo) | 77 | — | — | 65 | 86 |
+| 1 (after round-0 changes) | 76 | — | 93 | — | — |
+| 2 (after round-1 changes) | 79 | — | 95 | — | — |
+| 3 (after round-2 changes) | 80 | — | 97 | — | — |
+| 4 (after round-3 changes) | 77 | — | 96 | 66 | — |
 
-From round 1 the quorum is claude-fable-5-1 + gemini-4-argon.
+Reviewer set changed over time (user decision): round 0 fable + luna + gemini-3.8-flash; rounds 1–3 fable + argon;
+round 4 adds luna (run separately on the same commit); from round 5 fable + opus + argon + luna, stop rule
+fable ≥ 90 and opus ≥ 90. Round-4 fable output was truncated JSON; overall (77) and risks were read from the raw
+text, its improvement list was lost. Up to round 4 the review script truncated `cqa/static/index.html` to 14k chars
+(a limitation of the script, not the repo); from round 5 it is sent in full.
 
 ## Round 0 → changes
 ### Accepted (implemented)
@@ -116,3 +121,30 @@ Reviewers: claude-fable-5-1 (76), gemini-4-argon (93). fable's first response wa
 | Narrow 02 NA further (fable, 3rd time) | Rubric: NA = data sufficient from the start; our YES already covers explicit use of known details. |
 | Write provisional score into `total` for submission (fable) | Conflicts with the fail-closed requirement; `provisional_total` column + rescue pass instead. |
 | "Contest" jury sonnet+opus (fable) | Not measured; we don't claim untested accuracy. Configurable via `CQA_JURORS`. |
+
+## Round 4 → changes
+### Accepted (implemented)
+| Suggestion (source) | Implementation |
+|---|---|
+| 05 rule contradiction (anxiety trigger vs plain "why blocked?") (fable) | trigger narrowed to explicitly expressed anxiety; precedence rule + contrasting examples |
+| 02 YES/NA precedence (fable) | YES only when the latest client message lacked needed data and the operator got it (asked or took it from bot/history); repeating given details = NA |
+| 04: wrong / bypass advice → strictly 0 with ledger `open` (argon); contrasting 0/5, 10/15, escalation examples (luna) | rules of 04 |
+| Call 06 without chat artefacts (argon) | call rubric/rules |
+| Wait warning survives client pings (argon) | `compute_facts`; test |
+| 02: operator clarifying specifics after a generic bot topic = YES (argon); 07 closing across two operator turns (argon) | rules |
+| Holistic evidence (05/06) must cite a representative operator turn (argon) | system prompt |
+| Negation-aware auth fact (luna) | `data.says_authenticated`; tests |
+| Cache key hashes the actual system prompt + tool schema (luna) | `criterion_hash`; test |
+| Quote fragments must appear in order (luna) | `validate_evidence`; test |
+| Language heuristic: Kazakh name in Russian text ≠ KZ; per-message (luna) | `detect_language`; test |
+| Integer-only scale steps, checklist id allowlist in `load` (luna) | `checklist.validate/load`; tests |
+| Model payload shape hygiene (confidence, ledger, text fields) (luna) | `Evaluator._finish`; test |
+| Per-run usage/cost instead of process totals (luna) | `evaluate_many`; test |
+| Independent accuracy set (luna, fable) | held-out split `examples/gold_holdout` + `cqa label` / `cqa gold --labels` (see EVALUATION) |
+| Opus never sees consensus verdicts (fable) | optional `--confirm 03,04` / `CQA_CONFIRM`; measured in EVALUATION |
+
+### Rejected / not done
+| Suggestion | Why |
+|---|---|
+| `--allow-provisional` total (argon) | Conflicts with fail-closed; `provisional_total` column exists. |
+| Labelling real DEV dialogs ourselves | Would be self-labelling; tooling is ready for a human labeller. |

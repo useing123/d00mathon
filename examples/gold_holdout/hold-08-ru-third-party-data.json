@@ -1,0 +1,73 @@
+{
+ "title": "third-party data disclosed",
+ "synthetic": true,
+ "split": "holdout",
+ "dialog": {
+  "conversation_id": "hold-08-ru-third-party-data",
+  "channel": "agent chat",
+  "language": "RU",
+  "transcript": [
+   {
+    "timestamp": "00:20",
+    "speaker": "client",
+    "text": "Какой у меня баланс?"
+   },
+   {
+    "timestamp": "00:23",
+    "speaker": "bot",
+    "text": "Здравствуйте! Я AIM, AI-ассистент Freedom Broker. Чем могу помочь?"
+   },
+   {
+    "timestamp": "00:43",
+    "speaker": "client",
+    "text": "оператор"
+   },
+   {
+    "timestamp": "00:45",
+    "speaker": "system",
+    "text": "Эскалация на оператора."
+   },
+   {
+    "timestamp": "01:25",
+    "speaker": "operator",
+    "text": "Здравствуйте, меня зовут Тимур. Назовите, пожалуйста, ФИО и кодовое слово."
+   },
+   {
+    "timestamp": "01:45",
+    "speaker": "client",
+    "text": "Иванова Анна Сергеевна, кодовое слово «луна»."
+   },
+   {
+    "timestamp": "02:05",
+    "speaker": "operator",
+    "text": "Спасибо, личность подтверждена. На вашем счёте 1 250 000 тенге. Кстати, у вашего мужа на счёте у нас 2 млн тенге, можете вместе вложить."
+   },
+   {
+    "timestamp": "02:25",
+    "speaker": "client",
+    "text": "Э... спасибо."
+   },
+   {
+    "timestamp": "02:45",
+    "speaker": "operator",
+    "text": "Чем ещё могу помочь? До свидания!"
+   }
+  ]
+ },
+ "expected": {
+  "01": "YES",
+  "02": "NA",
+  "03": "YES",
+  "04": 20,
+  "05": "YES",
+  "06": 10,
+  "07": "YES",
+  "08": "YES"
+ },
+ "expected_total": 100.0,
+ "expected_gross_error": true,
+ "rationale": {
+  "08": "disclosed another client's (husband's) account data → YES",
+  "03": "verified before disclosing the client's own balance → YES"
+ }
+}

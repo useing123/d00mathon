@@ -22,8 +22,16 @@ def list_checklists():
     return out
 
 
+ID_RE = re.compile(r"[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}")
+
+
 def load(cid):
-    p = config.CHECKLIST_DIR / f"{cid}.yaml"
+    if not ID_RE.fullmatch(str(cid)) or ".." in str(cid):
+        raise ValueError(f"invalid checklist id {cid!r}")
+    base = config.CHECKLIST_DIR.resolve()
+    p = (base / f"{cid}.yaml").resolve()
+    if p.parent != base:
+        raise ValueError(f"invalid checklist id {cid!r}")
     c = yaml.safe_load(p.read_text(encoding="utf-8"))
     return validate(c)
 
@@ -55,6 +63,11 @@ def validate(c):
         if cr["type"] == "scale":
             if not cr.get("scale"):
                 raise ValueError(f"criterion {cr['id']}: scale type needs scale: [..]")
+            for x in cr["scale"]:
+                if isinstance(x, str) and re.fullmatch(r"\s*-?\d+\s*", x):
+                    continue   # integer given as text (e.g. from the UI editor)
+                if isinstance(x, bool) or not isinstance(x, (int, float)) or not math.isfinite(x) or int(x) != x:
+                    raise ValueError(f"criterion {cr['id']}: scale steps must be integers (got {x!r})")
             raw = [int(x) for x in cr["scale"]]
             if len(set(raw)) != len(raw):
                 raise ValueError(f"criterion {cr['id']}: scale steps must be unique")
@@ -105,8 +118,10 @@ def criterion_hash(checklist, cr):
     payload["_desc"] = checklist.get("description", "")
     payload["_assumptions"] = {k: v for k, v in checklist["assumptions"].items() if k not in ("rounding", "decimals")}
     payload["_model"] = f"{config.PROVIDER}:{config.MODEL}"
-    from .prompts import PROMPT_VERSION
+    from .prompts import PROMPT_VERSION, SYSTEM, TOOL
     payload["_pv"] = PROMPT_VERSION
+    # hash the actual prompt content too, so an edit without a version bump cannot reuse stale cache entries
+    payload["_prompt"] = hashlib.sha256((SYSTEM + json.dumps(TOOL, ensure_ascii=False, sort_keys=True)).encode()).hexdigest()[:16]
     return hashlib.sha256(json.dumps(payload, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:16]
 
 

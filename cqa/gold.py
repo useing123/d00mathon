@@ -76,14 +76,33 @@ def compute_metrics(gold, results):
     }
 
 
-def run_gold(mock=False, gold_dir=None, out=None, use_cache=True):
+def load_labels(path, group):
+    """Human labels for real dialogs (`python -m cqa label`) → gold items (dialogs are loaded from the group)."""
+    labels = json.loads(Path(path).read_text(encoding="utf-8"))
+    recs = {r["conversation_id"]: r for r in data.load_group(group)}
+    items = []
+    for cid, lab in labels.items():
+        if cid not in recs or not lab.get("expected"):
+            continue
+        rec = recs[cid]
+        from . import checklist as ckl, scoring
+        cl = ckl.load(ckl.pick_for_channel(rec["kind"]))
+        t = scoring.compute_total(cl["criteria"], lab["expected"], cl["assumptions"]["rounding"], cl["assumptions"]["decimals"])
+        items.append({"dialog": {k: v for k, v in rec.items() if k in ("conversation_id", "channel", "language", "transcript")},
+                      "expected": lab["expected"], "expected_total": t["total"], "expected_gross_error": t["gross_error"],
+                      "rationale": lab.get("notes", {}), "file": f"labels:{cid}"})
+    return items
+
+
+def run_gold(mock=False, gold_dir=None, out=None, use_cache=True, labels=None, group="DEV"):
     if mock:
         config.PROVIDER = "mock"
-    gold = load_gold(gold_dir)
+    gold = load_labels(labels, group) if labels else load_gold(gold_dir)
     recs = [data.normalize(g["dialog"], i) for i, g in enumerate(gold)]
     results, meta = Evaluator(use_cache=use_cache).evaluate_many(recs)
     m = compute_metrics(gold, results)
     m["meta"] = {k: meta.get(k) for k in ("provider", "model", "cost_usd", "elapsed_s", "errors")}
+    m["source"] = f"labels:{labels}" if labels else str(gold_dir or GOLD_DIR)
     out = Path(out or (config.RESULTS_DIR / "gold_report.json"))
     from .util import atomic_write
     atomic_write(out, json.dumps({"metrics": m, "dialogs": results}, ensure_ascii=False, indent=1))
@@ -102,3 +121,27 @@ def format_report(m):
     for x in m["mismatches"]:
         lines.append(f"  ✗ {x['conversation_id']} {x['criterion_id']}: expected {x['expected']} got {x['predicted']}")
     return "\n".join(lines)
+
+
+def label_dialog(rec, checklist, existing=None, ask=input, say=print):
+    """Interactive labelling of one dialog against the checklist. Returns {"expected": {...}, "notes": {...}}."""
+    say(data.format_transcript(rec))
+    say("")
+    exp, notes = {}, {}
+    from .checklist import strict_value
+    for cr in checklist["criteria"]:
+        allowed = ([str(x) for x in cr["scale"]] if cr.get("type") == "scale" else ["YES", "NO"]) + (["NA"] if cr.get("allow_na") else [])
+        prev = (existing or {}).get("expected", {}).get(cr["id"])
+        while True:
+            v = ask(f"{cr['id']} {cr['name']} [{'/'.join(allowed)}]{f' (Enter = {prev})' if prev is not None else ''}: ").strip()
+            if not v and prev is not None:
+                v = str(prev)
+            sv = strict_value(cr, v)
+            if sv is not None:
+                exp[cr["id"]] = sv
+                break
+            say(f"  invalid; allowed: {', '.join(allowed)}")
+        n = ask("   note (optional): ").strip()
+        if n:
+            notes[cr["id"]] = n
+    return {"expected": exp, "notes": notes}

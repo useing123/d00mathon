@@ -4,7 +4,7 @@
 > LLM jury scores every checklist criterion separately, backs each verdict with verified verbatim quotes, and computes the score in deterministic code.
 
 ![CI](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&logoColor=white)
-![tests](https://img.shields.io/badge/tests-100%20passed-brightgreen)
+![tests](https://img.shields.io/badge/tests-115%20passed-brightgreen)
 ![python](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue?logo=python&logoColor=white)
 ![ruff](https://img.shields.io/badge/lint-ruff-261230)
 ![license](https://img.shields.io/badge/license-MIT-green)
@@ -148,8 +148,8 @@ CQA_PROVIDER=openai CQA_OPENAI_BASE_URL=http://127.0.0.1:11434/v1 CQA_MODEL=qwen
 Подробно: [docs/ASSUMPTIONS.md](docs/ASSUMPTIONS.md).
 
 ## Результаты на DEV
-**Gold-набор (16 размеченных синтетических диалогов, `python -m cqa gold`):** точное совпадение 0.969–0.984 в двух одинаковых прогонах текущей версии (шум ±2 вердикта из 128), MAE итога 0.9–1.7, грубые ошибки precision/recall 1.0/1.0 — см. [docs/EVALUATION.md](docs/EVALUATION.md) (это проверка регрессий, а не оценка совпадения со скрытой разметкой).
-**DEV v3** (после правок по ревью): 65 диалогов, 0 ошибок, 0 неполных, средний балл 78.08, 5 флагов грубых ошибок (те же диалоги), $13.03 / 275 с.
+**Gold-набор:** на 16 синтетических диалогах, по которым настраивались правила, совпадение 0.992, MAE 0.43; на **отложенных 10 диалогах (не использовались для настройки)** — 0.925, MAE 7.32. Шум между одинаковыми прогонами ±2 вердикта из 128, грубые ошибки precision/recall 1.0/1.0 — см. [docs/EVALUATION.md](docs/EVALUATION.md) (это проверка регрессий, а не оценка совпадения со скрытой разметкой).
+**DEV v4** (после правок по ревью): 65 диалогов, 0 ошибок, 0 неполных, средний балл 78.08, 5 флагов грубых ошибок (те же диалоги), $13.37 / 267 с. Разметка реальных диалогов человеком: `python -m cqa label`, сверка: `python -m cqa gold --labels`.
 
 65 диалогов (60 чатов: RU 30 / KZ 15 / EN 15; 5 звонков RU), 0 ошибок, средний балл 75.95, 5 флагов грубых ошибок. Полный прогон ≈ 5 мин и ≈ $13; 10 диалогов ≈ 1 мин и ≈ $2. Методика: [docs/EVALUATION.md](docs/EVALUATION.md).
 
@@ -177,7 +177,7 @@ cqa/
   __main__.py    CLI: evaluate / stats / rescore / serve
 checklists/      freedom_chat_v1.yaml, freedom_call_v1.yaml
 examples/        sample_dialogs.json — 4 синтетических диалога (RU/EN/KZ чат + RU звонок)
-tests/           100 тестов: скоринг, цитаты, чек-листы, кэш-ключ, fail-closed, строгие значения, роли/время, факты, жюри, провайдеры, безопасность путей, gold, mock e2e, HTTP API
+tests/           115 тестов: скоринг, цитаты, чек-листы, кэш-ключ, fail-closed, строгие значения, роли/время, факты, жюри, провайдеры, безопасность путей, gold, mock e2e, HTTP API
 docs/            ARCHITECTURE, SCORING, ASSUMPTIONS, EVALUATION, API, презентация + PDF
 Makefile · pyproject.toml · Dockerfile · docker-compose.yml · .github/workflows/ci.yml
 ```
@@ -203,6 +203,8 @@ Makefile · pyproject.toml · Dockerfile · docker-compose.yml · .github/workfl
 
 **Limitations:** no labelled ground truth for DEV (accuracy checked by manual review of a sample); criteria 07/04/05 are the most subjective; audio offsets are approximate; local-model accuracy not measured.
 
-**Gold set:** 16 hand-labelled synthetic dialogs, `python -m cqa gold` → exact agreement 0.969–0.984 across two identical runs of the current version (±2/128 run-to-run noise), total MAE 0.9–1.7, gross-flag P/R 1.0/1.0. **Robustness:** fail-closed `incomplete` status, strict values, operator-quote checks, untrusted-transcript boundary, path-safe ids, atomic writes. Review history: [docs/REVIEW_QUORUM.md](docs/REVIEW_QUORUM.md).
+**Gold set:** 16 hand-labelled synthetic dialogs, `python -m cqa gold` → tuned set 0.992 / MAE 0.43, **held-out set (10 dialogs never used for tuning) 0.925 / MAE 7.32**, gross-flag P/R 1.0/1.0. **Robustness:** fail-closed `incomplete` status, strict values, operator-quote checks, untrusted-transcript boundary, path-safe ids, atomic writes. Review history: [docs/REVIEW_QUORUM.md](docs/REVIEW_QUORUM.md).
+
+UI: [docs/UI.md](docs/UI.md).
 
 Docs: [Architecture](docs/ARCHITECTURE.md) · [Scoring](docs/SCORING.md) · [Assumptions](docs/ASSUMPTIONS.md) · [Evaluation](docs/EVALUATION.md) · [API](docs/API.md) · [Deck](docs/CQA_Pitch_Deck.pdf). License: [MIT](LICENSE).

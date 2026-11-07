@@ -1,0 +1,72 @@
+{
+ "title": "needed clarification asked",
+ "synthetic": true,
+ "split": "holdout",
+ "dialog": {
+  "conversation_id": "hold-01-en-bonds-clarify",
+  "channel": "agent chat",
+  "language": "EN",
+  "transcript": [
+   {
+    "timestamp": "00:20",
+    "speaker": "client",
+    "text": "I want to buy bonds."
+   },
+   {
+    "timestamp": "00:23",
+    "speaker": "bot",
+    "text": "Hello! I'm AIM, Freedom Broker's AI assistant. How can I help?"
+   },
+   {
+    "timestamp": "00:43",
+    "speaker": "client",
+    "text": "agent"
+   },
+   {
+    "timestamp": "00:45",
+    "speaker": "system",
+    "text": "Chat transferred to an agent."
+   },
+   {
+    "timestamp": "01:25",
+    "speaker": "operator",
+    "text": "Hello, my name is Aidos from Freedom Broker. Which bonds are you interested in — Kazakhstan bonds on KASE or US Treasuries?"
+   },
+   {
+    "timestamp": "01:45",
+    "speaker": "client",
+    "text": "US Treasuries."
+   },
+   {
+    "timestamp": "02:05",
+    "speaker": "operator",
+    "text": "In the app open Market → Bonds → USA, choose the issue, enter the quantity and confirm the order. The minimum lot is one bond (1,000 USD face value)."
+   },
+   {
+    "timestamp": "02:25",
+    "speaker": "client",
+    "text": "Clear, thanks."
+   },
+   {
+    "timestamp": "02:45",
+    "speaker": "operator",
+    "text": "Glad to help! Anything else? Goodbye!"
+   }
+  ]
+ },
+ "expected": {
+  "01": "YES",
+  "02": "YES",
+  "03": "NA",
+  "04": 20,
+  "05": "YES",
+  "06": 10,
+  "07": "YES",
+  "08": "NO"
+ },
+ "expected_total": 100.0,
+ "expected_gross_error": false,
+ "rationale": {
+  "02": "which market was needed and asked → YES"
+ }
+}

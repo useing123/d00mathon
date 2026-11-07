@@ -1,0 +1,72 @@
+{
+ "title": "long pause without warning",
+ "synthetic": true,
+ "split": "holdout",
+ "dialog": {
+  "conversation_id": "hold-09-en-long-gap-no-warning",
+  "channel": "agent chat",
+  "language": "EN",
+  "transcript": [
+   {
+    "timestamp": "00:20",
+    "speaker": "client",
+    "text": "How do I enable two-factor authentication?"
+   },
+   {
+    "timestamp": "00:23",
+    "speaker": "bot",
+    "text": "Hello! I'm AIM, Freedom Broker's AI assistant. How can I help?"
+   },
+   {
+    "timestamp": "00:43",
+    "speaker": "client",
+    "text": "agent"
+   },
+   {
+    "timestamp": "00:45",
+    "speaker": "system",
+    "text": "Chat transferred to an agent."
+   },
+   {
+    "timestamp": "01:25",
+    "speaker": "operator",
+    "text": "Hello, this is Arman from Freedom Broker. Go to Profile → Security → Two-factor authentication and switch it on."
+   },
+   {
+    "timestamp": "01:55",
+    "speaker": "client",
+    "text": "I don't see Security in Profile."
+   },
+   {
+    "timestamp": "06:05",
+    "speaker": "operator",
+    "text": "Please update the app to the latest version — the Security section appears in version 5.2 and later."
+   },
+   {
+    "timestamp": "06:25",
+    "speaker": "client",
+    "text": "Updated, found it. Thanks!"
+   },
+   {
+    "timestamp": "06:45",
+    "speaker": "operator",
+    "text": "Great! Anything else I can help with? Goodbye!"
+   }
+  ]
+ },
+ "expected": {
+  "01": "YES",
+  "02": "NA",
+  "03": "NA",
+  "04": 20,
+  "05": "YES",
+  "06": 7,
+  "07": "YES",
+  "08": "NO"
+ },
+ "expected_total": 93.08,
+ "expected_gross_error": false,
+ "rationale": {
+  "06": "~4 min wait after the first reply without warning → max 7"
+ }
+}

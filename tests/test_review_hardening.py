@@ -399,3 +399,84 @@ def test_rescue_pass_recovers_failed_criterion(monkeypatch):
     c05 = next(c for c in out[0]["criteria"] if c["criterion_id"] == "05")
     assert out[0]["status"] == "complete" and c05["decided_by"].startswith("rescue:") and c05["value"] in ("YES", "NO")
     assert any("05" in e for e in meta["errors"])
+
+
+def test_wait_warning_survives_client_ping():
+    r = _rec([{"timestamp": "00:00", "speaker": "operator", "text": "Здравствуйте, меня зовут Ан"},
+              {"timestamp": "00:10", "speaker": "client", "text": "Где мой вывод?"},
+              {"timestamp": "00:20", "speaker": "operator", "text": "Минутку, уточню"},
+              {"timestamp": "02:00", "speaker": "client", "text": "жду"},
+              {"timestamp": "05:20", "speaker": "operator", "text": "Вывод исполнен"}])
+    w = data.compute_facts(r)["longest_wait_after_first_reply"]
+    assert w["to_turn"] == 4 and w["operator_warned_before"] is True
+
+
+# ---------- round-4 review (luna) ----------
+def test_auth_fact_negation_aware():
+    assert data.says_authenticated("Клиент авторизован в приложении")
+    assert data.says_authenticated("Customer is authenticated")
+    for neg in ("Клиент не авторизован", "Для авторизации введите код", "Client not verified", "Пользователь не прошёл проверку"):
+        assert not data.says_authenticated(neg), neg
+
+
+def test_language_kazakh_name_in_russian_is_ru():
+    assert data.detect_language(["Здравствуйте, меня зовут Әсем, хочу узнать комиссию за покупку облигаций"]) == "RU"
+    assert data.detect_language(["Сәлеметсіз бе, шотты қалай толтыруға болады?"]) == "KZ"
+    assert data.detect_language(["оператор"]) is None
+
+
+def test_quote_fragments_must_be_in_order():
+    from cqa.evaluator import validate_evidence
+    r = _rec([{"speaker": "operator", "text": "Сначала откройте приложение, затем выберите вывод"}])
+    assert validate_evidence(r, [{"turn": 0, "quote": "откройте приложение … выберите вывод"}])[0]
+    v, bad = validate_evidence(r, [{"turn": 0, "quote": "выберите вывод … откройте приложение"}])
+    assert not v and bad
+
+
+@pytest.mark.parametrize("step", [4.5, True, float("nan"), "7.5"])
+def test_fractional_or_bad_scale_step_rejected(step):
+    with pytest.raises(ValueError, match="integers"):
+        ckl.validate({"id": "x", "criteria": [{"id": "1", "name": "n", "type": "scale", "scale": [0, step, 10]}]})
+
+
+def test_checklist_load_rejects_traversal():
+    for bad in ("../etc/passwd", "a/b", "..", ""):
+        with pytest.raises(ValueError):
+            ckl.load(bad)
+
+
+def test_cache_key_tracks_prompt_content(monkeypatch):
+    cl = ckl.load("freedom_chat_v1")
+    h1 = ckl.criterion_hash(cl, cl["criteria"][0])
+    monkeypatch.setattr(prompts, "SYSTEM", prompts.SYSTEM + " ")
+    assert ckl.criterion_hash(cl, cl["criteria"][0]) != h1
+
+
+def test_malformed_payload_shape_sanitised():
+    s = Scripted([{"value": "15", "confidence": "high", "evidence": [{"turn": 1, "quote": "Тариф"}],
+                   "client_requests": [{"text": 1, "status": "weird"}, "junk"], "justification": {"a": 1}}])
+    tx = prompts.transcript_block(REC, data.format_transcript(REC))
+    out = Evaluator(llm=s, use_cache=False)._sample(REC, tx, ckl.load("freedom_chat_v1"), _cr("04"), 0)
+    assert out["confidence"] == 0.0 and out["client_requests"] == [{"text": "1", "essential": False, "status": "open", "turn": None}]
+    assert isinstance(out["justification"], str)
+
+
+def test_run_usage_is_per_run():
+    ev = Evaluator(use_cache=False)
+    llm.USAGE["input_tokens"] = llm.USAGE.get("input_tokens", 0) + 12345
+    _, meta = ev.evaluate_many([REC])
+    assert meta["usage"].get("input_tokens", 0) < 12345
+
+
+def test_optional_judge_confirmation_of_consensus(monkeypatch):
+    yes = {"value": "15", "evidence": [{"turn": 1, "quote": "Тариф"}],
+           "client_requests": [{"text": "a", "essential": True, "status": "partial"}]}
+    judge = Scripted([{"value": "10", "evidence": [{"turn": 1, "quote": "Тариф"}]}])
+    judge.model = "judge"
+    ev = Evaluator(use_cache=False)
+    ev.jurors, ev.judge, ev.ensemble = [Scripted([yes]), Scripted([yes])], judge, True
+    tx = prompts.transcript_block(REC, data.format_transcript(REC))
+    assert ev._jury(REC, tx, ckl.load("freedom_chat_v1"), _cr("04"), "k_h")["decided_by"] == "consensus"
+    monkeypatch.setattr(config, "CONFIRM", "03,04")
+    res = ev._jury(REC, tx, ckl.load("freedom_chat_v1"), _cr("04"), "k_h")
+    assert res["decided_by"] == "judge_confirm:judge" and res["value"] == 10

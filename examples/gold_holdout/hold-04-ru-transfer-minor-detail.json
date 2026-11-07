@@ -1,0 +1,73 @@
+{
+ "title": "main answered, secondary detail missed",
+ "synthetic": true,
+ "split": "holdout",
+ "dialog": {
+  "conversation_id": "hold-04-ru-transfer-minor-detail",
+  "channel": "agent chat",
+  "language": "RU",
+  "transcript": [
+   {
+    "timestamp": "00:20",
+    "speaker": "client",
+    "text": "Как перевести мои акции от другого брокера к вам и сколько это стоит?"
+   },
+   {
+    "timestamp": "00:23",
+    "speaker": "bot",
+    "text": "Здравствуйте! Я AIM, AI-ассистент Freedom Broker. Чем могу помочь?"
+   },
+   {
+    "timestamp": "00:43",
+    "speaker": "client",
+    "text": "оператор"
+   },
+   {
+    "timestamp": "00:45",
+    "speaker": "system",
+    "text": "Эскалация на оператора."
+   },
+   {
+    "timestamp": "01:35",
+    "speaker": "operator",
+    "text": "Здравствуйте, меня зовут Игорь. Чтобы перевести бумаги, подайте у текущего брокера поручение на перевод, указав наши реквизиты из раздела «Перевод ценных бумаг» в приложении, и загрузите копию поручения туда же. Перевод занимает 3–5 рабочих дней."
+   },
+   {
+    "timestamp": "01:55",
+    "speaker": "client",
+    "text": "А стоимость?"
+   },
+   {
+    "timestamp": "02:15",
+    "speaker": "operator",
+    "text": "С нашей стороны входящий перевод бесплатный."
+   },
+   {
+    "timestamp": "02:35",
+    "speaker": "client",
+    "text": "Понял, спасибо"
+   },
+   {
+    "timestamp": "02:55",
+    "speaker": "operator",
+    "text": "Обращайтесь, если будут вопросы. До свидания!"
+   }
+  ]
+ },
+ "expected": {
+  "01": "YES",
+  "02": "NA",
+  "03": "NA",
+  "04": 15,
+  "05": "YES",
+  "06": 10,
+  "07": "YES",
+  "08": "NO"
+ },
+ "expected_total": 92.31,
+ "expected_gross_error": false,
+ "rationale": {
+  "04": "process fully explained; did not mention the sending broker's fee (secondary detail) → 15",
+  "06": "client re-asked a question the operator skipped — 04 matter, not 06"
+ }
+}

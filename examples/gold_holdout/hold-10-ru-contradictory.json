@@ -1,0 +1,83 @@
+{
+ "title": "contradictory answers",
+ "synthetic": true,
+ "split": "holdout",
+ "dialog": {
+  "conversation_id": "hold-10-ru-contradictory",
+  "channel": "agent chat",
+  "language": "RU",
+  "transcript": [
+   {
+    "timestamp": "00:20",
+    "speaker": "client",
+    "text": "Какая комиссия за сделки с акциями на KASE?"
+   },
+   {
+    "timestamp": "00:23",
+    "speaker": "bot",
+    "text": "Здравствуйте! Я AIM, AI-ассистент Freedom Broker. Чем могу помочь?"
+   },
+   {
+    "timestamp": "00:43",
+    "speaker": "client",
+    "text": "оператор"
+   },
+   {
+    "timestamp": "00:45",
+    "speaker": "system",
+    "text": "Эскалация на оператора."
+   },
+   {
+    "timestamp": "01:25",
+    "speaker": "operator",
+    "text": "Здравствуйте, меня зовут Ержан. Комиссия 0,1% от суммы сделки."
+   },
+   {
+    "timestamp": "01:45",
+    "speaker": "client",
+    "text": "То есть с 100 000 тенге — 100 тенге?"
+   },
+   {
+    "timestamp": "02:05",
+    "speaker": "operator",
+    "text": "Нет, комиссия 0,2%, то есть 200 тенге."
+   },
+   {
+    "timestamp": "02:25",
+    "speaker": "client",
+    "text": "Так 0,1 или 0,2?"
+   },
+   {
+    "timestamp": "02:45",
+    "speaker": "operator",
+    "text": "Зависит от тарифа, посмотрите в приложении."
+   },
+   {
+    "timestamp": "03:05",
+    "speaker": "client",
+    "text": "Ладно..."
+   },
+   {
+    "timestamp": "03:25",
+    "speaker": "operator",
+    "text": "Чем ещё могу помочь? До свидания!"
+   }
+  ]
+ },
+ "expected": {
+  "01": "YES",
+  "02": "NA",
+  "03": "NA",
+  "04": 5,
+  "05": "YES",
+  "06": 4,
+  "07": "YES",
+  "08": "NO"
+ },
+ "expected_total": 63.08,
+ "expected_gross_error": false,
+ "rationale": {
+  "06": "contradictory answers, client had to re-ask because of them → 4",
+  "04": "ended with a general hint, client still unsure → 5"
+ }
+}

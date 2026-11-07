@@ -16,6 +16,8 @@ def _progress(done, total):
 
 def cmd_evaluate(a):
     """Evaluate a fetched group or a local JSON file; writes results JSON + CSV."""
+    if a.confirm:
+        config.CONFIRM = a.confirm
     if a.mock:
         config.PROVIDER = "mock"
     if a.input:
@@ -81,10 +83,37 @@ def cmd_stats(a):
 
 
 def cmd_gold(a):
+    if a.confirm:
+        config.CONFIRM = a.confirm
     from .gold import format_report, run_gold
-    m = run_gold(mock=a.mock, gold_dir=a.dir, out=a.out, use_cache=not a.fresh)
+    m = run_gold(mock=a.mock, gold_dir=a.dir, out=a.out, use_cache=not a.fresh, labels=a.labels, group=a.group)
     print(format_report(m))
     print(json.dumps({"report": m["report"], "meta": m["meta"]}, ensure_ascii=False))
+
+
+def cmd_label(a):
+    """Human labelling of real dialogs -> examples/dev_labels.json (git-ignored). Labels are never invented by the tool."""
+    from pathlib import Path
+
+    from . import checklist as ckl
+    from .gold import label_dialog
+    from .util import atomic_write
+    path = Path(a.out)
+    labels = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    recs = data.load_group(a.group)
+    ids = a.ids.split(",") if a.ids else [r["conversation_id"] for r in recs if r["conversation_id"] not in labels][: a.n]
+    for cid in ids:
+        rec = next((r for r in recs if r["conversation_id"] == cid), None)
+        if rec is None:
+            print(f"unknown dialog {cid}")
+            continue
+        cl = ckl.load(ckl.pick_for_channel(rec["kind"]))
+        print(f"\n===== {cid} ({rec['kind']}, {rec.get('language')}) — label by the organizer rubric =====")
+        lab = label_dialog(rec, cl, labels.get(cid))
+        lab["labeller"] = a.labeller
+        labels[cid] = lab
+        atomic_write(path, json.dumps(labels, ensure_ascii=False, indent=1))   # saved after every dialog
+        print(f"saved {cid} → {path} ({len(labels)} labelled)")
 
 
 def main():
@@ -102,6 +131,7 @@ def main():
     e.add_argument("--concurrency", type=int)
     e.add_argument("--refresh", action="store_true", help="re-fetch group even if data/<group>.json exists")
     e.add_argument("--fresh", action="store_true", help="ignore per-criterion cache (re-run everything)")
+    e.add_argument("--confirm", help="criteria where the judge re-checks unanimous jury verdicts, e.g. 03,04 (control runs)")
     e.add_argument("--mock", action="store_true", help="offline deterministic heuristic backend (no API key; same as CQA_PROVIDER=mock)")
     e.add_argument("--reeval", action="store_true",
                    help="re-evaluate with current checklist: only changed criteria hit the LLM (default behaviour with cache)")
@@ -111,9 +141,18 @@ def main():
     s.add_argument("--group", required=True)
     gd = sub.add_parser("gold", help="evaluate the hand-labelled gold set (examples/gold) and report agreement")
     gd.add_argument("--mock", action="store_true")
+    gd.add_argument("--confirm", help="criteria where the judge re-checks unanimous jury verdicts, e.g. 03,04")
     gd.add_argument("--fresh", action="store_true")
     gd.add_argument("--out")
-    gd.add_argument("--dir", help="directory with gold *.json (default examples/gold); e.g. a private labelled DEV subset")
+    gd.add_argument("--dir", help="directory with gold *.json (default examples/gold; held-out: examples/gold_holdout)")
+    gd.add_argument("--labels", help="human labels JSON from `cqa label` (e.g. examples/dev_labels.json)")
+    gd.add_argument("--group", default="DEV", help="group whose dialogs the --labels refer to")
+    lb = sub.add_parser("label", help="label real dialogs by hand (stored in a git-ignored JSON)")
+    lb.add_argument("--group", default="DEV")
+    lb.add_argument("--ids", help="comma-separated conversation ids (default: next unlabelled)")
+    lb.add_argument("-n", type=int, default=5, help="how many unlabelled dialogs to label")
+    lb.add_argument("--out", default="examples/dev_labels.json")
+    lb.add_argument("--labeller", default="")
     v = sub.add_parser("serve")
     v.add_argument("--host", default="127.0.0.1")
     v.add_argument("--port", type=int, default=8090)
@@ -128,6 +167,8 @@ def main():
         cmd_stats(a)
     elif a.cmd == "gold":
         cmd_gold(a)
+    elif a.cmd == "label":
+        cmd_label(a)
     elif a.cmd == "serve":
         import uvicorn
         uvicorn.run("cqa.server:app", host=a.host, port=a.port)

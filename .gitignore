@@ -28,3 +28,7 @@ htmlcov/
 .vscode/
 .DS_Store
 .tunnel.log
+.quorum/
+
+# human labels for real DEV dialogs (contain real client data references)
+examples/dev_labels.json

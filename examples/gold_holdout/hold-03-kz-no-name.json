@@ -1,0 +1,72 @@
+{
+ "title": "greeting without introduction",
+ "synthetic": true,
+ "split": "holdout",
+ "dialog": {
+  "conversation_id": "hold-03-kz-no-name",
+  "channel": "agent chat",
+  "language": "KZ",
+  "transcript": [
+   {
+    "timestamp": "00:20",
+    "speaker": "client",
+    "text": "Биржа қай уақытта жұмыс істейді?"
+   },
+   {
+    "timestamp": "00:23",
+    "speaker": "bot",
+    "text": "Сәлеметсіз бе! Мен AIM, Freedom Broker AI-ассистентімін. Қалай көмектесе аламын?"
+   },
+   {
+    "timestamp": "00:43",
+    "speaker": "client",
+    "text": "оператор"
+   },
+   {
+    "timestamp": "00:45",
+    "speaker": "system",
+    "text": "Чат операторға жіберілді."
+   },
+   {
+    "timestamp": "01:25",
+    "speaker": "operator",
+    "text": "Сәлеметсіз бе! Қалай көмектесе аламын?"
+   },
+   {
+    "timestamp": "01:45",
+    "speaker": "client",
+    "text": "Биржа уақыты қандай?"
+   },
+   {
+    "timestamp": "02:05",
+    "speaker": "operator",
+    "text": "KASE 11:30-дан 17:00-ге дейін (Астана уақыты), ал АҚШ биржалары 19:30-дан 02:00-ге дейін жұмыс істейді."
+   },
+   {
+    "timestamp": "02:25",
+    "speaker": "client",
+    "text": "Рақмет"
+   },
+   {
+    "timestamp": "02:45",
+    "speaker": "operator",
+    "text": "Тағы сұрақтарыңыз болса, жазыңыз. Сау болыңыз!"
+   }
+  ]
+ },
+ "expected": {
+  "01": "NO",
+  "02": "NA",
+  "03": "NA",
+  "04": 20,
+  "05": "YES",
+  "06": 10,
+  "07": "YES",
+  "08": "NO"
+ },
+ "expected_total": 84.62,
+ "expected_gross_error": false,
+ "rationale": {
+  "01": "greeted in Kazakh but did not give a name → NO"
+ }
+}
