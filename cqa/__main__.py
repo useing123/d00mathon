@@ -196,7 +196,13 @@ def main():
     v = sub.add_parser("serve")
     v.add_argument("--host", default="127.0.0.1")
     v.add_argument("--port", type=int, default=8090)
+    for sp in (e, gd):
+        sp.add_argument("--preset", choices=["econom", "balanced", "max", "jury"],
+                        help="model setup from the benchmark matrix (docs/MODELS.md); default: max")
     a = p.parse_args()
+    if getattr(a, "preset", None):
+        from .presets import apply
+        apply(a.preset, vars(config))
     if a.cmd == "evaluate":
         if not a.group and not a.input:
             p.error("--group or --input required")

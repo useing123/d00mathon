@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>CQA · Модели: цена / точность / скорость</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{--ink:#1d1d1f;--ink2:#424245;--mut:#86868b;--line:#e5e5ea;--soft:#f5f5f7;--bg:#fff;--acc:#0071e3;--accs:#e8f1fc;--good:#1f8a3b;--goods:#e3f4e8;--bad:#d70015;--mid:#b25f00;--mids:#fff3e0}
+*{box-sizing:border-box}body{margin:0;font:14px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:20px;height:56px;padding:0 28px;background:rgba(255,255,255,.86);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
+.brand{font-weight:600;font-size:15px}.brand span{color:var(--mut);font-weight:400}.sp{flex:1}
+a{color:var(--acc);text-decoration:none}.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 14px;font-size:13px;color:var(--ink)}
+main{max-width:1320px;margin:0 auto;padding:28px}
+h1{font-size:28px;letter-spacing:-.02em;margin:0 0 4px}h2{font-size:19px;margin:34px 0 10px;letter-spacing:-.01em}.sub{color:var(--mut);margin:0 0 20px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{border:1px solid var(--line);border-radius:14px;padding:18px 20px;background:#fff}.card.win{border-color:var(--acc);box-shadow:0 0 0 3px var(--accs)}
+.card .k{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}.card .n{font-size:17px;font-weight:600;margin:4px 0 8px}
+.card .m{display:flex;gap:16px;font-size:13px;color:var(--ink2)}.card .m b{display:block;font-size:20px;color:var(--ink)}
+.card code{font-size:12px;background:var(--soft);padding:2px 6px;border-radius:5px}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:8px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{font-weight:500;color:var(--mut);cursor:pointer;user-select:none;background:#fff}th:hover{color:var(--ink)}
+td:first-child,th:first-child{text-align:left}tr.front td:first-child{font-weight:600}
+.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:10px;background:var(--soft);color:var(--ink2);margin-left:6px}
+.tag.f{background:var(--goods);color:var(--good)}.tag.p{background:var(--accs);color:var(--acc)}
+.na{color:var(--mut)}.wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;padding:4px 10px}
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:20px}
+.box{border:1px solid var(--line);border-radius:14px;padding:18px}
+.est label{display:block;font-size:13px;color:var(--ink2);margin:0 0 12px}.est input,.est select{font:inherit;padding:7px 10px;border:1px solid var(--line);border-radius:8px;width:100%;margin-top:4px}
+.est .out{font-size:13px}.est .out div{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)}
+.note{color:var(--ink2);font-size:13px}.note li{margin:4px 0}
+svg text{font-size:11px;fill:var(--ink2)}
+</style></head><body>
+<div class="top"><div class="brand">CQA <span>· Модели</span></div><div class="sp"></div><a class="btn" href="/">← Обзор</a></div>
+<main>
+<h1>Какую модель использовать</h1>
+<p class="sub" id="sub">Загрузка матрицы…</p>
+<div class="cards" id="presets"></div>
+
+<h2>Цена ↔ точность (отложенный gold-набор)</h2>
+<div class="grid2">
+ <div class="box"><svg id="plot" width="100%" viewBox="0 0 720 380" role="img" aria-label="Граница Парето"></svg>
+  <div class="note">Ось X — $ за диалог (лог-шкала, gold + отложенный набор), ось Y — точное совпадение с разметкой на отложенном наборе. Зелёным — граница Парето.</div></div>
+ <div class="box est"><b>Калькулятор стоимости</b><p class="note">Оценка по фактическому расходу в бенчмарке (токены × прайс).</p>
+  <label>Диалогов<input id="n" type="number" min="1" value="10000"></label>
+  <label>Конфигурация<select id="cfg"></select></label>
+  <div class="out" id="out"></div></div>
+</div>
+
+<h2>Полная матрица</h2>
+<div class="wrap"><table id="tbl"><thead></thead><tbody></tbody></table></div>
+
+<h2>Оговорки</h2>
+<ul class="note" id="caveats">
+ <li>Gold-наборы синтетические и размечены автором правил: это проверка соответствия правилам, а не «истина» аудитора.</li>
+ <li>Настроечный набор (16 диалогов) использовался при доработке промптов — его оценки оптимистичны; решение принимается по отложенному (10 диалогов, 80 оценок).</li>
+ <li>Шум между прогонами — около ±2 оценок из 80–128; разницы меньше этого статистически неразличимы.</li>
+ <li>DEV — согласие с нашим же жюри (haiku+sonnet→opus), а не с людьми.</li>
+ <li>Цены — допущения по публичным прайсам на дату в матрице (без batch/скидок).</li>
+</ul>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+const pct=v=>v==null?'<span class="na">—</span>':(v*100).toFixed(1)+'%';
+const usd=v=>v==null?'—':'$'+(v<0.01?v.toFixed(4):v.toFixed(3));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let M=null,ROWS=[],SORT={k:'ho',d:-1};
+const COLS=[
+ ['config','Конфигурация',r=>r.config,r=>esc(r.config)+(r.pareto?'<span class="tag f">Парето</span>':'')+(r.preset?'<span class="tag p">'+esc(r.preset)+'</span>':'')],
+ ['ho','Отложенный',r=>r.ho,r=>pct(r.ho)+(r.hoN>1?' <span class="na">×'+r.hoN+'</span>':'')],
+ ['gold','Настроечный',r=>r.gold?.overall_agreement,r=>pct(r.gold?.overall_agreement)],
+ ['mae','MAE итога (отл.)',r=>r.holdout?.total_mae,r=>r.holdout?.total_mae??'—'],
+ ['rec','Recall грубых',r=>r.holdout?.gross?.recall,r=>pct(r.holdout?.gross?.recall)],
+ ['dev','DEV vs жюри',r=>r.dev?.overall_agreement,r=>pct(r.dev?.overall_agreement)],
+ ['inc','Незаверш.',r=>(r.gold?.incomplete||0)+(r.holdout?.incomplete||0),r=>r.holdout?(r.gold?.incomplete||0)+r.holdout.incomplete:'—'],
+ ['cost','$ / диалог',r=>r.usd_per_dialog,r=>usd(r.usd_per_dialog)],
+ ['sec','сек / диалог',r=>r.sec_per_dialog,r=>r.sec_per_dialog??'—'],
+ ['tok','токенов / диалог',r=>r.holdout?.tokens_per_dialog,r=>r.holdout?.tokens_per_dialog!=null?r.holdout.tokens_per_dialog.toLocaleString('en-US'):'—'],
+];
+function render(){
+ const rows=[...ROWS].sort((a,b)=>{const c=COLS.find(c=>c[0]==SORT.k)[2];const x=c(a),y=c(b);if(x==null)return 1;if(y==null)return -1;return (x>y?1:x<y?-1:0)*SORT.d});
+ $('#tbl thead').innerHTML='<tr>'+COLS.map(c=>`<th data-k="${c[0]}">${c[1]}${SORT.k==c[0]?(SORT.d>0?' ↑':' ↓'):''}</th>`).join('')+'</tr>';
+ $('#tbl tbody').innerHTML=rows.map(r=>`<tr class="${r.pareto?'front':''}">`+COLS.map(c=>`<td>${c[3](r)}</td>`).join('')+'</tr>').join('');
+ document.querySelectorAll('#tbl th').forEach(th=>th.onclick=()=>{SORT={k:th.dataset.k,d:SORT.k==th.dataset.k?-SORT.d:-1};render()});
+}
+function plot(){
+ const pts=ROWS.filter(r=>r.ho!=null&&r.usd_per_dialog>0);if(!pts.length)return;
+ const W=720,H=380,L=56,R=20,T=16,B=40;
+ const lx=pts.map(p=>Math.log10(p.usd_per_dialog)),x0=Math.floor(Math.min(...lx)),x1=Math.ceil(Math.max(...lx));
+ const ys=pts.map(p=>p.ho),y0=Math.floor(Math.min(...ys)*50)/50-0.01,y1=Math.min(1,Math.ceil(Math.max(...ys)*50)/50+0.005);
+ const X=v=>L+(Math.log10(v)-x0)/(x1-x0)*(W-L-R),Y=v=>T+(y1-v)/(y1-y0)*(H-T-B);
+ let s='';
+ for(let e=x0;e<=x1;e++){const x=X(10**e);s+=`<line x1="${x}" x2="${x}" y1="${T}" y2="${H-B}" stroke="#eee"/><text x="${x}" y="${H-B+16}" text-anchor="middle">$${10**e>=1?10**e:(10**e).toFixed(Math.max(0,-e))}</text>`}
+ for(let v=Math.ceil(y0*50)/50;v<=y1+1e-9;v+=0.02){const y=Y(v);s+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="#eee"/><text x="${L-6}" y="${y+4}" text-anchor="end">${(v*100).toFixed(0)}%</text>`}
+ const fr=pts.filter(p=>p.pareto).sort((a,b)=>a.usd_per_dialog-b.usd_per_dialog);
+ if(fr.length>1)s+=`<polyline fill="none" stroke="#1f8a3b" stroke-width="1.5" stroke-dasharray="4 3" points="${fr.map(p=>X(p.usd_per_dialog)+','+Y(p.ho)).join(' ')}"/>`;
+ const boxes=[];
+ [...pts].sort((a,b)=>b.ho-a.ho||a.usd_per_dialog-b.usd_per_dialog).forEach(p=>{const x=X(p.usd_per_dialog),y=Y(p.ho);
+  s+=`<circle cx="${x}" cy="${y}" r="${p.preset?7:5}" fill="${p.pareto?'#1f8a3b':'#0071e3'}" fill-opacity="${p.pareto?1:.55}"><title>${esc(p.config)}: ${pct(p.ho)}, ${usd(p.usd_per_dialog)}/диалог</title></circle>`;
+  const w=p.config.length*6.2;let lx=x+9,ly=y+4;if(lx+w>W-R)lx=x-9-w;
+  const hit=(a,b)=>a.x<b.x+b.w&&b.x<a.x+a.w&&Math.abs(a.y-b.y)<12;
+  for(let k=0;k<12&&boxes.some(b=>hit({x:lx,y:ly,w},b));k++)ly+=12;
+  boxes.push({x:lx,y:ly,w});
+  if(Math.abs(ly-(y+4))>2)s+=`<line x1="${x}" y1="${y}" x2="${lx}" y2="${ly-4}" stroke="#ccc"/>`;
+  s+=`<text x="${lx}" y="${ly}" style="paint-order:stroke;stroke:#fff;stroke-width:3px">${esc(p.config)}</text>`});
+ s+=`<text x="${(W+L)/2}" y="${H-6}" text-anchor="middle">$ за диалог</text>`;
+ $('#plot').innerHTML=s;
+}
+function est(){
+ const n=+$('#n').value||0,r=ROWS.find(r=>r.config==$('#cfg').value);if(!r)return;
+ const c=n*(r.usd_per_dialog||0),t=n*(r.sec_per_dialog||0);
+ $('#out').innerHTML=`<div><span>Стоимость</span><b>$${c.toLocaleString('en-US',{maximumFractionDigits:2})}</b></div><div><span>Время (при параллельности бенчмарка)</span><b>${t>3600?(t/3600).toFixed(1)+' ч':(t/60).toFixed(1)+' мин'}</b></div><div><span>Точность на отложенном</span><b>${pct(r.ho)}</b></div>`;
+}
+fetch('/api/models/bench').then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(m=>{
+ M=m;const pre=m.presets||{};
+ ROWS=m.rows.map(r=>({...r,ho:r.holdout?(r.holdout.overall_agreement_mean??r.holdout.overall_agreement):null,hoN:r.holdout?.runs?.length||1,
+   preset:Object.entries(pre).filter(([k,p])=>p.bench_config==r.config).map(([k])=>k).join(', ')}));
+ $('#sub').textContent=`${ROWS.length} конфигураций · один и тот же чек-лист, промпты и валидация цитат · расход на бенчмарк $${m.spend_usd_total} · цены на ${m.prices_as_of}`;
+ $('#presets').innerHTML=['econom','balanced','max'].filter(k=>pre[k]).map(k=>{const p=pre[k],r=ROWS.find(r=>r.config==p.bench_config)||{};
+  return `<div class="card ${k=='max'?'win':''}"><div class="k">${k=='econom'?'Эконом':k=='balanced'?'Баланс':'Максимум'}${p.default?' · по умолчанию':''}</div><div class="n">${esc(p.label||p.bench_config)}</div>
+  <div class="m"><div><b>${pct(r.ho)}</b>отложенный</div><div><b>${usd(r.usd_per_dialog)}</b>за диалог</div><div><b>${r.sec_per_dialog??'—'}</b>сек/диалог</div></div>
+  <p class="note">${esc(p.why||'')}</p><code>python -m cqa evaluate --preset ${k}</code></div>`}).join('');
+ $('#cfg').innerHTML=ROWS.map(r=>`<option>${esc(r.config)}</option>`).join('');
+ const mx=pre.max&&pre.max.bench_config;if(mx)$('#cfg').value=mx;
+ render();plot();est();$('#n').oninput=est;$('#cfg').onchange=est;
+}).catch(e=>{$('#sub').textContent='Матрица не найдена: запустите scripts/bench_matrix.py matrix ('+e.message+')'});
+</script>
+</body></html>

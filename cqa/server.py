@@ -52,6 +52,24 @@ def static_file(name: str):
     return FileResponse(STATIC / name, media_type="text/javascript" if name.endswith(".js") else "text/css")
 
 
+@app.get("/models")
+def models_page():
+    return FileResponse(STATIC / "models.html")
+
+
+@app.get("/api/models/bench")
+def models_bench():
+    """Benchmark matrix (scripts/bench_matrix.py matrix) + presets; see docs/MODELS.md."""
+    from . import presets
+    p = config.RESULTS_DIR / "bench_matrix.json"
+    if not p.exists():
+        raise HTTPException(404, "results/bench_matrix.json not found: run scripts/bench_matrix.py matrix")
+    doc = json.loads(p.read_text(encoding="utf-8"))
+    doc["presets"] = {k: {**v, "default": k == presets.DEFAULT} for k, v in presets.PRESETS.items()}
+    doc["active_preset"] = getattr(config, "PRESET", "")
+    return doc
+
+
 @app.get("/api/health")
 def health():
     return {"ok": True, "provider": config.PROVIDER, "model": config.MODEL,

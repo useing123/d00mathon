@@ -147,6 +147,11 @@ CQA_PROVIDER=openai CQA_OPENAI_BASE_URL=http://127.0.0.1:11434/v1 CQA_MODEL=qwen
 
 Подробно: [docs/ASSUMPTIONS.md](docs/ASSUMPTIONS.md).
 
+## Выбор модели (пресеты)
+Матрица цена/точность/скорость по 19 конфигурациям (Anthropic, OpenAI, Gemini, локальная Qwen; одиночные модели, жюри, варианты промптов): [docs/MODELS.md](docs/MODELS.md), страница **`/models`** в интерфейсе.
+Победитель выбран автоматически по отложенному gold-набору: **`gpt-5.3-codex` — 97.5% (2 прогона), MAE 1.54, $0.058/диалог**; он теперь режим по умолчанию (`--preset max`). Второе место — `gemini-4-argon` (96.9%).
+`python -m cqa evaluate --preset econom|balanced|max|jury` (или `CQA_PRESET=...`; явные `CQA_MODEL`/`CQA_JURORS`/`CQA_JUDGE` важнее пресета). Воспроизвести: `python scripts/bench_matrix.py snapshot && python scripts/bench_matrix.py run && python scripts/bench_matrix.py matrix`.
+
 ## Результаты
 Текущая версия (жюри haiku-5-5 + sonnet-5-5, судья opus-5-5; при расхождении судья сначала решает «вслепую»). Подробно и история версий: [docs/EVALUATION.md](docs/EVALUATION.md).
 

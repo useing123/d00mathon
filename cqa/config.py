@@ -65,3 +65,17 @@ def apply_final_profile():
     JURORS, JUDGE = list(FINAL_PROFILE["JURORS"]), FINAL_PROFILE["JUDGE"]
     CONFIRM, SCALE_SAMPLES = FINAL_PROFILE["CONFIRM"], FINAL_PROFILE["SCALE_SAMPLES"]
 BLIND_JUDGE = get("CQA_BLIND_JUDGE", "1") == "1"   # on juror disagreement the judge first decides without seeing them
+
+# Model preset (cqa/presets.py, chosen from the benchmark matrix — docs/MODELS.md). Applied as the default only
+# when no explicit CQA_MODEL / CQA_ENSEMBLE / CQA_JURORS / CQA_JUDGE is configured; CQA_PRESET forces one.
+PRESET = get("CQA_PRESET", "")
+
+
+def _apply_default_preset():
+    from . import presets
+    explicit = any(os.environ.get(k) for k in ("CQA_MODEL", "CQA_ENSEMBLE", "CQA_JURORS", "CQA_JUDGE"))
+    if PROVIDER == "anthropic" and (PRESET or not explicit):
+        presets.apply(PRESET or presets.DEFAULT, globals())
+
+
+_apply_default_preset()
