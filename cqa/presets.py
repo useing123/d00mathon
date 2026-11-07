@@ -18,10 +18,12 @@ PRESETS = {
                  "why": "Один вендор (Anthropic), без ключа OpenAI. Не на границе Парето — выбор по требованиям к поставщику."},
     "max": {"label": "gpt-5.3-codex", "bench_config": "gpt-5.3-codex",
             "ensemble": False, "model": "gpt-5.3-codex", "prompt": "v0",
-            "why": "Лучший результат на отложенном наборе (2 прогона), но отрыв 2 метки из 80 в пределах шума; не прогонялся на всём DEV. Опционально."},
+            "why": ("Лучший на отложенном наборе (2 прогона), но отрыв 2 метки из 80 в пределах шума; "
+                    "не прогонялся на всём DEV. Опционально.")},
     "jury": {"label": "жюри haiku+sonnet → opus (по умолчанию)", "bench_config": "jury-haiku+sonnet>opus", "default": True,
              "ensemble": True, "jurors": ["claude-haiku-5-5", "claude-sonnet-5-5"], "judge": "claude-opus-5-5", "prompt": "v0",
-             "why": "Режим по умолчанию: им сделан results/dev/results.json и им же оцениваются контрольные диалоги. Различия с max в пределах шума отложенного набора."},
+             "why": ("Режим по умолчанию: им сделан results/dev/results.json и им же оцениваются контрольные диалоги. "
+                     "Различия с max в пределах шума отложенного набора.")},
 }
 DEFAULT = "jury"
 
