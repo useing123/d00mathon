@@ -136,3 +136,25 @@ DEV has no labelled ground truth, so accuracy was checked by hand on **8 dialogs
 
 ## Offline check
 `make demo` / `python -m cqa evaluate --mock --input examples/sample_dialogs.json` runs the whole pipeline on synthetic dialogs with a deterministic heuristic backend — it validates plumbing (I/O, evidence validation, scoring, export), **not** accuracy.
+
+## Criteria 07 / 02 fix (external review)
+
+Changes: `assumptions.closure_mode: strict|lenient` (default strict = literal PDF «подвёл итог или предложил дальнейшую помощь и попрощался»), rendered into the 07 rubric as `{closure_rule}`; new 07 rule «Не оценивай, решён ли вопрос клиента — это критерий 04»; three synthetic NA/YES/NO examples in 02. Only 07/02 cache keys changed (other criteria served from cache). DEV re-run: default jury, `results/dev_jury_v8.json` (before: `dev_jury_v7.json`), cost $1.90.
+
+| Criterion | Before (v7) | After (v8, strict) | lenient (`dev_jury_v8_lenient.json`) |
+|---|---|---|---|
+| 07 | YES 13 / NO 45 / NA 7 | YES 17 / NO 43 / NA 5 | YES 53 / NO 9 / NA 3 |
+| 02 | NA 43 / YES 14 / NO 8 | NA 41 / YES 14 / NO 10 | (02 not affected by the setting; 2 jury-noise flips) |
+| mean total | 80.41 | 80.14 | 84.53 |
+
+04→07 leakage: v7 had 07 justifications citing an unanswered question (p1-ru-003 «…вопрос о комиссии остался без ответа», p1-ru-007 «…не подводит итог: вопрос клиента о повторном выводе остался без ответа»); v8 has none.
+
+Changed verdicts (v7 → v8):
+- p1-ru-007 07 NO→YES: «прощальное пожелание «Хорошего дня!» и короткая фиксация сделанного («Путь к обновлению я указал»)… формула «прощание + итог» выполнена».
+- p1-kz-004 07 NO→YES: «попрощался («Сау болыңыз!») и в предыдущей реплике зафиксировал следующий шаг… засчитывается как итог».
+- p1-ru-012 07 NA→NO: «клиент заявил, что вопросов больше нет, и у оператора была возможность закрыть диалог».
+- p1-ru-005 02 NA→NO: «не уточнил, в какой платформе клиент ищет реквизиты… клиенту пришлось самому уточнять».
+- p1-ru-029 02 NA→NO: «запрос про «вход» был неоднозначным… не уточнил, какой вход, и сразу дал ссылку».
+
+closure_mode=lenient would flip **37/65** DEV dialogs on 07 (mostly NO→YES for a bare farewell). Not the default.
+Held-out regression (`results/gold_holdout_v13.json`): overall agreement 0.963 (v12: 0.95), 02 10/10, 07 10/10, MAE 4.0.
