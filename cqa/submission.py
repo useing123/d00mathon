@@ -39,7 +39,7 @@ CODES = list(SPEC["criteria"].values())
 
 
 def team_name():
-    return config.get("CQA_TEAM_NAME", "d00mathon") or "d00mathon"
+    return config.get("CQA_TEAM_NAME", "казачи капай") or "казачи капай"
 
 
 def criterion_code(cr):

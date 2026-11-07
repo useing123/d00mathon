@@ -1,6 +1,6 @@
 {
  "schema_version": "1.0",
- "team_name": "d00mathon",
+ "team_name": "казачи капай",
  "model": {
   "mode": "external_api",
   "name": "claude-haiku-5-5, claude-sonnet-5-5, claude-opus-5-5"

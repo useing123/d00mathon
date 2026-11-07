@@ -22,7 +22,7 @@ def doc():
 def test_shape_and_mapping(doc):
     obj = submission.to_v1(doc)
     assert submission.validate(obj) == ([], [])
-    assert obj["schema_version"] == "1.0" and obj["team_name"] == "d00mathon"
+    assert obj["schema_version"] == "1.0" and obj["team_name"] == "казачи капай"
     assert obj["model"]["mode"] in ("local", "external_api", "hybrid") and obj["model"]["name"]
     r0, d0 = obj["results"][0], doc["dialogs"][0]
     assert r0["status"] == "ok" and [c["criterion_id"] for c in r0["criteria"]] == submission.CODES
