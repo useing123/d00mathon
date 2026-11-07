@@ -85,6 +85,7 @@ def transcript_block(rec, transcript_text, facts_text=""):
 
 
 def criterion_block(checklist, cr):
+    from .checklist import render
     a = checklist["assumptions"]
     notes = []
     if a.get("first_reply") == "first_human_operator_turn":
@@ -103,10 +104,10 @@ def criterion_block(checklist, cr):
 Допустимые значения (value — строго одно из них): {vals}
 
 Рубрика:
-{cr.get('rubric', '').strip()}
+{render(cr.get('rubric', ''), checklist).strip()}
 
 Правила принятия решения:
-{cr.get('rules', '').strip()}
+{render(cr.get('rules', ''), checklist).strip()}
 
 Оцени ТОЛЬКО этот критерий. Сначала найди все релевантные реплики оператора, затем примени рубрику и правила буквально, затем вызови submit_evaluation."""
 

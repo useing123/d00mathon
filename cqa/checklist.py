@@ -64,6 +64,11 @@ def validate(c):
     a = dict(DEFAULT_ASSUMPTIONS)
     a.update(c.get("assumptions") or {})
     c["assumptions"] = a
+    lw = a.get("long_wait_seconds")
+    if lw is not None and (isinstance(lw, bool) or not isinstance(lw, (int, float)) or lw <= 0):
+        raise ValueError("assumptions.long_wait_seconds must be a positive number")
+    if lw is None and any("{long_wait_" in str(cr.get(k, "")) for cr in c["criteria"] for k in ("rubric", "rules")):
+        raise ValueError("rubric uses {long_wait_*} but assumptions.long_wait_seconds is not set")
     ids = set()
     for cr in c["criteria"]:
         cr["id"] = str(cr["id"])
@@ -100,6 +105,32 @@ def validate(c):
         elif cr["type"] != "binary":
             raise ValueError(f"criterion {cr['id']}: type must be binary|scale")
     return c
+
+
+def long_wait_seconds(c):
+    """`assumptions.long_wait_seconds` of a (validated) checklist — the only place the wait threshold is defined."""
+    v = (c.get("assumptions") or {}).get("long_wait_seconds")
+    if v is None:
+        raise ValueError(f"checklist {c.get('id')!r}: assumptions.long_wait_seconds is required")
+    return v
+
+
+def rubric_vars(c):
+    """Values substituted into rubric/rules text ({long_wait_seconds}, {long_wait_minutes})."""
+    a = c.get("assumptions") or {}
+    s = a.get("long_wait_seconds")
+    if s is None:
+        return {}
+    m = s / 60
+    return {"long_wait_seconds": s, "long_wait_minutes": int(m) if float(m).is_integer() else round(m, 1)}
+
+
+def render(text, c):
+    """Fill {placeholders} in rubric text from the checklist assumptions (unknown braces are left as is)."""
+    out = text or ""
+    for k, v in rubric_vars(c).items():
+        out = out.replace("{" + k + "}", str(v))
+    return out
 
 
 def strict_value(cr, v):

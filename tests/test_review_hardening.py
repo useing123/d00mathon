@@ -506,10 +506,10 @@ def test_all_unwarned_waits_listed():
               {"timestamp": "00:20", "speaker": "operator", "text": "Минутку, уточню"},
               {"timestamp": "06:20", "speaker": "operator", "text": "Ответ 1"},          # long but warned
               {"timestamp": "06:30", "speaker": "client", "text": "Вопрос 2"},
-              {"timestamp": "09:30", "speaker": "operator", "text": "Ответ 2"}])        # shorter, NOT warned
+              {"timestamp": "10:00", "speaker": "operator", "text": "Ответ 2"}])        # shorter, NOT warned
     f = data.compute_facts(r)
     assert f["longest_wait_after_first_reply"]["operator_warned_before"] is True
-    un = [w for w in f["waits_over_2min"] if not w["operator_warned_before"]]
+    un = [w for w in f["long_waits"] if not w["operator_warned_before"]]
     assert [(w["from_turn"], w["to_turn"]) for w in un] == [(5, 6)]
     assert "БЕЗ предупреждения: 1" in data.format_facts(f)
 

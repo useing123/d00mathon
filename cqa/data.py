@@ -230,7 +230,6 @@ def format_transcript(rec, mark_internal=True):
     return "\n".join(lines)
 
 
-LONG_WAIT_S = 120
 KZ_LETTERS = set("әғқңөұүһі")
 # anchored wait-warning intents (not bare "момент"/"минут": «в данный момент», «в течение 5 минут» are not warnings)
 WAIT_RE = re.compile(
@@ -295,8 +294,17 @@ GROSS_SIGNALS = re.compile(
     r"|туп(?:ой|ая|ые)|идиот|дура[кч]|stupid|idiot|ақымақ|түсінбейтін\s+адам", re.I)
 
 
+def default_long_wait_seconds():
+    """Wait threshold from the default chat checklist YAML (`assumptions.long_wait_seconds`) — the single source."""
+    from . import checklist
+    return checklist.long_wait_seconds(checklist.load(checklist.pick_for_channel("chat")))
+
+
 def compute_facts(rec, long_wait_s=None):
-    """Deterministic facts the LLM should not have to derive (offsets arithmetic, roles, language, ending)."""
+    """Deterministic facts the LLM should not have to derive (offsets arithmetic, roles, language, ending).
+    `long_wait_s` comes from the checklist (`assumptions.long_wait_seconds`); None → the default chat checklist."""
+    if long_wait_s is None:
+        long_wait_s = default_long_wait_seconds()
     tr = rec["transcript"]
     ops = [t for t in tr if t["speaker"] == "operator" and not t.get("internal")]
     first_op = ops[0]["index"] if ops else None
@@ -352,15 +360,15 @@ def compute_facts(rec, long_wait_s=None):
                     w = {"seconds": round(gap), "from_turn": start["index"], "to_turn": t["index"],
                          "operator_warned_before": bool(any(WAIT_RE.search(o.get("text") or "") for o in recent)),
                          "kind": "reply_to_client" if pending is not None else "between_operator_messages"}
-                    if gap > (long_wait_s or LONG_WAIT_S):
+                    if gap > long_wait_s:
                         long_waits.append(w)
                     if best is None or gap > best["seconds"]:
                         best = w
                 pending, last_op, ack_seen = None, t, False
                 since_client.append(t)
     facts["longest_wait_after_first_reply"] = best
-    facts["waits_over_2min"] = long_waits
-    facts["long_wait_seconds"] = long_wait_s or LONG_WAIT_S
+    facts["long_waits"] = long_waits
+    facts["long_wait_seconds"] = long_wait_s
     facts["gross_signal_turns"] = [t["index"] for t in tr if t["speaker"] == "operator" and not t.get("internal")
                                    and GROSS_SIGNALS.search(t.get("text") or "")]
     holds = []
@@ -406,17 +414,17 @@ def format_facts(f):
         lines.append(f"- Самое долгое ожидание ответа оператора после его первой реплики: {w['seconds']} с "
                      f"(реплики №{w['from_turn']} → №{w['to_turn']}; {kind}); оператор предупреждал об ожидании перед этим: "
                      f"{'да' if w['operator_warned_before'] else 'нет'}.")
-    lw = f.get("waits_over_2min") or []
+    lw = f.get("long_waits") or []
     unwarned = [x for x in lw if not x["operator_warned_before"]]
     if lw:
         def d(x):
             k = "ответ клиенту" if x["kind"] == "reply_to_client" else "пауза между сообщениями оператора"
             return f"№{x['from_turn']}→№{x['to_turn']} {x['seconds']} с ({k})"
-        lines.append(f"- Ожиданий дольше {f.get('long_wait_seconds', LONG_WAIT_S)} с после первой реплики: {len(lw)}; "
+        lines.append(f"- Ожиданий дольше {f['long_wait_seconds']} с после первой реплики: {len(lw)}; "
                      f"из них БЕЗ предупреждения: {len(unwarned)}"
                      + (": " + "; ".join(d(x) for x in unwarned) if unwarned else "") + ".")
     else:
-        lines.append(f"- Ожиданий дольше {f.get('long_wait_seconds', LONG_WAIT_S)} с после первой реплики оператора нет.")
+        lines.append(f"- Ожиданий дольше {f['long_wait_seconds']} с после первой реплики оператора нет.")
     if f.get("gross_signal_turns"):
         lines.append("- Реплики оператора с признаками возможной грубой ошибки (номер карты, мессенджер, «на мою карту», "
                      f"оскорбительная лексика) — проверь по тексту: №{', №'.join(map(str, f['gross_signal_turns']))}.")
