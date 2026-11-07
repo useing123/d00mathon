@@ -1,0 +1,5094 @@
+{
+ "tag": "issai_9b_kk",
+ "suite": "holdout",
+ "settings": {
+  "first": "local",
+  "local_model": "issai-9b-kk",
+  "adapter": "",
+  "escalate": "claude-haiku-5-5",
+  "judge": "claude-sonnet-5-5",
+  "t1": 0.7,
+  "hard": "04,05,06",
+  "hard_conf": 0.9,
+  "t2": 0.7,
+  "haiku_low": 0.0,
+  "gross_yes": true,
+  "mode": "quality",
+  "local_timeout": 0.0,
+  "logprobs": false,
+  "force": ""
+ },
+ "routing": {
+  "settings": {
+   "first": "local",
+   "local_model": "issai-9b-kk",
+   "adapter": "",
+   "escalate": "claude-haiku-5-5",
+   "judge": "claude-sonnet-5-5",
+   "t1": 0.7,
+   "hard": "04,05,06",
+   "hard_conf": 0.9,
+   "t2": 0.7,
+   "haiku_low": 0.0,
+   "gross_yes": true,
+   "mode": "quality",
+   "local_timeout": 0.0,
+   "logprobs": false,
+   "force": ""
+  },
+  "criteria": 80,
+  "tier_counts": {
+   "1": 80,
+   "2": 0,
+   "3": 0
+  },
+  "tier_share": {
+   "1": 1.0,
+   "2": 0.0,
+   "3": 0.0
+  },
+  "escalated_share": 0.0,
+  "reasons": {},
+  "cloud_usd_by_model": {},
+  "cloud_usd": 0
+ },
+ "wall_s": 134.4,
+ "dialogs": 10,
+ "sec_per_dialog": 13.44,
+ "incomplete": [
+  "hold-07-call-kz-hangup-before-request"
+ ],
+ "errors": [],
+ "metrics": {
+  "overall_agreement": 0.887,
+  "total_mae": 8.21,
+  "gross": {
+   "tn": 9,
+   "tp": 1,
+   "precision": 1.0,
+   "recall": 1.0
+  },
+  "na_confusion": {
+   "exp_NA/pred_NA": 13,
+   "exp_NA/pred_applicable": 4,
+   "exp_applicable/pred_FAILED": 1,
+   "exp_applicable/pred_applicable": 62
+  },
+  "mismatches": [
+   {
+    "conversation_id": "hold-01-en-bonds-clarify",
+    "criterion_id": "02",
+    "expected": "YES",
+    "predicted": "NO",
+    "rationale": "which market was needed and asked → YES"
+   },
+   {
+    "conversation_id": "hold-04-ru-transfer-minor-detail",
+    "criterion_id": "03",
+    "expected": "NA",
+    "predicted": "NO",
+    "rationale": ""
+   },
+   {
+    "conversation_id": "hold-04-ru-transfer-minor-detail",
+    "criterion_id": "04",
+    "expected": 15,
+    "predicted": 20,
+    "rationale": "process fully explained; did not mention the sending broker's fee (secondary detail) → 15"
+   },
+   {
+    "conversation_id": "hold-07-call-kz-hangup-before-request",
+    "criterion_id": "06",
+    "expected": 10,
+    "predicted": null,
+    "rationale": ""
+   },
+   {
+    "conversation_id": "hold-08-ru-third-party-data",
+    "criterion_id": "02",
+    "expected": "NA",
+    "predicted": "NO",
+    "rationale": ""
+   },
+   {
+    "conversation_id": "hold-08-ru-third-party-data",
+    "criterion_id": "04",
+    "expected": 20,
+    "predicted": 15,
+    "rationale": ""
+   },
+   {
+    "conversation_id": "hold-09-en-long-gap-no-warning",
+    "criterion_id": "03",
+    "expected": "NA",
+    "predicted": "NO",
+    "rationale": ""
+   },
+   {
+    "conversation_id": "hold-10-ru-contradictory",
+    "criterion_id": "02",
+    "expected": "NA",
+    "predicted": "NO",
+    "rationale": ""
+   },
+   {
+    "conversation_id": "hold-10-ru-contradictory",
+    "criterion_id": "04",
+    "expected": 5,
+    "predicted": 10,
+    "rationale": "ended with a general hint, client still unsure → 5"
+   }
+  ],
+  "per_criterion": {
+   "01": 1.0,
+   "02": 0.7,
+   "03": 0.8,
+   "04": 0.7,
+   "05": 1.0,
+   "06": 0.9,
+   "07": 1.0,
+   "08": 1.0
+  }
+ },
+ "dialogs_detail": [
+  {
+   "conversation_id": "hold-01-en-bonds-clarify",
+   "channel": "agent chat",
+   "language": "EN",
+   "kind": "chat",
+   "dialog_hash": "5d87acc95c99be32",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в первой реплике поздоровался на языке клиента (English) и представился, назвав имя (Aidos) и компанию (Freedom Broker).",
+     "reasoning": "Первая реплика оператора (№5): 'Hello, my name is Aidos from Freedom Broker. Which bonds are you interested in — Kazakhstan bonds on KASE or US Treasuries?' Оператор поздоровался на английском (язык клиента) и представился, назвав имя (Aidos) и компанию (Freedom Broker). Это соответствует критерию YES.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Hello, my name is Aidos from Freedom Broker. Which bonds are you interested in — Kazakhstan bonds on KASE or US Treasuries?",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 10.28,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не уточнил, какие именно облигации интересуют клиента, хотя это было необходимо для правильного ответа. Вместо уточнения он сразу дал инструкцию по покупке US Treasuries, не спросив, действительно ли это то, что хотел клиент.",
+     "reasoning": "Оператор не уточнил, какие именно облигации (KASE или US Treasuries) интересуют клиента, хотя это было необходимо для правильного ответа. Вместо уточнения он сразу дал инструкцию по покупке US Treasuries, не спросив, действительно ли это то, что хотел клиент. Это противоречит правилу о необходимости уточнения недостающих деталей перед ответом.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Hello, my name is Aidos from Freedom Broker. Which bonds are you interested in — Kazakhstan bonds on KASE or US Treasuries?",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 6,
+       "quote": "US Treasuries.",
+       "speaker": "client",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "In the app open Market → Bonds → USA, choose the issue, enter the quantity and confirm the order. The minimum lot is one bond (1,000 USD face value).",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 0.95,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 12.03,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос клиента касался общих инструкций по покупке облигаций, не требовал раскрытия персональных данных или выполнения защищенных действий. Идентификация не требовалась.",
+     "reasoning": "Запрос клиента (покупка облигаций) не требовал раскрытия персональных данных или выполнения защищенных действий (смена данных, вывод средств и т.п.). Оператор дал общие инструкции по навигации в приложении. Согласно рубрике, такие общие вопросы не требуют идентификации, поэтому значение NA.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Запрос не требовал идентификации (общие вопросы: как купить, инструкция).",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 8.78,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "Оператор дал точную инструкцию по покупке US Treasuries, указал раздел в приложении и минимальный лот. Клиент подтвердил понимание и благодарность, что свидетельствует о закрытии вопроса.",
+     "reasoning": "Клиент четко сформулировал запрос: купить US Treasuries. Оператор дал точную инструкцию: открыть приложение, перейти в раздел Bonds → USA, выбрать выпуск, ввести количество, подтвердить заказ, указав минимальный лот. Клиент подтвердил понимание ('Clear, thanks') и благодарил. Все существенные вопросы закрыты, дан корректный следующий шаг.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "In the app open Market → Bonds → USA, choose the issue, enter the quantity and confirm the order. The minimum lot is one bond (1,000 USD face value).",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 8,
+       "quote": "Clear, thanks.",
+       "speaker": "client",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.0,
+     "evidence_warning": "",
+     "needs_review": true,
+     "client_requests": [
+      {
+       "text": "I want to buy bonds.",
+       "essential": true,
+       "status": "closed",
+       "turn": 1
+      },
+      {
+       "text": "US Treasuries.",
+       "essential": true,
+       "status": "closed",
+       "turn": 6
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      20
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 20,
+      "local_conf": 0.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 13.37,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": [
+      "low_confidence_scale"
+     ]
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Клиент не выражал недовольства или тревоги, просто запрашивал информацию о покупке облигаций. Оператор был вежлив и предоставил четкие инструкции, что соответствует критерию YES.",
+     "reasoning": "Клиент не выражал недовольства, неудобства или тревоги. Он просто захотел купить облигации и получил четкие инструкции. Оператор был вежлив на протяжении всего диалога, что соответствует критерию YES.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Hello, my name is Aidos from Freedom Broker. Which bonds are you interested in — Kazakhstan bonds on KASE or US Treasuries?",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "In the app open Market → Bonds → USA, choose the issue, enter the quantity and confirm the order. The minimum lot is one bond (1,000 USD face value).",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Glad to help! Anything else? Goodbye!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 10.89,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответ оператора был ясным, связным и понятным. Клиент подтвердил понимание. Пауза 20 секунд не является явным ожиданием, требующим предупреждения.",
+     "reasoning": "Оператор дал ясный и связный ответ в реплике [7], четко объяснив, где найти нужные блоки и как заказать. Хотя было ожидание ответа на реплику клиента (реплика [6] → [7]) длительностью 20 секунд, это не является явным ожиданием (более 180 секунд), поэтому не требует предупреждения. Ответ был понятным, без ошибок, и клиент подтвердил понимание (реплика [8]: 'Clear, thanks').",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "In the app open Market → Bonds → USA, choose the issue, enter the quantity and confirm the order. The minimum lot is one bond (1,000 USD face value).",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 11.47,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор попрощался и предложил дальнейшую помощь в последней реплике.",
+     "reasoning": "Оператор в последней реплике [9] сказал: 'Glad to help! Anything else? Goodbye!'. Это содержит прощание ('Goodbye!') и предложение дальнейшей помощи ('Anything else?'). Итого: YES.",
+     "evidence": [
+      {
+       "turn": 9,
+       "quote": "Glad to help! Anything else? Goodbye!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 6.6,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Грубых ошибок (оскорблений, предложения платных услуг, раскрытия конфиденциальной информации) в репликах оператора не выявлено.",
+     "reasoning": "В диалоге оператор Aidos представился, ответил на вопрос клиента о выборе облигаций (US Treasuries), дал инструкцию по покупке и попрощался. В репликах оператора отсутствуют оскорбления, предложения платных услуг в обход компании, раскрытие конфиденциальной информации. Тон общения вежливый и профессиональный.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "omission_without_missing_where",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 13.63,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [
+    "04"
+   ],
+   "warnings": [
+    "08: omission_without_missing_where"
+   ],
+   "total": 81.25,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     81.25,
+     81.25
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 1
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NO",
+     "03": "NA",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 81.25,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-02-call-ru-phone-change-no-id",
+   "channel": "voice call",
+   "language": "RU",
+   "kind": "call",
+   "dialog_hash": "ded40a1fda7f09d8",
+   "checklist_id": "freedom_call_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в первой реплике поздоровался и представился, назвав имя.",
+     "reasoning": "Первая реплика оператора (№4): 'Добрый день, Фридом Брокер, меня зовут Гульнара. Чем могу помочь?' — оператор поздоровался на русском (язык клиента) и представился, назвав имя 'Гульнара'.",
+     "evidence": [
+      {
+       "turn": 4,
+       "quote": "Добрый день, Фридом Брокер, меня зовут Гульнара. Чем могу помочь?",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 9.15,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос клиента был ясен и содержал все необходимые детали (действие и новый номер). Оператор сразу дал корректный ответ, не переспрашивая и не уточняя ничего лишнего. Согласно правилам, если данных хватает для ответа и уточнять нечего, оценка — NA.",
+     "reasoning": "Клиент четко сформулировал запрос: поменять номер телефона в профиле на конкретный номер. Оператор сразу ответил, используя указанный номер, без лишних уточнений. Данные были достаточны для ответа, уточнять не требовалось. Это соответствует критерию NA.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Запрос клиента был ясен и содержал все необходимые детали для ответа (поменять номер на 87015055000000). Оператор сразу ответил, не требуя уточнений.",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 10.37,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор подтвердил изменение номера телефона без предварительной проверки личности клиента (не запросил ФИО, ИИН, кодовое слово или другие идентификационные данные).",
+     "reasoning": "Запрос клиента (смена номера телефона в профиле) требует идентификации, так как это действие, связанное с персональными данными. Однако оператор не запросил и не получил никаких идентификационных данных (ФИО, ИИН, кодовое слово, сверка данных) перед подтверждением изменения. Оператор сразу подтвердил изменение номера, что противоречит правилу о необходимости подтверждения личности ДО раскрытия данных/действия. В транскрипте нет следов проверки личности (например, «Назовите ФИО», «Назовите кодовое слово» или «Назовите последние 4 цифры номера счета»).",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Хочу поменять номер телефона в профиле на восемь семьсот один пятьсот пятьдесят пять ноль ноль ноль.",
+       "speaker": "client",
+       "internal": false
+      },
+      {
+       "turn": 6,
+       "quote": "Хорошо, номер в профиле изменён на новый, SMS теперь будут приходить на него.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "Ожидалось, что оператор запросит и проверит идентификационные данные клиента (например, ФИО, ИИН, кодовое слово) перед подтверждением изменения номера телефона (примерно после реплики 5).",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 0.95,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 14.55,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "Все существенные вопросы клиента закрыты, дан корректный ответ и следующий шаг (подтверждение изменения номера).",
+     "reasoning": "Клиент сформулировал запрос на изменение номера телефона в профиле. оператор сразу подтвердил, что номер изменён, и объяснил, что SMS теперь будут приходить на него. Вопрос клиента полностью закрыт, клиент благодарит и завершает разговор. Следующий шаг (подтверждение изменения) не требовался, так как оператор сразу сообщил об успешном изменении.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Хочу поменять номер телефона в профиле на восемь семьсот один пятьсот пятьдесят пять ноль ноль ноль ноль.",
+       "speaker": "client",
+       "internal": false
+      },
+      {
+       "turn": 6,
+       "quote": "Хорошо, номер в профиле изменён на новый, SMS теперь будут приходить на него.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Спасибо.",
+       "speaker": "client",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [
+      {
+       "text": "Хочу поменять номер телефона в профиле на восемь семьсот один пятьсот пятьдесят пять ноль ноль ноль ноль.",
+       "essential": true,
+       "status": "closed",
+       "turn": 5
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      20
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 20,
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 25.57,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор был вежлив на протяжении всего диалога, клиент не выражал недовольства или тревоги, поэтому достаточно вежливого общения.",
+     "reasoning": "Клиент не выражал недовольства, тревоги или жалоб, он просто попросил изменить номер. Оператор был вежлив на протяжении всего диалога, использовал стандартные приветствие и заключительные фразы, и ответил на запрос клиента. Поэтому оценка YES.",
+     "evidence": [
+      {
+       "turn": 4,
+       "quote": "Добрый день, Фридом Брокер, меня зовут Гульнара. Чем могу помочь?",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 6,
+       "quote": "Хорошо, номер в профиле изменён на новый, SMS теперь будут приходить на него.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 8,
+       "quote": "Пожалуйста. Могу ещё чем-то помочь? Всего доброго, до свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 10.32,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответ оператора был ясным, связным и логичным. Пауза между репликами не превышала 3 минуты, и клиент не переспрашивал. Диалог проходил гладко.",
+     "reasoning": "Оператор Гульнара дала ясный, связный и логичный ответ на запрос клиента по изменению номера телефона. Фраза «номер в профиле изменён на новый, SMS теперь будут приходить на него» четко объяснила результат действия. Пауза между репликами оператора (№4 и №6) составила 8 секунд, что не является явным ожиданием (более 180 с), и не требовала предупреждения. В целом диалог был понятным, без неуместных выражений или сбивчивых формулировок.",
+     "evidence": [
+      {
+       "turn": 6,
+       "quote": "Хорошо, номер в профиле изменён на новый, SMS теперь будут приходить на него.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 10.89,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор попрощался и предложил дальнейшую помощь в последней реплике.",
+     "reasoning": "Оператор в последней реплике (№8) сказал: «Пожалуйста. Могу ещё чем-то помочь? Всего доброго, до свидания!». Это содержит прощание («Всего доброго, до свидания!») и предложение дальнейшей помощи («Могу ещё чем-то помочь?»). Итого: прощание + предложение помощи = YES.",
+     "evidence": [
+      {
+       "turn": 8,
+       "quote": "Пожалуйста. Могу ещё чем-то помочь? Всего доброго, до свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 7.19,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не допустил грубых ошибок: не оскорблял клиента, не предлагал платные услуги, не раскрывал конфиденциальную информацию. Диалог прошел в вежливой и профессиональной манере.",
+     "reasoning": "В диалоге оператор Гульнара вежливо поздоровалась, представилась и предложила помощь. Клиент попросил изменить номер телефона, оператор подтвердил изменение и завершил разговор благодарностью и пожеланием хорошего дня. Никаких оскорблений, угроз, предложений платных услуг или раскрытия конфиденциальной информации не зафиксировано. Все реплики оператора соответствуют этическим нормам и правилам компании.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "omission_without_missing_where",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 15.73,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [
+    "08: omission_without_missing_where"
+   ],
+   "total": 76.47,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     76.47,
+     76.47
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": {
+    "operator_wpm": 86.2,
+    "speaker_changes": 4,
+    "overlap_rate": 0.0,
+    "operator_response_s": {
+     "median": 8.0,
+     "p90": 8.0,
+     "max": 8.0,
+     "n": 2
+    },
+    "note": "informational, estimated from turn start times only; not scored"
+   },
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "NO",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 76.47,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-03-kz-no-name",
+   "channel": "agent chat",
+   "language": "KZ",
+   "kind": "chat",
+   "dialog_hash": "10b97e633b821842",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор поздоровался, но не представился (не назвал имя).",
+     "reasoning": "Оператор в своей первой реплике [5] поздоровался на казахском языке ('Сәлеметсіз бе!'), что соответствует языку клиента. Однако он не представился, не назвав своего имени или используя формулировку типа 'Вас консультирует Алия'. Согласно рубрике, отсутствие представления делает оценку NO.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "В первой реплике оператора [5] отсутствовало представление (название имени).",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 9.24,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос клиента был ясен (вопрос о времени работы бирж), оператор сразу дал полный ответ без уточнений. Нет необходимости в YES, так как уточнять нечего.",
+     "reasoning": "Клиент в первой реплике после оператора (№6) задал вопрос: « Биржа уақыты қандай?». Это общий вопрос о времени работы бирж. Оператор в реплике №7 сразу дал полный ответ, указав время работы KASE и американских бирж. Уточнять ничего не требовалось, так как запрос был ясен. Оператор не переспрашивал и не заставлял клиента уточнять детали. Поэтому значение — NA.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "KASE 11:30-дан 17:00-ге дейін (Астана уақыты), ал АҚШ биржалары 19:30-дан 02:00-ге дейін жұмыс істейді.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.95,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 10.39,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос клиента касался общих сведений о времени работы бирж, не требующих идентификации. Оператор не запрашивал и не получал персональных данных.",
+     "reasoning": "Клиент задал общий вопрос о времени работы биржи, не требующий доступа к персональным данным или счёту. Оператор ответил на вопрос, не запрашивая и не получая идентификационных данных. Согласно рубрике, идентификация не требовалась для таких запросов, поэтому оценка — NA.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Запрос не требовал идентификации (общий вопрос о тарифах/инструкциях).",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 7.61,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "Оператор дал полный и точный ответ на вопрос клиента о времени работы бирж, указав время для KASE и американских бирж. Клиент подтвердил понимание и благодарность, вопрос закрыт.",
+     "reasoning": "Клиент задал вопрос о времени работы бирж. Оператор дал точный и полный ответ: указал время работы KASE (11:30–17:00) и американских бирж (19:30–02:00). Клиент поблагодарил, что подтверждает понимание. Вопрос полностью закрыт, следующий шаг — завершение диалога, что оператор и сделал. Нет упущенных существенных деталей или неверных рекомендаций.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "KASE 11:30-дан 17:00-ге дейін (Астана уақыты), ал АҚШ биржалары 19:30-дан 02:00-ге дейін жұмыс істейді.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 8,
+       "quote": "Рақмет",
+       "speaker": "client",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.0,
+     "evidence_warning": "",
+     "needs_review": true,
+     "client_requests": [
+      {
+       "text": "Биржа уақыты қандай?",
+       "essential": true,
+       "status": "closed",
+       "turn": 6
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      20
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 20,
+      "local_conf": 0.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 24.24,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": [
+      "low_confidence_scale"
+     ]
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Клиент не выражал недовольства или тревоги. Оператор вел себя вежливо на протяжении всего диалога, отвечая на вопросы клиента корректно и спокойно.",
+     "reasoning": "Клиент не выражал недовольства, тревоги или жалоб. Его вопросы были прямыми и вежливыми. Оператор отвечал вежливо и корректно на протяжении всего диалога, используя стандартные приветствия и заключительные фразы. Поэтому оценка YES.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Сәлеметсіз бе! Қалай көмектесе аламын?",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "KASE 11:30-дан 17:00-ге дейін (Астана уақыты), ал АҚШ биржалары 19:30-дан 02:00-ге дейін жұмыс істейді.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Тағы сұрақтарыңыз болса, жазыңыз. Сау болыңыз!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 10.02,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответ оператора был ясным, связным и понятным. Пауза в 20 секунд не является явным ожиданием, требующим предупреждения. Клиент не переспрашивал, диалог прошел гладко.",
+     "reasoning": "Оператор дал ясный и связный ответ на вопрос клиента о времени работы бирж. Формулировка была понятной, клиент не переспрашивал. Пауза между репликами оператора (№5 и №7) составила 20 секунд, что значительно меньше порога в 180 секунд для «явного ожидания», поэтому предупреждение не требовалось. Никаких сбоев, противоречий или неясных формулировок не наблюдалось.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "KASE 11:30-дан 17:00-ге дейін (Астана уақыты), ал АҚШ биржалары 19:30-дан 02:00-ге дейін жұмыс істейді.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 10.87,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор попрощался и предложил дальнейшую помощь в последней реплике.",
+     "reasoning": "Оператор в последней реплике [9] сказал: «Тағы сұрақтарыңыз болса, жазыңыз. Сау болыңыз!». Это содержит прощание («Сау болыңыз!») и предложение дальнейшей помощи («Тағы сұрақтарыңыз болса, жазыңыз»). По правилам критерия 07 это достаточно для YES.",
+     "evidence": [
+      {
+       "turn": 9,
+       "quote": "Тағы сұрақтарыңыз болса, жазыңыз. Сау болыңыз!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 6.29,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "В репликах оператора отсутствуют оскорбления, предложения платных услуг или раскрытие конфиденциальной информации. Грубых ошибок не выявлено.",
+     "reasoning": "Проанализировал реплики оператора (№5, №7, №9). В них нет оскорблений, предложений платных услуг, раскрытия конфиденциальной информации. Тон вежливый, ответы соответствуют запросам клиента. Грубых ошибок не выявлено.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "omission_without_missing_where",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 12.02,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [
+    "04"
+   ],
+   "warnings": [
+    "08: omission_without_missing_where"
+   ],
+   "total": 84.62,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     84.62,
+     84.62
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 1
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "NO",
+     "02": "NA",
+     "03": "NA",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 84.62,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-04-ru-transfer-minor-detail",
+   "channel": "agent chat",
+   "language": "RU",
+   "kind": "chat",
+   "dialog_hash": "ccf83e115f7a934a",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в первой реплике поздоровался и представился.",
+     "reasoning": "Первая реплика оператора (№5) начинается с приветствия «Здравствуйте» на русском языке (соответствует языку клиента) и содержит представление «меня зовут Игорь». Это полностью соответствует критерию установления контакта.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Игорь.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 8.32,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос клиента был ясен с самого начала, и оператор сразу дал полный ответ без необходимости уточнения дополнительных деталей.",
+     "reasoning": "Запрос клиента был ясен с самого начала: он спрашивал о переводе акций и стоимости. Оператор сразу дал полный ответ, не переспрашивая и не уточняя дополнительные детали, так как их не требовалось для ответа на поставленный вопрос. Это соответствует критерию NA, так как уточнять было нечего, и запрос не допускал множественных толкований, требующих уточнения.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Запрос был ясен с самого начала, и оператор сразу дал полный ответ без необходимости уточнения дополнительных деталей.",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 8.32,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор раскрыл информацию о переводе и стоимости без предварительной проверки личности клиента (не запросил и не получил идентификационные данные).",
+     "reasoning": "Запрос клиента касался перевода акций и стоимости, что требует доступа к персональным данным. Оператор сразу начал давать инструкцию по переводу и сообщил о стоимости, не запросив и не получив никаких идентификационных данных (ФИО, ИИН, кодовое слово и т.д.). В транскрипте нет подтверждения личности клиента, поэтому идентификация не была проведена до раскрытия информации.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "В начале диалога, после эскалации, оператор должен был запросить данные для идентификации (например, ФИО, ИИН или кодовое слово) перед предоставлением инструкций по переводу и стоимости.",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 0.95,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 9.31,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "Оператор дал точную инструкцию по переводу акций, указал срок (3–5 дней) и ответил на вопрос о стоимости (бесплатно). Все вопросы клиента закрыты, информация верна.",
+     "reasoning": "Клиент задал два вопроса: 1) Как перевести акции и сколько это стоит? 2) А стоимость? Оператор ответил на первый вопрос, дав точную инструкцию (поручение у текущего брокера, загрузка в приложение) и срок (3–5 дней). На второй вопрос о стоимости оператор ответил, что входящий перевод бесплатный. Оба вопроса клиента закрыты, информация корректна, следующий шаг (обращение при вопросах) указан. Клиент подтвердил понимание и благодарность. Это соответствует критерию 20.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Игорь. Чтобы перевести бумаги, подайте у текущего брокера поручение на перевод, указав наши реквизиты из раздела «Перевод ценных бумаг» в приложении, и загрузите копию поручения туда же. Перевод занимает 3–5 рабочих дней.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "С нашей стороны входящий перевод бесплатный.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.0,
+     "evidence_warning": "",
+     "needs_review": true,
+     "client_requests": [
+      {
+       "text": "Как перевести мои акции от другого брокера к вам и сколько это стоит?",
+       "essential": true,
+       "status": "closed",
+       "turn": 1
+      },
+      {
+       "text": "А стоимость?",
+       "essential": true,
+       "status": "closed",
+       "turn": 6
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      20
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 20,
+      "local_conf": 0.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 16.26,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": [
+      "low_confidence_scale"
+     ]
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Клиент не выражал недовольства или тревоги. Оператор отвечал вежливо и по существу на все вопросы клиента.",
+     "reasoning": "Клиент не выражал недовольства, тревоги или жалоб. Его вопросы были прямыми и вежливыми. Оператор отвечал вежливо и по существу на все вопросы клиента, используя дружелюбный тон. Поэтому оценка YES.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Игорь. Чтобы перевести бумаги, подайте у текущего брокера поручение на перевод, указав наши реквизиты из раздела «Перевод ценных бумаг» в приложении, и загрузите копию поручения туда же. Перевод занимает 3–5 рабочих дней.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "С нашей стороны входящий перевод бесплатный.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 10.23,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответы ясные, связные, предупреждение о задержке было дано, переспросов нет.",
+     "reasoning": "Оператор дал ясный и связный ответ на вопрос о стоимости перевода, предупредив о задержке ответа (20 с) перед отправкой реплики №7, что соответствует правилам управления диалогом. Нет неясных формулировок, переспросов или сбоев в логике. Оценка 10.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "С нашей стороны входящий перевод бесплатный.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 6.64,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор попрощался и предложил дальнейшую помощь в последней реплике.",
+     "reasoning": "Оператор в последней реплике №9 сказал «Обращайтесь, если будут вопросы. До свидания!». Это содержит прощание («До свидания!») и предложение дальнейшей помощи («Обращайтесь, если будут вопросы»). Согласно рубрике, достаточно прощания И хотя бы одного из двух (итог или предложение помощи). Здесь оба условия выполнены, поэтому оценка YES.",
+     "evidence": [
+      {
+       "turn": 9,
+       "quote": "Обращайтесь, если будут вопросы. До свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 8.03,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не допустил грубых ошибок: не оскорбил клиента, не предложил платные услуги в обход компании, не раскрыл конфиденциальную информацию.",
+     "reasoning": "В репликах оператора (№5, №7, №9) отсутствуют оскорбления, предложения платных услуг в обход компании, раскрытие конфиденциальной информации. Тон общения вежливый и профессиональный. Грубых ошибок не выявлено.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "omission_without_missing_where",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 12.54,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [
+    "04"
+   ],
+   "warnings": [
+    "08: omission_without_missing_where"
+   ],
+   "total": 76.47,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     76.47,
+     76.47
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 1
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "NO",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 76.47,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-05-en-angry-order-cancelled",
+   "channel": "agent chat",
+   "language": "EN",
+   "kind": "chat",
+   "dialog_hash": "d4630de474101a65",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в первой реплике поздоровался на языке клиента (EN) и представился, назвав имя и компанию.",
+     "reasoning": "Первая реплика оператора (№5): 'Hello, I'm Madina from Freedom Broker. I'm sorry you've had to write several times — I understand how frustrating that is, I'll sort it out now. Please confirm your full name and code word, and tell me which order (ticker and date).' Оператор поздоровался на английском (язык клиента) и представился, назвав имя 'Madina' и компанию 'Freedom Broker'.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Hello, I'm Madina from Freedom Broker.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 9.9,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор своевременно уточнил недостающие детали (ФИО, кодовое слово, тикер и дата заказа) перед тем, как объяснить причину отмены заказа. Это соответствует требованиям критерия YES.",
+     "reasoning": "Оператор сразу после приветствия попросил подтвердить имя, кодовое слово и детали заказа (тикер, дата), что является необходимым уточнением перед ответом. Клиент предоставил эти данные, после чего оператор дал точный ответ. Уточнение было своевременным и необходимым, так как без этих данных невозможно было бы объяснить причину отмены заказа.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Please confirm your full name and code word, and tell me which order (ticker and date).",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 6,
+       "quote": "Peter Novak, code word 'river'. TSLA buy order yesterday.",
+       "speaker": "client",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Thank you, verified. Your TSLA order was cancelled at the close because it was a day order and the limit price was not reached.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.95,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 10.82,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор запросила и получила идентификационные данные (ФИО, кодовое слово, детали заказа) и подтвердила их ('verified'), после чего раскрыла информацию о статусе заказа. Идентификация была проведена до раскрытия данных.",
+     "reasoning": "Критерий 03 (Идентификация) требует, чтобы оператор запросил и подтвердил личность клиента ДО раскрытия данных. В данном случае оператор запросила ФИО, кодовое слово и детали заказа. Клиент предоставил эти данные. Оператор подтвердила их как 'verified' и раскрыла причину отмены заказа (данные о сделке). Идентификация была проведена и подтверждена перед раскрытием информации о статусе заказа.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Please confirm your full name and code word, and tell me which order (ticker and date).",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 6,
+       "quote": "Peter Novak, code word 'river'. TSLA buy order yesterday.",
+       "speaker": "client",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Thank you, verified. Your TSLA order was cancelled at the close because it was a day order and the limit price was not reached.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 12.7,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "Оператор дал полное объяснение причины отмены и точную инструкцию по повторному заказу. Клиент подтвердил понимание и благодарил.",
+     "reasoning": "Клиент обратился с вопросом о причине отмены заказа. оператор сразу объяснил причину (day order, limit price not reached) и дал точную инструкцию по следующему шагу (повторить заказ с 'Good till cancelled'). Клиент подтвердил понимание и благодарил. Все существенные вопросы закрыты, дан корректный следующий шаг.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "Your TSLA order was cancelled at the close because it was a day order and the limit price was not reached. To keep it active, place it again with 'Good till cancelled' validity in the order form.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.0,
+     "evidence_warning": "",
+     "needs_review": true,
+     "client_requests": [
+      {
+       "text": "Why was my order cancelled?",
+       "essential": true,
+       "status": "closed",
+       "turn": 1
+      },
+      {
+       "text": "What should I do next?",
+       "essential": true,
+       "status": "closed",
+       "turn": 7
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      20
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 20,
+      "local_conf": 0.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 21.22,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": [
+      "low_confidence_scale"
+     ]
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор признал недовольство клиента (повторные обращения) и извинился, проявив эмпатию, что соответствует критерию YES.",
+     "reasoning": "Клиент в первой реплике явно выражает недовольство и раздражение: 'This is the third time I'm writing!!! My order was cancelled and nobody explains why!'. Оператор в реплике №5 сразу отреагировал на эмоции, извинившись и признав неудобство: 'I'm sorry you've had to write several times — I understand how frustrating that is'. Это соответствует требованию по реакции на конкретную проблему и эмоции клиента. В дальнейшем оператор оставался вежливым и помог решить вопрос.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Hello, I'm Madina from Freedom Broker. I'm sorry you've had to write several times — I understand how frustrating that is, I'll sort it out now.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 10.18,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответ оператора был ясным, связным и информативным. Пауза между сообщениями оператора (20 с) не является явным ожиданием, требующим предупреждения. Клиент не переспрашивал, диалог прошел гладко.",
+     "reasoning": "Оператор дала ясный и связный ответ на запрос клиента. Она объяснила причину отмены заказа (day order, limit price не достигнута) и дала четкую инструкцию по исправлению (Good till cancelled). Пауза между репликами оператора (№5 и №7) составила 20 секунд, что значительно меньше порога в 180 секунд для «явного ожидания», поэтому предупреждение не требовалось. Клиент не переспрашивал, диалог прошел гладко.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "Thank you, verified. Your TSLA order was cancelled at the close because it was a day order and the limit price was not reached. To keep it active, place it again with 'Good till cancelled' validity in the order form.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 11.48,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор завершил диалог корректно: попрощался и предложил дальнейшую помощь.",
+     "reasoning": "Оператор в последней реплике (№9) попрощался («Goodbye!») и предложил дальнейшую помощь («Can I help with anything else?»). Это соответствует формуле завершения: прощание + предложение помощи. Итог был подведен в предыдущей реплике (№7), но для критерия завершения достаточно одного из элементов в скобках вместе с прощанием.",
+     "evidence": [
+      {
+       "turn": 9,
+       "quote": "Sorry again for the trouble. Can I help with anything else? Goodbye!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 7.66,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор действовал корректно, без оскорблений и нарушений конфиденциальности.",
+     "reasoning": "Оператор не допустил оскорблений, не предлагал платные услуги и не раскрыл конфиденциальную информацию. Все реплики оператора вежливы и профессиональны. Грубых ошибок, определяемых по рубрике, нет.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "omission_without_missing_where",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 11.78,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [
+    "04"
+   ],
+   "warnings": [
+    "08: omission_without_missing_where"
+   ],
+   "total": 100.0,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     100.0,
+     100.0
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 1
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "YES",
+     "03": "YES",
+     "04": 20,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 100.0,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-06-ru-wrong-advice-close",
+   "channel": "agent chat",
+   "language": "RU",
+   "kind": "chat",
+   "dialog_hash": "f8607b5a55f67e3e",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в первой реплике поздоровался на русском языке и представился по имени.",
+     "reasoning": "Первая реплика оператора (№5) начинается с приветствия «Здравствуйте» на языке клиента (RU) и содержит представление «меня зовут Олжас». Это полностью соответствует требованиям критерия: приветствие на языке клиента и названное имя.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Олжас.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 8.76,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос клиента был ясен с самого начала, и оператор сразу дал ответ, не уточняя лишних деталей. Это соответствует критерию NA.",
+     "reasoning": "Клиент в реплике [1] четко сформулировал запрос: «Хочу закрыть брокерский счёт, как это сделать?». Запрос однозначный, не требует уточнения деталей (какой счёт, какие бумаги и т.д.), так как речь идет о закрытии брокерского счёта в целом. Оператор в реплике [5] сразу дал инструкцию («Просто удалите приложение — счёт закроется автоматически»), не задав лишних вопросов. Согласно правилам, если данные клиента хватало для ответа и уточнять нечего, оценка — NA.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Запрос клиента был ясен с самого начала, и оператор сразу дал ответ, не уточняя лишних деталей.",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.95,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 9.91,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос клиента касался общей инструкции по закрытию счёта, а не раскрытия персональных данных или выполнения защищенного действия. Идентификация не требовалась для ответа на этот вопрос.",
+     "reasoning": "Запрос клиента был общим: 'Хочу закрыть брокерский счёт, как это сделать?'. Это вопрос о процедуре, а не запрос на раскрытие конкретных персональных данных или выполнение защищенного действия (например, сброс пароля или изменение данных). Оператор не запрашивал и не получал идентификационные данные (ФИО, ИИН, кодовое слово и т.д.), так как для ответа на вопрос о способе закрытия счёта это не требовалось. Согласно правилам, такие общие инструкции не требуют идентификации, поэтому значение NA.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Запрос был общим (как закрыть счёт), не требовал раскрытия данных или проверки личности.",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 10.86,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 0,
+     "is_na": false,
+     "scale_step": 0,
+     "justification": "Оператор дал неверную рекомендацию (удалить приложение), что не является способом закрытия счёта. Вопрос клиента остался открытым, так как он не получил правильного ответа.",
+     "reasoning": "Клиент спросил, как закрыть брокерский счёт. Оператор предложил удалить приложение, что не является официальным способом закрытия счёта. Это неверная рекомендация, которая может привести к потере доступа к средствам или ошибкам. Вопрос остался открытым, так как клиент не получил правильного пути закрытия счёта.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Просто удалите приложение — счёт закроется автоматически.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.0,
+     "evidence_warning": "",
+     "needs_review": true,
+     "client_requests": [
+      {
+       "text": "Хочу закрыть брокерский счёт, как это сделать?",
+       "essential": true,
+       "status": "open",
+       "turn": 1
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      0
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 0,
+      "local_conf": 0.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 9.16,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": [
+      "low_confidence_scale"
+     ]
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор был вежлив, представился и ответил на запрос клиента. Клиент не выражал недовольства или тревоги, поэтому требования по эмпатии (реакция на эмоции) не применимы, но вежливость сохранена.",
+     "reasoning": "Клиент не выражал недовольства, тревоги или жалоб, он просто задал вопрос о закрытии счета. Оператор Олжас был вежлив, представился и дал инструкцию. Хотя совет «просто удалите приложение» может быть технически неточным для полного закрытия счета (обычно требуется заявка), в данном критерии оценивается именно вежливость и реакция на эмоции. Так как эмоций не было, а тон был вежливым, оценка YES.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Олжас. Просто удалите приложение — счёт закроется автоматически.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Всего доброго!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.95,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 10.56,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответ оператора был ясным, связным и понятным. Клиент не переспрашивал, продолжил диалог без замечаний.",
+     "reasoning": "Оператор дал ясный, связный ответ на вопрос клиента о закрытии счета, предупредив о необходимости удалить приложение для автоматического закрытия. Ответ был понятен, не требовал переспросов, и диалог продолжился логично. Оценивается как 10 по ясности и связности.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Олжас. Просто удалите приложение — счёт закроется автоматически.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 7.14,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор попрощался, но не подвёл итог и не предложил дальнейшую помощь, что требуется для оценки YES.",
+     "reasoning": "Оператор попрощался (реплика 7: «Всего доброго!»), но не подвёл итог и не предложил дальнейшую помощь. Согласно рубрике, для YES требуется прощание + хотя бы одно из двух (итог или предложение помощи). Здесь только прощание, поэтому оценка NO.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "Всего доброго!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 6.37,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не допустил оскорблений, не предложил платные услуги и не раскрыл конфиденциальную информацию.",
+     "reasoning": "Оператор Олжас не допустил грубых ошибок: не оскорбил клиента, не предложил платные услуги, не раскрыл конфиденциальную информацию. Хотя рекомендация по удалению приложения для закрытия счета может быть неверной (это критерий 04), она не является грубой ошибкой по критерию 08.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "omission_without_missing_where",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 11.79,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [
+    "04"
+   ],
+   "warnings": [
+    "08: omission_without_missing_where"
+   ],
+   "total": 61.54,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     61.54,
+     61.54
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 1
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "NA",
+     "04": 0,
+     "05": "YES",
+     "06": 10,
+     "07": "NO",
+     "08": "NO"
+    },
+    "total": 61.54,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-07-call-kz-hangup-before-request",
+   "channel": "voice call",
+   "language": "KZ",
+   "kind": "call",
+   "dialog_hash": "7e993139704d9dd4",
+   "checklist_id": "freedom_call_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в первой реплике поздоровался на казахском языке и представился по имени.",
+     "reasoning": "Оператор в первой реплике [4] поздоровался на казахском языке ('Сәлеметсіз бе') и представился ('менің атым Дана'). Язык клиента — KZ, что соответствует приветствию оператора. Все требования критерия выполнены.",
+     "evidence": [
+      {
+       "turn": 4,
+       "quote": "Сәлеметсіз бе, Фридом Брокер, менің атым Дана. Қалай көмектесе аламын?",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 6.79,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Оператор не успел выявить потребность, так как звонок прервался до начала диалога с клиентом. Клиент начал говорить, но не закончил, и оператор не задал уточняющих вопросов.",
+     "reasoning": "Критерий 02 (Выявление потребности) оценивает, уточнил ли оператор недостающие детали перед ответом или использовал известные. В данном случае клиент начал говорить «Иә, сәлеметсіз бе, мен...» и звонок оборвался (SYSTEM: Клиент завершил разговор) до того, как оператор успел задать вопрос или дать ответ. Оператор не получил возможности выявить потребность, так как диалог прервался. Поэтому значение NA, так как оператор не мог уточнить или ответить, и данные клиента были недостаточны для ответа, но оператор не успел их получить.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "Оператор не успел задать уточняющие вопросы, так как звонок прервался на реплике клиента №5.",
+     "na_reason": "Диалог прервался до того, как оператор успел выявить потребность или задать уточняющие вопросы.",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 0.95,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 13.32,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос клиента не требовал идентификации, так как он не озвучил конкретный запрос, связанный с персональными данными или счетом, до завершения звонка.",
+     "reasoning": "Критерий 03 (Идентификация) не применим, так как клиент не запрашивал персональные данные, доступ к счету или выполнение защищенных действий. Клиент начал говорить, но звонок был прерван системой до того, как он сформулировал запрос. Оператор представился, но не было необходимости в идентификации, так как запрос не требовал её.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Клиент не сформировал запрос, требующий идентификации, до завершения звонка.",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 9.02,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": "NA",
+     "justification": "Диалог прервался до того, как клиент сформулировал запрос. Оператор не мог оказать консультацию, так как не знал, в чем нуждались.",
+     "reasoning": "Клиент начал говорить, но не сформировал запрос. Оператор выполнил только приветствие и не получил возможность ответить на вопрос. Диалог прервался до формулировки запроса, что соответствует условию NA.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Клиент начал говорить, но не сформировал запрос. Оператор не получил возможность ответить на вопрос. Диалог прервался до формулировки запроса.",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 7.75,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор проявил вежливость, клиент не выражал недовольства или тревоги, звонок оборвался до того, как возникла необходимость в реакции на эмоции.",
+     "reasoning": "Клиент не выразил недовольства, тревоги или жалобы. Он только начал говорить ('Иә, сәлеметсіз бе, мен...'), когда звонок оборвался. Оператор в своей первой реплике [4] использовал вежливую формулу приветствия и предложил помощь ('Сәлеметсіз бе, Фридом Брокер, менің атым Дана. Қалай көмектесе аламын?'). Поскольку недовольства не было, достаточна вежливость, что соответствует критерию YES.",
+     "evidence": [
+      {
+       "turn": 4,
+       "quote": "Сәлеметсіз бе, Фридом Брокер, менің атым Дана. Қалай көмектесе аламын?",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 5,
+       "quote": "Иә, сәлеметсіз бе, мен...",
+       "speaker": "client",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 11.03,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": null,
+     "is_na": false,
+     "scale_step": null,
+     "justification": "",
+     "reasoning": "",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.0,
+     "evidence_warning": "",
+     "needs_review": true,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": null,
+      "local_conf": null,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 25.78,
+      "local_error": "criterion 06: model failed to return a valid value (last: 'NA')",
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": [
+      "low_confidence_scale"
+     ]
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Диалог оборвался до завершения со стороны оператора. Клиент завершил разговор сразу после реплики оператора, не дав возможности попрощаться или подвести итог.",
+     "reasoning": "Диалог оборвался после реплики клиента (№5), когда оператор еще не успел завершить разговор. Клиент положил трубку (SYSTEM: Клиент завершил разговор) до того, как оператор мог попрощаться или подвести итог. У оператора не было возможности выполнить элементы завершения.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Клиент завершил разговор (№6) сразу после реплики оператора (№4), не дав возможности завершить диалог по правилам (прощание + итог/предложение помощи).",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 9.32,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "В диалоге отсутствуют какие-либо признаки грубой ошибки: оскорблений, предложения платных услуг или раскрытия конфиденциальной информации. Оператор использовал только стандартное приветствие.",
+     "reasoning": "В транскрипте нет ни одной реплики оператора, содержащей оскорбления, предложения платных услуг в обход компании или раскрытия конфиденциальной информации. Единственная реплика оператора (№4) — это стандартное приветствие и предложение помощи. Следовательно, грубых ошибок нет.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "omission_without_missing_where",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 14.36,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "incomplete",
+   "failed_criteria": [
+    "06"
+   ],
+   "needs_review": [
+    "06"
+   ],
+   "warnings": [
+    "08: omission_without_missing_where"
+   ],
+   "total": null,
+   "provisional_total": 100.0,
+   "gross_error": false,
+   "stability": null,
+   "call_metrics": {
+    "operator_wpm": 75.0,
+    "speaker_changes": 1,
+    "overlap_rate": 0.0,
+    "operator_response_s": {
+     "median": null,
+     "p90": null,
+     "max": null,
+     "n": 0
+    },
+    "note": "informational, estimated from turn start times only; not scored"
+   },
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "NA",
+     "04": "NA",
+     "05": "YES",
+     "06": null,
+     "07": "NA",
+     "08": "NO"
+    },
+    "total": null,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "incomplete"
+   }
+  },
+  {
+   "conversation_id": "hold-08-ru-third-party-data",
+   "channel": "agent chat",
+   "language": "RU",
+   "kind": "chat",
+   "dialog_hash": "96ca54cdd3d9ea0b",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в первой реплике поздоровался и представился, назвав своё имя.",
+     "reasoning": "Первая реплика оператора (№5): 'Здравствуйте, меня зовут Тимур. Назовите, пожалуйста, ФИО и кодовое слово.' Оператор поздоровался на русском (язык клиента) и представился, назвав имя 'Тимур'.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Тимур. Назовите, пожалуйста, ФИО и кодовое слово.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 6.47,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не уточнил, какой именно счёт или период имел в виду клиент, хотя запрос «какой у меня баланс?» допускал несколько толкований. Вместо уточнения он сразу сообщил сумму, что соответствует правилу NO.",
+     "reasoning": "Клиент в реплике [3] явно попросил оператора. В реплике [1] он задал вопрос: «Какой у меня баланс?». Оператор в реплике [5] не уточнил, какой именно счёт (основной, депозитный, брокерский) или какой период (на текущий момент, за месяц, за год), так как запрос клиента допускал несколько толкований. Вместо уточнения оператор сразу ответил в реплике [7], сообщив сумму 1 250 000 тенге, не спросив дополнительных деталей. Это соответствует правилу NO: оператор ответил «наугад», не уточнив существенно недостающие данные, хотя запрос был неоднозначным.",
+     "evidence": [
+      {
+       "turn": 1,
+       "quote": "Какой у меня баланс?",
+       "speaker": "client",
+       "internal": false
+      },
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Тимур. Назовите, пожалуйста, ФИО и кодовое слово.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "На вашем счёте 1 250 000 тенге.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "В реплике 5 оператор должен был уточнить, какой именно счёт (основной, депозитный, брокерский) и за какой период (текущий, за месяц, за год) клиент хочет узнать баланс, но этого не сделал.",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 0.95,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 16.93,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "оператор запросил и получил ФИО и кодовое слово, подтвердил личность до раскрытия данных о балансе.",
+     "reasoning": "Запрос клиента на баланс требовал идентификации. оператор запросил ФИО и кодовое слово, клиент их назвал. оператор подтвердил личность и раскрыл данные. Идентификация проведена ДО раскрытия данных, что соответствует правилам.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Тимур. Назовите, пожалуйста, ФИО и кодовое слово.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 6,
+       "quote": "Иванова Анна Сергеевна, кодовое слово «луна».",
+       "speaker": "client",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Спасибо, личность подтверждена. На вашем счёте 1 250 000 тенге.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 9.42,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 15,
+     "is_na": false,
+     "scale_step": 15,
+     "justification": "Существенный вопрос клиента (баланс) был решен (1 250 000 тенге), но допущена второстепенная деталь (незаконное разглашение информации о муже, что не относится к содержательной части консультации по балансу).",
+     "reasoning": "Клиент задал вопрос о балансе. оператор ответил с точной суммой (1 250 000 тенге), что закрывает существенный запрос. Однако оператор допустил нарушение конфиденциальности, сообщив клиенту информацию о балансе мужа без подтверждения полномочий или согласия, что является серьезным упущением в безопасности, но для критерия 04 (консультация) основной вопрос клиента был решен. Следующий шаг (чем еще помочь) был предложен, но не был необходим, так как клиент не задал дополнительных вопросов. Таким образом, существенный вопрос клиента закрыт, но допущена второстепенная деталь (незаконное разглашение информации о третьем лице, что не относится к содержательной части консультации по балансу).",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "На вашем счёте 1 250 000 тенге. Кстати, у вашего мужа на счёте у нас 2 млн тенге, можете вместе вложить.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.0,
+     "evidence_warning": "ledger_inconsistent",
+     "needs_review": true,
+     "client_requests": [
+      {
+       "text": "Какой у меня баланс?",
+       "essential": true,
+       "status": "closed",
+       "turn": 1
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      15
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 15,
+      "local_conf": 0.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 26.17,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": [
+      "low_confidence_scale"
+     ]
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор был вежлив на протяжении всего диалога, клиент не выражал недовольства или тревоги, требующих специальной реакции эмпатии.",
+     "reasoning": "Клиент не выражал недовольства, тревоги или жалоб. Его реплика [8] «Э... спасибо» — это реакция на предложение оператора, а не выражение недовольства. Оператор был вежлив на протяжении всего диалога, использовал стандартные приветствие и закрытие, подтвердил личность и предоставил информацию о балансе. Поэтому оценка YES.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Тимур. Назовите, пожалуйста, ФИО и кодовое слово.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Спасибо, личность подтверждена. На вашем счёте 1 250 000 тенге. Кстати, у вашего мужа на счёте у нас 2 млн тенге, можете вместе вложить.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Чем ещё могу помочь? До свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 11.8,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Ответы оператора ясные, связные, без сбоев. Ожидание 20 с не требовало предупреждения (менее 180 с). Клиент не переспрашивал, диалог понятен.",
+     "reasoning": "Оператор дал ясный и связный ответ на вопрос клиента о балансе (1 250 000 тенге). В диалоге не было замеченных сбоев, неясных формулировок или противоречий, которые бы затруднили понимание. Ожидание между репликами оператора (20 с) не является явным ожиданием, требующим предупреждения, так как оно меньше 180 с. Клиент не переспрашивал и не выражал непонимания. Ответ был понятным и логичным.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "Спасибо, личность подтверждена. На вашем счёте 1 250 000 тенге. Кстати, у вашего мужа на счёте у нас 2 млн тенге, можете вместе вложить.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 11.78,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор попрощался и предложил дальнейшую помощь в последней реплике.",
+     "reasoning": "Оператор в последней реплике [9] сказал «Чем ещё могу помочь? До свидания!». Это соответствует формуле завершения: прощание («До свидания!») + предложение дальнейшей помощи («Чем ещё могу помочь?»). Итого — YES.",
+     "evidence": [
+      {
+       "turn": 9,
+       "quote": "Чем ещё могу помочь? До свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 5.87,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор раскрыл конфиденциальную информацию о третьем лице (муже клиента), назвав сумму на его счете.",
+     "reasoning": "Оператор раскрыл конфиденциальную информацию о клиенте (муже клиента), назвав сумму на его счете (2 млн тенге). Это является грубой ошибкой согласно рубрике критерия 08, так как это данные другого клиента.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "Кстати, у вашего мужа на счёте у нас 2 млн тенге, можете вместе вложить.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 6.79,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [
+    "04"
+   ],
+   "warnings": [
+    "04: ledger_inconsistent"
+   ],
+   "total": 80.0,
+   "provisional_total": null,
+   "gross_error": true,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     80.0,
+     80.0
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 1
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NO",
+     "03": "YES",
+     "04": 15,
+     "05": "YES",
+     "06": 10,
+     "07": "YES",
+     "08": "YES"
+    },
+    "total": 80.0,
+    "gross_error": true,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-09-en-long-gap-no-warning",
+   "channel": "agent chat",
+   "language": "EN",
+   "kind": "chat",
+   "dialog_hash": "0e4defa53f9f3a58",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в первой реплике поздоровался на языке клиента и представился, назвав имя и компанию.",
+     "reasoning": "Первая реплика оператора (№5) начинается с приветствия 'Hello' на языке клиента (EN) и содержит представление: 'this is Arman from Freedom Broker'. Имя оператора названо, компания указана, что соответствует требованиям рубрики.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Hello, this is Arman from Freedom Broker. Go to Profile → Security → Two-factor authentication and switch it on.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 6.76,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос клиента был ясен с самого начала, и оператор сразу дал корректный ответ без необходимости уточнять дополнительные детали. Это соответствует критерию NA.",
+     "reasoning": "Оператор сразу дал точный ответ на запрос клиента, не задавая лишних уточняющих вопросов. Клиент четко сформулировал запрос: 'How do I enable two-factor authentication?', и оператор ответил, указав путь в приложении. Уточнять не требовалось, так как запрос был однозначным и понятным с самого начала диалога.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Запрос клиента был ясен с самого начала, и оператор сразу дал корректный ответ без необходимости уточнять дополнительные детали.",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 15.13,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Запрос требовал идентификации для доступа к личному кабинету, но оператор не запросил и не получил никаких идентификационных данных клиента, а сразу дал инструкцию. В транскрипте нет подтверждения авторизации системы.",
+     "reasoning": "Запрос клиента касался включения двухфакторной аутентификации, что требует доступа к личному кабинету и раскрытия персональных данных. Однако оператор не запрашивал и не получал никаких идентификационных данных (ФИО, ИИН, кодовое слово и т.д.), а сразу дал инструкцию. В транскрипте нет подтверждения авторизации системы. Согласно правилам, если оператор раскрывает данные без проверки — NO. Здесь оператор не раскрыл данные, но и не подтвердил личность, что требуется для защищенного действия. Поэтому оценка NO.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "Ожидалось, что оператор запросит и получит идентификационные данные клиента (например, ФИО, ИИН, кодовое слово) до предоставления инструкций по защищенным действиям.",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 0.95,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 11.7,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 20,
+     "is_na": false,
+     "scale_step": 20,
+     "justification": "Все существенные вопросы клиента закрыты: оператор дал точную инструкцию по включению 2FA и объяснил, как решить проблему с отсутствием раздела Security (обновление приложения). Клиент подтвердил, что всё работает, и благодарит.",
+     "reasoning": "Клиент задал вопрос о включении двухфакторной аутентификации. Оператор дал точную инструкцию: перейти в Profile → Security → Two-factor authentication и включить. Когда клиент сообщил, что не видит раздел Security, оператор объяснил причину (новая версия приложения) и дал конкретное решение (обновить до 5.2+). После обновления клиент подтвердил, что всё работает. Все существенные вопросы закрыты, клиент благодарит и подтверждает успех. Это соответствует максимальной оценке 20.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Go to Profile → Security → Two-factor authentication and switch it on.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Please update the app to the latest version — the Security section appears in version 5.2 and later.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 8,
+       "quote": "Updated, found it. Thanks!",
+       "speaker": "client",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [
+      {
+       "text": "How do I enable two-factor authentication?",
+       "essential": true,
+       "status": "closed",
+       "turn": 1
+      },
+      {
+       "text": "I don't see Security in Profile.",
+       "essential": true,
+       "status": "closed",
+       "turn": 6
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      20
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 20,
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 14.75,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Клиент не выражал недовольства или тревоги, только запрашивал информацию. Оператор отвечал вежливо и по существу, предоставив четкие инструкции по включению двухфакторной аутентификации.",
+     "reasoning": "Клиент не выражал недовольства, тревоги или раздражения. Его реплики были прямыми запросами и вопросами. Оператор отвечал вежливо и по существу, предоставив четкие инструкции. Поэтому оценка YES.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Hello, this is Arman from Freedom Broker. Go to Profile → Security → Two-factor authentication and switch it on.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Please update the app to the latest version — the Security section appears in version 5.2 and later.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 8.77,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 7,
+     "is_na": false,
+     "scale_step": 7,
+     "justification": "Ответы ясные и связные, но было явное ожидание (250 с) без предупреждения, что снижает оценку до 7.",
+     "reasoning": "Оператор дал ясный и связный ответ на вопрос клиента. Однако после первой реплики (№5) последовало ожидание ответа оператора длительностью 250 секунд (реплики №6 → №7), что превышает порог в 180 секунд. Согласно правилам, если такое ожидание произошло без предупреждения, максимальная оценка по критерию 06 снижается до 7. Оператор не предупредил клиента о задержке перед отправкой ответа в реплике №7.",
+     "evidence": [
+      {
+       "turn": 7,
+       "quote": "Please update the app to the latest version — the Security section appears in version 5.2 and later.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "Ожидание после реплики оператора №5 (ответ на реплику клиента №6) длилось 250 с, предупреждения не было.",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      7
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 7,
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 11.06,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор попрощался и предложил дальнейшую помощь в последней реплике.",
+     "reasoning": "Оператор в последней реплике [9] сказал: 'Great! Anything else I can help with? Goodbye!'. Это содержит прощание ('Goodbye!') и предложение дальнейшей помощи ('Anything else I can help with?'). Согласно рубрике, достаточно прощания + одного из двух (итог или предложение помощи). Здесь оба условия выполнены, поэтому оценка YES.",
+     "evidence": [
+      {
+       "turn": 9,
+       "quote": "Great! Anything else I can help with? Goodbye!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 7.24,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не допустил грубых ошибок: нет оскорблений, раскрытия конфиденциальной информации или предложений платных услуг в обход компании.",
+     "reasoning": "В диалоге оператор Арман представился, дал четкие инструкции по включению двухфакторной аутентификации, рекомендовал обновить приложение и завершил общение вежливо. Никаких оскорблений, раскрытия конфиденциальной информации или предложений платных услуг в обход компании не зафиксировано. Все реплики оператора соответствуют правилам и не содержат грубых ошибок.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "omission_without_missing_where",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 13.52,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [
+    "08: omission_without_missing_where"
+   ],
+   "total": 71.18,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     71.18,
+     71.18
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NA",
+     "03": "NO",
+     "04": 20,
+     "05": "YES",
+     "06": 7,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 71.18,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  },
+  {
+   "conversation_id": "hold-10-ru-contradictory",
+   "channel": "agent chat",
+   "language": "RU",
+   "kind": "chat",
+   "dialog_hash": "1e7a6a6a8ecbf862",
+   "checklist_id": "freedom_chat_v1",
+   "criteria": [
+    {
+     "criterion_id": "01",
+     "name": "Установление контакта",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор в первой реплике поздоровался и представился, назвав имя Ержан.",
+     "reasoning": "Первая реплика оператора (№5): 'Здравствуйте, меня зовут Ержан.' Оператор поздоровался на русском (язык клиента) и представился, назвав имя. Критерий выполнен.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Ержан.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 5.96,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "02",
+     "name": "Выявление потребности",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не уточнил недостающие детали (тариф, тип сделки) перед ответом, что привело к противоречивым данным (0,1% → 0,2%) и путанице у клиента.",
+     "reasoning": "Клиент в реплике [1] задал вопрос о комиссии за сделки с акциями на KASE. Оператор в реплике [5] сразу ответил, не уточнив, какой именно тариф или счёт имеется в виду, хотя комиссия может зависеть от этих факторов. В реплике [7] оператор изменил цифру (0,1% → 0,2%), что показывает отсутствие точных данных или уточнения. В реплике [9] оператор признал, что комиссия зависит от тарифа, но не уточнил, какой тариф у клиента, и не спросил об этом перед ответом. Это соответствует критерию NO: оператор ответил «наугад», не уточнив существенно недостающие данные (тариф/тип сделки), что привело к путанице у клиента.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Комиссия 0,1% от суммы сделки.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Нет, комиссия 0,2%, то есть 200 тенге.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Зависит от тарифа, посмотрите в приложении.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 0.95,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 17.64,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "03",
+     "name": "Идентификация",
+     "type": "binary",
+     "value": "NA",
+     "is_na": true,
+     "scale_step": null,
+     "justification": "Запрос был общим (комиссия за сделки), не требовал идентификации. Оператор не запрашивал и не получал персональные данные клиента.",
+     "reasoning": "Запрос клиента касался комиссии за сделки с акциями, что является общим вопросом о тарифах, не требующим раскрытия персональных данных или доступа к счёту. Оператор не запрашивал и не получал идентификационные данные, так как это не было необходимо для ответа на вопрос. Согласно правилам, такие запросы оцениваются как NA.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "Запрос касался общих тарифов, не требовал доступа к персональным данным или счёту клиента.",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NA"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NA",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 8.14,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "04",
+     "name": "Консультация",
+     "type": "scale",
+     "value": 10,
+     "is_na": false,
+     "scale_step": 10,
+     "justification": "Оператор дал противоречивый ответ о комиссии (0,1% и 0,2%), не объяснил причину разночтений и не дал точного ответа на вопрос клиента, оставив его в недоумении. Вопрос остался открытым.",
+     "reasoning": "Клиент задал вопрос о комиссии за сделки с акциями на KASE. Оператор сначала сказал 0,1% (реплика 5), но потом признал ошибку и сказал 0,2% (реплика 7). Однако он не объяснил, почему возникла противоречивая информация, и не дал точного ответа на вопрос клиента о том, какая комиссия будет в его случае (зависит от тарифа). Клиент остался в недоумении (реплика 8: «Так 0,1 или 0,2?»). Оператор не закрыл вопрос, а просто направил клиента в приложение (реплика 9). Это не является полным и точным ответом на существенный вопрос клиента. Поэтому оценка — 10, так как часть вопросов закрыта, но существенный остался открытым.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Комиссия 0,1% от суммы сделки.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Нет, комиссия 0,2%, то есть 200 тенге.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Зависит от тарифа, посмотрите в приложении.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [
+      {
+       "text": "Какая комиссия за сделки с акциями на KASE?",
+       "essential": true,
+       "status": "open",
+       "turn": 1
+      },
+      {
+       "text": "То есть с 100 000 тенге — 100 тенге?",
+       "essential": true,
+       "status": "open",
+       "turn": 6
+      },
+      {
+       "text": "Так 0,1 или 0,2?",
+       "essential": true,
+       "status": "open",
+       "turn": 8
+      }
+     ],
+     "juror_errors": [],
+     "votes": [
+      10
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 10,
+      "local_conf": 0.95,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 17.78,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "05",
+     "name": "Эмпатия",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор вел себя вежливо, отвечал на вопросы клиента о комиссии. Клиент не выражал недовольства или тревоги, поэтому требования по реакции на эмоции не возникли. Оператор не был резким или пренебрежительным.",
+     "reasoning": "Клиент не выражал недовольства, тревоги или жалоб. Он задавал вопросы о комиссии и уточнял цифры. Оператор отвечал вежливо, без грубости или пренебрежения. Хотя оператор поправил клиента (реплика 7), это было сделано в рамках уточнения фактов, а не с негативным тоном. В целом оператор был вежлив на протяжении всего диалога.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Здравствуйте, меня зовут Ержан. Комиссия 0,1% от суммы сделки.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Нет, комиссия 0,2%, то есть 200 тенге.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Зависит от тарифа, посмотрите в приложении.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 11,
+       "quote": "Чем ещё могу помочь? До свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 0.95,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 12.16,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "06",
+     "name": "Управление диалогом и грамотность",
+     "type": "scale",
+     "value": 4,
+     "is_na": false,
+     "scale_step": 4,
+     "justification": "Оператор дал противоречивые ответы (0,1% и 0,2%), что заставило клиента переспросить. Оператор не прояснил противоречие, а просто указал на зависимость от тарифа, что привело к путанице, но клиент всё же понял суть.",
+     "reasoning": "Оператор дал противоречивые ответы по комиссии: сначала сказал 0,1% (реплика 5), потом 0,2% (реплика 7). Клиент переспросил (реплика 8), но оператор не прояснил противоречие, а просто сказал, что зависит от тарифа (реплика 9). Это привело к путанице, хотя клиент всё же понял суть (что зависит от тарифа), но ход диалога стал неясным из-за противоречия. По правилам: противоречивые ответы, из-за которых ход диалога стал непонятен — 0; если клиент переспросил и оператор прояснил — 4. Здесь оператор не прояснил противоречие, но клиент всё же понял, что зависит от тарифа, и диалог продолжился. Поэтому оценка 4.",
+     "evidence": [
+      {
+       "turn": 5,
+       "quote": "Комиссия 0,1% от суммы сделки.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 7,
+       "quote": "Нет, комиссия 0,2%, то есть 200 тенге.",
+       "speaker": "operator",
+       "internal": false
+      },
+      {
+       "turn": 8,
+       "quote": "Так 0,1 или 0,2?",
+       "speaker": "client",
+       "internal": false
+      },
+      {
+       "turn": 9,
+       "quote": "Зависит от тарифа, посмотрите в приложении.",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 0.95,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      4
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": 4,
+      "local_conf": 0.95,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 14.67,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "07",
+     "name": "Завершение",
+     "type": "binary",
+     "value": "YES",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор попрощался и предложил дальнейшую помощь в последней реплике.",
+     "reasoning": "Оператор в последней реплике №11 сказал «Чем ещё могу помочь? До свидания!». Это соответствует формуле завершения: прощание («До свидания!») + предложение дальнейшей помощи («Чем ещё могу помочь?»). Итого — YES.",
+     "evidence": [
+      {
+       "turn": 11,
+       "quote": "Чем ещё могу помочь? До свидания!",
+       "speaker": "operator",
+       "internal": false
+      }
+     ],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "YES"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "YES",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 5.39,
+      "local_error": null,
+      "local_evidence_ok": true,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    },
+    {
+     "criterion_id": "08",
+     "name": "Грубые ошибки",
+     "type": "binary",
+     "value": "NO",
+     "is_na": false,
+     "scale_step": null,
+     "justification": "Оператор не допустил оскорблений, не раскрыл конфиденциальную информацию и не предлагал платные услуги. Хотя была неточность в цифре комиссии, это не относится к категории грубых ошибок по определению.",
+     "reasoning": "В диалоге оператор Ержан предоставил информацию о комиссии, но позже исправил себя, заявив, что комиссия 0,2%, а не 0,1%. Это не грубая ошибка в смысле оскорбления, раскрытия конфиденциальной информации или предложения платных услуг. Оператор не использовал унизительные замечания или оскорбления. Поэтому нет оснований для оценки YES.",
+     "evidence": [],
+     "rejected_quotes": [],
+     "missing_where": "",
+     "na_reason": "",
+     "confidence": 1.0,
+     "evidence_warning": "omission_without_missing_where",
+     "needs_review": false,
+     "client_requests": [],
+     "juror_errors": [],
+     "votes": [
+      "NO"
+     ],
+     "jury": {},
+     "decided_by": "cascade:tier1:issai-9b-kk",
+     "self_consistency_disagreement": false,
+     "cached": false,
+     "routing": {
+      "tier": 1,
+      "route": "local",
+      "reasons": [],
+      "tier2_reasons": [],
+      "local_value": "NO",
+      "local_conf": 1.0,
+      "local_conf_source": "self",
+      "local_option_probs": null,
+      "decision_value": null,
+      "local_s": 15.18,
+      "local_error": null,
+      "local_evidence_ok": false,
+      "haiku": null,
+      "sonnet": null,
+      "models": [
+       "issai-9b-kk"
+      ]
+     },
+     "review_reasons": []
+    }
+   ],
+   "status": "complete",
+   "failed_criteria": [],
+   "needs_review": [],
+   "warnings": [
+    "08: omission_without_missing_where"
+   ],
+   "total": 57.5,
+   "provisional_total": null,
+   "gross_error": false,
+   "stability": {
+    "criteria_unanimous": 8,
+    "criteria_total": 8,
+    "agreement": 1.0,
+    "score_range": [
+     57.5,
+     57.5
+    ],
+    "score_spread": 0.0,
+    "flagged_criteria": 0
+   },
+   "call_metrics": null,
+   "human": {
+    "overrides": {},
+    "values": {
+     "01": "YES",
+     "02": "NO",
+     "03": "NA",
+     "04": 10,
+     "05": "YES",
+     "06": 4,
+     "07": "YES",
+     "08": "NO"
+    },
+    "total": 57.5,
+    "gross_error": false,
+    "diff": [],
+    "reviewed": false,
+    "status": "complete"
+   }
+  }
+ ],
+ "kz_subset": {
+  "n": 1,
+  "agreement": null,
+  "mae": null
+ }
+}
