@@ -74,5 +74,12 @@ def test_http_api_end_to_end():
     assert d["human"]["reviewed"] is True
     assert cl.get("/api/export/DEMO.csv?which=both").text.startswith("conversation_id")
     assert json.loads(cl.get("/api/export/DEMO.json").content)["group"] == "DEMO"
+    assert {"group": "DEMO", "dialogs": 4, "evaluated": True} in cl.get("/api/groups").json()
+    assert len(cl.get("/api/dialogs/DEMO").json()) == 4
+    assert cl.post("/api/rescore/DEMO").status_code == 200
+    c = cl.get("/api/checklists/freedom_chat_v1").json()
+    assert "criteria" in c["checklist"] and c["yaml"].startswith("id:")
+    bad = {"id": "tmp_cl", "criteria": [{"id": "1", "type": "scale"}]}
+    assert cl.put("/api/checklists/tmp_cl", json=bad).status_code == 400
     p = cl.post("/api/paste", json={"text": "client: привет\noperator: Здравствуйте, меня зовут Ая"}).json()
     assert p["conversation_id"].startswith("pasted-")

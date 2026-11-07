@@ -37,3 +37,12 @@ def test_gross_flag_independent_of_total():
     g = {"id": "g", "type": "binary", "weight": 0, "gross": True}
     r = compute_total([B, g], {"b": "NO", "g": "NO"})
     assert r == {"total": 0.0, "gross_error": False, "max_weight_applicable": 10.0}
+
+
+def test_readme_worked_example():
+    """Worked example from README / docs/SCORING.md on the real chat checklist."""
+    from cqa.checklist import load
+    crit = load("freedom_chat_v1")["criteria"]
+    vals = {"01": "YES", "02": "NA", "03": "NA", "04": 15, "05": "NO", "06": 7, "07": "NA", "08": "NO"}
+    r = compute_total(crit, vals)
+    assert r["max_weight_applicable"] == 60.0 and r["total"] == 59.17 and r["gross_error"] is False

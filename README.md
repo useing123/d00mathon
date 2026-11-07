@@ -1,92 +1,198 @@
 # CQA — AI-оценка качества чатов и звонков Freedom Broker
 
-Система автоматически оценивает работу **оператора-человека** (не бота) по гибкому чек-листу: чаты и голосовые звонки, RU / KZ / EN. Для каждого критерия — значение, обоснование, дословная цитата-доказательство (с номером реплики) или указание, где ожидалось действие; итоговый балл 0–100 считается детерминированным кодом, грубые ошибки — отдельным флагом. Есть веб-интерфейс без логина с ручной проверкой (override), аудиоплеером для звонков и редактором чек-листов.
+> **Жюри из LLM проверяет каждый критерий отдельно, приводит дословные цитаты-доказательства и считает балл детерминированным кодом.**
+> LLM jury scores every checklist criterion separately, backs each verdict with verified verbatim quotes, and computes the score in deterministic code.
 
-## Быстрый старт
+![CI](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&logoColor=white)
+![tests](https://img.shields.io/badge/tests-40%20passed-brightgreen)
+![python](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue?logo=python&logoColor=white)
+![ruff](https://img.shields.io/badge/lint-ruff-261230)
+![license](https://img.shields.io/badge/license-MIT-green)
+
+[English version ↓](#english) · [Pitch deck (PDF)](docs/CQA_Pitch_Deck.pdf) · [Presentation (HTML)](docs/presentation.html) · [Architecture](docs/ARCHITECTURE.md) · [Scoring](docs/SCORING.md) · [Assumptions](docs/ASSUMPTIONS.md) · [Evaluation](docs/EVALUATION.md) · [API](docs/API.md)
+
+Система оценивает работу **оператора-человека** (не бота) по гибкому чек-листу: чаты и голосовые звонки, RU / KZ / EN. Для каждого критерия — значение, обоснование, дословная цитата с номером реплики (или «где ожидалось действие»), итог 0–100 и отдельный флаг грубой ошибки. Веб-интерфейс без логина: дашборд, карточка диалога с подсветкой доказательств, аудиоплеер, ручная проверка (override), редактор чек-листов.
+
+## Быстрый старт (3 команды)
 
 ```bash
-python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
-cp .env.example .env         # вписать ANTHROPIC_API_KEY и CQA_API_URL (не коммитится)
-.venv/bin/python -m pytest -q                                   # тесты скоринга/цитат
-.venv/bin/python -m cqa evaluate --group DEV                    # fetch + оценка -> results/dev.json + results/dev.csv
-.venv/bin/python -m cqa stats --group DEV                       # распределения, разногласия self-consistency
-.venv/bin/python -m cqa serve --port 8090                       # UI: http://127.0.0.1:8090 (без логина)
+make install                       # venv + зависимости
+make demo                          # офлайн-прогон на синтетических диалогах (mock-LLM, без ключа)
+make serve                         # UI: http://127.0.0.1:8090
 ```
 
-Контрольный набор (одна команда): `python -m cqa evaluate --group <ID>` — загрузка через `CQA_API_URL&group_id=<ID>`, авто-выбор чек-листа по каналу (чат → `freedom_chat_v1`, звонок → `freedom_call_v1`), параллельная оценка, `results/<id>.json` + `results/<id>.csv`. В UI то же самое — кнопка **Fetch group & evaluate**.
+С реальной моделью: `cp .env.example .env`, вписать `ANTHROPIC_API_KEY` и `CQA_API_URL`, затем `make eval-dev`.
+Без make: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt && .venv/bin/python -m cqa evaluate --mock --input examples/sample_dialogs.json`.
+Docker: `docker compose up --build` (секреты из `.env`, в образ не попадают).
 
-Другие флаги: `--input file.json` (локальный файл), `--ids a,b`, `--limit N`, `--checklist ID` (принудительно), `--fresh` (без кэша), `--reeval` (переоценка текущим чек-листом: к LLM идут только изменённые критерии), `--samples N`, `--concurrency N`, `--refresh` (перескачать группу). `python -m cqa rescore --group G` — пересчёт итогов после смены весов без LLM.
+### ⏱ Контрольный набор (час 23)
+
+```bash
+python -m cqa evaluate --group <ID>        # или: make eval-group GROUP=<ID>
+```
+Загрузка `CQA_API_URL&group_id=<ID>` → авто-выбор чек-листа по каналу (чат → `freedom_chat_v1`, звонок → `freedom_call_v1`) → параллельная оценка → `results/<id>.json` + `results/<id>.csv`. В UI то же — кнопка **Fetch group & evaluate**. Каждый новый диалог реально анализируется LLM: заготовленных ответов нет, кэш ключуется хэшем диалога.
 
 ## Архитектура
 
+```mermaid
+flowchart LR
+  A[API организаторов / JSON / вставка текста] --> N[data.py<br/>нормализация, роли,<br/>удержание, аудио-смещения]
+  N --> C{checklist.py<br/>выбор по каналу}
+  C --> T[(диалог × критерий)]
+  T --> P[prompts.py<br/>1 критерий = 1 промпт]
+  P --> L[llm.py<br/>Anthropic / OpenAI-compat / Mock]
+  L --> V[evaluator.py<br/>проверка цитат, жюри, кэш]
+  V --> S[scoring.py<br/>Decimal ROUND_HALF_UP]
+  S --> R[(results JSON/CSV)]
+  R --> U[server.py + UI<br/>дашборд, override, редактор]
+  O[(overrides отдельно)] --> U
 ```
-cqa/
-  config.py     .env + переменные окружения (провайдер, модель, URL)
-  data.py       загрузка/fetch/вставка, нормализация, смещения для аудио, разметка удержания в звонках
-  checklist.py  YAML-чек-листы, валидация, хэш критерия, авто-выбор по каналу
-  prompts.py    системный промпт + отдельный промпт на КАЖДЫЙ критерий + JSON-схема инструмента
-  llm.py        Anthropic (tool use, prompt caching) | любой OpenAI-совместимый endpoint (Ollama, vLLM)
-  evaluator.py  оценка критерия: валидация цитат → ретрай, self-consistency, кэш; пул потоков
-  scoring.py    детерминированный скоринг (Decimal, ROUND_HALF_UP)
-  store.py      results/<group>.json, overrides отдельно, CSV-экспорт (AI / Human / оба)
-  server.py     FastAPI; static/index.html — одностраничный UI
-checklists/     freedom_chat_v1.yaml, freedom_call_v1.yaml (+ любые новые из редактора)
-tests/          тесты скоринга и валидации цитат
+
+### Жюри (режим по умолчанию)
+
+```mermaid
+sequenceDiagram
+  participant E as Evaluator
+  participant H as Juror: claude-haiku-5-5
+  participant S as Juror: claude-sonnet-5-5
+  participant J as Judge: claude-opus-5-5
+  par параллельно
+    E->>H: критерий k + транскрипт
+  and
+    E->>S: критерий k + транскрипт
+  end
+  H-->>E: value, цитаты, обоснование
+  S-->>E: value, цитаты, обоснование
+  alt вердикты совпали
+    E->>E: принять вердикт жюри
+  else расхождение
+    E->>J: критерий + транскрипт + оба мнения
+    J-->>E: финальный вердикт
+  end
+  E->>E: валидация цитат → кэш → скоринг кодом
 ```
-
-Поток: `диалог → нормализация → (диалог × критерий) задачи → пул потоков → LLM tool-call → проверка цитат → (при низкой уверенности) ещё 2 сэмпла и голосование → кэш → скоринг кодом → JSON/CSV/UI`.
-
-### Точность (главная метрика)
-- **Один критерий — один запрос.** В промпте только рубрика и правила принятия решения этого критерия — модель не «размазывает» внимание.
-- **Строгий JSON** через Anthropic tool use (`tool_choice` принудительный, `enum` допустимых значений, включая NA только там, где он разрешён).
-- **Валидация цитат.** Каждая цитата должна быть дословной подстрокой указанной реплики (нормализация пробелов/кавычек/ё; допускаются фрагменты через «…»). Если цитата в другой реплике — номер исправляется; если не найдена нигде — повтор запроса с указанием ошибки, после 3 попыток галлюцинированные цитаты отбрасываются (видно в UI/JSON как `rejected_quotes`).
-- **Self-consistency.** Модель возвращает `confidence`; если < порога (0.8, настраивается в YAML), делается ещё 2 сэмпла параллельно и берётся большинство (для шкал при ничьей — медиана). Голоса сохраняются (`votes`, `self_consistency_disagreement`), в UI помечены ⚖.
-- **Роли.** Транскрипт подаётся с номерами реплик, временем и ролями; бот/система явно исключены из оценки. В звонках реплики во время удержания/консультации агентов помечаются `[ВНУТРЕННИЕ ПЕРЕГОВОРЫ НА УДЕРЖАНИИ]` — клиент их не слышит.
-- **Шумный ASR.** В чек-листе звонков отдельное указание не наказывать оператора за ошибки распознавания.
-- Температура: используемый Anthropic endpoint отклоняет параметр `temperature`, поэтому вызовы идут с умолчанием провайдера; детерминизм обеспечивается кэшем, самосогласованием и жёсткими правилами. Для OpenAI-совместимых моделей передаётся `temperature=0` (сэмплы self-consistency — 1.0).
-- Никаких заготовленных ответов: новые диалоги всегда анализируются LLM; кэш ключуется хэшем (текст критерия + допущения + модель + версия промпта) × хэш диалога и нужен только для переоценки изменённых критериев.
-
-### Провайдеры
-`.env`: `CQA_PROVIDER=anthropic`, `CQA_MODEL=claude-sonnet-4-5-20250929` (проверено). Локально: `CQA_PROVIDER=openai`, `CQA_OPENAI_BASE_URL=http://127.0.0.1:11434/v1`, `CQA_MODEL=qwen2.5:14b` — JSON-режим, та же схема и валидация.
 
 ## Как считается балл
-- YES = полный вес, NO = 0; шкала пропорционально: `вес × шаг / верхний_шаг` (04: 15/20 → 15 баллов из 20; 06: 7/10 → 10.5 из 15).
-- NA-критерии исключаются, веса оставшихся пропорционально перераспределяются: `итог = 100 × Σ набранное / Σ весов применимых`.
-- Округление до 2 знаков через `Decimal` **ROUND_HALF_UP** (50.625 → 50.63, не банковское округление float). Настраивается `assumptions.rounding/decimals`.
-- Нет ни одного применимого взвешенного критерия → `total = null`.
-- Критерий 08 «Грубые ошибки» без баллов, отдельный флаг `gross_error`.
-- Время первого ответа (3 мин), теги и вложения не оцениваются. Чек-лист одинаков для RU/KZ/EN.
 
-## Явные допущения (настраиваются в `assumptions` YAML)
-1. «Первая реплика» в критерии 01 = **первая реплика человека-оператора**, даже если бот отвечал раньше; приветствие бота не засчитывается (`first_reply: first_human_operator_turn`).
-2. Ожидание в очереди до первой реплики оператора не снижает критерий 06 (скорость первого ответа не оценивается).
-3. Реплики оператора во время удержания/консультации с коллегой — внутренние (`ignore_internal_hold_turns: true`).
-4. 07 = NA, если клиент/система оборвали диалог без возможности оператора попрощаться.
-5. Округление — ROUND_HALF_UP до 2 знаков.
+`итог = 100 × Σ набранное / Σ весов применимых критериев`, где YES = вес, NO = 0, шкала = `вес × шаг / максимальный_шаг`, NA исключается из числителя **и** знаменателя. Округление `Decimal ROUND_HALF_UP` до 2 знаков. Критерий 08 «Грубые ошибки» без веса — отдельный флаг `gross_error`. Нет применимых критериев → `total = null`.
 
-## Ручная проверка (Human review)
-В карточке диалога у каждого критерия — «Ручная проверка»: значение + обоснование + имя ревьюера. Overrides хранятся **отдельно** (`results/overrides/<group>.json`), AI-вывод не изменяется; итог по человеку пересчитывается, в таблице видны оба итога, в карточке — AI → Human diff. Экспорт: JSON (AI + блок `human`), CSV AI, CSV Human, CSV AI+Human.
+**Пример с NA** (чат-чек-лист, тест `test_readme_worked_example`):
 
-## Звонки и аудио
-Для звонков показывается плеер `audio_url`; клик по реплике/цитате перематывает на `время реплики − время первой реплики` (приближение: запись может стартовать не синхронно с транскриптом).
+| Критерий | Вес | Оценка | Балл |
+|---|---|---|---|
+| 01 Контакт | 10 | YES | 10 |
+| 02 Потребность | 15 | NA | — |
+| 03 Идентификация | 20 | NA | — |
+| 04 Консультация | 20 | 15 из 20 | 15 |
+| 05 Эмпатия | 15 | NO | 0 |
+| 06 Управление/грамотность | 15 | 7 из 10 | 10.5 |
+| 07 Завершение | 5 | NA | — |
+| **Итого** | **60 применимо** | | **100 × 35.5 / 60 = 59.17** |
+
+Все крайние случаи и соответствующие тесты: [docs/SCORING.md](docs/SCORING.md).
+
+## Как максимизируется точность
+- **Один критерий — один запрос.** В промпте только рубрика и правила принятия решения этого критерия.
+- **Жюри + судья.** Haiku и Sonnet голосуют параллельно; при расхождении решает Opus. На DEV жюри согласилось в 84.4% из 520 вердиктов, судья решил 81.
+- **Строгий JSON** через tool use: `enum` допустимых значений, NA только там, где разрешён.
+- **Проверка цитат.** Цитата обязана быть дословной подстрокой указанной реплики (нормализация пробелов/кавычек/ё, фрагменты через «…»); неверный номер реплики исправляется, выдуманная цитата → повтор запроса, затем отбрасывается (`rejected_quotes`).
+- **Роли и удержание.** Бот/система исключены; реплики во время консультации агентов помечены `[ВНУТРЕННИЕ ПЕРЕГОВОРЫ НА УДЕРЖАНИИ]`; ошибки ASR не наказываются.
+- **Детерминированный скоринг** в коде, а не в LLM.
+- **Кэш по критерию**: ключ = хэш(текст критерия + допущения + версия промпта) × модель × хэш диалога. Правка рубрики → переоценивается только этот критерий; правка веса → пересчёт без LLM.
+
+## Интерфейс
+- Дашборд: средний балл, гистограмма, распределение по критериям, флаги грубых ошибок, сортировка.
+- Карточка диалога: подсветка реплик-доказательств, клик по цитате → прокрутка; NA с причиной; «ожидалось в реплике N»; ⚖ — разногласие жюри.
+- Звонки: плеер `audio_url`, клик по реплике → перемотка.
+- Ручная проверка: значение + обоснование + ревьюер; хранится отдельно, AI-вывод не меняется; итог «человек» и diff AI→Human; экспорт JSON / CSV AI / Human / оба.
+- Загрузка JSON-файла, вставка диалога текстом, прогресс-бар оценки.
 
 ## Гибкие чек-листы
-Вкладка «Чек-листы»: добавить/удалить/переупорядочить критерий, тип binary/scale, шкала, вес, NA, «грубая», рубрика и правила; или правка YAML целиком. После сохранения:
-- изменились только веса → «Пересчитать веса» (без LLM, мгновенно);
-- изменились рубрика/новый критерий → «Re-evaluate with current checklist»: благодаря хэшу критерия к LLM уходят только изменённые/новые критерии.
+Вкладка «Чек-листы» в UI или YAML в `checklists/`. Добавить критерий:
+```yaml
+  - id: "09"
+    name: Предложение продукта
+    type: binary            # или type: scale + scale: [0, 5, 10]
+    weight: 5
+    allow_na: true
+    rubric: |
+      YES — оператор уместно предложил релевантный продукт ...
+    rules: |
+      - ...
+```
+Сохранить → «Re-evaluate with current checklist» (к LLM уйдёт только новый критерий) или «Пересчитать веса» (без LLM). Валидация: уникальные id, тип, шкала (`tests/test_checklist.py`).
 
-## Форматы результатов
-`results/<group>.json`: по каждому диалогу `criteria[]` (value, is_na, scale_step, justification, evidence[{turn, quote, speaker}], missing_where, na_reason, confidence, votes), `total`, `gross_error`, `human{…}`, а также meta (модель, время, токены, стоимость).
-`results/<group>.csv`: одна строка на диалог, колонка на критерий + total + gross_error.
+## Локальная LLM (Ollama / vLLM)
+```bash
+CQA_PROVIDER=openai CQA_OPENAI_BASE_URL=http://127.0.0.1:11434/v1 CQA_MODEL=qwen2.5:14b \
+  python -m cqa evaluate --input examples/sample_dialogs.json
+```
+Те же промпты, JSON-режим, та же схема и валидация цитат. `CQA_PROVIDER=mock` (или `--mock`) — детерминированная эвристика без сети для тестов, CI и демо (не для точности).
+
+## Допущения
+
+| # | Допущение | Где задано |
+|---|---|---|
+| 1 | Критерий 01: «первая реплика» = первая реплика **человека-оператора**; приветствие бота не засчитывается | `assumptions.first_reply` |
+| 2 | Критерий 07 оценивается строго | рубрика 07 |
+| 3 | Время первого ответа, теги, вложения не оцениваются | docs/ASSUMPTIONS.md |
+| 4 | Звонки (по замечанию организаторов): критерий 06 оценивает логику, ясность и управление паузами вместо грамотности письма; в 04 и всех остальных ошибки ASR не наказываются | `freedom_call_v1.yaml` |
+| 5 | Реплики во время удержания — внутренние, не оцениваются | `ignore_internal_hold_turns` |
+| 6 | Аудио-смещение = время реплики − время первой реплики (приближение) | `cqa/data.py` |
+| 7 | Округление ROUND_HALF_UP до 2 знаков | `assumptions.rounding` |
+
+Подробно: [docs/ASSUMPTIONS.md](docs/ASSUMPTIONS.md).
+
+## Результаты на DEV
+65 диалогов (60 чатов: RU 30 / KZ 15 / EN 15; 5 звонков RU), 0 ошибок, средний балл 75.95, 5 флагов грубых ошибок. Полный прогон ≈ 5 мин и ≈ $13; 10 диалогов ≈ 1 мин и ≈ $2. Методика: [docs/EVALUATION.md](docs/EVALUATION.md).
+
+## Ограничения (честно)
+- Для DEV нет размеченного ground truth — точность проверена ручным разбором выборки, а не метрикой на большом наборе.
+- Наиболее неоднозначные критерии — 07, 04, 05 (субъективность рубрики).
+- Облачный режим жюри стоит денег (≈ $0.2 на диалог); точность локальной модели мы не измеряли.
+- Смещение аудио приблизительное: запись может стартовать не синхронно с транскриптом.
+- Фоновые задачи UI живут в памяти процесса; авторизации нет (по условию).
+- Mock-провайдер — эвристика для тестов, не бейзлайн качества.
+
+## Структура проекта
+```
+cqa/
+  config.py      .env + переменные окружения
+  data.py        загрузка/fetch, нормализация, удержание, аудио-смещения
+  checklist.py   YAML-чек-листы, валидация, хэш критерия, выбор по каналу
+  prompts.py     системный промпт + промпт на каждый критерий + JSON-схема
+  llm.py         Anthropic | OpenAI-совместимый | MockBackend
+  evaluator.py   жюри/судья, проверка цитат, кэш, пул потоков
+  scoring.py     детерминированный скоринг
+  store.py       результаты, overrides, CSV
+  server.py      FastAPI; static/index.html — UI
+  __main__.py    CLI: evaluate / stats / rescore / serve
+checklists/      freedom_chat_v1.yaml, freedom_call_v1.yaml
+examples/        sample_dialogs.json — 4 синтетических диалога (RU/EN/KZ чат + RU звонок)
+tests/           40 тестов: скоринг, цитаты, чек-листы, кэш-ключ, mock e2e, HTTP API
+docs/            ARCHITECTURE, SCORING, ASSUMPTIONS, EVALUATION, API, презентация + PDF
+Makefile · pyproject.toml · Dockerfile · docker-compose.yml · .github/workflows/ci.yml
+```
+
+## CLI
+`python -m cqa evaluate [--group G | --input file.json] [--ids a,b] [--limit N] [--checklist ID] [--fresh] [--reeval] [--mock] [--concurrency N] [--refresh]` · `python -m cqa stats --group G` · `python -m cqa rescore --group G` · `python -m cqa serve --port 8090`.
 
 ## Публичный репозиторий
-`.env`, `data/` (сырые диалоги) и `results/` (содержат цитаты клиентов) в `.gitignore`. Данные загружаются во время работы через `CQA_API_URL`.
+`.env`, `data/` (сырые диалоги), `results/` (цитаты клиентов), `.cache/` — в `.gitignore`. Данные загружаются во время работы через `CQA_API_URL`. В `examples/` только выдуманные диалоги.
 
-## Демо-сценарий (5–10 минут)
-1. **(1 мин) Проблема.** Ручной QA слушает/читает единицы процентов обращений; нужна 100% проверка с объяснимостью.
-2. **(1 мин) Запуск.** UI → группа `DEV` → **Fetch group & evaluate** — прогресс-бар, параллельная оценка; рассказать: 1 критерий = 1 промпт, строгий JSON, проверка цитат, self-consistency.
-3. **(2 мин) Дашборд.** Средний балл, гистограмма, распределение по критериям, флаги грубых ошибок (например p1-ru-023 — предложение платной консультации в обход компании). Сортировка по итогу.
-4. **(2 мин) Диалог.** Открыть чат: подсветка реплик-доказательств, клик по цитате → прокрутка; NA с объяснением; «ожидалось в реплике N». Открыть звонок `p4-ru-002`: плеер, клик по реплике → перемотка, серые реплики «удержание».
-5. **(1 мин) Ручная проверка.** Поменять оценку критерия, указать причину → пересчитан итог «человек», видно расхождение AI vs Human; экспорт CSV AI+Human.
-6. **(1 мин) Гибкость.** Чек-листы → изменить вес → «Пересчитать веса»; добавить критерий → «Re-evaluate» (к LLM уходит только новый критерий). Чек-лист звонков отдельный, выбирается по каналу автоматически.
-7. **(30 с) Архитектура.** Anthropic в облаке или локальная модель через Ollama одной строкой в `.env`; CLI `python -m cqa evaluate --group <ID>` для контрольного набора.
+---
+
+<a id="english"></a>
+## English
+
+**CQA** evaluates the *human operator* in Freedom Broker chats and voice calls (RU/KZ/EN) against a flexible YAML checklist. Each criterion is a separate LLM call; a jury (claude-haiku-5-5 + claude-sonnet-5-5) votes in parallel and claude-opus-5-5 adjudicates disagreements. Every verdict carries a justification and verbatim, turn-referenced quotes validated against the transcript. The 0–100 score is computed in code (NA weight redistribution, Decimal ROUND_HALF_UP); gross errors are a separate flag.
+
+**Quickstart:** `make install && make demo && make serve` (offline, mock LLM). Real run: fill `.env` from `.env.example`, then `python -m cqa evaluate --group <ID>` → `results/<id>.json|csv`.
+
+**Highlights:** per-criterion prompts · LLM jury + judge · quote validation with auto-correction / retry · deterministic scoring · per-criterion cache (editing one rubric re-evaluates only that criterion; reweighting needs no LLM) · no-login web UI with evidence highlighting, audio seek, human override (stored separately, AI vs Human diff, CSV/JSON export) and checklist editor · cloud (Anthropic), local (Ollama/vLLM via OpenAI-compatible API) or offline mock · Docker · CI on 3.11/3.12 without secrets.
+
+**DEV results:** 65 dialogs (60 chats, 5 calls), 0 errors, mean 75.95, 5 gross-error flags; jurors agreed on 84.4% of 520 criterion verdicts, the judge decided 81. Full run ~5 min / ~$13.
+
+**Limitations:** no labelled ground truth for DEV (accuracy checked by manual review of a sample); criteria 07/04/05 are the most subjective; audio offsets are approximate; local-model accuracy not measured.
+
+Docs: [Architecture](docs/ARCHITECTURE.md) · [Scoring](docs/SCORING.md) · [Assumptions](docs/ASSUMPTIONS.md) · [Evaluation](docs/EVALUATION.md) · [API](docs/API.md) · [Deck](docs/CQA_Pitch_Deck.pdf). License: [MIT](LICENSE).
