@@ -101,3 +101,19 @@ def test_lora_args_and_preset(monkeypatch):
     assert "--lora-modules cqa-adapter=org/ad" in router.vllm_lora_args("org/ad")
     from cqa import presets
     assert presets.PRESETS["cascade"]["router"] is True
+
+
+def test_local_presets(monkeypatch):
+    from cqa import presets
+    for k in ("CQA_ROUTER_FIRST", "CQA_ROUTER_T1", "CQA_JEV_BASE_URL", "CQA_ROUTER_LOCAL_MODEL", "CQA_ROUTER_HARD_CONF",
+              "CQA_ROUTER_T2", "CQA_JEV_MODEL"):
+        monkeypatch.delenv(k, raising=False)
+    ns = {}
+    presets.apply("local", ns)
+    assert ns["PROVIDER"] == "openai" and ns["MODEL"] == "qwen3.8-27b-fp8" and not ns["ENSEMBLE"]
+    monkeypatch.setattr("cqa.router.install", lambda *a, **k: None)
+    ns = {}
+    presets.apply("cascade-local", ns)
+    import os
+    assert ns["PROVIDER"] == "anthropic" and os.environ["CQA_ROUTER_FIRST"] == "jev"
+    assert os.environ["CQA_JEV_BASE_URL"].endswith("/v1/decisions")

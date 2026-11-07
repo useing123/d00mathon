@@ -17,8 +17,10 @@ from pathlib import Path
 
 from . import data, scoring
 
-MODEL = "typesafe/jev-1.14"
-URL = "https://openrouter.ai/api/alpha/decisions"
+# Endpoint is configurable so the SAME question builder feeds Jev (OpenRouter) and Jev-compatible self-hosted
+# decision servers (LitJev, qwen-jev-like / openjev wrappers in scripts/decision_server.py): docs/KZ_MODELS.md.
+MODEL = os.environ.get("CQA_JEV_MODEL", "typesafe/jev-1.14")
+URL = os.environ.get("CQA_JEV_BASE_URL", "https://openrouter.ai/api/alpha/decisions")
 KEY_URL = "https://openrouter.ai/api/v1/key"
 MAX_STATE_CHARS = 12000
 RULES_CHARS = int(os.environ.get("CQA_JEV_RULES_CHARS", "0"))   # 0 = full rules; a 700-char cut lost ~9 pts
@@ -29,6 +31,9 @@ ROLE = ("Задача: оценить работу ЧЕЛОВЕКА-операт
 
 
 def api_key():
+    k = os.environ.get("CQA_JEV_API_KEY") or (None if "openrouter.ai" in URL else "none")
+    if k:
+        return k.strip()
     k = os.environ.get("OPENROUTER_API_KEY")
     if k:
         return k.strip()
@@ -156,4 +161,5 @@ def evaluate(rec, checklist, key=None, retries=2):
     return {"conversation_id": rec["conversation_id"], "checklist_id": checklist["id"], "criteria": crit,
             "total": t["total"], "gross_error": t["gross_error"],
             "status": "ok" if all(v is not None for v in values.values()) else "incomplete",
-            "latency_s": round(time.time() - t0, 2), "usage": resp.get("usage"), "provider": "jev", "model": MODEL}
+            "latency_s": round(time.time() - t0, 2), "usage": resp.get("usage"), "provider": "jev", "model": MODEL,
+            "endpoint": URL}

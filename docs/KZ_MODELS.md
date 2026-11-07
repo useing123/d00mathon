@@ -53,3 +53,42 @@ Same protocol (`run_local_only.py`, tier 1 only: 80/80 criteria at tier 1, no es
 - 4B-Kazakh: 0 incomplete, 0 errors. Below the 9B (0.887) and 27B (0.963), above Qwen3-8B-AWQ (0.775); weak on 07 (0.5).
 - GigaChat3.1-10B-A1.8B-bf16: **no number**. The pod was switched to it with `podEditJob` (vllm `latest`, `--max-model-len 16384`, then again with `--trust-remote-code`). The container never came up: uptime −1 and proxy 404 for about 20 min across both tries. I couldn't get the logs through the API, so the cause is unknown (possibly DeepseekV3/MLA on an A40 with vLLM `latest`). I stopped to stay within budget.
 - Pod `ic49nwbfubw3ev` (cqa-a1): STOPPED, EXITED verified. About 40 min × $0.59/h ≈ $0.39.
+
+## Decision models (Qwen3.8-27B-FP8 tier 1, held-out 10 dialogs, 1× A40 secure $0.59/h, 2026-11-08)
+
+The same question builder (`cqa/jev.py`, endpoint via `CQA_JEV_BASE_URL` / `CQA_JEV_MODEL`) feeds every method.
+Client: `scripts/bench_kz.py decision|tune|cascade`. Pod-side servers: `scripts/decision_server.py` (vllmchoice / qjl / openjev); LitJev runs natively
+(`litjev --backend sglang`, `/v1/systemone`). Results use the shared schema in `results/kz_models/<method>__<model>.json` (per-dialog data
+included; tuned-gold runs are `__gold.json`, raw dialogs are in `raw/`). $/dialog = GPU cost only, sequential (concurrency 1–4).
+
+| method | model | agr. | MAE | gross P/R | KZ | RU | EN | s/dialog | $/dialog | escal. |
+|---|---|---|---|---|---|---|---|---|---|---|
+| cascade: vllm-choice → haiku (→ sonnet) | Qwen3.8-27B-FP8 | 0.950 | 4.42 | 1/1 | 1.0 | 0.90 | 1.0 | 7.65 | $0.0013 GPU + ~$0.00008 cloud* | 13.8 % |
+| vLLM guided_choice decision mode (ours) | Qwen3.8-27B-FP8 | 0.938 | 4.58 | 1/1 | 0.938 | 0.90 | 1.0 | 7.3 | $0.0012 | – |
+| qwen-jev-like (sting8k, MIT) | Qwen3.8-27B-FP8 | 0.912 | 9.41 | 1/1 | 1.0 | 0.85 | 0.958 | 2.7 | $0.00045 | – |
+| LitJev (zhengxuyu, Apache-2.0; SGLang, FP8) | Qwen3.8-27B-FP8 | 0.863 | 7.16 | 1/1 | 0.938 | 0.825 | 0.875 | 13.5 | $0.0022 | – |
+| LitJev | issai/Qwen3.5-9B-Kazakh | 0.812 | 10.34 | –/0 | 0.875 | 0.775 | 0.833 | 3.8 | $0.0006 | – |
+| openjev 4B v5 (AlexWortega, MIT) | qwen3.5-4b-nli-v5 | 0.713 | 14.22 | –/0 | 0.812 | 0.55 | 0.917 | 6.4 | $0.0011 | – |
+| ref: vLLM generate (full prompt) | Qwen3.8-27B-FP8 | 0.963 | 4.3 | 1/1 | 1.0 | 0.925 | 1.0 | 26.6 | $0.0044 | – |
+| ref: Jev 1.14 / Jev cascade | – | 0.934 / 0.963 | | | | | | 0.4 / 1.3 | $0.0005 / $0.0042 | |
+
+Tuned gold (16) agreement: vllm-choice 0.953, qwen-jev-like 0.875, LitJev-27B 0.859, LitJev-9B 0.719, openjev 0.727.
+Cascade thresholds came from offline replay on tuned gold only (`bench_kz.py tune`; Haiku/Sonnet samples from `results/oss/jev_all_gold.json`):
+T1 0.5, HARD_CONF 0.95 (04/05/06), T2 0 → replay agreement 1.0 on gold (overfit, so expect less). Held-out result: 0.950.
+*Cloud $ is low because the Haiku calls hit the disk cache (`cloud_usd` counts only uncached calls). The real Haiku cost at 13.8 % escalation is roughly $0.0006/dialog (estimate).
+
+**Verdicts.** Best decision method: our vLLM guided_choice (0.938, 3.6× faster than full generation, about 1 label lower). The cascade on top reaches
+0.950 at 7.7 s/dialog and is the best self-hosted tier 1, but it does not beat Jev→haiku→sonnet (0.963, 1.3 s) or plain Qwen3.8 generation (0.963).
+qwen-jev-like is the fastest (2.7 s) and is weak on RU. LitJev is below both (content readout, uncalibrated). openjev (EN NLI cross-encoder) fails on RU and is not usable.
+With n=10, differences of ≤0.025 are noise. Caveats: concurrent agents edited `checklists/freedom_chat_v1.yaml` during this window, so later runs
+(qwen-jev-like, openjev, LitJev-9B) may have seen slightly different rule text than vllm-choice/LitJev-27B. LitJev's SGLang server fails under
+concurrent requests ("event loop is already running") and was run at concurrency 1. Each config was run once.
+
+Presets: `local` (Qwen3.8-27B-FP8 on own vLLM, `CQA_OPENAI_BASE_URL`, `CQA_ROUTER_LOCAL_MODEL`) and `cascade-local` (tier 1 = `decision_server.py
+vllmchoice` at `CQA_JEV_BASE_URL`, default `http://127.0.0.1:8101/v1/decisions`, thresholds above).
+
+**Pod for tomorrow:** `hieibio5fqyeuj` (cqa-kz, A40 secure, runpod/pytorch image, SSH key `~/.ssh/cqa_runpod`, host alias `kz` in ~/.ssh/config, so the port changes on resume).
+Status STOPPED (EXITED). Weights are on the container disk, which may be wiped on resume. Resume: GraphQL `podResume(input:{podId:"hieibio5fqyeuj", gpuCount:1})`, then
+`ssh kz 'bash /root/serve.sh Qwen/Qwen3.8-27B-FP8 qwen3.8-27b-fp8 --language-model-only'` (≈6 min) +
+`python decision_server.py vllmchoice --port 8101 --model qwen3.8-27b-fp8 --key $(cat /root/.tok)`, and tunnel `ssh -L 18000:…:8000 -L 18101:…:8101 kz`.
+(Pod port 8001 is taken by RunPod nginx.) LitJev: `bash /root/lj.sh <model> <log>` (venv /root/lj-env, sglang 0.5.23).

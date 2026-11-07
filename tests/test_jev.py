@@ -55,3 +55,32 @@ def test_evaluate_with_stubbed_api(monkeypatch):
     g = gold.load_gold()[4]
     r = jev.evaluate(data.normalize(g["dialog"], 0), _cl())
     assert r["status"] == "ok" and r["total"] is not None and r["gross_error"] is False
+
+
+def test_jev_endpoint_configurable(monkeypatch):
+    """CQA_JEV_BASE_URL / CQA_JEV_MODEL redirect the same question builder to a self-hosted Jev-compatible server."""
+    import importlib
+    import json as _json
+
+    monkeypatch.setenv("CQA_JEV_BASE_URL", "http://pod:8000/v1/decisions")
+    monkeypatch.setenv("CQA_JEV_MODEL", "litjev-qwen3.8-27b")
+    monkeypatch.delenv("CQA_JEV_API_KEY", raising=False)
+    j = importlib.reload(jev)
+    try:
+        assert j.URL == "http://pod:8000/v1/decisions" and j.MODEL == "litjev-qwen3.8-27b"
+        assert j.api_key() == "none"   # self-hosted: no OpenRouter key needed
+        seen = {}
+
+        def fake_post(url, body=None, key=None, timeout=120):
+            seen.update(url=url, body=body)
+            return {"answers": {}}
+        monkeypatch.setattr(j, "_post", fake_post)
+        cl = ckl.load("freedom_chat_v1")
+        g = gold.load_gold()[0]
+        j.evaluate(data.normalize(g["dialog"], 0), cl)
+        assert seen["url"] == "http://pod:8000/v1/decisions" and seen["body"]["model"] == "litjev-qwen3.8-27b"
+        assert seen["body"]["questions"] == j.build_questions(cl)
+        _json.dumps(seen["body"])
+    finally:
+        monkeypatch.undo()
+        importlib.reload(jev)

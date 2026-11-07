@@ -1,0 +1,466 @@
+{
+ "method": "qwen-jev-like",
+ "model": "Qwen/Qwen3.8-27B-FP8",
+ "gpu": "A40",
+ "split": "holdout",
+ "n_dialogs": 10,
+ "per_dialog": [
+  {
+   "id": "hold-01-en-bonds-clarify",
+   "lang": "en",
+   "per_criterion": {
+    "01": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "02": {
+     "pred": "NA",
+     "gold": "YES"
+    },
+    "03": {
+     "pred": "NA",
+     "gold": "NA"
+    },
+    "04": {
+     "pred": 20,
+     "gold": 20
+    },
+    "05": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "06": {
+     "pred": 10,
+     "gold": 10
+    },
+    "07": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "08": {
+     "pred": "NO",
+     "gold": "NO"
+    }
+   },
+   "total_pred": 100.0,
+   "total_gold": 100.0,
+   "gross_pred": false,
+   "gross_gold": false,
+   "status": "ok"
+  },
+  {
+   "id": "hold-02-call-ru-phone-change-no-id",
+   "lang": "ru",
+   "per_criterion": {
+    "01": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "02": {
+     "pred": "NA",
+     "gold": "NA"
+    },
+    "03": {
+     "pred": "NO",
+     "gold": "NO"
+    },
+    "04": {
+     "pred": 0,
+     "gold": 20
+    },
+    "05": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "06": {
+     "pred": 10,
+     "gold": 10
+    },
+    "07": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "08": {
+     "pred": "NO",
+     "gold": "NO"
+    }
+   },
+   "total_pred": 52.94,
+   "total_gold": 76.47,
+   "gross_pred": false,
+   "gross_gold": false,
+   "status": "ok"
+  },
+  {
+   "id": "hold-03-kz-no-name",
+   "lang": "kz",
+   "per_criterion": {
+    "01": {
+     "pred": "NO",
+     "gold": "NO"
+    },
+    "02": {
+     "pred": "NA",
+     "gold": "NA"
+    },
+    "03": {
+     "pred": "NA",
+     "gold": "NA"
+    },
+    "04": {
+     "pred": 20,
+     "gold": 20
+    },
+    "05": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "06": {
+     "pred": 10,
+     "gold": 10
+    },
+    "07": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "08": {
+     "pred": "NO",
+     "gold": "NO"
+    }
+   },
+   "total_pred": 84.62,
+   "total_gold": 84.62,
+   "gross_pred": false,
+   "gross_gold": false,
+   "status": "ok"
+  },
+  {
+   "id": "hold-04-ru-transfer-minor-detail",
+   "lang": "ru",
+   "per_criterion": {
+    "01": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "02": {
+     "pred": "NA",
+     "gold": "NA"
+    },
+    "03": {
+     "pred": "NA",
+     "gold": "NA"
+    },
+    "04": {
+     "pred": 20,
+     "gold": 15
+    },
+    "05": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "06": {
+     "pred": 10,
+     "gold": 10
+    },
+    "07": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "08": {
+     "pred": "NO",
+     "gold": "NO"
+    }
+   },
+   "total_pred": 100.0,
+   "total_gold": 92.31,
+   "gross_pred": false,
+   "gross_gold": false,
+   "status": "ok"
+  },
+  {
+   "id": "hold-05-en-angry-order-cancelled",
+   "lang": "en",
+   "per_criterion": {
+    "01": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "02": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "03": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "04": {
+     "pred": 20,
+     "gold": 20
+    },
+    "05": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "06": {
+     "pred": 10,
+     "gold": 10
+    },
+    "07": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "08": {
+     "pred": "NO",
+     "gold": "NO"
+    }
+   },
+   "total_pred": 100.0,
+   "total_gold": 100.0,
+   "gross_pred": false,
+   "gross_gold": false,
+   "status": "ok"
+  },
+  {
+   "id": "hold-06-ru-wrong-advice-close",
+   "lang": "ru",
+   "per_criterion": {
+    "01": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "02": {
+     "pred": "NA",
+     "gold": "NA"
+    },
+    "03": {
+     "pred": "NO",
+     "gold": "NA"
+    },
+    "04": {
+     "pred": 0,
+     "gold": 0
+    },
+    "05": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "06": {
+     "pred": 10,
+     "gold": 10
+    },
+    "07": {
+     "pred": "NO",
+     "gold": "NO"
+    },
+    "08": {
+     "pred": "NO",
+     "gold": "NO"
+    }
+   },
+   "total_pred": 47.06,
+   "total_gold": 61.54,
+   "gross_pred": false,
+   "gross_gold": false,
+   "status": "ok"
+  },
+  {
+   "id": "hold-07-call-kz-hangup-before-request",
+   "lang": "kz",
+   "per_criterion": {
+    "01": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "02": {
+     "pred": "NA",
+     "gold": "NA"
+    },
+    "03": {
+     "pred": "NA",
+     "gold": "NA"
+    },
+    "04": {
+     "pred": "NA",
+     "gold": "NA"
+    },
+    "05": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "06": {
+     "pred": 10,
+     "gold": 10
+    },
+    "07": {
+     "pred": "NA",
+     "gold": "NA"
+    },
+    "08": {
+     "pred": "NO",
+     "gold": "NO"
+    }
+   },
+   "total_pred": 100.0,
+   "total_gold": 100.0,
+   "gross_pred": false,
+   "gross_gold": false,
+   "status": "ok"
+  },
+  {
+   "id": "hold-08-ru-third-party-data",
+   "lang": "ru",
+   "per_criterion": {
+    "01": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "02": {
+     "pred": "NA",
+     "gold": "NA"
+    },
+    "03": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "04": {
+     "pred": 20,
+     "gold": 20
+    },
+    "05": {
+     "pred": "NO",
+     "gold": "YES"
+    },
+    "06": {
+     "pred": 10,
+     "gold": 10
+    },
+    "07": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "08": {
+     "pred": "YES",
+     "gold": "YES"
+    }
+   },
+   "total_pred": 82.35,
+   "total_gold": 100.0,
+   "gross_pred": true,
+   "gross_gold": true,
+   "status": "ok"
+  },
+  {
+   "id": "hold-09-en-long-gap-no-warning",
+   "lang": "en",
+   "per_criterion": {
+    "01": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "02": {
+     "pred": "NA",
+     "gold": "NA"
+    },
+    "03": {
+     "pred": "NA",
+     "gold": "NA"
+    },
+    "04": {
+     "pred": 20,
+     "gold": 20
+    },
+    "05": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "06": {
+     "pred": 7,
+     "gold": 7
+    },
+    "07": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "08": {
+     "pred": "NO",
+     "gold": "NO"
+    }
+   },
+   "total_pred": 93.08,
+   "total_gold": 93.08,
+   "gross_pred": false,
+   "gross_gold": false,
+   "status": "ok"
+  },
+  {
+   "id": "hold-10-ru-contradictory",
+   "lang": "ru",
+   "per_criterion": {
+    "01": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "02": {
+     "pred": "NA",
+     "gold": "NA"
+    },
+    "03": {
+     "pred": "NA",
+     "gold": "NA"
+    },
+    "04": {
+     "pred": 0,
+     "gold": 5
+    },
+    "05": {
+     "pred": "NO",
+     "gold": "YES"
+    },
+    "06": {
+     "pred": 4,
+     "gold": 4
+    },
+    "07": {
+     "pred": "YES",
+     "gold": "YES"
+    },
+    "08": {
+     "pred": "NO",
+     "gold": "NO"
+    }
+   },
+   "total_pred": 32.31,
+   "total_gold": 63.08,
+   "gross_pred": false,
+   "gross_gold": false,
+   "status": "ok"
+  }
+ ],
+ "per_criterion_agreement": {
+  "01": 1.0,
+  "02": 0.9,
+  "03": 0.9,
+  "04": 0.7,
+  "05": 0.8,
+  "06": 1.0,
+  "07": 1.0,
+  "08": 1.0
+ },
+ "overall_agreement": 0.912,
+ "total_mae": 9.41,
+ "gross": {
+  "p": 1.0,
+  "r": 1.0
+ },
+ "subsets": {
+  "KZ": 1.0,
+  "RU": 0.85,
+  "EN": 0.958
+ },
+ "s_per_dialog": 2.73,
+ "usd_per_dialog": 0.00045,
+ "incomplete": [],
+ "endpoint": "http://127.0.0.1:18101/v1/decisions",
+ "concurrency": 1,
+ "errors": []
+}

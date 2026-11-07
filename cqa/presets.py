@@ -32,6 +32,19 @@ PRESETS = {
                "ensemble": False, "model": "claude-haiku-5-5", "prompt": "v0",
                "why": ("Парсер (RU/KZ/EN) добавляет в FACTS подсказки с номерами реплик и глоссами казахских фраз; "
                        "вердикты выносят модели каскада. См. docs/HYBRID_KZ.md.")},
+    "local": {"label": "локально: Qwen3.8-27B-FP8 на своём vLLM (без облака)", "bench_config": "local", "provider": "openai",
+              "ensemble": False, "model": "qwen3.8-27b-fp8", "prompt": "v0",
+              "why": ("Одна self-hosted модель, данные не уходят в облако. Отложенный набор 0.963, ~27 с/диалог на A40. "
+                      "Нужен CQA_OPENAI_BASE_URL=<pod>/v1; имя модели — CQA_ROUTER_LOCAL_MODEL. См. docs/KZ_MODELS.md.")},
+    "cascade-local": {"label": "каскад: self-hosted decision model (vLLM guided choice) → haiku → sonnet",
+                      "bench_config": "cascade-local", "router": True, "ensemble": False, "model": "claude-haiku-5-5",
+                      "prompt": "v0", "env": {"CQA_ROUTER_FIRST": "jev", "CQA_ROUTER_T1": "0.5",
+                                              "CQA_ROUTER_HARD_CONF": "0.95", "CQA_ROUTER_T2": "0",
+                                              "CQA_JEV_BASE_URL": "http://127.0.0.1:8101/v1/decisions",
+                                              "CQA_JEV_MODEL": "qwen3.8-27b-fp8"},
+                      "why": ("Tier 1 — Jev-совместимый decision-сервер на своём GPU (scripts/decision_server.py "
+                              "vllmchoice), неуверенные критерии — haiku. Пороги подобраны на tuned gold. "
+                              "См. docs/KZ_MODELS.md, раздел Decision models.")},
 }
 DEFAULT = "jury"
 
@@ -41,12 +54,14 @@ def apply(name, cfg):
     if name not in PRESETS:
         raise ValueError(f"unknown preset {name!r}; choose one of {', '.join(PRESETS)}")
     p = PRESETS[name]
-    cfg["PROVIDER"] = "anthropic"   # "cloud" mode: the vendor is picked per model id (cqa.llm.cloud_route)
+    cfg["PROVIDER"] = p.get("provider", "anthropic")   # "cloud" mode: vendor picked per model id (llm.cloud_route)
+    for k, v in p.get("env", {}).items():   # preset defaults; explicit environment wins
+        os.environ.setdefault(k, v)
     cfg["ENSEMBLE"] = p["ensemble"]
     if p["ensemble"]:
         cfg["JURORS"], cfg["JUDGE"] = list(p["jurors"]), p["judge"]
     else:
-        cfg["MODEL"] = p["model"]
+        cfg["MODEL"] = os.environ.get("CQA_ROUTER_LOCAL_MODEL", p["model"]) if p.get("provider") == "openai" else p["model"]
     cfg["PRESET"] = name
     if p.get("router"):   # cascade: swap in cqa.router.CascadeEvaluator (thresholds via CQA_ROUTER_* env)
         from . import router
