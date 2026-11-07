@@ -1,0 +1,387 @@
+{
+ "jury-haiku+sonnet>opus": {
+  "disagreements": 9,
+  "judge_correct": 8,
+  "jev_correct": 7,
+  "cases": [
+   {
+    "dialog": "gold-05-ru-multi-question-partial",
+    "criterion": "04",
+    "votes": [
+     "15",
+     "10",
+     "10"
+    ],
+    "gold": "10",
+    "judge": 10,
+    "jev": 10,
+    "jev_conf": 0.93
+   },
+   {
+    "dialog": "gold-10-ru-complaint-no-empathy",
+    "criterion": "04",
+    "votes": [
+     "5",
+     "10",
+     "10"
+    ],
+    "gold": "10",
+    "judge": 10,
+    "jev": 10,
+    "jev_conf": 0.87
+   },
+   {
+    "dialog": "gold-10-ru-complaint-no-empathy",
+    "criterion": "06",
+    "votes": [
+     "7",
+     "10",
+     "10"
+    ],
+    "gold": "10",
+    "judge": 10,
+    "jev": 10,
+    "jev_conf": 0.71
+   },
+   {
+    "dialog": "gold-12-en-personal-card-transfer",
+    "criterion": "03",
+    "votes": [
+     "NO",
+     "NA",
+     "NA"
+    ],
+    "gold": "NA",
+    "judge": "NA",
+    "jev": "NA",
+    "jev_conf": 0.76
+   },
+   {
+    "dialog": "gold-15-call-ru-hold-hangup",
+    "criterion": "07",
+    "votes": [
+     "NO",
+     "NA",
+     "NA"
+    ],
+    "gold": "NA",
+    "judge": "NA",
+    "jev": "NA",
+    "jev_conf": 0.71
+   },
+   {
+    "dialog": "hold-04-ru-transfer-minor-detail",
+    "criterion": "04",
+    "votes": [
+     "20",
+     "15",
+     "15"
+    ],
+    "gold": "15",
+    "judge": 15,
+    "jev": 20,
+    "jev_conf": 0.96
+   },
+   {
+    "dialog": "hold-06-ru-wrong-advice-close",
+    "criterion": "03",
+    "votes": [
+     "NO",
+     "NA",
+     "NA"
+    ],
+    "gold": "NA",
+    "judge": "NA",
+    "jev": "NO",
+    "jev_conf": 0.69
+   },
+   {
+    "dialog": "hold-08-ru-third-party-data",
+    "criterion": "04",
+    "votes": [
+     "0",
+     "20",
+     "20"
+    ],
+    "gold": "20",
+    "judge": 20,
+    "jev": 20,
+    "jev_conf": 0.96
+   },
+   {
+    "dialog": "hold-10-ru-contradictory",
+    "criterion": "02",
+    "votes": [
+     "NO",
+     "NA",
+     "NO"
+    ],
+    "gold": "NA",
+    "judge": "NO",
+    "jev": "NA",
+    "jev_conf": 0.61
+   }
+  ]
+ },
+ "jury-sonnet+luna>opus": {
+  "disagreements": 11,
+  "judge_correct": 7,
+  "jev_correct": 7,
+  "cases": [
+   {
+    "dialog": "gold-07-ru-client-left-before-request",
+    "criterion": "02",
+    "votes": [
+     "NA",
+     "YES",
+     "NA"
+    ],
+    "gold": "NA",
+    "judge": "NA",
+    "jev": "NA",
+    "jev_conf": 0.64
+   },
+   {
+    "dialog": "gold-10-ru-complaint-no-empathy",
+    "criterion": "04",
+    "votes": [
+     "10",
+     "15",
+     "10"
+    ],
+    "gold": "10",
+    "judge": 10,
+    "jev": 10,
+    "jev_conf": 0.87
+   },
+   {
+    "dialog": "gold-10-ru-complaint-no-empathy",
+    "criterion": "07",
+    "votes": [
+     "NO",
+     "YES",
+     "NO"
+    ],
+    "gold": "NO",
+    "judge": "NO",
+    "jev": "NO",
+    "jev_conf": 0.97
+   },
+   {
+    "dialog": "gold-11-ru-paid-private-consult",
+    "criterion": "02",
+    "votes": [
+     "NO",
+     "NA",
+     "NA"
+    ],
+    "gold": "NA",
+    "judge": "NA",
+    "jev": "NA",
+    "jev_conf": 0.77
+   },
+   {
+    "dialog": "gold-11-ru-paid-private-consult",
+    "criterion": "07",
+    "votes": [
+     "NO",
+     "YES",
+     "NO"
+    ],
+    "gold": "NO",
+    "judge": "NO",
+    "jev": "YES",
+    "jev_conf": 0.91
+   },
+   {
+    "dialog": "gold-13-kz-insult",
+    "criterion": "06",
+    "votes": [
+     "7",
+     "10",
+     "10"
+    ],
+    "gold": "10",
+    "judge": 10,
+    "jev": 10,
+    "jev_conf": 0.44
+   },
+   {
+    "dialog": "hold-03-kz-no-name",
+    "criterion": "02",
+    "votes": [
+     "NA",
+     "NO",
+     "NO"
+    ],
+    "gold": "NA",
+    "judge": "NO",
+    "jev": "NO",
+    "jev_conf": 0.57
+   },
+   {
+    "dialog": "hold-04-ru-transfer-minor-detail",
+    "criterion": "04",
+    "votes": [
+     "15",
+     "20",
+     "15"
+    ],
+    "gold": "15",
+    "judge": 15,
+    "jev": 20,
+    "jev_conf": 0.96
+   },
+   {
+    "dialog": "hold-08-ru-third-party-data",
+    "criterion": "06",
+    "votes": [
+     "7",
+     "10",
+     "7"
+    ],
+    "gold": "10",
+    "judge": 7,
+    "jev": 10,
+    "jev_conf": 0.7
+   },
+   {
+    "dialog": "hold-10-ru-contradictory",
+    "criterion": "04",
+    "votes": [
+     "0",
+     "5",
+     "0"
+    ],
+    "gold": "5",
+    "judge": 0,
+    "jev": 10,
+    "jev_conf": 0.43
+   },
+   {
+    "dialog": "hold-10-ru-contradictory",
+    "criterion": "06",
+    "votes": [
+     "4",
+     "0",
+     "0"
+    ],
+    "gold": "4",
+    "judge": 0,
+    "jev": 4,
+    "jev_conf": 0.69
+   }
+  ]
+ },
+ "jury-sonnet+opus>opus": {
+  "disagreements": 8,
+  "judge_correct": 2,
+  "jev_correct": 6,
+  "cases": [
+   {
+    "dialog": "gold-12-en-personal-card-transfer",
+    "criterion": "06",
+    "votes": [
+     "10",
+     "7",
+     "7"
+    ],
+    "gold": "10",
+    "judge": 7,
+    "jev": 10,
+    "jev_conf": 0.8
+   },
+   {
+    "dialog": "gold-13-kz-insult",
+    "criterion": "06",
+    "votes": [
+     "7",
+     "10",
+     "10"
+    ],
+    "gold": "10",
+    "judge": 10,
+    "jev": 10,
+    "jev_conf": 0.44
+   },
+   {
+    "dialog": "gold-13-kz-insult",
+    "criterion": "07",
+    "votes": [
+     "NO",
+     "NA",
+     "NA"
+    ],
+    "gold": "NO",
+    "judge": "NA",
+    "jev": "NO",
+    "jev_conf": 0.52
+   },
+   {
+    "dialog": "hold-03-kz-no-name",
+    "criterion": "02",
+    "votes": [
+     "NA",
+     "NO",
+     "NO"
+    ],
+    "gold": "NA",
+    "judge": "NO",
+    "jev": "NO",
+    "jev_conf": 0.57
+   },
+   {
+    "dialog": "hold-04-ru-transfer-minor-detail",
+    "criterion": "04",
+    "votes": [
+     "20",
+     "15",
+     "15"
+    ],
+    "gold": "15",
+    "judge": 15,
+    "jev": 20,
+    "jev_conf": 0.96
+   },
+   {
+    "dialog": "hold-08-ru-third-party-data",
+    "criterion": "03",
+    "votes": [
+     "YES",
+     "NO",
+     "NO"
+    ],
+    "gold": "YES",
+    "judge": "NO",
+    "jev": "YES",
+    "jev_conf": 0.98
+   },
+   {
+    "dialog": "hold-10-ru-contradictory",
+    "criterion": "05",
+    "votes": [
+     "YES",
+     "NO",
+     "NO"
+    ],
+    "gold": "YES",
+    "judge": "NO",
+    "jev": "YES",
+    "jev_conf": 0.57
+   },
+   {
+    "dialog": "hold-10-ru-contradictory",
+    "criterion": "06",
+    "votes": [
+     "4",
+     "0",
+     "0"
+    ],
+    "gold": "4",
+    "judge": 0,
+    "jev": 4,
+    "jev_conf": 0.69
+   }
+  ]
+ }
+}

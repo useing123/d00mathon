@@ -1,0 +1,43 @@
+{
+ "config": "jev-1.14",
+ "suite": "gold",
+ "tag": "_r3",
+ "dialogs": 16,
+ "overall_agreement": 0.969,
+ "per_criterion": {
+  "01": 1.0,
+  "02": 0.875,
+  "03": 1.0,
+  "04": 1.0,
+  "05": 1.0,
+  "06": 1.0,
+  "07": 0.875,
+  "08": 1.0
+ },
+ "total_mae": 0.9,
+ "gross": {
+  "tn": 13,
+  "tp": 3,
+  "precision": 1.0,
+  "recall": 1.0
+ },
+ "na_confusion": {
+  "exp_NA/pred_NA": 24,
+  "exp_NA/pred_applicable": 2,
+  "exp_applicable/pred_NA": 1,
+  "exp_applicable/pred_applicable": 101
+ },
+ "incomplete": 0,
+ "usd": 0.008497,
+ "usd_per_dialog": 0.000531,
+ "wall_s": 1.7,
+ "latency_median_s": 0.39,
+ "latency_max_s": 0.51,
+ "calls_per_dialog": 1,
+ "mismatches": [
+  "gold-03-en-balance-verified/02: exp NA got YES",
+  "gold-11-ru-paid-private-consult/07: exp NO got YES",
+  "gold-13-kz-insult/07: exp NO got NA",
+  "gold-15-call-ru-hold-hangup/02: exp NA got YES"
+ ]
+}

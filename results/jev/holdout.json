@@ -1,0 +1,43 @@
+{
+ "config": "jev-1.14",
+ "suite": "holdout",
+ "tag": "_fullrules",
+ "dialogs": 10,
+ "overall_agreement": 0.938,
+ "per_criterion": {
+  "01": 1.0,
+  "02": 0.8,
+  "03": 0.9,
+  "04": 0.8,
+  "05": 1.0,
+  "06": 1.0,
+  "07": 1.0,
+  "08": 1.0
+ },
+ "total_mae": 4.57,
+ "gross": {
+  "tn": 9,
+  "tp": 1,
+  "precision": 1.0,
+  "recall": 1.0
+ },
+ "na_confusion": {
+  "exp_NA/pred_NA": 14,
+  "exp_NA/pred_applicable": 3,
+  "exp_applicable/pred_applicable": 63
+ },
+ "incomplete": 0,
+ "usd": 0.00527,
+ "usd_per_dialog": 0.000527,
+ "wall_s": 1.1,
+ "latency_median_s": 0.39,
+ "latency_max_s": 0.57,
+ "calls_per_dialog": 1,
+ "mismatches": [
+  "hold-03-kz-no-name/02: exp NA got NO",
+  "hold-04-ru-transfer-minor-detail/04: exp 15 got 20",
+  "hold-06-ru-wrong-advice-close/03: exp NA got NO",
+  "hold-08-ru-third-party-data/02: exp NA got YES",
+  "hold-10-ru-contradictory/04: exp 5 got 10"
+ ]
+}

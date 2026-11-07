@@ -1,0 +1,3266 @@
+[
+ {
+  "conversation_id": "gold-01-ru-tariff-good",
+  "checklist_id": "freedom_chat_v1",
+  "criteria": [
+   {
+    "criterion_id": "01",
+    "name": "Установление контакта",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "02",
+    "name": "Выявление потребности",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0,
+      "no": 0,
+      "na": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "03",
+    "name": "Идентификация",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0,
+      "no": 0,
+      "na": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "04",
+    "name": "Консультация",
+    "type": "scale",
+    "value": 20,
+    "is_na": false,
+    "confidence": 0.99,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.99",
+    "jev_raw": {
+     "type": "score",
+     "score": 3.97,
+     "legend": {
+      "0": "0 — нет содержательного ответа, или ключевая рекомендация неверна.",
+      "1": "5 — дана лишь общая подсказка, клиенту неясно, как действовать дальше.",
+      "2": "10 — часть вопросов закрыта, но существенный вопрос остался открытым.",
+      "3": "15 — основной вопрос решён, но упущена второстепенная деталь.",
+      "4": "20 — все существенные вопросы клиента закрыты, ИЛИ дан корректный следующий шаг (эскалация, заявка, точная инструкция)."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0.01,
+      "4": 0.99
+     },
+     "confidence": 0.99
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "05",
+    "name": "Эмпатия",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "06",
+    "name": "Управление диалогом и грамотность",
+    "type": "scale",
+    "value": 10,
+    "is_na": false,
+    "confidence": 0.73,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.73",
+    "jev_raw": {
+     "type": "score",
+     "score": 2.73,
+     "legend": {
+      "0": "0 — из-за бессвязных или противоречивых реплик ход диалога непонятен.",
+      "1": "4 — клиенту приходится переспрашивать из-за формулировок или порядка ответов оператора.",
+      "2": "7 — один заметный сбой (опечатка, искажающая смысл, неясная формулировка, не предупредил о явном ожидании), но клиент может понять ответ и продолжить.",
+      "3": "10 — ответы ясные и связные; если было явное ожидание, оператор предупредил."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0.27,
+      "3": 0.73
+     },
+     "confidence": 0.73
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "07",
+    "name": "Завершение",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 0.72,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.72",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 0.72,
+      "no": 0.28,
+      "na": 0
+     },
+     "confidence": 0.58
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "08",
+    "name": "Грубые ошибки",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0,
+      "no": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   }
+  ],
+  "total": 100.0,
+  "gross_error": false,
+  "status": "ok",
+  "latency_s": 0.44,
+  "usage": {
+   "input_tokens": 12685,
+   "output_tokens": 253,
+   "cost": 0.00053277,
+   "is_byok": false,
+   "cost_details": {
+    "upstream_inference_cost": 0.00053277,
+    "upstream_inference_prompt_cost": 0.00053277,
+    "upstream_inference_completions_cost": 0
+   }
+  },
+  "provider": "jev",
+  "model": "typesafe/jev-1.14"
+ },
+ {
+  "conversation_id": "gold-02-kz-wrong-language",
+  "checklist_id": "freedom_chat_v1",
+  "criteria": [
+   {
+    "criterion_id": "01",
+    "name": "Установление контакта",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0,
+      "no": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "02",
+    "name": "Выявление потребности",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0,
+      "no": 0,
+      "na": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "03",
+    "name": "Идентификация",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0,
+      "no": 0,
+      "na": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "04",
+    "name": "Консультация",
+    "type": "scale",
+    "value": 20,
+    "is_na": false,
+    "confidence": 0.96,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.96",
+    "jev_raw": {
+     "type": "score",
+     "score": 3.95,
+     "legend": {
+      "0": "0 — нет содержательного ответа, или ключевая рекомендация неверна.",
+      "1": "5 — дана лишь общая подсказка, клиенту неясно, как действовать дальше.",
+      "2": "10 — часть вопросов закрыта, но существенный вопрос остался открытым.",
+      "3": "15 — основной вопрос решён, но упущена второстепенная деталь.",
+      "4": "20 — все существенные вопросы клиента закрыты, ИЛИ дан корректный следующий шаг (эскалация, заявка, точная инструкция)."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0.04,
+      "4": 0.96
+     },
+     "confidence": 0.97
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "05",
+    "name": "Эмпатия",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "06",
+    "name": "Управление диалогом и грамотность",
+    "type": "scale",
+    "value": 10,
+    "is_na": false,
+    "confidence": 0.8,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.80",
+    "jev_raw": {
+     "type": "score",
+     "score": 2.79,
+     "legend": {
+      "0": "0 — из-за бессвязных или противоречивых реплик ход диалога непонятен.",
+      "1": "4 — клиенту приходится переспрашивать из-за формулировок или порядка ответов оператора.",
+      "2": "7 — один заметный сбой (опечатка, искажающая смысл, неясная формулировка, не предупредил о явном ожидании), но клиент может понять ответ и продолжить.",
+      "3": "10 — ответы ясные и связные; если было явное ожидание, оператор предупредил."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0.2,
+      "3": 0.8
+     },
+     "confidence": 0.8
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "07",
+    "name": "Завершение",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 0.77,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.77",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 0.77,
+      "no": 0.23,
+      "na": 0
+     },
+     "confidence": 0.66
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "08",
+    "name": "Грубые ошибки",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0,
+      "no": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   }
+  ],
+  "total": 84.62,
+  "gross_error": false,
+  "status": "ok",
+  "latency_s": 0.38,
+  "usage": {
+   "input_tokens": 12687,
+   "output_tokens": 253,
+   "cost": 0.000532854,
+   "is_byok": false,
+   "cost_details": {
+    "upstream_inference_cost": 0.000532854,
+    "upstream_inference_prompt_cost": 0.000532854,
+    "upstream_inference_completions_cost": 0
+   }
+  },
+  "provider": "jev",
+  "model": "typesafe/jev-1.14"
+ },
+ {
+  "conversation_id": "gold-03-en-balance-verified",
+  "checklist_id": "freedom_chat_v1",
+  "criteria": [
+   {
+    "criterion_id": "01",
+    "name": "Установление контакта",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "02",
+    "name": "Выявление потребности",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 0.53,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.53",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 0.53,
+      "no": 0.12,
+      "na": 0.35
+     },
+     "confidence": 0.3
+    },
+    "needs_review": true
+   },
+   {
+    "criterion_id": "03",
+    "name": "Идентификация",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0,
+      "na": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "04",
+    "name": "Консультация",
+    "type": "scale",
+    "value": 20,
+    "is_na": false,
+    "confidence": 0.99,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.99",
+    "jev_raw": {
+     "type": "score",
+     "score": 3.98,
+     "legend": {
+      "0": "0 — нет содержательного ответа, или ключевая рекомендация неверна.",
+      "1": "5 — дана лишь общая подсказка, клиенту неясно, как действовать дальше.",
+      "2": "10 — часть вопросов закрыта, но существенный вопрос остался открытым.",
+      "3": "15 — основной вопрос решён, но упущена второстепенная деталь.",
+      "4": "20 — все существенные вопросы клиента закрыты, ИЛИ дан корректный следующий шаг (эскалация, заявка, точная инструкция)."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0.01,
+      "4": 0.99
+     },
+     "confidence": 0.99
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "05",
+    "name": "Эмпатия",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "06",
+    "name": "Управление диалогом и грамотность",
+    "type": "scale",
+    "value": 10,
+    "is_na": false,
+    "confidence": 0.75,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.75",
+    "jev_raw": {
+     "type": "score",
+     "score": 2.74,
+     "legend": {
+      "0": "0 — из-за бессвязных или противоречивых реплик ход диалога непонятен.",
+      "1": "4 — клиенту приходится переспрашивать из-за формулировок или порядка ответов оператора.",
+      "2": "7 — один заметный сбой (опечатка, искажающая смысл, неясная формулировка, не предупредил о явном ожидании), но клиент может понять ответ и продолжить.",
+      "3": "10 — ответы ясные и связные; если было явное ожидание, оператор предупредил."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0.25,
+      "3": 0.75
+     },
+     "confidence": 0.75
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "07",
+    "name": "Завершение",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0,
+      "na": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "08",
+    "name": "Грубые ошибки",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0,
+      "no": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   }
+  ],
+  "total": 100.0,
+  "gross_error": false,
+  "status": "ok",
+  "latency_s": 0.39,
+  "usage": {
+   "input_tokens": 12506,
+   "output_tokens": 253,
+   "cost": 0.000525252,
+   "is_byok": false,
+   "cost_details": {
+    "upstream_inference_cost": 0.000525252,
+    "upstream_inference_prompt_cost": 0.000525252,
+    "upstream_inference_completions_cost": 0
+   }
+  },
+  "provider": "jev",
+  "model": "typesafe/jev-1.14"
+ },
+ {
+  "conversation_id": "gold-04-ru-balance-no-verification",
+  "checklist_id": "freedom_chat_v1",
+  "criteria": [
+   {
+    "criterion_id": "01",
+    "name": "Установление контакта",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "02",
+    "name": "Выявление потребности",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 0.93,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.93",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0,
+      "no": 0.07,
+      "na": 0.93
+     },
+     "confidence": 0.89
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "03",
+    "name": "Идентификация",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0,
+      "no": 1,
+      "na": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "04",
+    "name": "Консультация",
+    "type": "scale",
+    "value": 20,
+    "is_na": false,
+    "confidence": 0.99,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.99",
+    "jev_raw": {
+     "type": "score",
+     "score": 3.98,
+     "legend": {
+      "0": "0 — нет содержательного ответа, или ключевая рекомендация неверна.",
+      "1": "5 — дана лишь общая подсказка, клиенту неясно, как действовать дальше.",
+      "2": "10 — часть вопросов закрыта, но существенный вопрос остался открытым.",
+      "3": "15 — основной вопрос решён, но упущена второстепенная деталь.",
+      "4": "20 — все существенные вопросы клиента закрыты, ИЛИ дан корректный следующий шаг (эскалация, заявка, точная инструкция)."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0.01,
+      "4": 0.99
+     },
+     "confidence": 0.99
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "05",
+    "name": "Эмпатия",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "06",
+    "name": "Управление диалогом и грамотность",
+    "type": "scale",
+    "value": 10,
+    "is_na": false,
+    "confidence": 0.98,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.98",
+    "jev_raw": {
+     "type": "score",
+     "score": 2.98,
+     "legend": {
+      "0": "0 — из-за бессвязных или противоречивых реплик ход диалога непонятен.",
+      "1": "4 — клиенту приходится переспрашивать из-за формулировок или порядка ответов оператора.",
+      "2": "7 — один заметный сбой (опечатка, искажающая смысл, неясная формулировка, не предупредил о явном ожидании), но клиент может понять ответ и продолжить.",
+      "3": "10 — ответы ясные и связные; если было явное ожидание, оператор предупредил."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0.02,
+      "3": 0.98
+     },
+     "confidence": 0.98
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "07",
+    "name": "Завершение",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0,
+      "na": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "08",
+    "name": "Грубые ошибки",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0,
+      "no": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   }
+  ],
+  "total": 76.47,
+  "gross_error": false,
+  "status": "ok",
+  "latency_s": 0.38,
+  "usage": {
+   "input_tokens": 12431,
+   "output_tokens": 253,
+   "cost": 0.000522102,
+   "is_byok": false,
+   "cost_details": {
+    "upstream_inference_cost": 0.000522102,
+    "upstream_inference_prompt_cost": 0.000522102,
+    "upstream_inference_completions_cost": 0
+   }
+  },
+  "provider": "jev",
+  "model": "typesafe/jev-1.14"
+ },
+ {
+  "conversation_id": "gold-05-ru-multi-question-partial",
+  "checklist_id": "freedom_chat_v1",
+  "criteria": [
+   {
+    "criterion_id": "01",
+    "name": "Установление контакта",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "02",
+    "name": "Выявление потребности",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 0.63,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.63",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0.01,
+      "no": 0.36,
+      "na": 0.63
+     },
+     "confidence": 0.44
+    },
+    "needs_review": true
+   },
+   {
+    "criterion_id": "03",
+    "name": "Идентификация",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 0.99,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.99",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0,
+      "no": 0.01,
+      "na": 0.99
+     },
+     "confidence": 0.98
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "04",
+    "name": "Консультация",
+    "type": "scale",
+    "value": 10,
+    "is_na": false,
+    "confidence": 0.94,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.94",
+    "jev_raw": {
+     "type": "score",
+     "score": 2.05,
+     "legend": {
+      "0": "0 — нет содержательного ответа, или ключевая рекомендация неверна.",
+      "1": "5 — дана лишь общая подсказка, клиенту неясно, как действовать дальше.",
+      "2": "10 — часть вопросов закрыта, но существенный вопрос остался открытым.",
+      "3": "15 — основной вопрос решён, но упущена второстепенная деталь.",
+      "4": "20 — все существенные вопросы клиента закрыты, ИЛИ дан корректный следующий шаг (эскалация, заявка, точная инструкция)."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0.01,
+      "2": 0.94,
+      "3": 0.03,
+      "4": 0.02
+     },
+     "confidence": 0.93
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "05",
+    "name": "Эмпатия",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "06",
+    "name": "Управление диалогом и грамотность",
+    "type": "scale",
+    "value": 10,
+    "is_na": false,
+    "confidence": 0.8,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.80",
+    "jev_raw": {
+     "type": "score",
+     "score": 2.8,
+     "legend": {
+      "0": "0 — из-за бессвязных или противоречивых реплик ход диалога непонятен.",
+      "1": "4 — клиенту приходится переспрашивать из-за формулировок или порядка ответов оператора.",
+      "2": "7 — один заметный сбой (опечатка, искажающая смысл, неясная формулировка, не предупредил о явном ожидании), но клиент может понять ответ и продолжить.",
+      "3": "10 — ответы ясные и связные; если было явное ожидание, оператор предупредил."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0.2,
+      "3": 0.8
+     },
+     "confidence": 0.8
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "07",
+    "name": "Завершение",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0,
+      "na": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "08",
+    "name": "Грубые ошибки",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0,
+      "no": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   }
+  ],
+  "total": 84.62,
+  "gross_error": false,
+  "status": "ok",
+  "latency_s": 0.4,
+  "usage": {
+   "input_tokens": 12668,
+   "output_tokens": 253,
+   "cost": 0.000532056,
+   "is_byok": false,
+   "cost_details": {
+    "upstream_inference_cost": 0.000532056,
+    "upstream_inference_prompt_cost": 0.000532056,
+    "upstream_inference_completions_cost": 0
+   }
+  },
+  "provider": "jev",
+  "model": "typesafe/jev-1.14"
+ },
+ {
+  "conversation_id": "gold-06-kz-hold-no-warning",
+  "checklist_id": "freedom_chat_v1",
+  "criteria": [
+   {
+    "criterion_id": "01",
+    "name": "Установление контакта",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "02",
+    "name": "Выявление потребности",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 0.95,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.95",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0.02,
+      "no": 0.03,
+      "na": 0.95
+     },
+     "confidence": 0.92
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "03",
+    "name": "Идентификация",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0,
+      "no": 0,
+      "na": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "04",
+    "name": "Консультация",
+    "type": "scale",
+    "value": 20,
+    "is_na": false,
+    "confidence": 0.95,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.95",
+    "jev_raw": {
+     "type": "score",
+     "score": 3.92,
+     "legend": {
+      "0": "0 — нет содержательного ответа, или ключевая рекомендация неверна.",
+      "1": "5 — дана лишь общая подсказка, клиенту неясно, как действовать дальше.",
+      "2": "10 — часть вопросов закрыта, но существенный вопрос остался открытым.",
+      "3": "15 — основной вопрос решён, но упущена второстепенная деталь.",
+      "4": "20 — все существенные вопросы клиента закрыты, ИЛИ дан корректный следующий шаг (эскалация, заявка, точная инструкция)."
+     },
+     "probabilities": {
+      "0": 0.01,
+      "1": 0,
+      "2": 0,
+      "3": 0.04,
+      "4": 0.95
+     },
+     "confidence": 0.93
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "05",
+    "name": "Эмпатия",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 0.99,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.99",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 0.99,
+      "no": 0.01
+     },
+     "confidence": 0.98
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "06",
+    "name": "Управление диалогом и грамотность",
+    "type": "scale",
+    "value": 7,
+    "is_na": false,
+    "confidence": 0.98,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.98",
+    "jev_raw": {
+     "type": "score",
+     "score": 1.99,
+     "legend": {
+      "0": "0 — из-за бессвязных или противоречивых реплик ход диалога непонятен.",
+      "1": "4 — клиенту приходится переспрашивать из-за формулировок или порядка ответов оператора.",
+      "2": "7 — один заметный сбой (опечатка, искажающая смысл, неясная формулировка, не предупредил о явном ожидании), но клиент может понять ответ и продолжить.",
+      "3": "10 — ответы ясные и связные; если было явное ожидание, оператор предупредил."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0.01,
+      "2": 0.98,
+      "3": 0.01
+     },
+     "confidence": 0.98
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "07",
+    "name": "Завершение",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 0.99,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.99",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 0.99,
+      "no": 0.01,
+      "na": 0
+     },
+     "confidence": 0.98
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "08",
+    "name": "Грубые ошибки",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0,
+      "no": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   }
+  ],
+  "total": 93.08,
+  "gross_error": false,
+  "status": "ok",
+  "latency_s": 0.45,
+  "usage": {
+   "input_tokens": 12843,
+   "output_tokens": 253,
+   "cost": 0.000539406,
+   "is_byok": false,
+   "cost_details": {
+    "upstream_inference_cost": 0.000539406,
+    "upstream_inference_prompt_cost": 0.000539406,
+    "upstream_inference_completions_cost": 0
+   }
+  },
+  "provider": "jev",
+  "model": "typesafe/jev-1.14"
+ },
+ {
+  "conversation_id": "gold-07-ru-client-left-before-request",
+  "checklist_id": "freedom_chat_v1",
+  "criteria": [
+   {
+    "criterion_id": "01",
+    "name": "Установление контакта",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "02",
+    "name": "Выявление потребности",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 0.61,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.61",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0.11,
+      "no": 0.28,
+      "na": 0.61
+     },
+     "confidence": 0.42
+    },
+    "needs_review": true
+   },
+   {
+    "criterion_id": "03",
+    "name": "Идентификация",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 0.76,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.76",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0,
+      "no": 0.24,
+      "na": 0.76
+     },
+     "confidence": 0.64
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "04",
+    "name": "Консультация",
+    "type": "scale",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 0.97,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.97",
+    "jev_raw": {
+     "type": "score",
+     "score": 1.45,
+     "legend": {
+      "0": "0 — нет содержательного ответа, или ключевая рекомендация неверна.",
+      "1": "5 — дана лишь общая подсказка, клиенту неясно, как действовать дальше.",
+      "2": "10 — часть вопросов закрыта, но существенный вопрос остался открытым.",
+      "3": "15 — основной вопрос решён, но упущена второстепенная деталь.",
+      "4": "20 — все существенные вопросы клиента закрыты, ИЛИ дан корректный следующий шаг (эскалация, заявка, точная инструкция)."
+     },
+     "probabilities": {
+      "0": 0.61,
+      "1": 0.03,
+      "2": 0.01,
+      "3": 0.01,
+      "4": 0.34
+     },
+     "confidence": 0
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "05",
+    "name": "Эмпатия",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "06",
+    "name": "Управление диалогом и грамотность",
+    "type": "scale",
+    "value": 10,
+    "is_na": false,
+    "confidence": 0.99,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.99",
+    "jev_raw": {
+     "type": "score",
+     "score": 2.98,
+     "legend": {
+      "0": "0 — из-за бессвязных или противоречивых реплик ход диалога непонятен.",
+      "1": "4 — клиенту приходится переспрашивать из-за формулировок или порядка ответов оператора.",
+      "2": "7 — один заметный сбой (опечатка, искажающая смысл, неясная формулировка, не предупредил о явном ожидании), но клиент может понять ответ и продолжить.",
+      "3": "10 — ответы ясные и связные; если было явное ожидание, оператор предупредил."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0.01,
+      "3": 0.99
+     },
+     "confidence": 0.99
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "07",
+    "name": "Завершение",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 0.84,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.84",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0,
+      "no": 0.16,
+      "na": 0.84
+     },
+     "confidence": 0.76
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "08",
+    "name": "Грубые ошибки",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0,
+      "no": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   }
+  ],
+  "total": 100.0,
+  "gross_error": false,
+  "status": "ok",
+  "latency_s": 0.41,
+  "usage": {
+   "input_tokens": 12322,
+   "output_tokens": 253,
+   "cost": 0.000517524,
+   "is_byok": false,
+   "cost_details": {
+    "upstream_inference_cost": 0.000517524,
+    "upstream_inference_prompt_cost": 0.000517524,
+    "upstream_inference_completions_cost": 0
+   }
+  },
+  "provider": "jev",
+  "model": "typesafe/jev-1.14"
+ },
+ {
+  "conversation_id": "gold-08-en-farewell-only",
+  "checklist_id": "freedom_chat_v1",
+  "criteria": [
+   {
+    "criterion_id": "01",
+    "name": "Установление контакта",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "02",
+    "name": "Выявление потребности",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0,
+      "no": 0,
+      "na": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "03",
+    "name": "Идентификация",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0,
+      "no": 0,
+      "na": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "04",
+    "name": "Консультация",
+    "type": "scale",
+    "value": 20,
+    "is_na": false,
+    "confidence": 0.98,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.98",
+    "jev_raw": {
+     "type": "score",
+     "score": 3.96,
+     "legend": {
+      "0": "0 — нет содержательного ответа, или ключевая рекомендация неверна.",
+      "1": "5 — дана лишь общая подсказка, клиенту неясно, как действовать дальше.",
+      "2": "10 — часть вопросов закрыта, но существенный вопрос остался открытым.",
+      "3": "15 — основной вопрос решён, но упущена второстепенная деталь.",
+      "4": "20 — все существенные вопросы клиента закрыты, ИЛИ дан корректный следующий шаг (эскалация, заявка, точная инструкция)."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0.02,
+      "4": 0.98
+     },
+     "confidence": 0.98
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "05",
+    "name": "Эмпатия",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "06",
+    "name": "Управление диалогом и грамотность",
+    "type": "scale",
+    "value": 10,
+    "is_na": false,
+    "confidence": 0.81,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.81",
+    "jev_raw": {
+     "type": "score",
+     "score": 2.8,
+     "legend": {
+      "0": "0 — из-за бессвязных или противоречивых реплик ход диалога непонятен.",
+      "1": "4 — клиенту приходится переспрашивать из-за формулировок или порядка ответов оператора.",
+      "2": "7 — один заметный сбой (опечатка, искажающая смысл, неясная формулировка, не предупредил о явном ожидании), но клиент может понять ответ и продолжить.",
+      "3": "10 — ответы ясные и связные; если было явное ожидание, оператор предупредил."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0.19,
+      "3": 0.81
+     },
+     "confidence": 0.81
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "07",
+    "name": "Завершение",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 0.95,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.95",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0.05,
+      "no": 0.95,
+      "na": 0
+     },
+     "confidence": 0.92
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "08",
+    "name": "Грубые ошибки",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0,
+      "no": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   }
+  ],
+  "total": 92.31,
+  "gross_error": false,
+  "status": "ok",
+  "latency_s": 0.51,
+  "usage": {
+   "input_tokens": 12393,
+   "output_tokens": 253,
+   "cost": 0.000520506,
+   "is_byok": false,
+   "cost_details": {
+    "upstream_inference_cost": 0.000520506,
+    "upstream_inference_prompt_cost": 0.000520506,
+    "upstream_inference_completions_cost": 0
+   }
+  },
+  "provider": "jev",
+  "model": "typesafe/jev-1.14"
+ },
+ {
+  "conversation_id": "gold-09-ru-complaint-empathy",
+  "checklist_id": "freedom_chat_v1",
+  "criteria": [
+   {
+    "criterion_id": "01",
+    "name": "Установление контакта",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "02",
+    "name": "Выявление потребности",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 0.99,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.99",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 0.99,
+      "no": 0.01,
+      "na": 0
+     },
+     "confidence": 0.98
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "03",
+    "name": "Идентификация",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 0.97,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.97",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 0.97,
+      "no": 0.03,
+      "na": 0
+     },
+     "confidence": 0.96
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "04",
+    "name": "Консультация",
+    "type": "scale",
+    "value": 20,
+    "is_na": false,
+    "confidence": 0.98,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.98",
+    "jev_raw": {
+     "type": "score",
+     "score": 3.97,
+     "legend": {
+      "0": "0 — нет содержательного ответа, или ключевая рекомендация неверна.",
+      "1": "5 — дана лишь общая подсказка, клиенту неясно, как действовать дальше.",
+      "2": "10 — часть вопросов закрыта, но существенный вопрос остался открытым.",
+      "3": "15 — основной вопрос решён, но упущена второстепенная деталь.",
+      "4": "20 — все существенные вопросы клиента закрыты, ИЛИ дан корректный следующий шаг (эскалация, заявка, точная инструкция)."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0.02,
+      "4": 0.98
+     },
+     "confidence": 0.98
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "05",
+    "name": "Эмпатия",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "06",
+    "name": "Управление диалогом и грамотность",
+    "type": "scale",
+    "value": 10,
+    "is_na": false,
+    "confidence": 0.93,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.93",
+    "jev_raw": {
+     "type": "score",
+     "score": 2.93,
+     "legend": {
+      "0": "0 — из-за бессвязных или противоречивых реплик ход диалога непонятен.",
+      "1": "4 — клиенту приходится переспрашивать из-за формулировок или порядка ответов оператора.",
+      "2": "7 — один заметный сбой (опечатка, искажающая смысл, неясная формулировка, не предупредил о явном ожидании), но клиент может понять ответ и продолжить.",
+      "3": "10 — ответы ясные и связные; если было явное ожидание, оператор предупредил."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0.07,
+      "3": 0.93
+     },
+     "confidence": 0.93
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "07",
+    "name": "Завершение",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0,
+      "na": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "08",
+    "name": "Грубые ошибки",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0,
+      "no": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   }
+  ],
+  "total": 100.0,
+  "gross_error": false,
+  "status": "ok",
+  "latency_s": 0.39,
+  "usage": {
+   "input_tokens": 12968,
+   "output_tokens": 253,
+   "cost": 0.000544656,
+   "is_byok": false,
+   "cost_details": {
+    "upstream_inference_cost": 0.000544656,
+    "upstream_inference_prompt_cost": 0.000544656,
+    "upstream_inference_completions_cost": 0
+   }
+  },
+  "provider": "jev",
+  "model": "typesafe/jev-1.14"
+ },
+ {
+  "conversation_id": "gold-10-ru-complaint-no-empathy",
+  "checklist_id": "freedom_chat_v1",
+  "criteria": [
+   {
+    "criterion_id": "01",
+    "name": "Установление контакта",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0,
+      "no": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "02",
+    "name": "Выявление потребности",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 0.89,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.89",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0.06,
+      "no": 0.05,
+      "na": 0.89
+     },
+     "confidence": 0.83
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "03",
+    "name": "Идентификация",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0,
+      "no": 1,
+      "na": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "04",
+    "name": "Консультация",
+    "type": "scale",
+    "value": 10,
+    "is_na": false,
+    "confidence": 0.87,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.87",
+    "jev_raw": {
+     "type": "score",
+     "score": 2.02,
+     "legend": {
+      "0": "0 — нет содержательного ответа, или ключевая рекомендация неверна.",
+      "1": "5 — дана лишь общая подсказка, клиенту неясно, как действовать дальше.",
+      "2": "10 — часть вопросов закрыта, но существенный вопрос остался открытым.",
+      "3": "15 — основной вопрос решён, но упущена второстепенная деталь.",
+      "4": "20 — все существенные вопросы клиента закрыты, ИЛИ дан корректный следующий шаг (эскалация, заявка, точная инструкция)."
+     },
+     "probabilities": {
+      "0": 0.01,
+      "1": 0.04,
+      "2": 0.87,
+      "3": 0.07,
+      "4": 0.01
+     },
+     "confidence": 0.88
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "05",
+    "name": "Эмпатия",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 0.99,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.99",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0.01,
+      "no": 0.99
+     },
+     "confidence": 0.98
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "06",
+    "name": "Управление диалогом и грамотность",
+    "type": "scale",
+    "value": 10,
+    "is_na": false,
+    "confidence": 0.72,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.72",
+    "jev_raw": {
+     "type": "score",
+     "score": 2.72,
+     "legend": {
+      "0": "0 — из-за бессвязных или противоречивых реплик ход диалога непонятен.",
+      "1": "4 — клиенту приходится переспрашивать из-за формулировок или порядка ответов оператора.",
+      "2": "7 — один заметный сбой (опечатка, искажающая смысл, неясная формулировка, не предупредил о явном ожидании), но клиент может понять ответ и продолжить.",
+      "3": "10 — ответы ясные и связные; если было явное ожидание, оператор предупредил."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0.01,
+      "2": 0.27,
+      "3": 0.72
+     },
+     "confidence": 0.71
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "07",
+    "name": "Завершение",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 0.97,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.97",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0.03,
+      "no": 0.97,
+      "na": 0
+     },
+     "confidence": 0.96
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "08",
+    "name": "Грубые ошибки",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0,
+      "no": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   }
+  ],
+  "total": 29.41,
+  "gross_error": false,
+  "status": "ok",
+  "latency_s": 0.51,
+  "usage": {
+   "input_tokens": 12560,
+   "output_tokens": 253,
+   "cost": 0.00052752,
+   "is_byok": false,
+   "cost_details": {
+    "upstream_inference_cost": 0.00052752,
+    "upstream_inference_prompt_cost": 0.00052752,
+    "upstream_inference_completions_cost": 0
+   }
+  },
+  "provider": "jev",
+  "model": "typesafe/jev-1.14"
+ },
+ {
+  "conversation_id": "gold-11-ru-paid-private-consult",
+  "checklist_id": "freedom_chat_v1",
+  "criteria": [
+   {
+    "criterion_id": "01",
+    "name": "Установление контакта",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "02",
+    "name": "Выявление потребности",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 0.71,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.71",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0.02,
+      "no": 0.27,
+      "na": 0.71
+     },
+     "confidence": 0.56
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "03",
+    "name": "Идентификация",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 0.98,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.98",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0,
+      "no": 0.02,
+      "na": 0.98
+     },
+     "confidence": 0.97
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "04",
+    "name": "Консультация",
+    "type": "scale",
+    "value": 0,
+    "is_na": false,
+    "confidence": 0.96,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.96",
+    "jev_raw": {
+     "type": "score",
+     "score": 0.11,
+     "legend": {
+      "0": "0 — нет содержательного ответа, или ключевая рекомендация неверна.",
+      "1": "5 — дана лишь общая подсказка, клиенту неясно, как действовать дальше.",
+      "2": "10 — часть вопросов закрыта, но существенный вопрос остался открытым.",
+      "3": "15 — основной вопрос решён, но упущена второстепенная деталь.",
+      "4": "20 — все существенные вопросы клиента закрыты, ИЛИ дан корректный следующий шаг (эскалация, заявка, точная инструкция)."
+     },
+     "probabilities": {
+      "0": 0.96,
+      "1": 0.01,
+      "2": 0.01,
+      "3": 0,
+      "4": 0.02
+     },
+     "confidence": 0.91
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "05",
+    "name": "Эмпатия",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 0.8,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.80",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 0.8,
+      "no": 0.2
+     },
+     "confidence": 0.6
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "06",
+    "name": "Управление диалогом и грамотность",
+    "type": "scale",
+    "value": 10,
+    "is_na": false,
+    "confidence": 0.83,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.83",
+    "jev_raw": {
+     "type": "score",
+     "score": 2.82,
+     "legend": {
+      "0": "0 — из-за бессвязных или противоречивых реплик ход диалога непонятен.",
+      "1": "4 — клиенту приходится переспрашивать из-за формулировок или порядка ответов оператора.",
+      "2": "7 — один заметный сбой (опечатка, искажающая смысл, неясная формулировка, не предупредил о явном ожидании), но клиент может понять ответ и продолжить.",
+      "3": "10 — ответы ясные и связные; если было явное ожидание, оператор предупредил."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0.17,
+      "3": 0.83
+     },
+     "confidence": 0.83
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "07",
+    "name": "Завершение",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 0.92,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.92",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 0.92,
+      "no": 0.07,
+      "na": 0.01
+     },
+     "confidence": 0.88
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "08",
+    "name": "Грубые ошибки",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   }
+  ],
+  "total": 69.23,
+  "gross_error": true,
+  "status": "ok",
+  "latency_s": 0.36,
+  "usage": {
+   "input_tokens": 12652,
+   "output_tokens": 253,
+   "cost": 0.000531384,
+   "is_byok": false,
+   "cost_details": {
+    "upstream_inference_cost": 0.000531384,
+    "upstream_inference_prompt_cost": 0.000531384,
+    "upstream_inference_completions_cost": 0
+   }
+  },
+  "provider": "jev",
+  "model": "typesafe/jev-1.14"
+ },
+ {
+  "conversation_id": "gold-12-en-personal-card-transfer",
+  "checklist_id": "freedom_chat_v1",
+  "criteria": [
+   {
+    "criterion_id": "01",
+    "name": "Установление контакта",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "02",
+    "name": "Выявление потребности",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 0.95,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.95",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0,
+      "no": 0.05,
+      "na": 0.95
+     },
+     "confidence": 0.92
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "03",
+    "name": "Идентификация",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 0.81,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.81",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0,
+      "no": 0.19,
+      "na": 0.81
+     },
+     "confidence": 0.72
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "04",
+    "name": "Консультация",
+    "type": "scale",
+    "value": 0,
+    "is_na": false,
+    "confidence": 0.97,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.97",
+    "jev_raw": {
+     "type": "score",
+     "score": 0.11,
+     "legend": {
+      "0": "0 — нет содержательного ответа, или ключевая рекомендация неверна.",
+      "1": "5 — дана лишь общая подсказка, клиенту неясно, как действовать дальше.",
+      "2": "10 — часть вопросов закрыта, но существенный вопрос остался открытым.",
+      "3": "15 — основной вопрос решён, но упущена второстепенная деталь.",
+      "4": "20 — все существенные вопросы клиента закрыты, ИЛИ дан корректный следующий шаг (эскалация, заявка, точная инструкция)."
+     },
+     "probabilities": {
+      "0": 0.97,
+      "1": 0,
+      "2": 0,
+      "3": 0.01,
+      "4": 0.02
+     },
+     "confidence": 0.91
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "05",
+    "name": "Эмпатия",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 0.96,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.96",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 0.96,
+      "no": 0.04
+     },
+     "confidence": 0.92
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "06",
+    "name": "Управление диалогом и грамотность",
+    "type": "scale",
+    "value": 10,
+    "is_na": false,
+    "confidence": 0.86,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.86",
+    "jev_raw": {
+     "type": "score",
+     "score": 2.86,
+     "legend": {
+      "0": "0 — из-за бессвязных или противоречивых реплик ход диалога непонятен.",
+      "1": "4 — клиенту приходится переспрашивать из-за формулировок или порядка ответов оператора.",
+      "2": "7 — один заметный сбой (опечатка, искажающая смысл, неясная формулировка, не предупредил о явном ожидании), но клиент может понять ответ и продолжить.",
+      "3": "10 — ответы ясные и связные; если было явное ожидание, оператор предупредил."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0.14,
+      "3": 0.86
+     },
+     "confidence": 0.86
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "07",
+    "name": "Завершение",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0,
+      "na": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "08",
+    "name": "Грубые ошибки",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 0.89,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.89",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 0.89,
+      "no": 0.11
+     },
+     "confidence": 0.78
+    },
+    "needs_review": false
+   }
+  ],
+  "total": 69.23,
+  "gross_error": true,
+  "status": "ok",
+  "latency_s": 0.38,
+  "usage": {
+   "input_tokens": 12536,
+   "output_tokens": 253,
+   "cost": 0.000526512,
+   "is_byok": false,
+   "cost_details": {
+    "upstream_inference_cost": 0.000526512,
+    "upstream_inference_prompt_cost": 0.000526512,
+    "upstream_inference_completions_cost": 0
+   }
+  },
+  "provider": "jev",
+  "model": "typesafe/jev-1.14"
+ },
+ {
+  "conversation_id": "gold-13-kz-insult",
+  "checklist_id": "freedom_chat_v1",
+  "criteria": [
+   {
+    "criterion_id": "01",
+    "name": "Установление контакта",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "02",
+    "name": "Выявление потребности",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0,
+      "no": 0,
+      "na": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "03",
+    "name": "Идентификация",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 0.97,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.97",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0,
+      "no": 0.03,
+      "na": 0.97
+     },
+     "confidence": 0.96
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "04",
+    "name": "Консультация",
+    "type": "scale",
+    "value": 20,
+    "is_na": false,
+    "confidence": 0.93,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.93",
+    "jev_raw": {
+     "type": "score",
+     "score": 3.9,
+     "legend": {
+      "0": "0 — нет содержательного ответа, или ключевая рекомендация неверна.",
+      "1": "5 — дана лишь общая подсказка, клиенту неясно, как действовать дальше.",
+      "2": "10 — часть вопросов закрыта, но существенный вопрос остался открытым.",
+      "3": "15 — основной вопрос решён, но упущена второстепенная деталь.",
+      "4": "20 — все существенные вопросы клиента закрыты, ИЛИ дан корректный следующий шаг (эскалация, заявка, точная инструкция)."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0.02,
+      "3": 0.05,
+      "4": 0.93
+     },
+     "confidence": 0.92
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "05",
+    "name": "Эмпатия",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0,
+      "no": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "06",
+    "name": "Управление диалогом и грамотность",
+    "type": "scale",
+    "value": 10,
+    "is_na": false,
+    "confidence": 0.47,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.47",
+    "jev_raw": {
+     "type": "score",
+     "score": 2.24,
+     "legend": {
+      "0": "0 — из-за бессвязных или противоречивых реплик ход диалога непонятен.",
+      "1": "4 — клиенту приходится переспрашивать из-за формулировок или порядка ответов оператора.",
+      "2": "7 — один заметный сбой (опечатка, искажающая смысл, неясная формулировка, не предупредил о явном ожидании), но клиент может понять ответ и продолжить.",
+      "3": "10 — ответы ясные и связные; если было явное ожидание, оператор предупредил."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0.23,
+      "2": 0.3,
+      "3": 0.47
+     },
+     "confidence": 0.24
+    },
+    "needs_review": true
+   },
+   {
+    "criterion_id": "07",
+    "name": "Завершение",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 0.53,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.53",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0,
+      "no": 0.47,
+      "na": 0.53
+     },
+     "confidence": 0.3
+    },
+    "needs_review": true
+   },
+   {
+    "criterion_id": "08",
+    "name": "Грубые ошибки",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   }
+  ],
+  "total": 75.0,
+  "gross_error": true,
+  "status": "ok",
+  "latency_s": 0.4,
+  "usage": {
+   "input_tokens": 12783,
+   "output_tokens": 253,
+   "cost": 0.000536886,
+   "is_byok": false,
+   "cost_details": {
+    "upstream_inference_cost": 0.000536886,
+    "upstream_inference_prompt_cost": 0.000536886,
+    "upstream_inference_completions_cost": 0
+   }
+  },
+  "provider": "jev",
+  "model": "typesafe/jev-1.14"
+ },
+ {
+  "conversation_id": "gold-14-call-ru-password-reset-verified",
+  "checklist_id": "freedom_chat_v1",
+  "criteria": [
+   {
+    "criterion_id": "01",
+    "name": "Установление контакта",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "02",
+    "name": "Выявление потребности",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0,
+      "na": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "03",
+    "name": "Идентификация",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 0.99,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.99",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 0.99,
+      "no": 0.01,
+      "na": 0
+     },
+     "confidence": 0.98
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "04",
+    "name": "Консультация",
+    "type": "scale",
+    "value": 20,
+    "is_na": false,
+    "confidence": 0.99,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.99",
+    "jev_raw": {
+     "type": "score",
+     "score": 3.97,
+     "legend": {
+      "0": "0 — нет содержательного ответа, или ключевая рекомендация неверна.",
+      "1": "5 — дана лишь общая подсказка, клиенту неясно, как действовать дальше.",
+      "2": "10 — часть вопросов закрыта, но существенный вопрос остался открытым.",
+      "3": "15 — основной вопрос решён, но упущена второстепенная деталь.",
+      "4": "20 — все существенные вопросы клиента закрыты, ИЛИ дан корректный следующий шаг (эскалация, заявка, точная инструкция)."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0.01,
+      "4": 0.99
+     },
+     "confidence": 0.99
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "05",
+    "name": "Эмпатия",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 0.99,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.99",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 0.99,
+      "no": 0.01
+     },
+     "confidence": 0.98
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "06",
+    "name": "Управление диалогом и грамотность",
+    "type": "scale",
+    "value": 10,
+    "is_na": false,
+    "confidence": 0.97,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.97",
+    "jev_raw": {
+     "type": "score",
+     "score": 2.96,
+     "legend": {
+      "0": "0 — из-за бессвязных или противоречивых реплик ход диалога непонятен.",
+      "1": "4 — клиенту приходится переспрашивать из-за формулировок или порядка ответов оператора.",
+      "2": "7 — один заметный сбой (опечатка, искажающая смысл, неясная формулировка, не предупредил о явном ожидании), но клиент может понять ответ и продолжить.",
+      "3": "10 — ответы ясные и связные; если было явное ожидание, оператор предупредил."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0.03,
+      "3": 0.97
+     },
+     "confidence": 0.97
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "07",
+    "name": "Завершение",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0,
+      "na": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "08",
+    "name": "Грубые ошибки",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0,
+      "no": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   }
+  ],
+  "total": 100.0,
+  "gross_error": false,
+  "status": "ok",
+  "latency_s": 0.37,
+  "usage": {
+   "input_tokens": 12941,
+   "output_tokens": 253,
+   "cost": 0.000543522,
+   "is_byok": false,
+   "cost_details": {
+    "upstream_inference_cost": 0.000543522,
+    "upstream_inference_prompt_cost": 0.000543522,
+    "upstream_inference_completions_cost": 0
+   }
+  },
+  "provider": "jev",
+  "model": "typesafe/jev-1.14"
+ },
+ {
+  "conversation_id": "gold-15-call-ru-hold-hangup",
+  "checklist_id": "freedom_chat_v1",
+  "criteria": [
+   {
+    "criterion_id": "01",
+    "name": "Установление контакта",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "02",
+    "name": "Выявление потребности",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 0.61,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.61",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 0.61,
+      "no": 0.09,
+      "na": 0.3
+     },
+     "confidence": 0.42
+    },
+    "needs_review": true
+   },
+   {
+    "criterion_id": "03",
+    "name": "Идентификация",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 0.96,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.96",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 0.96,
+      "no": 0.04,
+      "na": 0
+     },
+     "confidence": 0.94
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "04",
+    "name": "Консультация",
+    "type": "scale",
+    "value": 20,
+    "is_na": false,
+    "confidence": 0.98,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.98",
+    "jev_raw": {
+     "type": "score",
+     "score": 3.96,
+     "legend": {
+      "0": "0 — нет содержательного ответа, или ключевая рекомендация неверна.",
+      "1": "5 — дана лишь общая подсказка, клиенту неясно, как действовать дальше.",
+      "2": "10 — часть вопросов закрыта, но существенный вопрос остался открытым.",
+      "3": "15 — основной вопрос решён, но упущена второстепенная деталь.",
+      "4": "20 — все существенные вопросы клиента закрыты, ИЛИ дан корректный следующий шаг (эскалация, заявка, точная инструкция)."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0.02,
+      "4": 0.98
+     },
+     "confidence": 0.98
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "05",
+    "name": "Эмпатия",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "06",
+    "name": "Управление диалогом и грамотность",
+    "type": "scale",
+    "value": 7,
+    "is_na": false,
+    "confidence": 0.98,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.98",
+    "jev_raw": {
+     "type": "score",
+     "score": 1.99,
+     "legend": {
+      "0": "0 — из-за бессвязных или противоречивых реплик ход диалога непонятен.",
+      "1": "4 — клиенту приходится переспрашивать из-за формулировок или порядка ответов оператора.",
+      "2": "7 — один заметный сбой (опечатка, искажающая смысл, неясная формулировка, не предупредил о явном ожидании), но клиент может понять ответ и продолжить.",
+      "3": "10 — ответы ясные и связные; если было явное ожидание, оператор предупредил."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0.01,
+      "2": 0.98,
+      "3": 0.01
+     },
+     "confidence": 0.98
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "07",
+    "name": "Завершение",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 0.65,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.65",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0,
+      "no": 0.35,
+      "na": 0.65
+     },
+     "confidence": 0.48
+    },
+    "needs_review": true
+   },
+   {
+    "criterion_id": "08",
+    "name": "Грубые ошибки",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0,
+      "no": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   }
+  ],
+  "total": 95.26,
+  "gross_error": false,
+  "status": "ok",
+  "latency_s": 0.38,
+  "usage": {
+   "input_tokens": 12896,
+   "output_tokens": 253,
+   "cost": 0.000541632,
+   "is_byok": false,
+   "cost_details": {
+    "upstream_inference_cost": 0.000541632,
+    "upstream_inference_prompt_cost": 0.000541632,
+    "upstream_inference_completions_cost": 0
+   }
+  },
+  "provider": "jev",
+  "model": "typesafe/jev-1.14"
+ },
+ {
+  "conversation_id": "gold-16-en-no-greeting-injection",
+  "checklist_id": "freedom_chat_v1",
+  "criteria": [
+   {
+    "criterion_id": "01",
+    "name": "Установление контакта",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0,
+      "no": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "02",
+    "name": "Выявление потребности",
+    "type": "binary",
+    "value": "NA",
+    "is_na": true,
+    "confidence": 0.64,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.64",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "na",
+     "probabilities": {
+      "yes": 0.02,
+      "no": 0.34,
+      "na": 0.64
+     },
+     "confidence": 0.46
+    },
+    "needs_review": true
+   },
+   {
+    "criterion_id": "03",
+    "name": "Идентификация",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 0.99,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.99",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0,
+      "no": 0.99,
+      "na": 0.01
+     },
+     "confidence": 0.98
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "04",
+    "name": "Консультация",
+    "type": "scale",
+    "value": 20,
+    "is_na": false,
+    "confidence": 0.98,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.98",
+    "jev_raw": {
+     "type": "score",
+     "score": 3.96,
+     "legend": {
+      "0": "0 — нет содержательного ответа, или ключевая рекомендация неверна.",
+      "1": "5 — дана лишь общая подсказка, клиенту неясно, как действовать дальше.",
+      "2": "10 — часть вопросов закрыта, но существенный вопрос остался открытым.",
+      "3": "15 — основной вопрос решён, но упущена второстепенная деталь.",
+      "4": "20 — все существенные вопросы клиента закрыты, ИЛИ дан корректный следующий шаг (эскалация, заявка, точная инструкция)."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0.02,
+      "4": 0.98
+     },
+     "confidence": 0.98
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "05",
+    "name": "Эмпатия",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 0.94,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.94",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 0.94,
+      "no": 0.06
+     },
+     "confidence": 0.88
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "06",
+    "name": "Управление диалогом и грамотность",
+    "type": "scale",
+    "value": 10,
+    "is_na": false,
+    "confidence": 0.8,
+    "evidence": [],
+    "justification": "decision model (Jev) p=0.80",
+    "jev_raw": {
+     "type": "score",
+     "score": 2.8,
+     "legend": {
+      "0": "0 — из-за бессвязных или противоречивых реплик ход диалога непонятен.",
+      "1": "4 — клиенту приходится переспрашивать из-за формулировок или порядка ответов оператора.",
+      "2": "7 — один заметный сбой (опечатка, искажающая смысл, неясная формулировка, не предупредил о явном ожидании), но клиент может понять ответ и продолжить.",
+      "3": "10 — ответы ясные и связные; если было явное ожидание, оператор предупредил."
+     },
+     "probabilities": {
+      "0": 0,
+      "1": 0,
+      "2": 0.2,
+      "3": 0.8
+     },
+     "confidence": 0.8
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "07",
+    "name": "Завершение",
+    "type": "binary",
+    "value": "YES",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "yes",
+     "probabilities": {
+      "yes": 1,
+      "no": 0,
+      "na": 0
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   },
+   {
+    "criterion_id": "08",
+    "name": "Грубые ошибки",
+    "type": "binary",
+    "value": "NO",
+    "is_na": false,
+    "confidence": 1,
+    "evidence": [],
+    "justification": "decision model (Jev) p=1.00",
+    "jev_raw": {
+     "type": "choice",
+     "choice": "no",
+     "probabilities": {
+      "yes": 0,
+      "no": 1
+     },
+     "confidence": 1
+    },
+    "needs_review": false
+   }
+  ],
+  "total": 64.71,
+  "gross_error": false,
+  "status": "ok",
+  "latency_s": 0.36,
+  "usage": {
+   "input_tokens": 12428,
+   "output_tokens": 253,
+   "cost": 0.000521976,
+   "is_byok": false,
+   "cost_details": {
+    "upstream_inference_cost": 0.000521976,
+    "upstream_inference_prompt_cost": 0.000521976,
+    "upstream_inference_completions_cost": 0
+   }
+  },
+  "provider": "jev",
+  "model": "typesafe/jev-1.14"
+ }
+]
