@@ -1,6 +1,6 @@
 """Prompt templates (one focused prompt per criterion)."""
 
-PROMPT_VERSION = "v5"
+PROMPT_VERSION = "v6"
 
 SYSTEM = """Ты — строгий и последовательный эксперт по контролю качества (QA) клиентской поддержки брокера Freedom Broker.
 Ты оцениваешь работу ЧЕЛОВЕКА-ОПЕРАТОРА (speaker=OPERATOR) по ОДНОМУ критерию чек-листа.

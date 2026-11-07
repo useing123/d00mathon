@@ -48,12 +48,15 @@ def validate_evidence(rec, evidence):
             tn = _norm(t.get("text", ""))
             return all(p in tn for p in parts)
         if 0 <= ti < len(turns) and ok(turns[ti]):
-            valid.append({"turn": ti, "quote": e["quote"], "speaker": turns[ti].get("speaker")})
+            valid.append({"turn": ti, "quote": e["quote"], "speaker": turns[ti].get("speaker"),
+                          "internal": bool(turns[ti].get("internal"))})
             continue
-        # wrong turn index: prefer an operator turn containing the quote, then any turn
-        hit = next((t for t in turns if t.get("speaker") == "operator" and ok(t)), None) or next((t for t in turns if ok(t)), None)
+        # wrong turn index: prefer a client-facing operator turn containing the quote, then any turn
+        hit = next((t for t in turns if t.get("speaker") == "operator" and not t.get("internal") and ok(t)), None) or \
+            next((t for t in turns if ok(t)), None)
         if hit:
-            valid.append({"turn": hit["index"], "quote": e["quote"], "speaker": hit.get("speaker"), "turn_corrected": True})
+            valid.append({"turn": hit["index"], "quote": e["quote"], "speaker": hit.get("speaker"), "turn_corrected": True,
+                          "internal": bool(hit.get("internal"))})
         else:
             invalid.append(e)
     return valid, invalid
@@ -71,11 +74,17 @@ def _positive(cr, v):
 def _check_evidence(cr, val, evidence, out):
     """Return a problem string (for a retry hint) or ''. Empty evidence is fine for NA / NO-by-omission
     if missing_where / na_reason is filled."""
-    ops = [e for e in evidence if e.get("speaker") == "operator"]
+    # operator turns spoken to a colleague during hold are not client communication
+    ops = [e for e in evidence if e.get("speaker") == "operator" and not e.get("internal")]
     reqs = out.get("client_requests")
     if cr.get("request_ledger") and isinstance(reqs, list) and reqs and isinstance(val, int):
-        ess_open = [r for r in reqs if isinstance(r, dict) and r.get("essential") and r.get("status") == "open"]
-        if ess_open and val > 10:
+        reqs = [r for r in reqs if isinstance(r, dict)]
+        ess = [r for r in reqs if r.get("essential")]
+        if any(r.get("status") == "open" for r in ess) and val > 10:
+            return "ledger_inconsistent"
+        if any(r.get("status") == "partial" for r in ess) and val == max(cr["scale"]):
+            return "ledger_inconsistent"
+        if reqs and all(r.get("status") == "closed" for r in reqs) and val in (5, 10):
             return "ledger_inconsistent"
     if cr.get("gross") and val == "YES" and not ops:
         return "gross_no_operator_quote"
@@ -98,8 +107,8 @@ _HINTS = {
     "na_without_reason": "При value=NA заполни na_reason.",
     "omission_without_missing_where": "Если evidence пустой, укажи в missing_where, где ожидалось действие оператора.",
     "positive_without_evidence": "Положительная оценка требует цитат из реплик OPERATOR.",
-    "ledger_inconsistent": ("В client_requests есть существенный вопрос со статусом open, а значение выше 10. "
-                            "Согласуй список запросов и значение по якорям критерия."),
+    "ledger_inconsistent": ("Значение не согласуется с client_requests (существенный open → не выше 10; существенный partial → "
+                            "не 20; все closed → 20, либо 0 при неверной ключевой рекомендации). Согласуй список и значение по якорям."),
     "no_operator_evidence": "Критерий оценивает поведение оператора: приведи цитаты из реплик OPERATOR (а не клиента/бота).",
 }
 
@@ -192,12 +201,25 @@ class Evaluator:
                 juror_errors.append(f"{self.judge.model}: {e}")
                 chosen, decided_by = o, f"single:{live[0][1].model}"
             chosen["evidence_warning"] = chosen.get("evidence_warning") or "juror_failed"
+        elif agree and cr.get("gross") and outs[-1]["value"] == "YES":
+            # a gross-error flag is a separate, high-stakes output: the judge confirms even a unanimous YES
+            o = outs[-1]
+            extra = ("\n\nОба эксперта отметили грубую ошибку (YES). Обоснование: " + o.get("justification", "") +
+                     " Цитаты: " + "; ".join(f"[{e['turn']}] «{e['quote']}»" for e in o.get("evidence") or []) +
+                     "\nПроверь сам строго по правилам: подтверди YES только при явной цитате оператора, подпадающей под определение.")
+            chosen, decided_by = self._sample(rec, tx_block, checklist, cr, 0.0, llm=self.judge, extra=extra), \
+                f"judge_confirm:{self.judge.model}"
         elif agree:
             chosen, decided_by = outs[-1], "consensus"   # strongest juror's explanation
         else:
             opinions = "\n".join(
                 f"- Эксперт {i+1}: значение {o['value']!r}. Обоснование: {o.get('justification','')} Рассуждение: {o.get('reasoning','')}"
                 + (" Цитаты: " + "; ".join(f"[{e['turn']}] «{e['quote']}»" for e in o.get("evidence") or []) if o.get("evidence") else "")
+                + (f" Где ожидалось: {o['missing_where']}." if o.get("missing_where") else "")
+                + (f" Почему NA: {o['na_reason']}." if o.get("na_reason") else "")
+                + (" Запросы клиента: " + "; ".join(f"{r.get('text')} [{r.get('status')}{'' if r.get('essential') else ', второстеп.'}]"
+                                                    for r in o["client_requests"] if isinstance(r, dict))
+                   if o.get("client_requests") else "")
                 for i, o in enumerate(outs))
             extra = ("\n\nДва независимых эксперта разошлись во мнениях:\n" + opinions +
                      "\nПроверь транскрипт сам, строго по правилам критерия, и вынеси окончательное решение. "
@@ -316,6 +338,29 @@ class Evaluator:
                         done += 1
                         if progress:
                             progress(done, len(jobs))
+        # rescue pass: criteria that failed get up to 2 fresh single-model attempts with the strongest model
+        # before the dialog is marked incomplete (fail-closed stays the last resort)
+        rescue = [(rec, cid, cr) for rec, cid, cr in jobs if results[rec["conversation_id"]][cr["id"]].get("failed")]
+        for rec, cid, cr in rescue:
+            rescuer = self.judge if self.ensemble else self.llm
+            for _ in range(2):
+                try:
+                    a = cls[cid]["assumptions"]
+                    tx = prompts.transcript_block(rec, data.format_transcript(rec, a.get("ignore_internal_hold_turns", True)),
+                                                  data.format_facts(data.compute_facts(rec)))
+                    o = self._sample(rec, tx, cls[cid], cr, 0.0, llm=rescuer)
+                    results[rec["conversation_id"]][cr["id"]] = {
+                        "criterion_id": cr["id"], "name": cr["name"], "type": cr["type"], "value": o["value"],
+                        "is_na": o["value"] == "NA", "justification": o.get("justification", ""),
+                        "reasoning": o.get("reasoning", ""), "evidence": o.get("evidence", []),
+                        "missing_where": o.get("missing_where", ""), "na_reason": o.get("na_reason", ""),
+                        "confidence": float(o.get("confidence") or 0), "decided_by": f"rescue:{rescuer.model}",
+                        "evidence_warning": o.get("evidence_warning", "") or "rescued_after_failure",
+                        "needs_review": bool(o.get("needs_review")), "client_requests": o.get("client_requests") or [],
+                        "cached": False}
+                    break
+                except Exception as e:
+                    errors.append(f"rescue {rec['conversation_id']}/{cr['id']}: {e}")
         out = []
         for rec in records:
             cid = checklist_override or ckl.pick_for_channel(rec["kind"])

@@ -44,7 +44,8 @@ def test_llm_error_is_not_na(monkeypatch):
     monkeypatch.setattr(ev.llm, "call", boom)
     out, meta = ev.evaluate_many([REC])
     assert out[0]["status"] == "incomplete" and out[0]["total"] is None
-    assert meta["incomplete_dialogs"] == ["t1"] and len(meta["errors"]) == 8
+    assert meta["incomplete_dialogs"] == ["t1"]
+    assert len(meta["errors"]) == 8 + 8 * 2          # 8 failures + 2 rescue attempts each, all failing
 
 
 # ---------- 4. strict values / invariants / overrides ----------
@@ -250,7 +251,8 @@ def test_facts_gap_language_ending():
     f = data.compute_facts(r)
     assert f["first_operator_turn"] == 1 and f["client_language_guess"] == "KZ"
     w = f["longest_wait_after_first_reply"]
-    assert w == {"seconds": 240, "from_turn": 2, "to_turn": 3, "operator_warned_before": False}   # queue time excluded
+    assert w == {"seconds": 240, "from_turn": 2, "to_turn": 3, "operator_warned_before": False,
+                 "kind": "reply_to_client"}   # queue time before the first reply is excluded
     assert f["ending"] == {"last_speaker": "operator", "last_operator_turn": 3, "system_end_event_turn": 4}
     txt = data.format_facts(f)
     assert "240 с" in txt and "№1" in txt
@@ -342,3 +344,58 @@ def test_404_gives_actionable_error(monkeypatch):
     monkeypatch.setattr(m, "_anthropic", lambda *a: (_ for _ in ()).throw(E404()))
     with pytest.raises(RuntimeError, match="not found.*CQA_JURORS"):
         m.call("s", "c", "u", prompts.TOOL)
+
+
+# ---------- round-3 review ----------
+def test_ledger_all_closed_but_10_retried():
+    s = Scripted([{"value": "10", "evidence": [{"turn": 1, "quote": "Тариф"}],
+                   "client_requests": [{"text": "a", "essential": True, "status": "closed"}]},
+                  {"value": "20", "evidence": [{"turn": 1, "quote": "Тариф"}],
+                   "client_requests": [{"text": "a", "essential": True, "status": "closed"}]}])
+    tx = prompts.transcript_block(REC, data.format_transcript(REC))
+    out = Evaluator(llm=s, use_cache=False)._sample(REC, tx, ckl.load("freedom_chat_v1"), _cr("04"), 0)
+    assert out["value"] == 20 and len(s.calls) == 2
+
+
+def test_internal_hold_turn_is_not_operator_evidence():
+    from cqa.evaluator import _check_evidence, validate_evidence
+    r = _rec([{"speaker": "system", "text": "Клиент находится на удержании."},
+              {"speaker": "operator", "text": "Коллега, подскажи тариф"},
+              {"speaker": "system", "text": "Клиент больше не находится на удержании."}])
+    v, _ = validate_evidence(r, [{"turn": 1, "quote": "подскажи тариф"}])
+    assert v[0]["internal"] is True
+    assert _check_evidence(_cr("05"), "YES", v, {}) == "no_operator_evidence"
+
+
+def test_unanimous_gross_yes_is_confirmed_by_judge():
+    yes = {"value": "YES", "evidence": [{"turn": 1, "quote": "Тариф 0.1%"}]}
+    a, b = Scripted([yes]), Scripted([yes])
+    judge = Scripted([{"value": "NO", "evidence": [], "missing_where": "нет"}])
+    judge.model = "judge"
+    ev = Evaluator(use_cache=False)
+    ev.jurors, ev.judge, ev.ensemble = [a, b], judge, True
+    tx = prompts.transcript_block(REC, data.format_transcript(REC))
+    res = ev._jury(REC, tx, ckl.load("freedom_chat_v1"), _cr("08"), "k_h")
+    assert res["decided_by"] == "judge_confirm:judge" and res["value"] == "NO" and len(judge.calls) == 1
+
+
+def test_rescue_pass_recovers_failed_criterion(monkeypatch):
+    ev = Evaluator(use_cache=False)
+    calls = {"n": 0}
+    real = ev.evaluate_criterion
+
+    def flaky(rec, cl, cr):
+        if cr["id"] == "05":
+            raise RuntimeError("overloaded")
+        return real(rec, cl, cr)
+    monkeypatch.setattr(ev, "evaluate_criterion", flaky)
+    orig = ev._sample
+
+    def counting(*a, **k):
+        calls["n"] += 1
+        return orig(*a, **k)
+    monkeypatch.setattr(ev, "_sample", counting)
+    out, meta = ev.evaluate_many([REC])
+    c05 = next(c for c in out[0]["criteria"] if c["criterion_id"] == "05")
+    assert out[0]["status"] == "complete" and c05["decided_by"].startswith("rescue:") and c05["value"] in ("YES", "NO")
+    assert any("05" in e for e in meta["errors"])

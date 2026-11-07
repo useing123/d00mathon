@@ -54,6 +54,12 @@ NA-vs-applicable confusion, list of disagreements.
 | + code-computed FACTS block (first operator turn, language heuristic, longest wait & warning, holds, ending), 01 naming examples, 06 literacy rule (prompt v4, full re-run, $2.30) | 0.992 | 1.44 | 05 gold-12 (model treats "takes too long" as a complaint needing acknowledgement) |
 | + round-2 changes: 04 request ledger (`client_requests`, consistency check), 05 boundary (incidental inconvenience inside a how-to question needs no apology), 03/07 rule additions, better FACTS (multi-message first reply, warning window, ack-only gaps excluded, auth marker) (prompt v5, full re-run, $2.54) | **0.992** | **0.43** | 06 gold-13 (7 vs 10; model docks 06 for the rude repetition — arguably a defensible reading) |
 
+| + round-3 changes: rescue pass, judge confirms unanimous 08=YES, two-way ledger consistency, internal hold turns excluded from operator evidence, 01 mixed KZ/RU, 03 "ID done, nothing disclosed" = YES, 07 "offer asked, client silent" = NA (prompt v6) | 0.969 / **0.984** (two identical runs) | 1.71 / 0.91 | 04 gold-11 (5 vs 0) in both; 04 gold-10, 06 gold-05/13 in one run only |
+
+**Run-to-run noise:** two `--fresh` runs of the identical v6 code differed by 2 of 128 verdicts (0.969 vs 0.984) —
+Anthropic sampling is provider default (the endpoint rejects `temperature`). Differences of ±2 verdicts on this set
+are noise, not signal; that is also why we stopped tuning on it.
+
 Note: the 05 boundary rule resolved gold-12; we report it, but treat it with suspicion as it was suggested by a reviewer after seeing that mismatch. The gold set is now saturated and no longer discriminative — new, harder labelled cases (ideally real dialogs labelled from the organizer's checklist text, `python -m cqa gold --dir <private dir>`) are the next step.
 
 **Tuning (one change, generic, not dialog-specific):** before tuning, all three 02 errors were `NA→NO`, and the

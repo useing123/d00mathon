@@ -10,6 +10,7 @@ suggestions that are correct and do not contradict the organizer rubric, and re-
 | 0 (initial repo) | 77 | 65 | 86 | — |
 | 1 (after round-0 changes) | 76 | — | — | 93 |
 | 2 (after round-1 changes) | 79 | — | — | 95 |
+| 3 (after round-2 changes) | 80 | — | — | 97 |
 
 From round 1 the quorum is claude-fable-5-1 + gemini-4-argon.
 
@@ -94,3 +95,24 @@ Reviewers: claude-fable-5-1 (76), gemini-4-argon (93). fable's first response wa
 | 07 strictness switch (farewell alone = YES) (fable) | Rubric: (summary OR offer) AND goodbye. |
 | Hand-label real DEV dialogs (fable) | No organizer labels exist; labelling them ourselves would repeat the self-labelling bias. `--dir` support added instead. |
 | Criterion hash incl. jury models (argon) | Already in the cache key (`msig`). |
+
+## Round 3 → changes
+### Accepted (implemented)
+| Suggestion (source) | Implementation |
+|---|---|
+| Rescue pass before nulling a total (fable) | failed criteria get 2 fresh single-model attempts with the judge model; only then `incomplete`; test |
+| Double-check gross flags (fable) | a unanimous 08=YES is confirmed by the judge (`decided_by: judge_confirm:…`); test |
+| Two-way 04 ledger consistency (argon) | essential partial → not 20; all closed → not 5/10; test |
+| Internal hold turns are not operator evidence (argon) | `internal` flag on evidence, excluded in `_check_evidence`; test |
+| Wait FACT distinguishes reply-to-client vs pause between operator messages (argon) | `kind` field |
+| Mixed KZ/RU clients (argon) | `client_mixed_languages` FACT; 01 rule: greeting in either language = YES |
+| 03: ID done, nothing disclosed because the dialog ended → YES (argon) | rules of 03 |
+| 07: operator asked "чем ещё помочь?", client silent, chat closed → NA (argon) | rules of 07 (consistent with rubric NA = chat broke off) |
+| Judge sees jurors' missing_where / na_reason / request ledger (argon) | `_jury` |
+
+### Rejected / not done
+| Suggestion | Why |
+|---|---|
+| Narrow 02 NA further (fable, 3rd time) | Rubric: NA = data sufficient from the start; our YES already covers explicit use of known details. |
+| Write provisional score into `total` for submission (fable) | Conflicts with the fail-closed requirement; `provisional_total` column + rescue pass instead. |
+| "Contest" jury sonnet+opus (fable) | Not measured; we don't claim untested accuracy. Configurable via `CQA_JURORS`. |

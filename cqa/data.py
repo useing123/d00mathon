@@ -249,8 +249,11 @@ def compute_facts(rec):
                 break
             if t["speaker"] == "operator" and not t.get("internal"):
                 first_block.append(t)
+    client_txt = [t.get("text", "") for t in tr if t["speaker"] == "client"]
+    per_msg = {detect_language([x]) for x in client_txt} - {None}
     facts = {"first_operator_turn": first_op, "first_operator_turns": [t["index"] for t in first_block],
-             "client_language_guess": detect_language([t.get("text", "") for t in tr if t["speaker"] == "client"]),
+             "client_language_guess": detect_language(client_txt),
+             "client_mixed_languages": sorted(per_msg) if len(per_msg) > 1 else [],
              "language_metadata": rec.get("language"),
              "system_says_client_authenticated": any(
                  t["speaker"] in ("system", "bot") and any(m in (t.get("text") or "").lower() for m in AUTH_MARKERS) for t in tr)}
@@ -288,7 +291,8 @@ def compute_facts(rec):
                         recent = since_client or ([last_op] if last_op else [])
                         warned = any(w in (o.get("text") or "").lower() for o in recent for w in WAIT_PHRASES)
                         best = {"seconds": round(gap), "from_turn": start["index"], "to_turn": t["index"],
-                                "operator_warned_before": bool(warned)}
+                                "operator_warned_before": bool(warned),
+                                "kind": "reply_to_client" if pending is not None else "between_operator_messages"}
                 pending, last_op, ack_seen = None, t, False
                 since_client.append(t)
     facts["longest_wait_after_first_reply"] = best
@@ -320,6 +324,8 @@ def format_facts(f):
                      + (f" (вместе с подряд идущими №{', №'.join(map(str, tb[1:]))} до ответа клиента)" if len(tb) > 1 else ""))
     else:
         lines.append("- Человек-оператор в диалоге не отвечал.")
+    if f.get("client_mixed_languages"):
+        lines.append(f"- Клиент смешивает языки: {', '.join(f['client_mixed_languages'])}.")
     if f.get("system_says_client_authenticated"):
         lines.append("- Система/бот сообщает, что клиент авторизован/верифицирован.")
     lines.append(f"- Язык клиента (эвристика по алфавиту): {f['client_language_guess'] or 'не определён'}; "
@@ -328,8 +334,10 @@ def format_facts(f):
                     if f["first_operator_turn"] is not None else ""))
     w = f["longest_wait_after_first_reply"]
     if w:
+        kind = ("ответ на сообщение клиента" if w.get("kind") == "reply_to_client"
+                else "пауза между сообщениями оператора без реплики клиента")
         lines.append(f"- Самое долгое ожидание ответа оператора после его первой реплики: {w['seconds']} с "
-                     f"(реплики №{w['from_turn']} → №{w['to_turn']}); оператор предупреждал об ожидании перед этим: "
+                     f"(реплики №{w['from_turn']} → №{w['to_turn']}; {kind}); оператор предупреждал об ожидании перед этим: "
                      f"{'да' if w['operator_warned_before'] else 'нет'}.")
     for h in f["holds"]:
         lines.append(f"- Удержание (системное событие) с реплики №{h['start_turn']}"
