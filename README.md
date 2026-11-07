@@ -35,7 +35,7 @@ flowchart LR
 | Jev 1.14 в одиночку | 0.934 | $0.00053 | массовый скрининг без цитат |
 | **Своя модель** Qwen3-8B + QLoRA (1 эпоха) | — (в процессе) | — (в процессе) | данные не покидают контур; база без дообучения — 0.775 |
 
-Подробно: [демо-сценарий](docs/DEMO.md) · [каскад](docs/OSS_ROUTER.md) · [Jev](docs/JEV.md) · [матрица моделей](docs/MODELS.md) (страница `/models`) · [дообучение](docs/FINETUNE.md) · модель на HF: [useing/cqa-qwen3-8b-lora](https://huggingface.co/useing/cqa-qwen3-8b-lora) (публикуется).
+Подробно: [демо-сценарий](docs/DEMO.md) · [каскад](docs/OSS_ROUTER.md) · [Jev](docs/JEV.md) · [матрица моделей](docs/MODELS.md) (страница `/models`) · [дообучение](docs/FINETUNE.md) · модель на HF: [useing/cqa-qwen3-8b-lora](https://huggingface.co/useing/cqa-qwen3-8b-lora) .
 
 ## Результаты (текущая версия, v7)
 
