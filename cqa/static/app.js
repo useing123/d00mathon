@@ -210,8 +210,10 @@ async function delCrit(i){if(await ask('Удалить критерий?',null))
 // ---------- appeals (two-step: open -> resolved; API /api/appeals) ----------
 const apFor=(conv,cid)=>APS.find(a=>a.status=='open'&&a.conversation_id==conv&&a.criterion_id==cid);
 async function refreshAps(){try{const r=await api('/api/appeals?group='+encodeURIComponent(G));APS=r.items;const n=r.open;$('#apCnt').textContent=n;$('#apCnt').classList.toggle('hide',!n)}catch(e){APS=[]}}
-function apBlock(cid,c){const a=apFor(CUR,cid);if(a)return `<div class="apn">⚑ Апелляция открыта${a.author?' ('+esc(a.author)+')':''}: «${esc(a.comment)}» <span class="lnk" onclick="view('appeals')">к очереди</span></div>`;
- if(APOPEN!=cid)return'';return `<div class="ovf apf"><textarea id="apc_${cid}" rows="2" placeholder="Почему вы не согласны с оценкой «${esc(VL[c.value]??c.value)}»? (обязательно)"></textarea>
+function apBlock(cid,c){const a=apFor(CUR,cid);const def=cdef(DOC?.dialogs.find(x=>x.conversation_id==CUR)?.checklist_id,cid);
+ const done=APS.filter(x=>x.status=='resolved'&&x.conversation_id==CUR&&x.criterion_id==cid).map(x=>`<div class="apn apdone">⚑ Апелляция${x.author?' ('+esc(x.author)+')':''}: «${esc(x.comment)}» · исходная оценка ${badge(x.value_at_appeal,def)} · решение: <b>${x.resolution.decision=='changed'?'изменено':'подтверждено'}</b> — ${esc(x.resolution.reason)} · итоговая ${badge(x.resolution.value,def,x.resolution.decision=='changed'?'hum':'')}</div>`).join('');
+ if(a)return done+ `<div class="apn">⚑ Апелляция открыта${a.author?' ('+esc(a.author)+')':''}: «${esc(a.comment)}» <span class="lnk" onclick="view('appeals')">к очереди</span></div>`;
+ if(APOPEN!=cid)return done;return done+`<div class="ovf apf"><textarea id="apc_${cid}" rows="2" placeholder="Почему вы не согласны с оценкой «${esc(VL[c.value]??c.value)}»? (обязательно)"></textarea>
  <input id="apa_${cid}" placeholder="Имя" style="width:110px;flex:0 0 110px;min-width:0" value="${esc(localStorage.reviewer||'')}">
  <button class="btn pri" id="apSend_${cid}" onclick="sendAp('${cid}')">Отправить апелляцию</button><button class="btn" onclick="APOPEN=null;renderDialog()">Отмена</button></div>`}
 async function sendAp(cid){const cm=$('#apc_'+cid).value.trim();if(!cm){toast('Комментарий обязателен');$('#apc_'+cid).focus();return}
@@ -241,4 +243,4 @@ async function resolveAp(id){const d=document.querySelector(`input[name=apd_${id
  if(!rs){toast('Причина обязательна');$('#apr_'+id).focus();return}localStorage.reviewer=$('#aprv_'+id).value;
  try{const r=await api(`/api/appeals/${id}/resolve`,J({group:G,decision:d,value:d=='change'?$('#apv_'+id).value:null,reason:rs,reviewer:$('#aprv_'+id).value}));
   const i=DOC?DOC.dialogs.findIndex(x=>x.conversation_id==r.dialog.conversation_id):-1;if(i>=0&&(!r.appeal.run||r.appeal.run==RUN))DOC.dialogs[i]=r.dialog;
-  toast(`Апелляция решена · итог диалога: ${r.total!=null?r.total.toFixed(2):'—'}`);await refreshAps();renderTable();renderOverview();await loadAppeals()}catch(e){toast('Ошибка: '+e.message)}}
+  if(CUR==r.dialog.conversation_id)renderDialog();toast(`Апелляция решена · итог диалога: ${r.total!=null?r.total.toFixed(2):'—'}`);await refreshAps();renderTable();renderOverview();await loadAppeals()}catch(e){toast('Ошибка: '+e.message)}}
