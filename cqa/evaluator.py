@@ -589,7 +589,8 @@ def build_dialog_result(rec, checklist, crit_results, overrides=None):
            "failed_criteria": failed, "needs_review": flags,
            "warnings": list(rec.get("warnings") or []) + warns,
            "total": None if failed else ai["total"], "provisional_total": ai["total"] if failed else None,
-           "gross_error": ai["gross_error"], "stability": dialog_stability(checklist, crit_results)}
+           "gross_error": ai["gross_error"], "stability": dialog_stability(checklist, crit_results),
+           "call_metrics": data.call_metrics(rec)}
     return apply_overrides(res, checklist, overrides or {})
 
 

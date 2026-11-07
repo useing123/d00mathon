@@ -438,3 +438,40 @@ def format_facts(f):
                  "системное событие завершения: "
                  f"{('№' + str(e['system_end_event_turn'])) if e['system_end_event_turn'] is not None else 'нет'}.")
     return "\n".join(lines)
+
+
+SPEECH_WPS = 2.5   # assumed speaking rate (words/s) used only to estimate whether a turn was cut into (no audio)
+
+
+def call_metrics(rec):
+    """Informational, audio-free call metrics from turn start times (NOT scored). Turn durations are unknown,
+    so a turn's length is approximated by the time until the next turn starts."""
+    tr = [t for t in rec["transcript"] if t["speaker"] in ("operator", "client") and not t.get("internal")
+          and t.get("offset") is not None]
+    if rec.get("kind") != "call" or len(tr) < 2:
+        return None
+    op_words = op_time = 0.0
+    changes = interrupts = 0
+    latencies = []
+    for a, b in zip(tr, tr[1:], strict=False):
+        gap = max(0.0, b["offset"] - a["offset"])
+        words = len((a.get("text") or "").split())
+        if a["speaker"] == "operator" and gap > 0:
+            op_words += words
+            op_time += gap
+        if a["speaker"] != b["speaker"]:
+            changes += 1
+            if gap < words / SPEECH_WPS:          # next speaker started before this turn could have been said
+                interrupts += 1
+            if a["speaker"] == "client" and b["speaker"] == "operator":
+                latencies.append(gap)
+    lat = sorted(latencies)
+
+    def q(p):
+        return round(lat[min(len(lat) - 1, int(p * (len(lat) - 1) + 0.5))], 1) if lat else None
+    return {"operator_wpm": round(op_words / op_time * 60, 1) if op_time else None,
+            "speaker_changes": changes,
+            "overlap_rate": round(interrupts / changes, 3) if changes else None,
+            "operator_response_s": {"median": q(0.5), "p90": q(0.9), "max": round(lat[-1], 1) if lat else None,
+                                    "n": len(lat)},
+            "note": "informational, estimated from turn start times only; not scored"}
