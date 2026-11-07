@@ -364,6 +364,14 @@ class CascadeEvaluator(BaseEvaluator):
         res = _ev._result_dict(cr, chosen, chosen["value"], decided_by=f"cascade:tier{tier}:{decided}",
                                votes=[o["value"] for o in (local, haiku, sonnet) if o and o.get("value") is not None],
                                routing=routing)
+        if tier == 1:   # cite-only evidence step for disputed tier-1 verdicts (cqa/evidence_step.py)
+            from . import evidence_step
+            if evidence_step.apply(res, self.esc, rec, tx, checklist, cr, use_cache=self.use_cache):
+                haiku = haiku or self._raw("escalate", self.esc, rec, tx, checklist, cr)
+                if not haiku.get("error"):
+                    routing.update(tier=2, route="haiku", reasons=why1 + ["evidence_missing"], haiku=_brief(haiku))
+                    res = _ev._result_dict(cr, haiku, haiku["value"], decided_by=f"cascade:tier2:{self.esc.model}",
+                                           votes=res["votes"] + [haiku["value"]], routing=routing)
         return _ev._flag(cr, res)
 
     def evaluate_many(self, records, *args, **kw):

@@ -1,0 +1,73 @@
+{
+ "cascade/holdout": {
+  "criteria": 80,
+  "coverage_before": 0.163,
+  "coverage_after": 0.487,
+  "cited_calls": 26,
+  "step_ok": 26,
+  "step_missing": 0,
+  "errors": 0,
+  "cached": 0,
+  "disputed_tier1_coverage_after": 1.0,
+  "usd_per_dialog": 0.0009,
+  "usd_total": 0.009,
+  "added_s_per_dialog_serial": 3.71,
+  "wall_s": 6.8,
+  "verdicts_changed": 0,
+  "disputed_share": 0.425,
+  "disputed_coverage_before": 0.206,
+  "disputed_coverage_after": 0.971
+ },
+ "cascade/dev": {
+  "criteria": 520,
+  "coverage_before": 0.24,
+  "coverage_after": 0.654,
+  "cited_calls": 215,
+  "step_ok": 215,
+  "step_missing": 0,
+  "errors": 0,
+  "cached": 0,
+  "disputed_tier1_coverage_after": 1.0,
+  "usd_per_dialog": 0.0012,
+  "usd_total": 0.0777,
+  "added_s_per_dialog_serial": 4.49,
+  "wall_s": 21.2,
+  "verdicts_changed": 0,
+  "disputed_share": 0.537,
+  "disputed_coverage_before": 0.197,
+  "disputed_coverage_after": 0.968
+ },
+ "jury/holdout": {
+  "criteria": 80,
+  "coverage_before": 0.975,
+  "disputed_share": 0.463,
+  "disputed_coverage_before": 0.946,
+  "disputed_coverage_after": 0.946
+ },
+ "jury/dev": {
+  "criteria": 520,
+  "coverage_before": 0.756,
+  "disputed_share": 0.531,
+  "disputed_coverage_before": 0.649,
+  "disputed_coverage_after": 0.649
+ },
+ "cascade-local/holdout": {
+  "criteria": 80,
+  "coverage_before": 0.0,
+  "coverage_after": 0.45,
+  "cited_calls": 36,
+  "step_ok": 36,
+  "step_missing": 0,
+  "errors": 0,
+  "cached": 26,
+  "disputed_tier1_coverage_after": 1.0,
+  "usd_per_dialog": 0.00031,
+  "usd_total": 0.0031,
+  "added_s_per_dialog_serial": 1.29,
+  "wall_s": 5.4,
+  "verdicts_changed": 0,
+  "disputed_share": 0.45,
+  "disputed_coverage_before": 0.0,
+  "disputed_coverage_after": 1.0
+ }
+}

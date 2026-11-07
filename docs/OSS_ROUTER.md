@@ -72,9 +72,32 @@ Qwen3-8B is too weak (02/04 especially) and its routing escalates 65% of criteri
 - Gold sets are synthetic and labelled by us; held-out is 10 dialogs (one label = 1.25 pp). Single runs.
 - DEV "agreement" = agreement with our own claude jury, not ground truth.
 - Tuning on 16 dialogs overfits; several thresholds tie. Replay numbers on the tuned gold are optimistic.
-- Jev tier-1 criteria that are not escalated have **no evidence quotes** (Jev returns probabilities only).
+- Jev tier-1 criteria that are not escalated have no quotes from Jev itself; disputed ones get them from the evidence step (§4a).
 - Only one open-weight model was run in this sweep (time); 14B / Qwen3.5 / Gemma are scripted but unmeasured.
 - bench_matrix.json was not modified (no new rows) to keep /models untouched.
+
+## 4a. Evidence step for tier-1 verdicts (`cqa/evidence_step.py`)
+
+After tier 1 decides and the criterion is **not** escalated, verdicts likely to be disputed (NO, NA, scale < max;
+08=YES via `CQA_EVIDENCE_08_YES=1`, default) get one cite-only claude-haiku-5-5 call: the prompt states the fixed
+decision and asks only for the supporting turn(s) + a 1–2 sentence rationale. Quotes pass the usual substring check
+(`validate_evidence`); result → `evidence`, `evidence_rationale`, `routing.evidence_step` {status ok|evidence_missing}.
+The value is never changed; with `CQA_EVIDENCE_ESCALATE=1` a criterion with no verified quote goes to tier 2.
+`CQA_EVIDENCE_STEP=off|disputed|all` (cascade default `disputed`). Replay on saved verdicts:
+`scripts/measure_evidence_step.py` → `results/oss/evidence_step.json` (held-out 10 + DEV 65, run once).
+
+| mode | criteria with a verified quote (held-out / DEV) | disputed verdicts with a quote | added $/dialog | added s/dialog |
+|---|---|---|---|---|
+| claude jury | 0.975 / 0.756 | 0.946 / 0.649 | – | – |
+| cascade Jev→haiku→sonnet, before | 0.163 / 0.240 | 0.206 / 0.197 | – | – |
+| cascade, evidence step `disputed` | 0.487 / 0.654 | 0.971 / 0.968 | $0.0009 / $0.0012 | ≈1.4 wall (criteria in parallel); 3.7 / 4.5 serial |
+| local decision cascade (Qwen3.8-27B), before¹ | 0.0 | 0.0 | – | – |
+| local decision cascade + step¹ | 0.450 | 1.000 | $0.0003 | ≈1.3 serial |
+
+All 277 cite calls returned ≥1 verified quote (0 evidence_missing, 0 errors); verdicts changed: 0 (asserted).
+Remaining unquoted disputed verdicts are escalated ones where Haiku/Sonnet left evidence empty (NA/omission).
+¹ held-out only; the saved run has no per-criterion tiers, so every disputed verdict was cited (upper bound on cost)
+and "before" ignores the ~14 % escalated criteria that carry Haiku quotes.
 
 ## 5. Deploy
 
