@@ -60,14 +60,14 @@ single model. Reproduce: `python scripts/bench_models.py run --base-url ... --mo
 | gross-error flag agreement | 0.985 (local 4 flags vs cloud 5) |
 | incomplete / failed | 0 / 0 |
 | wall time | 1043 s → **16.0 s/dialog** at concurrency 16 |
-| GPU cost | **$0.0026/dialog** (vs cloud jury ≈ $0.19/dialog: $12.14 for 65) |
+| GPU cost | **$0.0026/dialog** (vs cloud jury ≈ $0.16/dialog: $10.28 for 65, v7) |
 
 Total RunPod spend for the whole experiment (deploy, ~3 min load, gold+holdout+DEV, terminate):
 **$0.28** (balance $6.04 → $5.76).
 
 ## 3. Verdict & limitations
 
-- Usable as a cheap/offline **first pass** (≈70× cheaper per dialog), not a replacement for the
+- Usable as a cheap/offline **first pass** (≈60× cheaper per dialog), not a replacement for the
   cloud jury: ~11 pp lower gold agreement, MAE ≈ 7–10 points; weakest on 02 (need discovery),
   04 (answer correctness) and 06 (tone/scale) — the nuanced criteria. Gross-error detection held up.
 - Prompts are tuned for Claude; no per-model tweaking was done (fair comparison), so a tuned prompt or a

@@ -122,8 +122,8 @@ tr.flag td{background:var(--soft)}
     </div>
   </div>
   <div class="row" style="margin-top:44px">
-    <div class="col"><div class="big">86%</div><p class="muted" style="margin-top:14px">оценок присяжные дали одинаково (449 из 520)</p></div>
-    <div class="col"><div class="big">66</div><p class="muted" style="margin-top:14px">спорных случаев из 520 решил судья</p></div>
+    <div class="col"><div class="big">85%</div><p class="muted" style="margin-top:14px">оценок присяжные дали одинаково (444 из 520)</p></div>
+    <div class="col"><div class="big">76</div><p class="muted" style="margin-top:14px">спорных случаев из 520 решил судья (шкалы — медиана 3 ответов); все помечены «на проверку»</p></div>
   </div>
   <div class="foot"><span>Данные: прогон на 65 DEV-диалогах</span><span>4</span></div>
 </section>
@@ -150,7 +150,7 @@ tr.flag td{background:var(--soft)}
     <div class="item"><div class="t">N/A не штрафует</div><div class="d">Неприменимый критерий исключается, его вес распределяется пропорционально. Максимум всегда 100.</div></div>
     <div class="item"><div class="t">Округление по правилу</div><div class="d">Half-up до двух знаков: 50.625 → 50.63. Покрыто тестом.</div></div>
     <div class="item"><div class="t">Грубые ошибки отдельно</div><div class="d">Флаг не смешивается с баллом и виден в списке сразу.</div></div>
-    <div class="item"><div class="t">158 автотестов</div><div class="d">N/A, шкалы, перераспределение, округление, цитаты, формат сдачи, апелляции.</div></div>
+    <div class="item"><div class="t">174 автотеста</div><div class="d">N/A, шкалы, перераспределение, округление, цитаты, формат сдачи, апелляции.</div></div>
   </div>
   <div class="foot"><span>Детерминированный расчёт</span><span>6</span></div>
 </section>
@@ -161,27 +161,27 @@ tr.flag td{background:var(--soft)}
   <div class="row" style="margin-top:30px;align-items:flex-end">
     <div class="col" style="flex:1.5">
       <div class="bars">
-        <div class="bar"><b>1</b><i style="height:3%"></i><span>10+</span></div>
-        <div class="bar"><b>0</b><i style="height:0%"></i><span>20+</span></div>
-        <div class="bar"><b>6</b><i style="height:17%"></i><span>30+</span></div>
-        <div class="bar"><b>3</b><i style="height:8%"></i><span>40+</span></div>
+        <div class="bar"><b>0</b><i style="height:0%"></i><span>10+</span></div>
+        <div class="bar"><b>1</b><i style="height:3%"></i><span>20+</span></div>
+        <div class="bar"><b>3</b><i style="height:8%"></i><span>30+</span></div>
+        <div class="bar"><b>4</b><i style="height:11%"></i><span>40+</span></div>
         <div class="bar"><b>3</b><i style="height:8%"></i><span>50+</span></div>
-        <div class="bar"><b>5</b><i style="height:14%"></i><span>60+</span></div>
-        <div class="bar"><b>4</b><i style="height:11%"></i><span>70+</span></div>
-        <div class="bar"><b>7</b><i style="height:19%"></i><span>80+</span></div>
-        <div class="bar"><b>36</b><i style="height:100%"></i><span>90+</span></div>
+        <div class="bar"><b>6</b><i style="height:16%"></i><span>60+</span></div>
+        <div class="bar"><b>5</b><i style="height:13%"></i><span>70+</span></div>
+        <div class="bar"><b>5</b><i style="height:13%"></i><span>80+</span></div>
+        <div class="bar"><b>38</b><i style="height:100%"></i><span>90+</span></div>
       </div>
       <p class="muted" style="font-size:24px;margin-top:22px">Распределение итоговых баллов</p>
     </div>
     <div class="col">
       <div class="facts" style="grid-template-columns:1fr;gap:40px;margin-top:0">
-        <div class="fact"><div class="v">78.45</div><div class="l">средний балл</div></div>
+        <div class="fact"><div class="v">80.41</div><div class="l">средний балл</div></div>
         <div class="fact"><div class="v">5</div><div class="l">диалогов с грубой ошибкой: перевод денег на карту оператора, платная консультация в обход компании, оскорбление</div></div>
         <div class="fact"><div class="v">60 чатов · 5 звонков</div><div class="l">русский, казахский, английский</div></div>
       </div>
     </div>
   </div>
-  <div class="foot"><span>Точность на реальных DEV-диалогах человеком пока не измерена: на синтетических gold-наборах 0.99 / отложенном 0.93</span><span>7</span></div>
+  <div class="foot"><span>Точность на реальных DEV-диалогах человеком пока не измерена: на отложенном синтетическом наборе 0.95</span><span>7</span></div>
 </section>
 
 <section class="slide" data-id="product">
@@ -244,7 +244,7 @@ tr.flag td{background:var(--soft)}
   <div class="formula mono" style="font-size:38px">make submit GROUP=&lt;ID&gt;  →  results/prod/results.json</div>
   <div class="facts" style="grid-template-columns:repeat(3,1fr)">
     <div class="fact"><div class="v">~1 мин</div><div class="l">параллельная обработка</div></div>
-    <div class="fact"><div class="v">~$1.2</div><div class="l">за 10 диалогов (жюри Claude, $7.64 за 65 на DEV)</div></div>
+    <div class="fact"><div class="v">~$1.6</div><div class="l">за 10 диалогов ($0.16 за диалог; $10.28 за 65 на DEV)</div></div>
     <div class="fact"><div class="v">0</div><div class="l">заготовленных ответов: каждый диалог анализируется заново</div></div>
   </div>
   <div class="foot"><span>Или кнопка «Загрузить группу и оценить» в интерфейсе</span><span>12</span></div>

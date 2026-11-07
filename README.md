@@ -10,11 +10,23 @@
 
 [English version ↓](#english) · [Pitch deck (PDF)](docs/CQA_Pitch_Deck.pdf) · [Presentation (HTML)](docs/presentation.html) · [Architecture](docs/ARCHITECTURE.md) · [Scoring](docs/SCORING.md) · [Assumptions](docs/ASSUMPTIONS.md) · [Evaluation](docs/EVALUATION.md) · [API](docs/API.md)
 
+## Результаты (текущая версия, v7)
+
+| Набор | Совпадение значений | MAE итога | Грубые P/R | Прочее |
+|---|---|---|---|---|
+| **Held-out**, 10 синтетических диалогов (по ним не настраивались) | **0.95** (76/80, 1 прогон) | **4.43** | 1.0 / 1.0 | прежние прогоны 0.925–0.938 — это уровень шума |
+| **DEV**, 65 реальных/синтетических диалогов организаторов | не измерено (нет разметки человека) | — | 5 флагов | средний балл 80.41; 0 ошибок; 294 с |
+| Стоимость | **$0.16 за диалог** (DEV: $10.28 за 65, жюри haiku+sonnet → opus) | | | ≈ $1.6 за 10 контрольных |
+| Флаги `needs_review` (DEV) | 18.3% критериев, 75% диалогов | | | разошлись присяжные / решал судья / шкала с низкой уверенностью |
+
+Оба gold-набора синтетические и размечены нами — это проверка регрессий, а не совпадение со скрытой разметкой.
+Подробно: [docs/EVALUATION.md](docs/EVALUATION.md); история версий: [docs/HISTORY.md](docs/HISTORY.md).
+
 ## Submission / Сдача результатов (формат JSON 1.0)
 
 | Файл | Что внутри | Как получить |
 |---|---|---|
-| [`results/dev/results.json`](results/dev/results.json) | все 65 записей DEV (60 чатов + 5 звонков), прогон `dev_jury_v6` | `make submit-dev RUN=dev_jury_v6` (без вызовов LLM) |
+| [`results/dev/results.json`](results/dev/results.json) | все 65 записей DEV (60 чатов + 5 звонков), прогон `dev_jury_v7` | `make submit-dev RUN=dev_jury_v7` (без вызовов LLM) |
 | `results/prod/results.json` | ровно 10 записей контрольного набора, включая ошибки | в контрольный час: `make submit GROUP=<id>` → `git push` |
 
 - Формат — приложение к студенческому гайду «Как сдать результаты»: `{"schema_version":"1.0","team_name":"d00mathon","model":{"mode","name"},"results":[…]}`; на диалог — `status:"ok"` с 8 критериями (`contact, discovery, identification, consultation, empathy, dialogue, closure, critical`; `true/false/null` или шаг шкалы до веса) и `score:{final_score, critical_flag}`, либо `status:"error"`, `criteria:[]`, `score:null`, `error:"<причина>"` (ошибка никогда не заменяется нулём).
@@ -22,7 +34,7 @@
 - Все правила — в одном месте: [`cqa/submission.py`](cqa/submission.py); JSON-схема — [`docs/results.schema.json`](docs/results.schema.json); проверка: `python -m cqa validate results/prod/results.json` (схема, домены значений, 8 критериев по одному разу, `critical_flag == critical`, 2 знака, без дублей ID, в prod ровно 10 записей; `--group <id>` — ID совпадают с API).
 - `make submit GROUP=<id>`: загрузка из API → оценка (пресет по умолчанию) → экспорт JSON 1.0 → валидация → `git add -f` + commit; push — вручную. В UI: «Ещё → Выгрузить results.json (v1.0)».
 - Заменённый в UI критерий выгружается под своим `id` (или `code:` из YAML); стандартные 01–08 → официальные коды.
-- **Модель и стоимость.** `results/dev/results.json`: жюри `claude-haiku-5-5` + `claude-sonnet-5-5`, судья `claude-opus-5-5` (`external_api`), $7.64 за 65 диалогов ≈ **$0.12 за диалог**, ≈ 5 мин. Тот же режим (`--preset jury`) — по умолчанию для новых прогонов, в т.ч. `make submit` для контрольных диалогов. Альтернатива `--preset max` (`gpt-5.3-codex`, ≈ $0.058) опциональна: отрыв на отложенном наборе 2 метки из 80, это в пределах шума (см. [docs/MODELS.md](docs/MODELS.md)). Тихих подмен на старые модели нет: запасные модели выключены по умолчанию (`CQA_FALLBACK_MODELS`); фактическая модель записывается в `model.name`.
+- **Модель и стоимость.** `results/dev/results.json`: жюри `claude-haiku-5-5` + `claude-sonnet-5-5`, судья `claude-opus-5-5` (`external_api`), $10.28 за 65 диалогов ≈ **$0.16 за диалог**, ≈ 5 мин. Тот же режим (`--preset jury`) — по умолчанию для новых прогонов, в т.ч. `make submit` для контрольных диалогов. Альтернатива `--preset max` (`gpt-5.3-codex`, ≈ $0.058) опциональна: отрыв на отложенном наборе 2 метки из 80, это в пределах шума (см. [docs/MODELS.md](docs/MODELS.md)). Тихих подмен на старые модели нет: запасные модели выключены по умолчанию (`CQA_FALLBACK_MODELS`); фактическая модель записывается в `model.name`.
 - **Апелляции** (два отдельных действия): «Оспорить» на карточке критерия (обязательный комментарий) → вкладка «Апелляции»: проверяющий подтверждает или меняет оценку с обязательной причиной → итог пересчитывается; карточка показывает исходную оценку, решение и итог. API: `POST /api/appeals`, `GET /api/appeals?group=&status=`, `POST /api/appeals/{id}/resolve`.
 - Точность на реальных DEV-диалогах **не измерена** человеком (нет разметки); измерено только на синтетических gold-наборах (см. [docs/EVALUATION.md](docs/EVALUATION.md)).
 
@@ -109,7 +121,9 @@ sequenceDiagram
 
 ## Как максимизируется точность
 - **Один критерий — один запрос.** В промпте только рубрика и правила принятия решения этого критерия.
-- **Жюри + судья.** Haiku и Sonnet голосуют параллельно; при расхождении решает Opus. На DEV жюри согласилось в 84.4% из 520 вердиктов, судья решил 81.
+- **Жюри + судья.** Haiku и Sonnet голосуют параллельно; при расхождении решает Opus. На DEV (v7) жюри согласилось в 85.4% из 520 вердиктов, судья решил 76.
+- **Меньше шума на шкалах.** Если судья решает шкальный критерий (04, 06), он отвечает 3 раза и берётся **медиана** шага (`CQA_JUDGE_SAMPLES=3`); бинарные — большинство (судья разбивает ничью 1:1). Каждый диалог получает поле `stability` (согласие голосов, диапазон итога по фактическим голосам).
+- **Флаг «на проверку».** `needs_review` + причины на каждом критерии, где присяжные разошлись, решал судья или шкальное значение с низкой уверенностью; счётчик в интерфейсе (во внутреннем JSON, не в выгрузке v1.0).
 - **Строгий JSON** через tool use: одна стабильная схема инструмента для всех критериев (общий кэш промпта); допустимые значения перечислены в блоке критерия и проверяются в коде (`checklist.strict_value`) — недопустимое значение → повтор с подсказкой; NA только там, где разрешён.
 - **Факты, вычисленные кодом** (первая реплика оператора, эвристика языка клиента, самая долгая пауза после первого ответа и было ли предупреждение, удержания, как закончился диалог) передаются модели, чтобы она не считала время и роли сама.
 - **Проверка цитат.** Цитата обязана быть дословной подстрокой указанной реплики (нормализация пробелов/кавычек/ё, фрагменты через «…»); неверный номер реплики исправляется, выдуманная цитата → повтор запроса, затем отбрасывается (`rejected_quotes`).
@@ -154,14 +168,14 @@ CQA_PROVIDER=openai CQA_OPENAI_BASE_URL=http://127.0.0.1:11434/v1 CQA_MODEL=qwen
 | # | Допущение | Где задано |
 |---|---|---|
 | 1 | Критерий 01: «первая реплика» = первая реплика **человека-оператора**; приветствие бота не засчитывается | `assumptions.first_reply` |
-| 2 | Критерий 07 оценивается строго | рубрика 07 |
-| 3 | Время первого ответа, теги, вложения не оцениваются | docs/ASSUMPTIONS.md |
-| 4 | Звонки (по замечанию организаторов): критерий 06 оценивает логику, ясность и управление паузами вместо грамотности письма; в 04 и всех остальных ошибки ASR не наказываются | `freedom_call_v1.yaml` |
+| 2 | Критерий 07: прощание + (итог ИЛИ предложение помощи), буквально по чек-листу | рубрика 07 |
+| 3 | Время первого ответа, теги, вложения не оцениваются; «явное ожидание» позже — > 3 мин (180 с), задаётся только в YAML (`assumptions.long_wait_seconds`) | docs/ASSUMPTIONS.md |
+| 4 | Звонки (по замечанию организаторов): критерий 06 оценивает логику, ясность, отсутствие неуместных выражений, корректность речи и управление паузами; в 04 и всех остальных ошибки ASR не наказываются | `freedom_call_v1.yaml` |
 | 5 | Реплики во время удержания — внутренние, не оцениваются | `ignore_internal_hold_turns` |
 | 6 | Аудио-смещение = время реплики − время первой реплики (приближение) | `cqa/data.py` |
 | 7 | Округление ROUND_HALF_UP до 2 знаков | `assumptions.rounding` |
 
-Подробно: [docs/ASSUMPTIONS.md](docs/ASSUMPTIONS.md).
+Подробно (включая таблицу сверки каждого правила с текстом официального чек-листа): [docs/ASSUMPTIONS.md](docs/ASSUMPTIONS.md#rubric-alignment-official-checklist-pdf-vs-our-yaml).
 
 ## Выбор модели (пресеты)
 Матрица цена/точность/скорость по 19 конфигурациям (Anthropic, OpenAI, Gemini, локальная Qwen; одиночные модели, жюри, варианты промптов): [docs/MODELS.md](docs/MODELS.md), страница **`/models`** в интерфейсе.
@@ -169,23 +183,14 @@ CQA_PROVIDER=openai CQA_OPENAI_BASE_URL=http://127.0.0.1:11434/v1 CQA_MODEL=qwen
 `python -m cqa evaluate --preset econom|balanced|max|jury` (или `CQA_PRESET=...`; явные `CQA_MODEL`/`CQA_JURORS`/`CQA_JUDGE` важнее пресета). Воспроизвести: `python scripts/bench_matrix.py snapshot && python scripts/bench_matrix.py run && python scripts/bench_matrix.py matrix`.
 
 ## Результаты
-Текущая версия (жюри haiku-5-5 + sonnet-5-5, судья opus-5-5; при расхождении судья сначала решает «вслепую»). Подробно и история версий: [docs/EVALUATION.md](docs/EVALUATION.md).
-
-| Набор | Совпадение значений | MAE итога | Грубые ошибки P/R |
-|---|---|---|---|
-| Gold, 16 синтетических диалогов (по ним настраивались правила) | 0.992 | 0.33–0.43 | 1.0 / 1.0 |
-| **Held-out, 10 синтетических диалогов (не для настройки)** | **0.925–0.938** (5 прогонов) | **3.9–5.7** | 1.0 / 1.0 |
-| Реальные DEV с разметкой человека | не измерено — нужна разметка (`python -m cqa label`, затем `cqa gold --labels`) | | |
-
-Шум между одинаковыми прогонами — около ±2 вердиктов из 128 (Anthropic не принимает `temperature`). Оба gold-набора синтетические и размечены той же командой, что писала правила, — это проверка регрессий, а не оценка совпадения со скрытой разметкой организаторов.
-
-**DEV (65 диалогов: 60 чатов RU 30 / KZ 15 / EN 15, 5 звонков RU):** 0 ошибок, 0 неполных, средний балл 78.45, 5 флагов грубых ошибок (те же 5 диалогов, что и в первой версии), полный прогон ≈ 5 мин и ≈ $7.5 по текущей таблице цен (`cqa/pricing.py`).
+См. таблицу [в начале README](#результаты-текущая-версия-v7). Распределения значений до/после выравнивания рубрики,
+шум и флаги проверки — [docs/EVALUATION.md](docs/EVALUATION.md); прежние версии — [docs/HISTORY.md](docs/HISTORY.md).
 
 ## Ограничения (честно)
 - Для DEV нет размеченного ground truth; gold-набор синтетический и размечен нами — это регрессионная проверка, а не оценка точности на скрытой разметке.
 - Если оценка критерия упала (ошибка API), диалог помечается `incomplete` и итог не выставляется (fail-closed).
 - Наиболее неоднозначные критерии — 07, 04, 05 (субъективность рубрики).
-- Облачный режим жюри стоит денег (≈ $0.2 на диалог); точность локальной модели мы не измеряли.
+- Облачный режим жюри стоит денег (≈ $0.16 на диалог); точность локальной модели мы не измеряли.
 - Смещение аудио приблизительное: запись может стартовать не синхронно с транскриптом.
 - Фоновые задачи UI живут в памяти процесса; авторизации нет (по условию).
 - Mock-провайдер — эвристика для тестов, не бейзлайн качества.
@@ -227,7 +232,7 @@ Makefile · pyproject.toml · Dockerfile · docker-compose.yml · .github/workfl
 
 **Highlights:** per-criterion prompts · LLM jury + judge · quote validation with auto-correction / retry · deterministic scoring · per-criterion cache (editing one rubric re-evaluates only that criterion; reweighting needs no LLM) · no-login web UI with evidence highlighting, audio seek, human override (stored separately, AI vs Human diff, CSV/JSON export) and checklist editor · cloud (Anthropic), local (Ollama/vLLM via OpenAI-compatible API) or offline mock · Docker · CI on 3.11/3.12 without secrets.
 
-**Results (current version):** tuned synthetic gold set 0.992 / MAE 0.43; **held-out synthetic set 0.925–0.938 / MAE 3.9–5.7 over three runs**; real-DEV agreement not measured (needs human labels: `cqa label`). DEV: 65 dialogs, 0 errors, mean 78.45, 5 gross-error flags, ~5 min / ~$7.5 per full run (current price table).
+**Results (current version, v7):** held-out synthetic set **0.95 / MAE 4.43** (one run; earlier runs 0.925–0.938 = noise floor); real-DEV agreement not measured (needs human labels: `cqa label`). DEV: 65 dialogs, 0 errors, mean 80.41, 5 gross-error flags, ~5 min, **$0.16 per dialog** ($10.28 for 65). `needs_review` on 18.3% of criteria. History: [docs/HISTORY.md](docs/HISTORY.md).
 
 **Limitations:** no labelled ground truth for real DEV dialogs; both gold sets are synthetic and self-labelled; criteria 04/05/06 are the most subjective; audio offsets are approximate; local-model accuracy not measured (no local GPU run in this repo).
 
