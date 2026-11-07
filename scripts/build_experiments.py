@@ -301,6 +301,13 @@ def build_registry():
     for f, nm in JURY_VERSIONS:
         regs.append(dict(name=nm, family="jury code version", holdout=[str(R / f)], gold=[], usd=None, sec=None,
                          gpu="—", src=str(R / f)))
+    try:  # advanced router policies (offline replay, docs/ROUTER.md)
+        import sys
+        sys.path.insert(0, str(ROOT))
+        from cqa.routing_policy import registry_entries
+        regs += registry_entries(ROOT)
+    except ImportError:
+        pass
     merged = {}
     for r in regs:
         m = merged.get(r["name"])

@@ -1,0 +1,70 @@
+{
+ "budget_usd_per_dialog": 0.0015,
+ "fitted_on": "examples/gold (tuned, 16 dialogs)",
+ "gold": {
+  "acc": 0.984375,
+  "usd_per_dialog": 0.0006279765625000001,
+  "tiers": {
+   "1": 0.96875,
+   "2": 0.03125,
+   "3": 0.0
+  }
+ },
+ "policy": {
+  "01": {
+   "theta": 0.0,
+   "s2": "none"
+  },
+  "02": {
+   "theta": 0.6,
+   "s2": "none"
+  },
+  "03": {
+   "theta": 0.0,
+   "s2": "none"
+  },
+  "04": {
+   "theta": 0.0,
+   "s2": "none"
+  },
+  "05": {
+   "theta": 0.0,
+   "s2": "none"
+  },
+  "06": {
+   "theta": 0.0,
+   "s2": "none"
+  },
+  "07": {
+   "theta": 0.0,
+   "s2": "none"
+  },
+  "08": {
+   "theta": 0.0,
+   "s2": "none"
+  }
+ },
+ "calibration": {
+  "method": "temperature",
+  "global_T": 0.605,
+  "T": {
+   "01": 0.605,
+   "02": 0.605,
+   "03": 0.55,
+   "04": 0.55,
+   "05": 0.605,
+   "06": 0.5,
+   "07": 0.7321,
+   "08": 0.605
+  },
+  "prior_w": 4.0
+ },
+ "prices": {
+  "tier1_dialog": 0.000527,
+  "haiku_call": 0.00040390625,
+  "sonnet_call": 0.00838703125,
+  "qwen_gpu_dialog": 0.0294,
+  "source": "Haiku/Sonnet $/call = cloud_usd_by_model / 128 calls in jev_all_gold.json; Jev $/dialog = results/jev/holdout.json; Qwen GPU $/dialog = EXPERIMENTS.md"
+ },
+ "semantics": "escalate tier1\u2192Haiku if calibrated p < theta (plus fail-closed: tier-1 error, 08=YES); s2: none = keep Haiku, disagree = Sonnet if Haiku\u2260tier1, always = Sonnet"
+}

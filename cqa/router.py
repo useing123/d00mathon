@@ -416,6 +416,11 @@ class HybridEvaluator(CascadeEvaluator):
         return out, meta
 
 
+if os.environ.get("CQA_ROUTER_POLICY"):   # advanced per-criterion policy (docs/ROUTER.md); unset = unchanged
+    from . import routing_policy as _rp
+    _rp.patch(globals(), os.environ["CQA_ROUTER_POLICY"])
+
+
 def vllm_lora_args(adapter=None):
     """Extra vLLM flags for CQA_LOCAL_ADAPTER (a fine-tuned LoRA; see cqa/finetune/)."""
     adapter = adapter if adapter is not None else (config.get("CQA_LOCAL_ADAPTER") or "")

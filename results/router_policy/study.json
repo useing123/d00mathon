@@ -1,0 +1,1039 @@
+{
+ "prices": {
+  "tier1_dialog": 0.000527,
+  "haiku_call": 0.00040390625,
+  "sonnet_call": 0.00838703125,
+  "qwen_gpu_dialog": 0.0294,
+  "source": "Haiku/Sonnet $/call = cloud_usd_by_model / 128 calls in jev_all_gold.json; Jev $/dialog = results/jev/holdout.json; Qwen GPU $/dialog = EXPERIMENTS.md"
+ },
+ "holdout_sources": {
+  "haiku_cache": 55,
+  "haiku_bench": 25,
+  "sonnet_cache": 3,
+  "sonnet_bench": 77
+ },
+ "risk_coverage": {
+  "all": {
+   "aurc_gold": 0.002600864299846,
+   "aurc_holdout": 0.007599267355186068,
+   "acc_tier1_gold": 0.9765625,
+   "aurc_oracle_gold": 0.0003681409330669604
+  },
+  "01": {
+   "aurc_gold": 0.0,
+   "aurc_holdout": 0.0,
+   "acc_tier1_gold": 1.0,
+   "aurc_oracle_gold": 0.0
+  },
+  "02": {
+   "aurc_gold": 0.02645947802197802,
+   "aurc_holdout": 0.043611111111111114,
+   "acc_tier1_gold": 0.875,
+   "aurc_oracle_gold": 0.011979166666666666
+  },
+  "03": {
+   "aurc_gold": 0.0,
+   "aurc_holdout": 0.01,
+   "acc_tier1_gold": 1.0,
+   "aurc_oracle_gold": 0.0
+  },
+  "04": {
+   "aurc_gold": 0.0,
+   "aurc_holdout": 0.09123015873015872,
+   "acc_tier1_gold": 1.0,
+   "aurc_oracle_gold": 0.0
+  },
+  "05": {
+   "aurc_gold": 0.0,
+   "aurc_holdout": 0.0,
+   "acc_tier1_gold": 1.0,
+   "aurc_oracle_gold": 0.0
+  },
+  "06": {
+   "aurc_gold": 0.0,
+   "aurc_holdout": 0.0,
+   "acc_tier1_gold": 1.0,
+   "aurc_oracle_gold": 0.0
+  },
+  "07": {
+   "aurc_gold": 0.028235046203796202,
+   "aurc_holdout": 0.0,
+   "acc_tier1_gold": 0.9375,
+   "aurc_oracle_gold": 0.00390625
+  },
+  "08": {
+   "aurc_gold": 0.0,
+   "aurc_holdout": 0.0,
+   "acc_tier1_gold": 1.0,
+   "aurc_oracle_gold": 0.0
+  }
+ },
+ "calibration": {
+  "temperature": {
+   "method": "temperature",
+   "global_T": 0.605,
+   "T": {
+    "01": 0.605,
+    "02": 0.605,
+    "03": 0.55,
+    "04": 0.55,
+    "05": 0.605,
+    "06": 0.5,
+    "07": 0.7321,
+    "08": 0.605
+   },
+   "prior_w": 4.0
+  },
+  "ece": {
+   "gold": {
+    "raw": 0.04171875000000001,
+    "temperature": 0.019169930424283037,
+    "isotonic_global": 0.0035156249999999936,
+    "per_criterion": {
+     "01": {
+      "raw": 0.0,
+      "temperature": 2.4462533521063534e-07
+     },
+     "02": {
+      "raw": 0.04312500000000002,
+      "temperature": 0.11873992897673374
+     },
+     "03": {
+      "raw": 0.044999999999999984,
+      "temperature": 0.01924058303313271
+     },
+     "04": {
+      "raw": 0.03937499999999999,
+      "temperature": 0.004785102528269025
+     },
+     "05": {
+      "raw": 0.02312500000000004,
+      "temperature": 0.009460832252985572
+     },
+     "06": {
+      "raw": 0.153125,
+      "temperature": 0.07230445465869668
+     },
+     "07": {
+      "raw": 0.14,
+      "temperature": 0.12069244531909193
+     },
+     "08": {
+      "raw": 0.003750000000000031,
+      "temperature": 0.0005090532556327743
+     }
+    }
+   },
+   "holdout": {
+    "raw": 0.03987500000000002,
+    "temperature": 0.025255213288324325,
+    "isotonic_global": 0.03500000000000003,
+    "per_criterion": {
+     "01": {
+      "raw": 0.0,
+      "temperature": 2.4462533532165764e-07
+     },
+     "02": {
+      "raw": 0.14799999999999996,
+      "temperature": 0.13099932953052565
+     },
+     "03": {
+      "raw": 0.101,
+      "temperature": 0.07056222563372683
+     },
+     "04": {
+      "raw": 0.13699999999999998,
+      "temperature": 0.12613702867941415
+     },
+     "05": {
+      "raw": 0.05100000000000006,
+      "temperature": 0.03944895943860506
+     },
+     "06": {
+      "raw": 0.14100000000000001,
+      "temperature": 0.04991009917904983
+     },
+     "07": {
+      "raw": 0.0039999999999998925,
+      "temperature": 0.0010497192573055703
+     },
+     "08": {
+      "raw": 0.009000000000000008,
+      "temperature": 0.002137169133855088
+     }
+    }
+   }
+  }
+ },
+ "gold_pareto": [
+  {
+   "usd_per_dialog": 0.000602732421875,
+   "acc": 0.9765625,
+   "policy": {
+    "01": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "02": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "03": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "04": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "05": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "06": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "07": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "08": {
+     "theta": 0.0,
+     "s2": "none"
+    }
+   }
+  },
+  {
+   "usd_per_dialog": 0.0006279765625000001,
+   "acc": 0.984375,
+   "policy": {
+    "01": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "02": {
+     "theta": 0.6,
+     "s2": "none"
+    },
+    "03": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "04": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "05": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "06": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "07": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "08": {
+     "theta": 0.0,
+     "s2": "none"
+    }
+   }
+  },
+  {
+   "usd_per_dialog": 0.002301521484375,
+   "acc": 0.9921875,
+   "policy": {
+    "01": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "02": {
+     "theta": 0.8,
+     "s2": "disagree"
+    },
+    "03": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "04": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "05": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "06": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "07": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "08": {
+     "theta": 0.0,
+     "s2": "none"
+    }
+   }
+  }
+ ],
+ "global_theta_pareto": [
+  {
+   "usd_per_dialog": 0.000602732421875,
+   "acc": 0.9765625,
+   "rule": {
+    "theta": 0.0,
+    "s2": "none"
+   }
+  },
+  {
+   "usd_per_dialog": 0.00067846484375,
+   "acc": 0.984375,
+   "rule": {
+    "theta": 0.6,
+    "s2": "none"
+   }
+  },
+  {
+   "usd_per_dialog": 0.0044294609375,
+   "acc": 0.9921875,
+   "rule": {
+    "theta": 0.98,
+    "s2": "disagree"
+   }
+  }
+ ],
+ "policies": [
+  {
+   "name": "current cascade (replay; t1 .7, hard .9, t2 .7)",
+   "policy": null,
+   "gold": {
+    "acc": 0.9921875,
+    "usd_per_dialog": 0.00268018359375
+   },
+   "holdout": {
+    "acc": 0.9625,
+    "correct": 77,
+    "n": 80,
+    "ci": [
+     0.9125,
+     1.0
+    ],
+    "vs_cascade": {
+     "delta": 0.0,
+     "lo": 0.0,
+     "hi": 0.0,
+     "p_boot": 1.0,
+     "b": 0,
+     "c": 0,
+     "p_mcnemar": 1.0
+    },
+    "bench_proxy_answers_used": 0,
+    "usd_per_dialog": 0.0027698749999999998,
+    "tiers": {
+     "1": 0.825,
+     "2": 0.15,
+     "3": 0.025
+    },
+    "calls": {
+     "haiku": 14,
+     "sonnet": 2
+    }
+   },
+   "file": "results/router_policy/heldout__current_cascade__replay__t1__7__hard__9__t2__7.dialogs.json"
+  },
+  {
+   "name": "Jev only (fail-closed: 08=YES→Haiku)",
+   "policy": {
+    "01": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "02": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "03": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "04": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "05": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "06": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "07": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "08": {
+     "theta": 0.0,
+     "s2": "none"
+    }
+   },
+   "gold": {
+    "acc": 0.9765625,
+    "usd_per_dialog": 0.000602732421875
+   },
+   "holdout": {
+    "acc": 0.9375,
+    "correct": 75,
+    "n": 80,
+    "ci": [
+     0.9,
+     0.975
+    ],
+    "vs_cascade": {
+     "delta": -0.025,
+     "lo": -0.075,
+     "hi": 0.025,
+     "p_boot": 0.4234,
+     "b": 1,
+     "c": 3,
+     "p_mcnemar": 0.625
+    },
+    "bench_proxy_answers_used": 0,
+    "usd_per_dialog": 0.000567390625,
+    "tiers": {
+     "1": 0.9875,
+     "2": 0.0125,
+     "3": 0.0
+    },
+    "calls": {
+     "haiku": 1,
+     "sonnet": 0
+    }
+   },
+   "file": "results/router_policy/heldout__jev_only__fail_closed__08_yes_haiku.dialogs.json"
+  },
+  {
+   "name": "Haiku on every criterion",
+   "policy": {
+    "01": {
+     "theta": 1.01,
+     "s2": "none"
+    },
+    "02": {
+     "theta": 1.01,
+     "s2": "none"
+    },
+    "03": {
+     "theta": 1.01,
+     "s2": "none"
+    },
+    "04": {
+     "theta": 1.01,
+     "s2": "none"
+    },
+    "05": {
+     "theta": 1.01,
+     "s2": "none"
+    },
+    "06": {
+     "theta": 1.01,
+     "s2": "none"
+    },
+    "07": {
+     "theta": 1.01,
+     "s2": "none"
+    },
+    "08": {
+     "theta": 1.01,
+     "s2": "none"
+    }
+   },
+   "gold": {
+    "acc": 0.9765625,
+    "usd_per_dialog": 0.0037582500000000003
+   },
+   "holdout": {
+    "acc": 0.925,
+    "correct": 74,
+    "n": 80,
+    "ci": [
+     0.8625,
+     0.975
+    ],
+    "vs_cascade": {
+     "delta": -0.0375,
+     "lo": -0.1,
+     "hi": 0.0,
+     "p_boot": 0.2112,
+     "b": 0,
+     "c": 3,
+     "p_mcnemar": 0.25
+    },
+    "bench_proxy_answers_used": 25,
+    "usd_per_dialog": 0.0037582500000000003,
+    "tiers": {
+     "1": 0.0,
+     "2": 1.0,
+     "3": 0.0
+    },
+    "calls": {
+     "haiku": 80,
+     "sonnet": 0
+    }
+   },
+   "file": "results/router_policy/heldout__haiku_on_every_criterion.dialogs.json"
+  },
+  {
+   "name": "per-criterion policy, budget $0.001/dialog",
+   "policy": {
+    "01": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "02": {
+     "theta": 0.6,
+     "s2": "none"
+    },
+    "03": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "04": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "05": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "06": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "07": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "08": {
+     "theta": 0.0,
+     "s2": "none"
+    }
+   },
+   "gold": {
+    "acc": 0.984375,
+    "usd_per_dialog": 0.0006279765625000001
+   },
+   "holdout": {
+    "acc": 0.9375,
+    "correct": 75,
+    "n": 80,
+    "ci": [
+     0.9,
+     0.975
+    ],
+    "vs_cascade": {
+     "delta": -0.025,
+     "lo": -0.075,
+     "hi": 0.025,
+     "p_boot": 0.4234,
+     "b": 1,
+     "c": 3,
+     "p_mcnemar": 0.625
+    },
+    "bench_proxy_answers_used": 0,
+    "usd_per_dialog": 0.000567390625,
+    "tiers": {
+     "1": 0.9875,
+     "2": 0.0125,
+     "3": 0.0
+    },
+    "calls": {
+     "haiku": 1,
+     "sonnet": 0
+    }
+   },
+   "file": "results/router_policy/heldout__per_criterion_policy__budget__0_001_dialog.dialogs.json"
+  },
+  {
+   "name": "per-criterion policy, budget $0.0015/dialog",
+   "policy": {
+    "01": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "02": {
+     "theta": 0.6,
+     "s2": "none"
+    },
+    "03": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "04": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "05": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "06": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "07": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "08": {
+     "theta": 0.0,
+     "s2": "none"
+    }
+   },
+   "gold": {
+    "acc": 0.984375,
+    "usd_per_dialog": 0.0006279765625000001
+   },
+   "holdout": {
+    "acc": 0.9375,
+    "correct": 75,
+    "n": 80,
+    "ci": [
+     0.9,
+     0.975
+    ],
+    "vs_cascade": {
+     "delta": -0.025,
+     "lo": -0.075,
+     "hi": 0.025,
+     "p_boot": 0.4234,
+     "b": 1,
+     "c": 3,
+     "p_mcnemar": 0.625
+    },
+    "bench_proxy_answers_used": 0,
+    "usd_per_dialog": 0.000567390625,
+    "tiers": {
+     "1": 0.9875,
+     "2": 0.0125,
+     "3": 0.0
+    },
+    "calls": {
+     "haiku": 1,
+     "sonnet": 0
+    }
+   },
+   "file": "results/router_policy/heldout__per_criterion_policy__budget__0_0015_dialog.dialogs.json"
+  },
+  {
+   "name": "per-criterion policy, budget $0.0025/dialog",
+   "policy": {
+    "01": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "02": {
+     "theta": 0.8,
+     "s2": "disagree"
+    },
+    "03": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "04": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "05": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "06": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "07": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "08": {
+     "theta": 0.0,
+     "s2": "none"
+    }
+   },
+   "gold": {
+    "acc": 0.9921875,
+    "usd_per_dialog": 0.002301521484375
+   },
+   "holdout": {
+    "acc": 0.9625,
+    "correct": 77,
+    "n": 80,
+    "ci": [
+     0.925,
+     1.0
+    ],
+    "vs_cascade": {
+     "delta": 0.0,
+     "lo": -0.0375,
+     "hi": 0.0375,
+     "p_boot": 1.0,
+     "b": 1,
+     "c": 1,
+     "p_mcnemar": 1.0
+    },
+    "bench_proxy_answers_used": 2,
+    "usd_per_dialog": 0.00236596875,
+    "tiers": {
+     "1": 0.95,
+     "2": 0.025,
+     "3": 0.025
+    },
+    "calls": {
+     "haiku": 4,
+     "sonnet": 2
+    }
+   },
+   "file": "results/router_policy/heldout__per_criterion_policy__budget__0_0025_dialog.dialogs.json"
+  },
+  {
+   "name": "per-criterion policy, budget $0.004/dialog",
+   "policy": {
+    "01": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "02": {
+     "theta": 0.8,
+     "s2": "disagree"
+    },
+    "03": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "04": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "05": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "06": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "07": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "08": {
+     "theta": 0.0,
+     "s2": "none"
+    }
+   },
+   "gold": {
+    "acc": 0.9921875,
+    "usd_per_dialog": 0.002301521484375
+   },
+   "holdout": {
+    "acc": 0.9625,
+    "correct": 77,
+    "n": 80,
+    "ci": [
+     0.925,
+     1.0
+    ],
+    "vs_cascade": {
+     "delta": 0.0,
+     "lo": -0.0375,
+     "hi": 0.0375,
+     "p_boot": 1.0,
+     "b": 1,
+     "c": 1,
+     "p_mcnemar": 1.0
+    },
+    "bench_proxy_answers_used": 2,
+    "usd_per_dialog": 0.00236596875,
+    "tiers": {
+     "1": 0.95,
+     "2": 0.025,
+     "3": 0.025
+    },
+    "calls": {
+     "haiku": 4,
+     "sonnet": 2
+    }
+   },
+   "file": "results/router_policy/heldout__per_criterion_policy__budget__0_004_dialog.dialogs.json"
+  },
+  {
+   "name": "per-criterion policy, budget $0.008/dialog",
+   "policy": {
+    "01": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "02": {
+     "theta": 0.8,
+     "s2": "disagree"
+    },
+    "03": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "04": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "05": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "06": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "07": {
+     "theta": 0.0,
+     "s2": "none"
+    },
+    "08": {
+     "theta": 0.0,
+     "s2": "none"
+    }
+   },
+   "gold": {
+    "acc": 0.9921875,
+    "usd_per_dialog": 0.002301521484375
+   },
+   "holdout": {
+    "acc": 0.9625,
+    "correct": 77,
+    "n": 80,
+    "ci": [
+     0.925,
+     1.0
+    ],
+    "vs_cascade": {
+     "delta": 0.0,
+     "lo": -0.0375,
+     "hi": 0.0375,
+     "p_boot": 1.0,
+     "b": 1,
+     "c": 1,
+     "p_mcnemar": 1.0
+    },
+    "bench_proxy_answers_used": 2,
+    "usd_per_dialog": 0.00236596875,
+    "tiers": {
+     "1": 0.95,
+     "2": 0.025,
+     "3": 0.025
+    },
+    "calls": {
+     "haiku": 4,
+     "sonnet": 2
+    }
+   },
+   "file": "results/router_policy/heldout__per_criterion_policy__budget__0_008_dialog.dialogs.json"
+  },
+  {
+   "name": "global calibrated θ=0.6, s2=none (budget $0.004)",
+   "policy": {
+    "01": {
+     "theta": 0.6,
+     "s2": "none"
+    },
+    "02": {
+     "theta": 0.6,
+     "s2": "none"
+    },
+    "03": {
+     "theta": 0.6,
+     "s2": "none"
+    },
+    "04": {
+     "theta": 0.6,
+     "s2": "none"
+    },
+    "05": {
+     "theta": 0.6,
+     "s2": "none"
+    },
+    "06": {
+     "theta": 0.6,
+     "s2": "none"
+    },
+    "07": {
+     "theta": 0.6,
+     "s2": "none"
+    },
+    "08": {
+     "theta": 0.6,
+     "s2": "none"
+    }
+   },
+   "gold": {
+    "acc": 0.984375,
+    "usd_per_dialog": 0.00067846484375
+   },
+   "holdout": {
+    "acc": 0.9375,
+    "correct": 75,
+    "n": 80,
+    "ci": [
+     0.9,
+     0.975
+    ],
+    "vs_cascade": {
+     "delta": -0.025,
+     "lo": -0.075,
+     "hi": 0.025,
+     "p_boot": 0.4234,
+     "b": 1,
+     "c": 3,
+     "p_mcnemar": 0.625
+    },
+    "bench_proxy_answers_used": 0,
+    "usd_per_dialog": 0.00060778125,
+    "tiers": {
+     "1": 0.975,
+     "2": 0.025,
+     "3": 0.0
+    },
+    "calls": {
+     "haiku": 2,
+     "sonnet": 0
+    }
+   },
+   "file": "results/router_policy/heldout__global_calibrated___0_6__s2_none__budget__0_004.dialogs.json"
+  },
+  {
+   "name": "cascade + Sonnet on any Jev≠Haiku disagreement",
+   "policy": null,
+   "gold": {
+    "acc": 0.9921875,
+    "usd_per_dialog": 0.003204373046875
+   },
+   "holdout": {
+    "acc": 0.975,
+    "correct": 78,
+    "n": 80,
+    "ci": [
+     0.9375,
+     1.0
+    ],
+    "vs_cascade": {
+     "delta": 0.0125,
+     "lo": 0.0,
+     "hi": 0.0375,
+     "p_boot": 0.696,
+     "b": 1,
+     "c": 0,
+     "p_mcnemar": 1.0
+    },
+    "bench_proxy_answers_used": 4,
+    "usd_per_dialog": 0.006124687499999999,
+    "tiers": {
+     "1": 0.825,
+     "2": 0.1,
+     "3": 0.075
+    },
+    "calls": {
+     "haiku": 14,
+     "sonnet": 6
+    }
+   },
+   "file": "results/router_policy/heldout__cascade___sonnet_on_any_jev_haiku_disagreement.dialogs.json"
+  },
+  {
+   "name": "policy $0.004 + escalate on Jev≠Qwen3.8-27B",
+   "policy": {
+    "01": {
+     "theta": 0.0,
+     "s2": "none",
+     "agree": true
+    },
+    "02": {
+     "theta": 0.8,
+     "s2": "disagree",
+     "agree": true
+    },
+    "03": {
+     "theta": 0.0,
+     "s2": "none",
+     "agree": true
+    },
+    "04": {
+     "theta": 0.0,
+     "s2": "none",
+     "agree": true
+    },
+    "05": {
+     "theta": 0.0,
+     "s2": "none",
+     "agree": true
+    },
+    "06": {
+     "theta": 0.0,
+     "s2": "none",
+     "agree": true
+    },
+    "07": {
+     "theta": 0.0,
+     "s2": "none",
+     "agree": true
+    },
+    "08": {
+     "theta": 0.0,
+     "s2": "none",
+     "agree": true
+    }
+   },
+   "gold": {
+    "acc": 0.9921875,
+    "usd_per_dialog": 0.031701521484375
+   },
+   "holdout": {
+    "acc": 0.9625,
+    "correct": 77,
+    "n": 80,
+    "ci": [
+     0.925,
+     1.0
+    ],
+    "vs_cascade": {
+     "delta": 0.0,
+     "lo": -0.0375,
+     "hi": 0.0375,
+     "p_boot": 1.0,
+     "b": 1,
+     "c": 1,
+     "p_mcnemar": 1.0
+    },
+    "bench_proxy_answers_used": 2,
+    "usd_per_dialog": 0.031887140625,
+    "tiers": {
+     "1": 0.9125,
+     "2": 0.0625,
+     "3": 0.025
+    },
+    "calls": {
+     "haiku": 7,
+     "sonnet": 2
+    }
+   },
+   "file": "results/router_policy/heldout__policy__0_004___escalate_on_jev_qwen3_8_27b.dialogs.json"
+  }
+ ],
+ "references": {
+  "cascade_reported": 0.963,
+  "jury_reported": 0.95
+ }
+}

@@ -1,0 +1,571 @@
+{
+"dialogs": [
+{
+"conversation_id": "hold-01-en-bonds-clarify",
+"criteria": [
+{
+"criterion_id": "01",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "02",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "03",
+"value": "NA",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "04",
+"value": 20,
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "05",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "06",
+"value": 10,
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "07",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "08",
+"value": "NO",
+"tier": 1,
+"reasons": []
+}
+],
+"total": 100.0,
+"gross_error": false
+},
+{
+"conversation_id": "hold-02-call-ru-phone-change-no-id",
+"criteria": [
+{
+"criterion_id": "01",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "02",
+"value": "NA",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "03",
+"value": "NO",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "04",
+"value": 20,
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "05",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "06",
+"value": 10,
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "07",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "08",
+"value": "NO",
+"tier": 1,
+"reasons": []
+}
+],
+"total": 76.47,
+"gross_error": false
+},
+{
+"conversation_id": "hold-03-kz-no-name",
+"criteria": [
+{
+"criterion_id": "01",
+"value": "NO",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "02",
+"value": "NA",
+"tier": 3,
+"reasons": [
+"low_conf",
+"tier1_disagree"
+]
+},
+{
+"criterion_id": "03",
+"value": "NA",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "04",
+"value": 20,
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "05",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "06",
+"value": 10,
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "07",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "08",
+"value": "NO",
+"tier": 1,
+"reasons": []
+}
+],
+"total": 84.62,
+"gross_error": false
+},
+{
+"conversation_id": "hold-04-ru-transfer-minor-detail",
+"criteria": [
+{
+"criterion_id": "01",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "02",
+"value": "NA",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "03",
+"value": "NA",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "04",
+"value": 20,
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "05",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "06",
+"value": 10,
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "07",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "08",
+"value": "NO",
+"tier": 1,
+"reasons": []
+}
+],
+"total": 100.0,
+"gross_error": false
+},
+{
+"conversation_id": "hold-05-en-angry-order-cancelled",
+"criteria": [
+{
+"criterion_id": "01",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "02",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "03",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "04",
+"value": 20,
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "05",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "06",
+"value": 10,
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "07",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "08",
+"value": "NO",
+"tier": 1,
+"reasons": []
+}
+],
+"total": 100.0,
+"gross_error": false
+},
+{
+"conversation_id": "hold-06-ru-wrong-advice-close",
+"criteria": [
+{
+"criterion_id": "01",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "02",
+"value": "NA",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "03",
+"value": "NA",
+"tier": 2,
+"reasons": [
+"tier1_disagree"
+]
+},
+{
+"criterion_id": "04",
+"value": 0,
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "05",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "06",
+"value": 10,
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "07",
+"value": "NO",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "08",
+"value": "NO",
+"tier": 1,
+"reasons": []
+}
+],
+"total": 61.54,
+"gross_error": false
+},
+{
+"conversation_id": "hold-07-call-kz-hangup-before-request",
+"criteria": [
+{
+"criterion_id": "01",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "02",
+"value": "NA",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "03",
+"value": "NA",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "04",
+"value": "NA",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "05",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "06",
+"value": 10,
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "07",
+"value": "NA",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "08",
+"value": "NO",
+"tier": 1,
+"reasons": []
+}
+],
+"total": 100.0,
+"gross_error": false
+},
+{
+"conversation_id": "hold-08-ru-third-party-data",
+"criteria": [
+{
+"criterion_id": "01",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "02",
+"value": "NA",
+"tier": 3,
+"reasons": [
+"low_conf",
+"tier1_disagree"
+]
+},
+{
+"criterion_id": "03",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "04",
+"value": 0,
+"tier": 2,
+"reasons": [
+"tier1_disagree"
+]
+},
+{
+"criterion_id": "05",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "06",
+"value": 10,
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "07",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "08",
+"value": "YES",
+"tier": 2,
+"reasons": [
+"gross_yes"
+]
+}
+],
+"total": 76.47,
+"gross_error": true
+},
+{
+"conversation_id": "hold-09-en-long-gap-no-warning",
+"criteria": [
+{
+"criterion_id": "01",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "02",
+"value": "NA",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "03",
+"value": "NA",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "04",
+"value": 20,
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "05",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "06",
+"value": 7,
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "07",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "08",
+"value": "NO",
+"tier": 1,
+"reasons": []
+}
+],
+"total": 93.08,
+"gross_error": false
+},
+{
+"conversation_id": "hold-10-ru-contradictory",
+"criteria": [
+{
+"criterion_id": "01",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "02",
+"value": "NA",
+"tier": 2,
+"reasons": [
+"low_conf",
+"tier1_disagree"
+]
+},
+{
+"criterion_id": "03",
+"value": "NA",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "04",
+"value": 0,
+"tier": 2,
+"reasons": [
+"tier1_disagree"
+]
+},
+{
+"criterion_id": "05",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "06",
+"value": 4,
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "07",
+"value": "YES",
+"tier": 1,
+"reasons": []
+},
+{
+"criterion_id": "08",
+"value": "NO",
+"tier": 1,
+"reasons": []
+}
+],
+"total": 55.38,
+"gross_error": false
+}
+]
+}

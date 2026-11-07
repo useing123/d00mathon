@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="460" font-family="sans-serif" font-size="11">
+<rect width="820" height="460" fill="white"/>
+<text x="315.0" y="16" text-anchor="middle" font-size="13">Per-criterion policies: Pareto on tuned gold (line) vs held-out (points)</text>
+<line x1="71.0" y1="30" x2="71.0" y2="410" stroke="#ddd"/>
+<text x="71.0" y="425" text-anchor="middle">$0.0005</text>
+<line x1="150.0" y1="30" x2="150.0" y2="410" stroke="#ddd"/>
+<text x="150.0" y="425" text-anchor="middle">$0.001</text>
+<line x1="229.0" y1="30" x2="229.0" y2="410" stroke="#ddd"/>
+<text x="229.0" y="425" text-anchor="middle">$0.002</text>
+<line x1="333.4" y1="30" x2="333.4" y2="410" stroke="#ddd"/>
+<text x="333.4" y="425" text-anchor="middle">$0.005</text>
+<line x1="412.4" y1="30" x2="412.4" y2="410" stroke="#ddd"/>
+<text x="412.4" y="425" text-anchor="middle">$0.01</text>
+<line x1="491.4" y1="30" x2="491.4" y2="410" stroke="#ddd"/>
+<text x="491.4" y="425" text-anchor="middle">$0.02</text>
+<line x1="60" y1="410.0" x2="570" y2="410.0" stroke="#ddd"/>
+<text x="55" y="414.0" text-anchor="end">0.90</text>
+<line x1="60" y1="220.0" x2="570" y2="220.0" stroke="#ddd"/>
+<text x="55" y="224.0" text-anchor="end">0.95</text>
+<line x1="60" y1="30.0" x2="570" y2="30.0" stroke="#ddd"/>
+<text x="55" y="34.0" text-anchor="end">1.00</text>
+<text x="315.0" y="448" text-anchor="middle">$ per dialog (log)</text>
+<text x="16" y="220.0" transform="rotate(-90 16 220.0)" text-anchor="middle">exact agreement</text>
+<polyline fill="none" stroke="#2ca02c" stroke-width="1.5" points="92.3,119.1 97.0,89.4 245.0,59.7"/>
+<text x="580" y="42" fill="#2ca02c">— gold Pareto (in-sample)</text>
+<circle cx="266.1" cy="172.5" r="4" fill="#d62728"><title>current cascade (replay; t1 .7, hard .9, t2 .7): 0.963 @ $0.00277</title></circle><text x="271.1" y="167.5" font-size="9">1</text>
+<text x="580" y="60" font-size="9" fill="#d62728">1. current cascade (replay; t1 .7, hard .9, t2 </text>
+<circle cx="85.4" cy="267.5" r="4" fill="#1f77b4"><title>Jev only (fail-closed: 08=YES→Haiku): 0.938 @ $0.00057</title></circle><text x="90.4" y="262.5" font-size="9">2</text>
+<text x="580" y="73" font-size="9" fill="#1f77b4">2. Jev only (fail-closed: 08=YES→Haiku)</text>
+<circle cx="300.9" cy="315.0" r="4" fill="#1f77b4"><title>Haiku on every criterion: 0.925 @ $0.00376</title></circle><text x="305.9" y="310.0" font-size="9">3</text>
+<text x="580" y="86" font-size="9" fill="#1f77b4">3. Haiku on every criterion</text>
+<circle cx="85.4" cy="267.5" r="4" fill="#1f77b4"><title>per-criterion policy, budget $0.001/dialog: 0.938 @ $0.00057</title></circle><text x="90.4" y="262.5" font-size="9">4</text>
+<text x="580" y="99" font-size="9" fill="#1f77b4">4. per-criterion policy, budget $0.001/dialog</text>
+<circle cx="85.4" cy="267.5" r="4" fill="#1f77b4"><title>per-criterion policy, budget $0.0015/dialog: 0.938 @ $0.00057</title></circle><text x="90.4" y="262.5" font-size="9">5</text>
+<text x="580" y="112" font-size="9" fill="#1f77b4">5. per-criterion policy, budget $0.0015/dialog</text>
+<circle cx="248.2" cy="172.5" r="4" fill="#1f77b4"><title>per-criterion policy, budget $0.0025/dialog: 0.963 @ $0.00237</title></circle><text x="253.2" y="167.5" font-size="9">6</text>
+<text x="580" y="125" font-size="9" fill="#1f77b4">6. per-criterion policy, budget $0.0025/dialog</text>
+<circle cx="248.2" cy="172.5" r="4" fill="#1f77b4"><title>per-criterion policy, budget $0.004/dialog: 0.963 @ $0.00237</title></circle><text x="253.2" y="167.5" font-size="9">7</text>
+<text x="580" y="138" font-size="9" fill="#1f77b4">7. per-criterion policy, budget $0.004/dialog</text>
+<circle cx="248.2" cy="172.5" r="4" fill="#1f77b4"><title>per-criterion policy, budget $0.008/dialog: 0.963 @ $0.00237</title></circle><text x="253.2" y="167.5" font-size="9">8</text>
+<text x="580" y="151" font-size="9" fill="#1f77b4">8. per-criterion policy, budget $0.008/dialog</text>
+<circle cx="93.3" cy="267.5" r="4" fill="#1f77b4"><title>global calibrated θ=0.6, s2=none (budget $0.004): 0.938 @ $0.00061</title></circle><text x="98.3" y="262.5" font-size="9">9</text>
+<text x="580" y="164" font-size="9" fill="#1f77b4">9. global calibrated θ=0.6, s2=none (budget $0.</text>
+<circle cx="356.5" cy="125.0" r="4" fill="#d62728"><title>cascade + Sonnet on any Jev≠Haiku disagreement: 0.975 @ $0.00612</title></circle><text x="361.5" y="120.0" font-size="9">10</text>
+<text x="580" y="177" font-size="9" fill="#d62728">10. cascade + Sonnet on any Jev≠Haiku disagreeme</text>
+<circle cx="544.6" cy="172.5" r="4" fill="#1f77b4"><title>policy $0.004 + escalate on Jev≠Qwen3.8-27B: 0.963 @ $0.03189</title></circle><text x="549.6" y="167.5" font-size="9">11</text>
+<text x="580" y="190" font-size="9" fill="#1f77b4">11. policy $0.004 + escalate on Jev≠Qwen3.8-27B</text>
+</svg>
