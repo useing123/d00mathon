@@ -41,3 +41,15 @@ ISSAI 9B-Kazakh: good on KZ but weaker on RU; candidate LoRA base, not a replace
   The H100 could not be brought up in time, so whether it actually serves is unverified.
 - A40 `xtv6v09yyeyhds`: terminated (before the stop-not-terminate change).
 - Balance: $5.16 before → $4.09 after (also includes other agents' pods, e.g. cqa-ft, during the window).
+
+## issai/Qwen3.5-4B-Kazakh, ai-sage/GigaChat3.1-10B-A1.8B-bf16 (pod cqa-a1, A40 $0.59/h)
+Same protocol (`run_local_only.py`, tier 1 only: 80/80 criteria at tier 1, no escalation). `/v1/models` checked to return the exact served id before running.
+
+| model | held-out agr. | MAE | gross P/R | 01 02 03 04 05 06 07 08 | KZ (2) | RU (5) | EN (3) | s/dialog (A40) | $/dialog |
+|---|---|---|---|---|---|---|---|---|---|
+| issai/Qwen3.5-4B-Kazakh | 0.838 | 9.84 | 1.0 / 1.0 | 1 .8 .7 .7 1 1 .5 1 | 0.875 | 0.825 | 0.833 | 7.6 | $0.0012 |
+| ai-sage/GigaChat3.1-10B-A1.8B-bf16 | — | | | | | | | | |
+
+- 4B-Kazakh: 0 incomplete, 0 errors. Below the 9B (0.887) and 27B (0.963), above Qwen3-8B-AWQ (0.775); weak on 07 (0.5).
+- GigaChat3.1-10B-A1.8B-bf16: **no number**. The pod was switched to it with `podEditJob` (vllm `latest`, `--max-model-len 16384`, then again with `--trust-remote-code`). The container never came up: uptime −1 and proxy 404 for about 20 min across both tries. I couldn't get the logs through the API, so the cause is unknown (possibly DeepseekV3/MLA on an A40 with vLLM `latest`). I stopped to stay within budget.
+- Pod `ic49nwbfubw3ev` (cqa-a1): STOPPED, EXITED verified. About 40 min × $0.59/h ≈ $0.39.
