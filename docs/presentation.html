@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CQA · Оценка качества диалогов Freedom Broker</title>
+<style>
+:root{--ink:#1d1d1f;--muted:#6e6e73;--faint:#a1a1a6;--line:#e5e5ea;--bg:#ffffff;--soft:#f5f5f7}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#fafafa;overflow:hidden}
+body{font-family:"SF Pro Display","SF Pro Text",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:center center}
+.slide{position:absolute;inset:0;background:var(--bg);padding:120px 140px;display:none;flex-direction:column}
+.slide.on{display:flex;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.slide.on{animation:none}}
+.kicker{font-size:26px;color:var(--muted);letter-spacing:.02em;margin-bottom:28px}
+h1{font-size:112px;line-height:1.02;font-weight:700;letter-spacing:-.035em}
+h2{font-size:76px;line-height:1.06;font-weight:700;letter-spacing:-.03em;max-width:1500px}
+.lead{font-size:38px;line-height:1.4;color:var(--muted);margin-top:36px;max-width:1350px;text-wrap:pretty}
+p,li{font-size:30px;line-height:1.5}
+.muted{color:var(--muted)}
+.foot{position:absolute;left:140px;right:140px;bottom:64px;display:flex;justify-content:space-between;font-size:22px;color:var(--faint)}
+.grow{flex:1}
+.row{display:flex;gap:80px}
+.col{flex:1}
+.mono{font-family:"SF Mono",ui-monospace,Menlo,monospace}
+/* flow */
+.flow{display:flex;align-items:stretch;gap:0;margin-top:90px}
+.step{flex:1;padding:36px 34px;border:1px solid var(--line);border-radius:22px;margin-right:22px;position:relative}
+.step:last-child{margin-right:0}
+.step .n{font-size:22px;color:var(--faint);margin-bottom:18px}
+.step .t{font-size:32px;font-weight:600;line-height:1.2;margin-bottom:14px}
+.step .d{font-size:24px;line-height:1.45;color:var(--muted)}
+/* jury */
+.jury{display:grid;grid-template-columns:1fr 120px 1fr;align-items:center;margin-top:80px}
+.model{border:1px solid var(--line);border-radius:26px;padding:44px}
+.model .name{font-size:44px;font-weight:700;letter-spacing:-.02em}
+.model .role{font-size:26px;color:var(--muted);margin-top:10px}
+.arrow{font-size:48px;color:var(--faint);text-align:center}
+.pair{display:flex;flex-direction:column;gap:22px}
+.big{font-size:150px;font-weight:700;letter-spacing:-.04em;line-height:1}
+/* evidence table */
+table{border-collapse:collapse;width:100%;margin-top:50px}
+td{font-size:25px;line-height:1.4;padding:17px 18px;border-bottom:1px solid var(--line);vertical-align:top}
+td.k{width:90px;color:var(--faint);font-variant-numeric:tabular-nums}
+td.c{width:330px;font-weight:600}
+td.v{width:120px;font-weight:700}
+td.q{color:var(--muted);font-style:italic}
+tr.flag td{background:var(--soft)}
+/* bars */
+.bars{display:flex;align-items:flex-end;gap:26px;height:420px;margin-top:40px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.bar i{display:block;width:100%;background:var(--ink);border-radius:10px 10px 0 0}
+.bar b{font-size:26px;margin-bottom:12px;font-weight:600}
+.bar span{font-size:22px;color:var(--muted);margin-top:14px}
+.facts{display:grid;grid-template-columns:repeat(2,1fr);gap:46px 80px;margin-top:70px}
+.fact .v{font-size:64px;font-weight:700;letter-spacing:-.03em}
+.fact .l{font-size:26px;color:var(--muted);margin-top:6px;line-height:1.4}
+.list{margin-top:60px;display:grid;grid-template-columns:1fr 1fr;gap:44px 90px}
+.item .t{font-size:36px;font-weight:600;letter-spacing:-.01em}
+.item .d{font-size:27px;color:var(--muted);line-height:1.45;margin-top:10px}
+.formula{font-size:40px;margin-top:70px;padding:44px 50px;background:var(--soft);border-radius:24px;line-height:1.5}
+.nav{position:fixed;bottom:18px;right:24px;font-size:14px;color:#8e8e93;font-family:-apple-system,sans-serif;user-select:none}
+.nav button{border:1px solid #d2d2d7;background:#fff;border-radius:8px;width:36px;height:36px;font-size:16px;cursor:pointer;margin-left:6px}
+@media print{html,body{overflow:visible;background:#fff}#stage{position:static;transform:none!important}.slide{display:flex!important;position:relative;page-break-after:always;break-inside:avoid}.nav{display:none}}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<section class="slide" data-id="title">
+  <div class="kicker">Freedom Broker · Хакатон · Кейс CQA</div>
+  <div class="grow"></div>
+  <h1>Каждая оценка<br>с доказательством</h1>
+  <p class="lead">Система проверяет чаты и звонки по чек-листу, ставит балл по каждому критерию и показывает реплику, на которой основано решение.</p>
+  <div class="grow"></div>
+  <div class="foot"><span>RU · KZ · EN · чаты и звонки</span><span>1</span></div>
+</section>
+
+<section class="slide" data-id="task">
+  <div class="kicker">Задача</div>
+  <h2>Ручная проверка диалогов не масштабируется</h2>
+  <div class="row" style="margin-top:80px">
+    <div class="col">
+      <p>Контролёр читает переписку, сверяется с 8 критериями, считает веса, отдельно учитывает N/A и грубые нарушения.</p>
+      <p class="muted" style="margin-top:28px">Три языка, чаты и расшифровки звонков с ошибками распознавания речи.</p>
+    </div>
+    <div class="col">
+      <p><b>Главная метрика жюри:</b> насколько оценки системы совпадают с эталоном на 10 новых диалогах.</p>
+      <p class="muted" style="margin-top:28px">Поэтому мы строили систему вокруг точности и проверяемости, а не вокруг одного большого промпта.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Задача</span><span>2</span></div>
+</section>
+
+<section class="slide" data-id="pipeline">
+  <div class="kicker">Как это работает</div>
+  <h2>Один критерий, один точный вопрос</h2>
+  <div class="flow">
+    <div class="step"><div class="n">01</div><div class="t">Диалог</div><div class="d">Из API по group_id, из файла или вставкой. Чек-лист выбирается по каналу: чат или звонок.</div></div>
+    <div class="step"><div class="n">02</div><div class="t">8 отдельных проверок</div><div class="d">У каждого критерия свой промпт с правилами и условиями N/A. Оценивается только оператор, не бот.</div></div>
+    <div class="step"><div class="n">03</div><div class="t">Жюри моделей</div><div class="d">Две модели решают независимо. При расхождении решает третья, самая сильная.</div></div>
+    <div class="step"><div class="n">04</div><div class="t">Проверка цитат</div><div class="d">Каждая цитата ищется в транскрипте дословно. Выдуманная цитата отклоняется, запрос повторяется.</div></div>
+    <div class="step"><div class="n">05</div><div class="t">Итог считает код</div><div class="d">Веса, перераспределение N/A и округление считаются детерминированно, без участия модели.</div></div>
+  </div>
+  <div class="foot"><span>Архитектура</span><span>3</span></div>
+</section>
+
+<section class="slide" data-id="jury">
+  <div class="kicker">Жюри из трёх моделей</div>
+  <h2>Две модели голосуют, третья разрешает спор</h2>
+  <div class="jury">
+    <div class="pair">
+      <div class="model"><div class="name">Claude Haiku 5.5</div><div class="role">Присяжный: быстрый взгляд</div></div>
+      <div class="model"><div class="name">Claude Sonnet 5.5</div><div class="role">Присяжный: глубокий разбор</div></div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="model" style="padding:56px">
+      <div class="name">Claude Opus 5.5</div>
+      <div class="role">Судья. Видит транскрипт и оба мнения, решает по фактам, а не большинством.</div>
+    </div>
+  </div>
+  <div class="row" style="margin-top:70px">
+    <div class="col"><div class="big">84%</div><p class="muted" style="margin-top:14px">оценок присяжные дали одинаково</p></div>
+    <div class="col"><div class="big">81</div><p class="muted" style="margin-top:14px">спорных случаев из 520 решил судья</p></div>
+  </div>
+  <div class="foot"><span>Данные: прогон на 65 DEV-диалогах</span><span>4</span></div>
+</section>
+
+<section class="slide" data-id="evidence">
+  <div class="kicker">Пример из DEV · p1-ru-023 · итог 84.62 · грубая ошибка</div>
+  <h2 style="font-size:64px">Решение можно проверить за секунды</h2>
+  <table>
+    <tr><td class="k">01</td><td class="c">Установление контакта</td><td class="v">Да</td><td class="q">«Здравствуйте, я Марк.»</td></tr>
+    <tr><td class="k">03</td><td class="c">Идентификация</td><td class="v">N/A</td><td class="q">Общий вопрос про облигации, данные клиента не раскрывались</td></tr>
+    <tr><td class="k">04</td><td class="c">Консультация</td><td class="v">15</td><td class="q">«Откройте „Котировки“. Если знаете название или тикер, введите его в строку поиска.»</td></tr>
+    <tr><td class="k">06</td><td class="c">Ведение диалога</td><td class="v">10</td><td class="q">Присяжные: 7 и 10. Судья Opus: 10</td></tr>
+    <tr><td class="k">07</td><td class="c">Завершение</td><td class="v">Нет</td><td class="q">«Хорошо. Всего доброго.» Прощание есть, итога и предложения помощи нет</td></tr>
+    <tr class="flag"><td class="k">08</td><td class="c">Грубые ошибки</td><td class="v">Да</td><td class="q">«Можете дать личный номер? Вечером созвонюсь с вами и за плату объясню…»</td></tr>
+  </table>
+  <div class="foot"><span>Обоснования и цитаты сгенерированы системой, номера реплик ведут в транскрипт</span><span>5</span></div>
+</section>
+
+<section class="slide" data-id="scoring">
+  <div class="kicker">Расчёт</div>
+  <h2>Модель оценивает, код считает</h2>
+  <div class="formula mono">итог = Σ (балл<sub>i</sub> / макс<sub>i</sub>) × вес<sub>i</sub> × 100 / Σ вес<sub>применимых</sub></div>
+  <div class="list" style="margin-top:70px">
+    <div class="item"><div class="t">N/A не штрафует</div><div class="d">Неприменимый критерий исключается, его вес распределяется пропорционально. Максимум всегда 100.</div></div>
+    <div class="item"><div class="t">Округление по правилу</div><div class="d">Half-up до двух знаков: 50.625 → 50.63. Покрыто тестом.</div></div>
+    <div class="item"><div class="t">Грубые ошибки отдельно</div><div class="d">Флаг не смешивается с баллом и виден в списке сразу.</div></div>
+    <div class="item"><div class="t">13 юнит-тестов</div><div class="d">Все N/A, шкалы, перераспределение, граничные случаи округления.</div></div>
+  </div>
+  <div class="foot"><span>Детерминированный расчёт</span><span>6</span></div>
+</section>
+
+<section class="slide" data-id="results">
+  <div class="kicker">Результаты на DEV</div>
+  <h2>65 диалогов, ноль сбоев</h2>
+  <div class="row" style="margin-top:30px;align-items:flex-end">
+    <div class="col" style="flex:1.5">
+      <div class="bars">
+        <div class="bar"><b>1</b><i style="height:3%"></i><span>10+</span></div>
+        <div class="bar"><b>4</b><i style="height:11%"></i><span>20+</span></div>
+        <div class="bar"><b>6</b><i style="height:17%"></i><span>30+</span></div>
+        <div class="bar"><b>2</b><i style="height:6%"></i><span>40+</span></div>
+        <div class="bar"><b>3</b><i style="height:9%"></i><span>50+</span></div>
+        <div class="bar"><b>6</b><i style="height:17%"></i><span>60+</span></div>
+        <div class="bar"><b>0</b><i style="height:0%"></i><span>70+</span></div>
+        <div class="bar"><b>8</b><i style="height:23%"></i><span>80+</span></div>
+        <div class="bar"><b>35</b><i style="height:100%"></i><span>90+</span></div>
+      </div>
+      <p class="muted" style="font-size:24px;margin-top:22px">Распределение итоговых баллов</p>
+    </div>
+    <div class="col">
+      <div class="facts" style="grid-template-columns:1fr;gap:40px;margin-top:0">
+        <div class="fact"><div class="v">75.95</div><div class="l">средний балл</div></div>
+        <div class="fact"><div class="v">5</div><div class="l">диалогов с грубой ошибкой: перевод денег на карту оператора, платная консультация в обход компании, оскорбление</div></div>
+        <div class="fact"><div class="v">60 чатов · 5 звонков</div><div class="l">русский, казахский, английский</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Эталонной разметки нет. Ручная сверка 8 диалогов по рубрике выполнена</span><span>7</span></div>
+</section>
+
+<section class="slide" data-id="product">
+  <div class="kicker">Продукт</div>
+  <h2>Контролёр остаётся главным</h2>
+  <div class="list">
+    <div class="item"><div class="t">Без логина</div><div class="d">Открыл ссылку и работаешь. Загрузка группы и оценка в одну кнопку.</div></div>
+    <div class="item"><div class="t">Ручная проверка</div><div class="d">Любой критерий можно переоценить. Правки человека хранятся отдельно, итог пересчитывается, видна разница AI и человека.</div></div>
+    <div class="item"><div class="t">Подсветка доказательств</div><div class="d">Клик по оценке подсвечивает реплику в транскрипте.</div></div>
+    <div class="item"><div class="t">Аудио звонков</div><div class="d">Плеер с переходом к реплике по времени транскрипта.</div></div>
+    <div class="item"><div class="t">Редактор чек-листов</div><div class="d">Добавить, заменить, перевесить критерий. Отдельные чек-листы для чатов и звонков.</div></div>
+    <div class="item"><div class="t">Экспорт</div><div class="d">JSON и CSV: строка на диалог, столбец на критерий, итог и флаг.</div></div>
+  </div>
+  <div class="foot"><span>Веб-интерфейс · FastAPI</span><span>8</span></div>
+</section>
+
+<section class="slide" data-id="flex">
+  <div class="kicker">Гибкость</div>
+  <h2>Новый чек-лист без программиста</h2>
+  <div class="row" style="margin-top:80px">
+    <div class="col">
+      <p><b>Изменили критерий</b> — пересчитываются только затронутые оценки. Кэш привязан к тексту критерия и диалогу.</p>
+      <p style="margin-top:34px"><b>Поменяли вес</b> — итог пересчитывается мгновенно, без обращения к модели.</p>
+    </div>
+    <div class="col">
+      <p><b>Любой провайдер.</b> Модели меняются в конфиге. Поддержан OpenAI-совместимый endpoint для локальной LLM (Ollama, vLLM).</p>
+      <p style="margin-top:34px"><b>Звонки.</b> Отдельный чек-лист учитывает устную речь: логику разговора, паузы, понятность объяснений.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Чек-листы в YAML</span><span>9</span></div>
+</section>
+
+<section class="slide" data-id="control">
+  <div class="kicker">Контрольный этап</div>
+  <h2>10 новых диалогов примерно за минуту</h2>
+  <div class="formula mono" style="font-size:38px">python -m cqa evaluate --group &lt;ID&gt;</div>
+  <div class="facts" style="grid-template-columns:repeat(3,1fr)">
+    <div class="fact"><div class="v">~1 мин</div><div class="l">параллельная обработка</div></div>
+    <div class="fact"><div class="v">~$2</div><div class="l">за 10 диалогов</div></div>
+    <div class="fact"><div class="v">0</div><div class="l">заготовленных ответов: каждый диалог анализируется заново</div></div>
+  </div>
+  <div class="foot"><span>Или кнопка «Загрузить группу и оценить» в интерфейсе</span><span>10</span></div>
+</section>
+
+<section class="slide" data-id="assumptions">
+  <div class="kicker">Допущения</div>
+  <h2>Где мы приняли решение сами</h2>
+  <div class="list">
+    <div class="item"><div class="t">«Первый ответ» в критерии 01</div><div class="d">Первая реплика живого оператора, даже если до него отвечал бот.</div></div>
+    <div class="item"><div class="t">Завершение строго по рубрике</div><div class="d">Одного «Хорошего дня» мало: нужен итог или предложение помощи плюс прощание.</div></div>
+    <div class="item"><div class="t">Время первой реакции</div><div class="d">Ожидание в очереди не снижает оценку ведения диалога: по условию оно не оценивается.</div></div>
+    <div class="item"><div class="t">Всё настраивается</div><div class="d">Каждое допущение вынесено флагом в YAML и меняется за минуту.</div></div>
+  </div>
+  <div class="foot"><span>Описано в README</span><span>11</span></div>
+</section>
+
+<section class="slide" data-id="end">
+  <div class="kicker">CQA</div>
+  <div class="grow"></div>
+  <h1>Точно. Доказуемо.<br>Под контролем человека.</h1>
+  <p class="lead">Жюри из трёх моделей, проверка каждой цитаты, расчёт в коде и интерфейс, где последнее слово за контролёром.</p>
+  <div class="grow"></div>
+  <div class="foot"><span>Спасибо</span><span>12</span></div>
+</section>
+
+</div>
+<div class="nav"><span id="cnt"></span><button id="prev" aria-label="Назад">‹</button><button id="next" aria-label="Вперёд">›</button></div>
+<script>
+(function(){
+  var S=[].slice.call(document.querySelectorAll('.slide')),i=+(localStorage.getItem('cqa_deck')||0);
+  if(isNaN(i)||i>=S.length)i=0;
+  function show(n){i=Math.max(0,Math.min(S.length-1,n));S.forEach(function(s,k){s.classList.toggle('on',k===i)});
+    document.getElementById('cnt').textContent=(i+1)+' / '+S.length;localStorage.setItem('cqa_deck',i)}
+  function fit(){var s=Math.min(innerWidth/1920,innerHeight/1080);document.getElementById('stage').style.transform='translate(-50%,-50%) scale('+s+')'}
+  addEventListener('resize',fit);
+  addEventListener('keydown',function(e){if(['ArrowRight','PageDown',' '].indexOf(e.key)>-1){e.preventDefault();show(i+1)}
+    if(['ArrowLeft','PageUp'].indexOf(e.key)>-1){e.preventDefault();show(i-1)}if(e.key==='Home')show(0);if(e.key==='End')show(S.length-1)});
+  document.getElementById('next').onclick=function(){show(i+1)};document.getElementById('prev').onclick=function(){show(i-1)};
+  var x0=null;addEventListener('touchstart',function(e){x0=e.touches[0].clientX});
+  addEventListener('touchend',function(e){if(x0===null)return;var dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>40)show(i+(dx<0?1:-1));x0=null});
+  fit();show(i);
+})();
+</script>
+</body>
+</html>
