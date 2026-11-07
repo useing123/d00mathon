@@ -22,7 +22,7 @@
 - Все правила — в одном месте: [`cqa/submission.py`](cqa/submission.py); JSON-схема — [`docs/results.schema.json`](docs/results.schema.json); проверка: `python -m cqa validate results/prod/results.json` (схема, домены значений, 8 критериев по одному разу, `critical_flag == critical`, 2 знака, без дублей ID, в prod ровно 10 записей; `--group <id>` — ID совпадают с API).
 - `make submit GROUP=<id>`: загрузка из API → оценка (пресет по умолчанию) → экспорт JSON 1.0 → валидация → `git add -f` + commit; push — вручную. В UI: «Ещё → Выгрузить results.json (v1.0)».
 - Заменённый в UI критерий выгружается под своим `id` (или `code:` из YAML); стандартные 01–08 → официальные коды.
-- **Модель и стоимость.** `results/dev/results.json`: жюри `claude-haiku-5-5` + `claude-sonnet-5-5`, судья `claude-opus-5-5` (`external_api`), $7.64 за 65 диалогов ≈ **$0.12 за диалог**, ≈ 5 мин. Пресет по умолчанию для новых прогонов (в т.ч. `make submit`) — `gpt-5.3-codex`, ≈ $0.058 за диалог (см. [docs/MODELS.md](docs/MODELS.md)); фактическая модель записывается в `model.name`.
+- **Модель и стоимость.** `results/dev/results.json`: жюри `claude-haiku-5-5` + `claude-sonnet-5-5`, судья `claude-opus-5-5` (`external_api`), $7.64 за 65 диалогов ≈ **$0.12 за диалог**, ≈ 5 мин. Тот же режим (`--preset jury`) — по умолчанию для новых прогонов, в т.ч. `make submit` для контрольных диалогов. Альтернатива `--preset max` (`gpt-5.3-codex`, ≈ $0.058) опциональна: отрыв на отложенном наборе 2 метки из 80, это в пределах шума (см. [docs/MODELS.md](docs/MODELS.md)). Тихих подмен на старые модели нет: запасные модели выключены по умолчанию (`CQA_FALLBACK_MODELS`); фактическая модель записывается в `model.name`.
 - **Апелляции** (два отдельных действия): «Оспорить» на карточке критерия (обязательный комментарий) → вкладка «Апелляции»: проверяющий подтверждает или меняет оценку с обязательной причиной → итог пересчитывается; карточка показывает исходную оценку, решение и итог. API: `POST /api/appeals`, `GET /api/appeals?group=&status=`, `POST /api/appeals/{id}/resolve`.
 - Точность на реальных DEV-диалогах **не измерена** человеком (нет разметки); измерено только на синтетических gold-наборах (см. [docs/EVALUATION.md](docs/EVALUATION.md)).
 
@@ -165,7 +165,7 @@ CQA_PROVIDER=openai CQA_OPENAI_BASE_URL=http://127.0.0.1:11434/v1 CQA_MODEL=qwen
 
 ## Выбор модели (пресеты)
 Матрица цена/точность/скорость по 19 конфигурациям (Anthropic, OpenAI, Gemini, локальная Qwen; одиночные модели, жюри, варианты промптов): [docs/MODELS.md](docs/MODELS.md), страница **`/models`** в интерфейсе.
-Победитель выбран автоматически по отложенному gold-набору: **`gpt-5.3-codex` — 97.5% (2 прогона), MAE 1.54, $0.058/диалог**; он теперь режим по умолчанию (`--preset max`). Второе место — `gemini-4-argon` (96.9%).
+Победитель выбран автоматически по отложенному gold-набору: **`gpt-5.3-codex` — 97.5% (2 прогона), MAE 1.54, $0.058/диалог**; второе место — `gemini-4-argon` (96.9%), жюри Claude — 95.0%. Разница 1–2 метки из 80 в пределах шума, поэтому режим по умолчанию оставлен `jury` (им сделан DEV-файл), а `max` доступен как опция.
 `python -m cqa evaluate --preset econom|balanced|max|jury` (или `CQA_PRESET=...`; явные `CQA_MODEL`/`CQA_JURORS`/`CQA_JUDGE` важнее пресета). Воспроизвести: `python scripts/bench_matrix.py snapshot && python scripts/bench_matrix.py run && python scripts/bench_matrix.py matrix`.
 
 ## Результаты

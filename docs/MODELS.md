@@ -20,7 +20,7 @@ edits other agents made during the benchmark could not reach some configurations
 | Set | Size | Role |
 |---|---|---|
 | Tuned gold (`examples/gold`) | 16 synthetic dialogs × 8 criteria = 128 labels | Used while the prompts/rules were developed, so scores here are **optimistic** |
-| Held-out gold (`examples/gold_holdout`) | 10 dialogs × 8 = 80 labels | Never used for tuning. **This is the selection metric** |
+| Held-out gold (`examples/gold_holdout`) | 10 dialogs × 8 = 80 labels | Not used to write rules, but one 04 rule was later influenced by a held-out mismatch (see EVALUATION.md), and it was used to choose between models, so it is no longer a clean test set. Differences of ≤2/80 labels are within run-to-run noise. |
 | DEV | 65 real dialogs | No human labels. Agreement is measured against our own reference jury run (`results/dev_jury_v4.json`, haiku+sonnet→opus) and is **not ground truth** |
 
 Metrics:

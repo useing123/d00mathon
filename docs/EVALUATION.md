@@ -125,7 +125,7 @@ re-asked an ignored question, which the model attributes to 06; defensible eithe
 dialogs with clear-cut cases. This is a regression/consistency check, not an estimate of agreement with the
 organizer's hidden ground truth, which is likely lower on 04/05/06.
 
-## Held-out split (never used for tuning)
+## Held-out split (not used to write rules; see contamination note below)
 `examples/gold_holdout/` — 10 further synthetic dialogs (RU 4 / KZ 2 / EN 4 incl. 2 calls) written after the tuning
 rounds, labelled strictly by the organizer rubric, and **not used to change any rule**. Scenarios: needed
 clarification asked, protected action (phone change) without ID, greeting without a name, secondary detail missed,

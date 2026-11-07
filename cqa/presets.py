@@ -1,6 +1,6 @@
 """Model presets chosen from the benchmark matrix (results/bench_matrix.json, docs/MODELS.md).
 
-Selection rule for ``max`` (the product default): highest exact agreement on the HELD-OUT gold set (mean of
+Selection rule for ``max`` (optional preset; the product default is ``jury``): highest exact agreement on the HELD-OUT gold set (mean of
 repeated runs), tie-break lower total MAE, then higher gross recall, then lower $/dialog.
 A preset only sets the model setup (single model or jury) and the prompt variant; checklists, evidence
 validation and scoring are the same for every preset. Explicit CQA_MODEL / CQA_ENSEMBLE / CQA_JURORS /
@@ -16,14 +16,14 @@ PRESETS = {
     "balanced": {"label": "claude-sonnet-5-5 (только Anthropic)", "bench_config": "sonnet",
                  "ensemble": False, "model": "claude-sonnet-5-5", "prompt": "v0",
                  "why": "Один вендор (Anthropic), без ключа OpenAI. Не на границе Парето — выбор по требованиям к поставщику."},
-    "max": {"label": "gpt-5.3-codex", "bench_config": "gpt-5.3-codex", "default": True,
+    "max": {"label": "gpt-5.3-codex", "bench_config": "gpt-5.3-codex",
             "ensemble": False, "model": "gpt-5.3-codex", "prompt": "v0",
-            "why": "Лучший результат на отложенном наборе (среднее 2 прогонов), на границе Парето."},
-    "jury": {"label": "жюри haiku+sonnet → opus (прежний режим)", "bench_config": "jury-haiku+sonnet>opus",
+            "why": "Лучший результат на отложенном наборе (2 прогона), но отрыв 2 метки из 80 в пределах шума; не прогонялся на всём DEV. Опционально."},
+    "jury": {"label": "жюри haiku+sonnet → opus (по умолчанию)", "bench_config": "jury-haiku+sonnet>opus", "default": True,
              "ensemble": True, "jurors": ["claude-haiku-5-5", "claude-sonnet-5-5"], "judge": "claude-opus-5-5", "prompt": "v0",
-             "why": "Прежний режим по умолчанию; эталон для сравнения на DEV."},
+             "why": "Режим по умолчанию: им сделан results/dev/results.json и им же оцениваются контрольные диалоги. Различия с max в пределах шума отложенного набора."},
 }
-DEFAULT = "max"
+DEFAULT = "jury"
 
 
 def apply(name, cfg):
