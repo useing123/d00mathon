@@ -18,10 +18,14 @@ Served by `python -m cqa serve --port 8090` (FastAPI, no auth). Interactive docs
 | GET | `/api/jobs/{jid}` | — | Job progress `{status: queued/running/done/error, done, total, elapsed_s, ...}` |
 | GET | `/api/runs/{group}` | — | Result files for the group, newest first: `[{run, created_at, dialogs, model, cost_usd, mtime}]` |
 | GET | `/api/results/{group}` | `run=<name>` (optional; default = newest run) | Results document with AI output + `human` block per dialog |
-| PUT | `/api/overrides/{group}/{conv}/{crit}` | `{value, justification, reviewer}` (`value: null` removes); `?run=` optional | Updated dialog with human total/diff |
+| PUT | `/api/overrides/{group}/{conv}/{crit}` | `{value, justification, reviewer}` (`value: null` removes); `?run=` optional | Updated dialog with human total/diff; **400** if the value is not an allowed step/`YES`/`NO`/`NA` for that criterion, 404 for unknown run/dialog |
 | POST | `/api/rescore/{group}` | — | Recompute totals with current weights (no LLM) → `{ok}` |
 | GET | `/api/export/{group}.json` | `run=` optional | Download results JSON |
 | GET | `/api/export/{group}.csv` | `which=ai\|human\|both`, `run=` optional | Download CSV |
+
+Identifiers that become file names (`group`, `run`, checklist `cid`) must match `[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}` without `..`, and the resolved path must stay inside its directory → otherwise **400** (`tests/test_review_hardening.py::test_path_traversal_rejected`).
+
+Result dialogs carry `status` (`complete`/`incomplete`), `failed_criteria`, `provisional_total`, `needs_review` (criterion ids) and `warnings`; criterion results may carry `evidence_warning`, `needs_review`, and `jury` keyed `"<index>:<model>"`.
 
 Example (offline):
 ```bash

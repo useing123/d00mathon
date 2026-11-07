@@ -4,7 +4,7 @@
 > LLM jury scores every checklist criterion separately, backs each verdict with verified verbatim quotes, and computes the score in deterministic code.
 
 ![CI](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&logoColor=white)
-![tests](https://img.shields.io/badge/tests-40%20passed-brightgreen)
+![tests](https://img.shields.io/badge/tests-75%20passed-brightgreen)
 ![python](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue?logo=python&logoColor=white)
 ![ruff](https://img.shields.io/badge/lint-ruff-261230)
 ![license](https://img.shields.io/badge/license-MIT-green)
@@ -144,10 +144,14 @@ CQA_PROVIDER=openai CQA_OPENAI_BASE_URL=http://127.0.0.1:11434/v1 CQA_MODEL=qwen
 Подробно: [docs/ASSUMPTIONS.md](docs/ASSUMPTIONS.md).
 
 ## Результаты на DEV
+**Gold-набор (16 размеченных синтетических диалогов, `python -m cqa gold`):** точное совпадение 0.969 (128 вердиктов), MAE итога 3.64, грубые ошибки precision/recall 1.0/1.0 — см. [docs/EVALUATION.md](docs/EVALUATION.md) (это проверка регрессий, а не оценка совпадения со скрытой разметкой).
+**DEV v2** (после правок по ревью): 65 диалогов, 0 ошибок, 0 неполных, средний балл 76.57, 5 флагов грубых ошибок, $11.60 / 245 с.
+
 65 диалогов (60 чатов: RU 30 / KZ 15 / EN 15; 5 звонков RU), 0 ошибок, средний балл 75.95, 5 флагов грубых ошибок. Полный прогон ≈ 5 мин и ≈ $13; 10 диалогов ≈ 1 мин и ≈ $2. Методика: [docs/EVALUATION.md](docs/EVALUATION.md).
 
 ## Ограничения (честно)
-- Для DEV нет размеченного ground truth — точность проверена ручным разбором выборки, а не метрикой на большом наборе.
+- Для DEV нет размеченного ground truth; gold-набор синтетический и размечен нами — это регрессионная проверка, а не оценка точности на скрытой разметке.
+- Если оценка критерия упала (ошибка API), диалог помечается `incomplete` и итог не выставляется (fail-closed).
 - Наиболее неоднозначные критерии — 07, 04, 05 (субъективность рубрики).
 - Облачный режим жюри стоит денег (≈ $0.2 на диалог); точность локальной модели мы не измеряли.
 - Смещение аудио приблизительное: запись может стартовать не синхронно с транскриптом.
@@ -191,8 +195,10 @@ Makefile · pyproject.toml · Dockerfile · docker-compose.yml · .github/workfl
 
 **Highlights:** per-criterion prompts · LLM jury + judge · quote validation with auto-correction / retry · deterministic scoring · per-criterion cache (editing one rubric re-evaluates only that criterion; reweighting needs no LLM) · no-login web UI with evidence highlighting, audio seek, human override (stored separately, AI vs Human diff, CSV/JSON export) and checklist editor · cloud (Anthropic), local (Ollama/vLLM via OpenAI-compatible API) or offline mock · Docker · CI on 3.11/3.12 without secrets.
 
-**DEV results:** 65 dialogs (60 chats, 5 calls), 0 errors, mean 75.95, 5 gross-error flags; jurors agreed on 84.4% of 520 criterion verdicts, the judge decided 81. Full run ~5 min / ~$13.
+**DEV results (v1):** 65 dialogs (60 chats, 5 calls), 0 errors, mean 75.95, 5 gross-error flags; jurors agreed on 84.4% of 520 criterion verdicts, the judge decided 81. Full run ~5 min / ~$13.
 
 **Limitations:** no labelled ground truth for DEV (accuracy checked by manual review of a sample); criteria 07/04/05 are the most subjective; audio offsets are approximate; local-model accuracy not measured.
+
+**Gold set:** 16 hand-labelled synthetic dialogs, `python -m cqa gold` → exact agreement 0.969, total MAE 3.64, gross-flag P/R 1.0/1.0. **Robustness:** fail-closed `incomplete` status, strict values, operator-quote checks, untrusted-transcript boundary, path-safe ids, atomic writes. Review history: [docs/REVIEW_QUORUM.md](docs/REVIEW_QUORUM.md).
 
 Docs: [Architecture](docs/ARCHITECTURE.md) · [Scoring](docs/SCORING.md) · [Assumptions](docs/ASSUMPTIONS.md) · [Evaluation](docs/EVALUATION.md) · [API](docs/API.md) · [Deck](docs/CQA_Pitch_Deck.pdf). License: [MIT](LICENSE).
