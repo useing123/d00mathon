@@ -47,3 +47,6 @@ models/*.tar.gz
 # RunPod pod metadata (ids/proxy URLs) — never commit
 **/.*pod*.json
 **/*_pod.json
+
+# pitch artefacts kept out of git (served from /root/cqa_share)
+docs/CQA_Tech_Report.*
