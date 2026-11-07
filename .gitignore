@@ -43,3 +43,7 @@ examples/dev_labels.json
 models/*/adapter_model.safetensors
 models/*/tokenizer.json
 models/*.tar.gz
+
+# RunPod pod metadata (ids/proxy URLs) — never commit
+**/.*pod*.json
+**/*_pod.json
