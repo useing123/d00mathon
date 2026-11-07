@@ -255,6 +255,7 @@ checklists/      freedom_chat_v1.yaml, freedom_call_v1.yaml
 examples/        sample_dialogs.json — 4 синтетических диалога (RU/EN/KZ чат + RU звонок)
 tests/           pytest (offline, mock): скоринг, цитаты, чек-листы, кэш-ключ, fail-closed, строгие значения, роли/время, факты, жюри, провайдеры, безопасность путей, gold, mock e2e, HTTP API
 docs/            ARCHITECTURE, SCORING, ASSUMPTIONS, EVALUATION, API, презентация + PDF
+EXPERIMENTS.md   все эксперименты: CI, парные тесты, лидерборд, Pareto, абляции (scripts/build_experiments.py)
 Makefile · pyproject.toml · Dockerfile · docker-compose.yml · .github/workflows/ci.yml
 ```
 
