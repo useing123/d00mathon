@@ -12,7 +12,14 @@ generated + appended on first `up`). The pod id of the last `up` is stored in .c
 `up` also spawns a detached watchdog that terminates the pod after --max-hours no matter what.
 Never prints secrets.
 """
-import argparse, json, os, secrets, subprocess, sys, time, urllib.request
+import argparse
+import json
+import os
+import secrets
+import subprocess
+import sys
+import time
+import urllib.request
 from pathlib import Path
 
 ENV_FILE = Path.home() / ".hermes" / ".env"
@@ -113,7 +120,8 @@ def wait(a):
         try:
             req = urllib.request.Request(url, headers={"Authorization": f"Bearer {token()}", "User-Agent": "cqa"})
             with urllib.request.urlopen(req, timeout=20) as r:
-                print(f"ready after {time.time() - t0:.0f}s:", r.read().decode()[:300]); return
+                print(f"ready after {time.time() - t0:.0f}s:", r.read().decode()[:300])
+                return
         except Exception as e:
             print(f"  {time.time() - t0:5.0f}s not ready ({str(e)[:60]})", flush=True)
         time.sleep(20)

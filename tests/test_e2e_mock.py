@@ -33,7 +33,7 @@ def test_pipeline_end_to_end():
             assert c["value"] is not None
             for e in c["evidence"]:  # every surviving quote is verbatim in the cited turn
                 rec = next(r for r in recs if r["conversation_id"] == d["conversation_id"])
-                assert e["quote"][:20].lower() in rec["transcript"][e["turn"]]["text"].lower()
+                assert e["quote"][:20].lower() in data.turn_at(rec, e["turn"])["text"].lower()
     # weak dialog (no greeting/name, no farewell) scores below the good one
     assert by["demo-en-chat-weak"]["total"] < by["demo-ru-chat-good"]["total"]
     # second run is served from the per-criterion cache

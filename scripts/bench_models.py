@@ -9,7 +9,14 @@ data/DEV.json via subprocess with CQA_PROVIDER=openai, CQA_ENSEMBLE=0 — checkl
 validation and scoring are untouched. It then compares DEV results with the cloud jury run and writes
 results/bench_<tag>.json. API key: CQA_OPENAI_API_KEY or CQA_LOCAL_LLM_TOKEN (env or ~/.hermes/.env).
 """
-import argparse, glob, json, os, re, subprocess, sys, time
+import argparse
+import glob
+import json
+import os
+import re
+import subprocess
+import sys
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -40,12 +47,15 @@ def compare(local_path, cloud_path):
             k = c["criterion_id"]
             p = per.setdefault(k, [0, 0])
             if k in lc:
-                p[0] += 1; p[1] += _val(lc[k]) == _val(c)
+                p[0] += 1
+                p[1] += _val(lc[k]) == _val(c)
         lt, ct = L[i].get("total"), C[i].get("total")
         if lt is not None and ct is not None:
             mae.append(abs(float(lt) - float(ct)))
-        gross_agree += bool(L[i].get("gross_error")) == bool(C[i].get("gross_error")); n_tot += 1
-    tot = sum(p[0] for p in per.values()); m = sum(p[1] for p in per.values())
+        gross_agree += bool(L[i].get("gross_error")) == bool(C[i].get("gross_error"))
+        n_tot += 1
+    tot = sum(p[0] for p in per.values())
+    m = sum(p[1] for p in per.values())
     return {"dialogs_compared": len(ids),
             "per_criterion_exact": {k: round(v[1] / v[0], 3) for k, v in sorted(per.items()) if v[0]},
             "overall_exact": round(m / tot, 3) if tot else None,
@@ -85,7 +95,9 @@ def run(a):
         sec, r = sh(["evaluate", "--input", "data/DEV.json", "--fresh", "--concurrency", str(a.concurrency),
                      "--out", str(dev)], env, R / f"bench_{a.tag}_dev.log")
         try:
-            d = json.load(open(dev)); n = len(d["dialogs"]); meta = d.get("meta", {})
+            d = json.load(open(dev))
+            n = len(d["dialogs"])
+            meta = d.get("meta", {})
             out["dev"] = {"dialogs": n, "elapsed_s": round(sec, 1), "sec_per_dialog": round(sec / max(n, 1), 2),
                           "gpu_usd_per_dialog": round(a.price_hr * sec / 3600 / max(n, 1), 5),
                           "incomplete": len(meta.get("incomplete_dialogs") or []),
@@ -101,8 +113,11 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("cmd", choices=["run", "compare"])
     p.add_argument("files", nargs="*")
-    p.add_argument("--base-url"); p.add_argument("--model"); p.add_argument("--tag", default="local")
-    p.add_argument("--concurrency", type=int, default=12); p.add_argument("--price-hr", type=float, default=0.0)
+    p.add_argument("--base-url")
+    p.add_argument("--model")
+    p.add_argument("--tag", default="local")
+    p.add_argument("--concurrency", type=int, default=12)
+    p.add_argument("--price-hr", type=float, default=0.0)
     p.add_argument("--skip", default="")
     newest = sorted(glob.glob(str(ROOT / "results/dev_jury_v*.json")),
                     key=lambda f: int(re.search(r"_v(\d+)", f).group(1)))

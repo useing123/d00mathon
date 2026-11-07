@@ -15,5 +15,5 @@ def test_mock_is_deterministic_and_offline():
     ev = Evaluator(use_cache=False)
     a = ev.evaluate_criterion(rec, cl, cl["criteria"][0])
     b = ev.evaluate_criterion(rec, cl, cl["criteria"][0])
-    assert a["value"] == b["value"] == "YES" and a["evidence"][0]["turn"] == 1
+    assert a["value"] == b["value"] == "YES" and a["evidence"][0]["turn"] == 2
     assert LLM().model == "mock-heuristic"

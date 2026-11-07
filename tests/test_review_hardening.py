@@ -122,7 +122,18 @@ class Scripted:
 
     def call(self, system, cached, user, tool, temperature=0.0):
         self.calls.append(user)
-        return self.outs.pop(0) if len(self.outs) > 1 else self.outs[0]
+        out = self.outs.pop(0) if len(self.outs) > 1 else self.outs[0]
+        if "КРИТЕРИЙ 04" in user and isinstance(out, dict) and "client_requests" not in out and out.get("value") != "NA":
+            out = {**out, "client_requests": _ledger_for(str(out.get("value")))}   # consistent ledger for 04 tests
+        return out
+
+
+def _ledger_for(v):
+    ess = {"20": "closed", "15": "closed", "0": "closed"}.get(v, "open")
+    led = [{"text": "main", "essential": True, "status": ess}]
+    if v == "15":
+        led.append({"text": "detail", "essential": False, "status": "open"})
+    return led
 
 
 def _cr(cid):
@@ -140,7 +151,7 @@ def test_empty_evidence_ok_for_na_and_omission():
 
 
 def test_client_only_evidence_is_retried_then_flagged():
-    s = Scripted([{"value": "YES", "evidence": [{"turn": 0, "quote": "Какой тариф"}]}])
+    s = Scripted([{"value": "YES", "evidence": [{"turn": 1, "quote": "Какой тариф"}]}])
     ev = Evaluator(llm=s, use_cache=False)
     tx = prompts.transcript_block(REC, data.format_transcript(REC))
     out = ev._sample(REC, tx, ckl.load("freedom_chat_v1"), _cr("05"), 0)
@@ -153,13 +164,13 @@ def test_gross_yes_without_operator_quote_needs_review_not_flipped():
     tx = prompts.transcript_block(REC, data.format_transcript(REC))
     out = ev._sample(REC, tx, ckl.load("freedom_chat_v1"), _cr("08"), 0)
     assert out["value"] == "YES" and out["needs_review"] is True and len(s.calls) == 2
-    s = Scripted([{"value": "YES", "evidence": [{"turn": 1, "quote": "Тариф 0.1%"}]}])
+    s = Scripted([{"value": "YES", "evidence": [{"turn": 2, "quote": "Тариф 0.1%"}]}])
     out = Evaluator(llm=s, use_cache=False)._sample(REC, tx, ckl.load("freedom_chat_v1"), _cr("08"), 0)
     assert not out.get("needs_review") and len(s.calls) == 1
 
 
 def test_non_step_value_is_rejected_and_retried():
-    s = Scripted([{"value": "17", "evidence": []}, {"value": "15", "evidence": [{"turn": 1, "quote": "Тариф"}]}])
+    s = Scripted([{"value": "17", "evidence": []}, {"value": "15", "evidence": [{"turn": 2, "quote": "Тариф"}]}])
     tx = prompts.transcript_block(REC, data.format_transcript(REC))
     out = Evaluator(llm=s, use_cache=False)._sample(REC, tx, ckl.load("freedom_chat_v1"), _cr("04"), 0)
     assert out["value"] == 15 and "недопустимо" in s.calls[1]
@@ -182,8 +193,8 @@ def test_tool_schema_is_stable_across_criteria():
 
 # ---------- 7. jury keys ----------
 def test_jury_votes_keyed_by_index_and_model(monkeypatch):
-    a, b = Scripted([{"value": "YES", "evidence": [{"turn": 1, "quote": "Тариф"}]}]), \
-        Scripted([{"value": "YES", "evidence": [{"turn": 1, "quote": "Тариф"}]}])
+    a, b = Scripted([{"value": "YES", "evidence": [{"turn": 2, "quote": "Тариф"}]}]), \
+        Scripted([{"value": "YES", "evidence": [{"turn": 2, "quote": "Тариф"}]}])
     ev = Evaluator(use_cache=False)
     ev.jurors, ev.judge, ev.ensemble = [a, b], a, True   # same model name twice must not collide
     tx = prompts.transcript_block(REC, data.format_transcript(REC))
@@ -249,13 +260,13 @@ def test_facts_gap_language_ending():
               {"timestamp": "09:20", "speaker": "operator", "text": "Жауап"},
               {"timestamp": "09:30", "speaker": "system", "text": "Клиент завершил разговор."}])
     f = data.compute_facts(r)
-    assert f["first_operator_turn"] == 1 and f["client_language_guess"] == "KZ"
+    assert f["first_operator_turn"] == 2 and f["client_language_guess"] == "KZ"
     w = f["longest_wait_after_first_reply"]
-    assert w == {"seconds": 240, "from_turn": 2, "to_turn": 3, "operator_warned_before": False,
+    assert w == {"seconds": 240, "from_turn": 3, "to_turn": 4, "operator_warned_before": False,
                  "kind": "reply_to_client"}   # queue time before the first reply is excluded
-    assert f["ending"] == {"last_speaker": "operator", "last_operator_turn": 3, "system_end_event_turn": 4}
+    assert f["ending"] == {"last_speaker": "operator", "last_operator_turn": 4, "system_end_event_turn": 5}
     txt = data.format_facts(f)
-    assert "240 с" in txt and "№1" in txt
+    assert "240 с" in txt and "№2" in txt
     assert "ФАКТЫ" in prompts.transcript_block(r, data.format_transcript(r), txt)
 
 
@@ -263,7 +274,7 @@ def test_hold_fact_with_warning():
     r = _rec([{"timestamp": "00:00", "speaker": "operator", "text": "Минутку, уточню"},
               {"timestamp": "00:05", "speaker": "system", "text": "Клиент находится на удержании."},
               {"timestamp": "03:05", "speaker": "system", "text": "Клиент больше не находится на удержании."}], channel="call")
-    assert data.compute_facts(r)["holds"] == [{"start_turn": 1, "operator_warned_before": True, "end_turn": 2, "seconds": 180}]
+    assert data.compute_facts(r)["holds"] == [{"start_turn": 2, "operator_warned_before": True, "end_turn": 3, "seconds": 180}]
 
 
 class Boom(Scripted):
@@ -272,7 +283,7 @@ class Boom(Scripted):
 
 
 def test_jury_one_juror_fails_judge_reviews():
-    ok = Scripted([{"value": "YES", "evidence": [{"turn": 1, "quote": "Тариф"}]}])
+    ok = Scripted([{"value": "YES", "evidence": [{"turn": 2, "quote": "Тариф"}]}])
     judge = Scripted([{"value": "NO", "evidence": [], "missing_where": "[1]"}])
     judge.model = "judge"
     ev = Evaluator(use_cache=False)
@@ -284,7 +295,7 @@ def test_jury_one_juror_fails_judge_reviews():
 
 
 def test_jury_all_fail_judge_alone_then_fail_closed():
-    judge = Scripted([{"value": "YES", "evidence": [{"turn": 1, "quote": "Тариф"}]}])
+    judge = Scripted([{"value": "YES", "evidence": [{"turn": 2, "quote": "Тариф"}]}])
     ev = Evaluator(use_cache=False)
     ev.jurors, ev.judge, ev.ensemble = [Boom([{}]), Boom([{}])], judge, True
     tx = prompts.transcript_block(REC, data.format_transcript(REC))
@@ -307,9 +318,9 @@ def test_facts_first_block_warning_window_ack_and_auth():
               {"timestamp": "06:40", "speaker": "client", "text": "Спасибо!"},
               {"timestamp": "16:40", "speaker": "operator", "text": "До свидания"}])
     f = data.compute_facts(r)
-    assert f["first_operator_turns"] == [1, 2] and f["system_says_client_authenticated"] is False
+    assert f["first_operator_turns"] == [2, 3] and f["system_says_client_authenticated"] is False
     w = f["longest_wait_after_first_reply"]
-    assert w["to_turn"] == 6 and w["operator_warned_before"] is True    # warning 2 turns before the gap still counts
+    assert w["to_turn"] == 7 and w["operator_warned_before"] is True    # warning 2 turns before the gap still counts
     assert w["seconds"] == 300                                           # 10-min gap after "Спасибо!" ignored
     assert "№2" in data.format_facts(f)
 
@@ -322,14 +333,14 @@ def test_auth_fact_and_short_kazakh():
 
 def test_quote_with_copied_line_prefix_is_accepted():
     from cqa.evaluator import validate_evidence
-    v, bad = validate_evidence(REC, [{"turn": 1, "quote": "[1] (00:30) OPERATOR: Здравствуйте, меня зовут Ан"}])
+    v, bad = validate_evidence(REC, [{"turn": 2, "quote": "[1] (00:30) OPERATOR: Здравствуйте, меня зовут Ан"}])
     assert v and not bad
 
 
 def test_04_ledger_inconsistency_retried():
-    s = Scripted([{"value": "20", "evidence": [{"turn": 1, "quote": "Тариф"}],
+    s = Scripted([{"value": "20", "evidence": [{"turn": 2, "quote": "Тариф"}],
                    "client_requests": [{"text": "a", "essential": True, "status": "open"}]},
-                  {"value": "10", "evidence": [{"turn": 1, "quote": "Тариф"}],
+                  {"value": "10", "evidence": [{"turn": 2, "quote": "Тариф"}],
                    "client_requests": [{"text": "a", "essential": True, "status": "open"}]}])
     tx = prompts.transcript_block(REC, data.format_transcript(REC))
     out = Evaluator(llm=s, use_cache=False)._sample(REC, tx, ckl.load("freedom_chat_v1"), _cr("04"), 0)
@@ -348,9 +359,9 @@ def test_404_gives_actionable_error(monkeypatch):
 
 # ---------- round-3 review ----------
 def test_ledger_all_closed_but_10_retried():
-    s = Scripted([{"value": "10", "evidence": [{"turn": 1, "quote": "Тариф"}],
+    s = Scripted([{"value": "10", "evidence": [{"turn": 2, "quote": "Тариф"}],
                    "client_requests": [{"text": "a", "essential": True, "status": "closed"}]},
-                  {"value": "20", "evidence": [{"turn": 1, "quote": "Тариф"}],
+                  {"value": "20", "evidence": [{"turn": 2, "quote": "Тариф"}],
                    "client_requests": [{"text": "a", "essential": True, "status": "closed"}]}])
     tx = prompts.transcript_block(REC, data.format_transcript(REC))
     out = Evaluator(llm=s, use_cache=False)._sample(REC, tx, ckl.load("freedom_chat_v1"), _cr("04"), 0)
@@ -362,13 +373,13 @@ def test_internal_hold_turn_is_not_operator_evidence():
     r = _rec([{"speaker": "system", "text": "Клиент находится на удержании."},
               {"speaker": "operator", "text": "Коллега, подскажи тариф"},
               {"speaker": "system", "text": "Клиент больше не находится на удержании."}])
-    v, _ = validate_evidence(r, [{"turn": 1, "quote": "подскажи тариф"}])
+    v, _ = validate_evidence(r, [{"turn": 2, "quote": "подскажи тариф"}])
     assert v[0]["internal"] is True
     assert _check_evidence(_cr("05"), "YES", v, {}) == "no_operator_evidence"
 
 
 def test_unanimous_gross_yes_is_confirmed_by_judge():
-    yes = {"value": "YES", "evidence": [{"turn": 1, "quote": "Тариф 0.1%"}]}
+    yes = {"value": "YES", "evidence": [{"turn": 2, "quote": "Тариф 0.1%"}]}
     a, b = Scripted([yes]), Scripted([yes])
     judge = Scripted([{"value": "NO", "evidence": [], "missing_where": "нет"}])
     judge.model = "judge"
@@ -408,7 +419,7 @@ def test_wait_warning_survives_client_ping():
               {"timestamp": "02:00", "speaker": "client", "text": "жду"},
               {"timestamp": "05:20", "speaker": "operator", "text": "Вывод исполнен"}])
     w = data.compute_facts(r)["longest_wait_after_first_reply"]
-    assert w["to_turn"] == 4 and w["operator_warned_before"] is True
+    assert w["to_turn"] == 5 and w["operator_warned_before"] is True
 
 
 # ---------- round-4 review (luna) ----------
@@ -428,8 +439,8 @@ def test_language_kazakh_name_in_russian_is_ru():
 def test_quote_fragments_must_be_in_order():
     from cqa.evaluator import validate_evidence
     r = _rec([{"speaker": "operator", "text": "Сначала откройте приложение, затем выберите вывод"}])
-    assert validate_evidence(r, [{"turn": 0, "quote": "откройте приложение … выберите вывод"}])[0]
-    v, bad = validate_evidence(r, [{"turn": 0, "quote": "выберите вывод … откройте приложение"}])
+    assert validate_evidence(r, [{"turn": 1, "quote": "откройте приложение … выберите вывод"}])[0]
+    v, bad = validate_evidence(r, [{"turn": 1, "quote": "выберите вывод … откройте приложение"}])
     assert not v and bad
 
 
@@ -453,7 +464,7 @@ def test_cache_key_tracks_prompt_content(monkeypatch):
 
 
 def test_malformed_payload_shape_sanitised():
-    s = Scripted([{"value": "15", "confidence": "high", "evidence": [{"turn": 1, "quote": "Тариф"}],
+    s = Scripted([{"value": "15", "confidence": "high", "evidence": [{"turn": 2, "quote": "Тариф"}],
                    "client_requests": [{"text": 1, "status": "weird"}, "junk"], "justification": {"a": 1}}])
     tx = prompts.transcript_block(REC, data.format_transcript(REC))
     out = Evaluator(llm=s, use_cache=False)._sample(REC, tx, ckl.load("freedom_chat_v1"), _cr("04"), 0)
@@ -469,9 +480,9 @@ def test_run_usage_is_per_run():
 
 
 def test_optional_judge_confirmation_of_consensus(monkeypatch):
-    yes = {"value": "15", "evidence": [{"turn": 1, "quote": "Тариф"}],
+    yes = {"value": "15", "evidence": [{"turn": 2, "quote": "Тариф"}],
            "client_requests": [{"text": "a", "essential": True, "status": "partial"}]}
-    judge = Scripted([{"value": "10", "evidence": [{"turn": 1, "quote": "Тариф"}]}])
+    judge = Scripted([{"value": "10", "evidence": [{"turn": 2, "quote": "Тариф"}]}])
     judge.model = "judge"
     ev = Evaluator(use_cache=False)
     ev.jurors, ev.judge, ev.ensemble = [Scripted([yes]), Scripted([yes])], judge, True
@@ -499,7 +510,7 @@ def test_all_unwarned_waits_listed():
     f = data.compute_facts(r)
     assert f["longest_wait_after_first_reply"]["operator_warned_before"] is True
     un = [w for w in f["waits_over_2min"] if not w["operator_warned_before"]]
-    assert [(w["from_turn"], w["to_turn"]) for w in un] == [(4, 5)]
+    assert [(w["from_turn"], w["to_turn"]) for w in un] == [(5, 6)]
     assert "БЕЗ предупреждения: 1" in data.format_facts(f)
 
 
@@ -527,10 +538,10 @@ def test_preflight_fallback(monkeypatch):
 
 def test_final_profile_scale_median(monkeypatch):
     monkeypatch.setattr(config, "SCALE_SAMPLES", 3)
-    a = Scripted([{"value": "20", "evidence": [{"turn": 1, "quote": "Тариф"}]},
-                  {"value": "10", "evidence": [{"turn": 1, "quote": "Тариф"}]},
-                  {"value": "15", "evidence": [{"turn": 1, "quote": "Тариф"}]}])
-    b = Scripted([{"value": "15", "evidence": [{"turn": 1, "quote": "Тариф"}]}])
+    a = Scripted([{"value": "20", "evidence": [{"turn": 2, "quote": "Тариф"}]},
+                  {"value": "10", "evidence": [{"turn": 2, "quote": "Тариф"}]},
+                  {"value": "15", "evidence": [{"turn": 2, "quote": "Тариф"}]}])
+    b = Scripted([{"value": "15", "evidence": [{"turn": 2, "quote": "Тариф"}]}])
     ev = Evaluator(use_cache=False)
     ev.jurors, ev.judge, ev.ensemble = [a, b], b, True
     tx = prompts.transcript_block(REC, data.format_transcript(REC))
@@ -548,7 +559,7 @@ def test_apply_final_profile(monkeypatch):
 
 # ---------- round-6 review ----------
 def test_blind_judge_accepts_matching_juror_without_opinions():
-    a = Scripted([{"value": "YES", "evidence": [{"turn": 1, "quote": "Тариф"}]}])
+    a = Scripted([{"value": "YES", "evidence": [{"turn": 2, "quote": "Тариф"}]}])
     b = Scripted([{"value": "NO", "evidence": [], "missing_where": "[1]"}])
     judge = Scripted([{"value": "NO", "evidence": [], "missing_where": "[1]"}])
     judge.model = "judge"
@@ -561,10 +572,10 @@ def test_blind_judge_accepts_matching_juror_without_opinions():
 
 
 def test_blind_judge_third_value_then_sees_opinions():
-    a = Scripted([{"value": "20", "evidence": [{"turn": 1, "quote": "Тариф"}]}])
-    b = Scripted([{"value": "10", "evidence": [{"turn": 1, "quote": "Тариф"}]}])
-    judge = Scripted([{"value": "5", "evidence": [{"turn": 1, "quote": "Тариф"}]},
-                      {"value": "10", "evidence": [{"turn": 1, "quote": "Тариф"}]}])
+    a = Scripted([{"value": "20", "evidence": [{"turn": 2, "quote": "Тариф"}]}])
+    b = Scripted([{"value": "10", "evidence": [{"turn": 2, "quote": "Тариф"}]}])
+    judge = Scripted([{"value": "5", "evidence": [{"turn": 2, "quote": "Тариф"}]},
+                      {"value": "10", "evidence": [{"turn": 2, "quote": "Тариф"}]}])
     judge.model = "judge"
     ev = Evaluator(use_cache=False)
     ev.jurors, ev.judge, ev.ensemble = [a, b], judge, True
@@ -575,7 +586,7 @@ def test_blind_judge_third_value_then_sees_opinions():
 
 def test_ledger_15_requires_missed_secondary_detail():
     from cqa.evaluator import _check_evidence
-    ev = [{"turn": 1, "quote": "x", "speaker": "operator"}]
+    ev = [{"turn": 2, "quote": "x", "speaker": "operator"}]
     closed = {"client_requests": [{"text": "a", "essential": True, "status": "closed"}]}
     assert _check_evidence(_cr("04"), 15, ev, closed) == "ledger_inconsistent"
     minor = {"client_requests": [{"text": "a", "essential": True, "status": "closed"},
@@ -586,7 +597,7 @@ def test_ledger_15_requires_missed_secondary_detail():
 @pytest.mark.parametrize("vals,expected", [(["NA", "NA", "15"], "NA"), (["NA", "10", "20"], 20), (["NA", "NA", "NA"], "NA")])
 def test_scale_sample_edge_cases(monkeypatch, vals, expected):
     monkeypatch.setattr(config, "SCALE_SAMPLES", 3)
-    outs = [{"value": v, "evidence": [{"turn": 1, "quote": "Тариф"}], "na_reason": "x"} for v in vals]
+    outs = [{"value": v, "evidence": [{"turn": 2, "quote": "Тариф"}], "na_reason": "x"} for v in vals]
     a, b = Scripted(list(outs)), Scripted(list(outs))
     ev = Evaluator(use_cache=False)
     ev.jurors, ev.judge, ev.ensemble = [a, b], a, True
@@ -616,3 +627,81 @@ def test_organizer_csv_scored_columns_only():
     assert store.to_organizer_csv({"dialogs": [d]}).splitlines() == ["conversation_id,01,total,gross_error", "c1,YES,,NO"]
     assert store.to_organizer_csv({"dialogs": [d]}, fill_provisional=True).splitlines()[1] == "c1,YES,81.26,NO"
     assert "incomplete,04" in store.to_diagnostics_csv({"dialogs": [d]})
+
+
+# ---------- round-7 review ----------
+def test_prompts_import_without_variants_package(monkeypatch):
+    import builtins
+    import importlib
+    real = builtins.__import__
+
+    def fake(name, *a, **k):
+        if "prompt_variants" in name or (a and a[2] and "prompt_variants" in (a[2] or ())):
+            raise ImportError("absent")
+        return real(name, *a, **k)
+    monkeypatch.setattr(builtins, "__import__", fake)
+    monkeypatch.setenv("CQA_PROMPT_VARIANT", "v0")
+    importlib.reload(prompts)                       # default: never touches the optional package
+    monkeypatch.setenv("CQA_PROMPT_VARIANT", "v9")
+    with pytest.warns(UserWarning):
+        importlib.reload(prompts)                   # requested but missing → warning, v0 prompts
+    monkeypatch.delenv("CQA_PROMPT_VARIANT")
+    monkeypatch.setattr(builtins, "__import__", real)
+    importlib.reload(prompts)
+    assert "submit_evaluation" in prompts.SYSTEM
+
+
+def test_save_keeps_extends(tmp_path, monkeypatch):
+    import shutil
+
+    import yaml
+    for f in ("freedom_chat_v1.yaml", "freedom_call_v1.yaml"):
+        shutil.copy(config.CHECKLIST_DIR / f, tmp_path / f)
+    monkeypatch.setattr(config, "CHECKLIST_DIR", tmp_path)
+    c = ckl.load("freedom_call_v1")
+    next(x for x in c["criteria"] if x["id"] == "05")["weight"] = 20
+    ckl.save(c)
+    raw = yaml.safe_load((tmp_path / "freedom_call_v1.yaml").read_text())
+    assert raw["extends"] == "freedom_chat_v1" and "criteria" not in raw
+    assert {o["id"] for o in raw["criteria_overrides"]} == {"05", "06"}
+    assert next(x for x in ckl.load("freedom_call_v1")["criteria"] if x["id"] == "05")["weight"] == 20
+
+
+def test_changed_transcript_same_id_is_reevaluated():
+    ev = Evaluator(use_cache=True)
+    ev.evaluate_many([REC])
+    again, _ = Evaluator(use_cache=True).evaluate_many([REC])
+    assert all(c["cached"] for c in again[0]["criteria"])
+    changed = _rec([{"timestamp": "00:00", "speaker": "client", "text": "Какой тариф?"},
+                    {"timestamp": "00:31", "speaker": "operator", "text": "Здравствуйте, меня зовут Ан. Тариф 0.1%."}])
+    out, _ = Evaluator(use_cache=True).evaluate_many([changed])
+    assert not any(c["cached"] for c in out[0]["criteria"])        # only a timestamp changed
+
+
+def test_preflight_assigns_distinct_fallbacks(monkeypatch):
+    ev = Evaluator(use_cache=False)
+    mk = []
+    for name in ("gone-a", "gone-b", "judge-ok"):
+        m = Scripted([{}])
+        m.provider, m.model = "anthropic", name
+        mk.append(m)
+    lister = type("M", (), {"list": staticmethod(lambda limit=100: [type("X", (), {"id": i})() for i in ("judge-ok", "f1", "f2")])})()
+    mk[0].client = type("C", (), {"models": lister})()
+    ev.llm, ev.jurors, ev.judge, ev.ensemble = mk[0], mk[:2], mk[2], True
+    monkeypatch.setattr(config, "FALLBACK_MODELS", ["f1", "f2"])
+    ev.preflight()
+    assert [m.model for m in ev.jurors] == ["f1", "f2"] and ev.ensemble
+
+
+def test_ledger_empty_retried():
+    s = Scripted([{"value": "20", "evidence": [{"turn": 2, "quote": "Тариф"}], "client_requests": []}])
+    tx = prompts.transcript_block(REC, data.format_transcript(REC))
+    out = Evaluator(llm=s, use_cache=False)._sample(REC, tx, ckl.load("freedom_chat_v1"), _cr("04"), 0)
+    assert len(s.calls) == 2 and out["evidence_warning"] == "ledger_empty"
+
+
+def test_gross_signal_fact():
+    r = _rec([{"speaker": "operator", "text": "Переведите на мою карту 4400 4302 1111 2222"},
+              {"speaker": "operator", "text": "Обычный ответ"}])
+    f = data.compute_facts(r)
+    assert f["gross_signal_turns"] == [1] and "№1" in data.format_facts(f)

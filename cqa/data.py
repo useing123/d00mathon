@@ -137,6 +137,26 @@ def _mmss(ts):
         return None
 
 
+# ---- turn numbering: the ONE conversion point. Every user-facing turn number (prompt labels, evidence,
+# facts, UI, API, exports) is 1-based; Python list positions are 0-based. Use turn_pos()/turn_at() only.
+TURN_BASE = 1
+
+
+def turn_pos(n):
+    """User-facing turn number -> list position (or -1 if not an int)."""
+    try:
+        return int(n) - TURN_BASE
+    except (TypeError, ValueError):
+        return -1
+
+
+def turn_at(rec, n):
+    """Turn dict for a user-facing turn number, or None if out of range."""
+    i = turn_pos(n)
+    tr = rec.get("transcript") or []
+    return tr[i] if 0 <= i < len(tr) else None
+
+
 def normalize(rec, i):
     rec = dict(rec)
     rec.setdefault("conversation_id", f"dialog-{i+1}")
@@ -149,7 +169,7 @@ def normalize(rec, i):
     unknown = {}
     for idx, t in enumerate(rec.get("transcript") or []):
         t = dict(t)
-        t["index"] = idx
+        t["index"] = idx + TURN_BASE
         raw_sp = t.get("speaker")
         sp = normalize_speaker(raw_sp)
         if sp is None:
@@ -234,7 +254,8 @@ def says_authenticated(text):
     """Affirmative, non-negated authentication statement (e.g. «Клиент авторизован»); negated/conditional → False."""
     t = text or ""
     return bool(AUTH_RE.search(t)) and not AUTH_NEG_RE.search(t)
-KZ_WORDS = ("сәлем", "салем", "рахмет", "рақмет", "жоқ", "иә", "калай", "қалай", "керек", "бар ма", "қайда", "кайда")
+KZ_WORDS = ("сәлем", "салем", "салеметсиз", "саламатсыз", "комектес", "акша", "картамен", "шотты",
+             "рахмет", "рақмет", "жоқ", "иә", "калай", "қалай", "керек", "бар ма", "қайда", "кайда")
 END_MARKERS = ("завершил", "прерван", "отключ", "аяқтады", "ended", "left the chat", "hung up", "disconnected", "closed")
 TRIVIAL = {"оператор", "operator", "agent", "агент", "менеджер", "маман", "человек", "1", "2", "0"}
 
@@ -268,14 +289,20 @@ def detect_language(texts):
     return max(sorted(weights), key=lambda k: weights[k])
 
 
-def compute_facts(rec):
+GROSS_SIGNALS = re.compile(
+    r"\b\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4}\b|(?:^|\s)@[a-z0-9_]{4,}|telegram|телеграм|whatsapp|ватсап|вотсап"
+    r"|на\s+(?:мою|мой)\s+(?:карту|счёт|счет|номер)|to\s+my\s+(?:personal\s+)?(?:card|account)|лично\s+(?:за|мне)"
+    r"|туп(?:ой|ая|ые)|идиот|дура[кч]|stupid|idiot|ақымақ|түсінбейтін\s+адам", re.I)
+
+
+def compute_facts(rec, long_wait_s=None):
     """Deterministic facts the LLM should not have to derive (offsets arithmetic, roles, language, ending)."""
     tr = rec["transcript"]
     ops = [t for t in tr if t["speaker"] == "operator" and not t.get("internal")]
     first_op = ops[0]["index"] if ops else None
     first_block = []   # consecutive operator messages before the next client message = one "first reply"
     if first_op is not None:
-        for t in tr[first_op:]:
+        for t in tr[turn_pos(first_op):]:
             if t["speaker"] == "client":
                 break
             if t["speaker"] == "operator" and not t.get("internal"):
@@ -325,7 +352,7 @@ def compute_facts(rec):
                     w = {"seconds": round(gap), "from_turn": start["index"], "to_turn": t["index"],
                          "operator_warned_before": bool(any(WAIT_RE.search(o.get("text") or "") for o in recent)),
                          "kind": "reply_to_client" if pending is not None else "between_operator_messages"}
-                    if gap > LONG_WAIT_S:
+                    if gap > (long_wait_s or LONG_WAIT_S):
                         long_waits.append(w)
                     if best is None or gap > best["seconds"]:
                         best = w
@@ -333,15 +360,18 @@ def compute_facts(rec):
                 since_client.append(t)
     facts["longest_wait_after_first_reply"] = best
     facts["waits_over_2min"] = long_waits
+    facts["long_wait_seconds"] = long_wait_s or LONG_WAIT_S
+    facts["gross_signal_turns"] = [t["index"] for t in tr if t["speaker"] == "operator" and not t.get("internal")
+                                   and GROSS_SIGNALS.search(t.get("text") or "")]
     holds = []
     for t in tr:
         if t.get("hold_event") == "start":
-            prev_op = next((p for p in reversed(tr[:t["index"]]) if p["speaker"] == "operator"), None)
+            prev_op = next((p for p in reversed(tr[:turn_pos(t["index"])]) if p["speaker"] == "operator"), None)
             holds.append({"start_turn": t["index"], "operator_warned_before": bool(
                 prev_op and WAIT_RE.search(prev_op.get("text") or ""))})
         elif t.get("hold_event") == "end" and holds and "end_turn" not in holds[-1]:
             holds[-1]["end_turn"] = t["index"]
-            s0, s1 = tr[holds[-1]["start_turn"]].get("offset"), t.get("offset")
+            s0, s1 = tr[turn_pos(holds[-1]["start_turn"])].get("offset"), t.get("offset")
             if s0 is not None and s1 is not None:
                 holds[-1]["seconds"] = round(s1 - s0)
     facts["holds"] = holds
@@ -382,10 +412,14 @@ def format_facts(f):
         def d(x):
             k = "ответ клиенту" if x["kind"] == "reply_to_client" else "пауза между сообщениями оператора"
             return f"№{x['from_turn']}→№{x['to_turn']} {x['seconds']} с ({k})"
-        lines.append(f"- Ожиданий дольше 2 мин после первой реплики: {len(lw)}; из них БЕЗ предупреждения: {len(unwarned)}"
+        lines.append(f"- Ожиданий дольше {f.get('long_wait_seconds', LONG_WAIT_S)} с после первой реплики: {len(lw)}; "
+                     f"из них БЕЗ предупреждения: {len(unwarned)}"
                      + (": " + "; ".join(d(x) for x in unwarned) if unwarned else "") + ".")
     else:
-        lines.append("- Ожиданий дольше 2 мин после первой реплики оператора нет.")
+        lines.append(f"- Ожиданий дольше {f.get('long_wait_seconds', LONG_WAIT_S)} с после первой реплики оператора нет.")
+    if f.get("gross_signal_turns"):
+        lines.append("- Реплики оператора с признаками возможной грубой ошибки (номер карты, мессенджер, «на мою карту», "
+                     f"оскорбительная лексика) — проверь по тексту: №{', №'.join(map(str, f['gross_signal_turns']))}.")
     for h in f["holds"]:
         lines.append(f"- Удержание (системное событие) с реплики №{h['start_turn']}"
                      + (f" до №{h['end_turn']}" if "end_turn" in h else "")

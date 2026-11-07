@@ -37,7 +37,7 @@ async function loadGroup(g,keepRun){G=g;localStorage.cqaGroup=g;
  $('#rsel').value=RUN;await loadResults()}
 const rq=()=>RUN?'?run='+encodeURIComponent(RUN):'';
 async function loadResults(){try{DOC=await api('/api/results/'+encodeURIComponent(G)+rq())}catch(e){DOC=null}
- $('#exJson').href=`/api/export/${G}.json${rq()}`;$('#exCsv').href=`/api/export/${G}.csv?which=both${RUN?'&run='+encodeURIComponent(RUN):''}`;
+ $('#exJson').href=`/api/export/${G}.json${rq()}`;$('#exCsv').href=`/api/export/${G}.csv?which=both${RUN?'&run='+encodeURIComponent(RUN):''}`;$('#exOrg').href=`/api/export/${G}.csv?which=organizer${RUN?'&run='+encodeURIComponent(RUN):''}`;
  renderOverview();renderTable();if(CUR&&curView()=='dialog')renderDialog()}
 // ---------- overview ----------
 function stats(){const ds=DOC.dialogs;const tot=d=>d.human&&d.human.reviewed?d.human.total:d.total;
@@ -119,7 +119,7 @@ function renderDialog(){const rec=DIALOGS[CUR],res=DOC&&DOC.dialogs.find(d=>d.co
   <button class="btn" onclick="nav(-1)" ${pos<=0?'disabled':''} title="Предыдущий (k)">↑</button><button class="btn" onclick="nav(1)" ${pos<0||pos>=ORDER.length-1?'disabled':''} title="Следующий (j)">↓</button>
   <button class="btn" onclick="reevalOne()" title="Повторная оценка только этого диалога (без кэша)">Переоценить</button>`;
  const isCall=rec.kind=='call';
- $('#tmeta').textContent=`${rec.transcript.length} реплик (с №0)${isCall?' · клик по реплике — перемотка записи':''}`;
+ $('#tmeta').textContent=`${rec.transcript.length} реплик (нумерация с №1)${isCall?' · клик по реплике — перемотка записи':''}`;
  $('#audioBox').innerHTML=isCall&&rec.audio_url?`<div class="audio"><audio id="aud" controls preload="none" src="${esc(rec.audio_url)}"></audio><div class="mut sm">Перемотка приблизительная: смещение отсчитывается от первой реплики.</div></div>`:'';
  $('#transcript').innerHTML=rec.transcript.map(t=>`<div id="t${t.index}" class="turn ${esc(t.speaker)} ${t.internal?'internal':''} ${ev[t.index]?'ev':''} ${isCall?'seek':''}" ${isCall?`onclick="seek(${t.offset??0})"`:''}>
   <div class="n">${t.index}</div><div class="bub"><div class="who">${SPK[t.speaker]||esc(t.speaker)}${t.internal?' · внутреннее':''}<time>${fmt(t.offset)}</time>${(ev[t.index]||[]).map(c=>`<span class="evm" data-tip="Цитата для критерия ${c}">${c}</span>`).join('')}</div><div class="tx">${esc(t.text)}</div></div></div>`).join('');

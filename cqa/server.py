@@ -251,7 +251,7 @@ def _load(group, run=None):
     if not p.exists():
         return None
     from .evaluator import apply_overrides
-    doc = json.loads(p.read_text())
+    doc = store.upgrade_turns(json.loads(p.read_text()))
     ov = store.load_overrides(group)
     for d in doc["dialogs"]:
         apply_overrides(d, ckl.load(d["checklist_id"]), ov.get(d["conversation_id"], {}))
@@ -308,10 +308,11 @@ def export_json(group: str, run: str = ""):
 
 @app.get("/api/export/{group}.csv")
 def export_csv(group: str, which: str = "ai", run: str = ""):
-    if which not in ("ai", "human", "both"):
-        raise HTTPException(400, "which must be ai|human|both")
+    if which not in ("ai", "human", "both", "organizer"):
+        raise HTTPException(400, "which must be ai|human|both|organizer")
     doc = _load(group, run)
     if not doc:
         raise HTTPException(404, "not evaluated yet")
-    return PlainTextResponse(store.to_csv(doc, which), media_type="text/csv; charset=utf-8",
+    txt = store.to_organizer_csv(doc) if which == "organizer" else store.to_csv(doc, which)
+    return PlainTextResponse(txt, media_type="text/csv; charset=utf-8",
                              headers={"Content-Disposition": f'attachment; filename="{group}_{which}.csv"'})

@@ -7,15 +7,15 @@ REC = normalize({"conversation_id": "x", "channel": "agent chat", "transcript": 
 
 
 def test_valid_and_corrected_and_invalid():
-    v, bad = validate_evidence(REC, [{"turn": 1, "quote": "Меня зовут Алина"},
-                                     {"turn": 0, "quote": "откройте вкладку Кабинет"},
-                                     {"turn": 1, "quote": "Я вам перезвоню"}])
-    assert len(v) == 2 and v[1]["turn"] == 1 and v[1].get("turn_corrected")
+    v, bad = validate_evidence(REC, [{"turn": 2, "quote": "Меня зовут Алина"},
+                                     {"turn": 1, "quote": "откройте вкладку Кабинет"},
+                                     {"turn": 2, "quote": "Я вам перезвоню"}])
+    assert len(v) == 2 and v[1]["turn"] == 2 and v[1].get("turn_corrected")
     assert len(bad) == 1
 
 
 def test_ellipsis_quote():
-    v, bad = validate_evidence(REC, [{"turn": 1, "quote": "Здравствуйте! ... вкладку «Кабинет»"}])
+    v, bad = validate_evidence(REC, [{"turn": 2, "quote": "Здравствуйте! ... вкладку «Кабинет»"}])
     assert v and not bad
 
 
@@ -31,9 +31,9 @@ def test_hold_marking():
 
 
 def test_evidence_as_json_string_and_dict():
-    v, _ = validate_evidence(REC, '[{"turn": 1, "quote": "Меня зовут Алина"}]')
+    v, _ = validate_evidence(REC, '[{"turn": 2, "quote": "Меня зовут Алина"}]')
     assert v and v[0]["speaker"] == "operator"
-    v, _ = validate_evidence(REC, {"turn": 1, "quote": "меня   зовут алина"})
+    v, _ = validate_evidence(REC, {"turn": 2, "quote": "меня   зовут алина"})
     assert v
 
 
@@ -46,5 +46,5 @@ def test_evidence_garbage_ignored():
 
 def test_yo_and_quotes_normalised():
     r = normalize({"transcript": [{"speaker": "operator", "text": "Всё «готово»"}]}, 0)
-    v, _ = validate_evidence(r, [{"turn": 0, "quote": "все \"готово\""}])
+    v, _ = validate_evidence(r, [{"turn": 1, "quote": "все \"готово\""}])
     assert v

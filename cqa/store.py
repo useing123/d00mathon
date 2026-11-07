@@ -19,11 +19,29 @@ def overrides_path(group):
     return safe_child(config.RESULTS_DIR / "overrides", str(group).lower(), ".json")
 
 
+def upgrade_turns(doc):
+    """Runs saved before 1-based numbering (meta.turn_base absent/0) carry 0-based turn refs; shift them once
+    on load so the API/UI/exports are always 1-based (data.TURN_BASE)."""
+    from .data import TURN_BASE
+    meta = doc.setdefault("meta", {}) if isinstance(doc, dict) else {}
+    base = meta.get("turn_base", 0)
+    if base == TURN_BASE:
+        return doc
+    k = TURN_BASE - base
+    for d in doc.get("dialogs") or []:
+        for r in d.get("criteria") or []:
+            for e in (r.get("evidence") or []) + (r.get("rejected_quotes") or []) + (r.get("client_requests") or []):
+                if isinstance(e, dict) and isinstance(e.get("turn"), int):
+                    e["turn"] += k
+    meta["turn_base"] = TURN_BASE
+    return doc
+
+
 def load_results(group):
     p = results_path(group)
     if not p.exists():
         return None
-    doc = json.loads(p.read_text())
+    doc = upgrade_turns(json.loads(p.read_text()))
     ov = load_overrides(group)
     for d in doc["dialogs"]:
         apply_overrides(d, ckl.load(d["checklist_id"]), ov.get(d["conversation_id"], {}))
@@ -32,6 +50,8 @@ def load_results(group):
 
 def save_results(group, dialogs, meta, out=None):
     config.RESULTS_DIR.mkdir(exist_ok=True)
+    from .data import TURN_BASE
+    meta = {**(meta or {}), "turn_base": TURN_BASE}
     doc = {"group": group, "created_at": time.strftime("%Y-%m-%dT%H:%M:%S"), "meta": meta, "dialogs": dialogs}
     p = out or results_path(group)
     atomic_write(p, json.dumps(doc, ensure_ascii=False, indent=1))

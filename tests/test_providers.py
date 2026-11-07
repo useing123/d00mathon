@@ -119,8 +119,8 @@ def test_wrong_turn_index_prefers_operator_turn():
     from cqa import data
     from cqa.evaluator import validate_evidence
     r = data.normalize({"transcript": [{"speaker": "client", "text": "спасибо"}, {"speaker": "operator", "text": "спасибо"}]}, 0)
-    v, _ = validate_evidence(r, [{"turn": 7, "quote": "спасибо"}])
-    assert v[0]["turn"] == 1 and v[0]["speaker"] == "operator"
+    v, _ = validate_evidence(r, [{"turn": 8, "quote": "спасибо"}])
+    assert v[0]["turn"] == 2 and v[0]["speaker"] == "operator"
 
 
 def test_anthropic_text_json_fallback(monkeypatch):

@@ -1,13 +1,13 @@
 """Prompt templates (one focused prompt per criterion)."""
 
-PROMPT_VERSION = "v9"
+PROMPT_VERSION = "v10"  # v10: 1-based turn numbers
 
 SYSTEM = """Ты — строгий и последовательный эксперт по контролю качества (QA) клиентской поддержки брокера Freedom Broker.
 Ты оцениваешь работу ЧЕЛОВЕКА-ОПЕРАТОРА (speaker=OPERATOR) по ОДНОМУ критерию чек-листа.
 Принципы:
 - Реплики BOT (AI-ассистент / IVR) и SYSTEM не являются действиями оператора и не засчитываются оператору (но дают контекст: что клиент уже сообщил, что было раньше).
 - Опирайся только на текст транскрипта. Не додумывай то, чего нет.
-- Каждое утверждение подкрепляй цитатой: номер реплики [N] и ТОЧНЫЙ фрагмент текста этой реплики (дословно, копированием, без перевода и правок; можно взять подстроку).
+- Каждое утверждение подкрепляй цитатой: номер реплики [N] (нумерация с 1, как в транскрипте) и ТОЧНЫЙ фрагмент текста этой реплики (дословно, копированием, без перевода и правок; можно взять подстроку).
 - Если оценка NO/низкая из-за отсутствия действия — укажи, в какой момент (номер реплики) действие ожидалось, в поле missing_where.
 - Язык диалога может быть русский, казахский или английский; чек-лист одинаков для всех языков.
 - Пиши обоснование по-русски, кратко (1–3 предложения).
@@ -114,9 +114,16 @@ def criterion_block(checklist, cr):
 # Optional prompt variant (cqa/prompt_variants): CQA_PROMPT_VARIANT=v1|v2|v3; default/empty/v0 = the prompts above.
 def _load_variant():
     import os
-
-    from .prompt_variants import apply
-    apply(os.environ.get("CQA_PROMPT_VARIANT", "v0"), globals())
+    import warnings
+    name = os.environ.get("CQA_PROMPT_VARIANT", "v0")
+    if name in ("", "v0"):
+        return   # default: the prompts above; the experimental variants package is optional
+    try:
+        from .prompt_variants import apply
+    except ImportError:
+        warnings.warn(f"CQA_PROMPT_VARIANT={name!r} requested but cqa.prompt_variants is not installed; using v0", stacklevel=2)
+        return
+    apply(name, globals())
 
 
 _load_variant()

@@ -53,9 +53,10 @@ def validate_evidence(rec, evidence):
                     return False
                 pos = i + len(p)
             return True
-        if 0 <= ti < len(turns) and ok(turns[ti]):
-            valid.append({"turn": ti, "quote": e["quote"], "speaker": turns[ti].get("speaker"),
-                          "internal": bool(turns[ti].get("internal"))})
+        cited = data.turn_at(rec, ti)
+        if cited is not None and ok(cited):
+            valid.append({"turn": cited["index"], "quote": e["quote"], "speaker": cited.get("speaker"),
+                          "internal": bool(cited.get("internal"))})
             continue
         # wrong turn index: prefer a client-facing operator turn containing the quote, then any turn
         hit = next((t for t in turns if t.get("speaker") == "operator" and not t.get("internal") and ok(t)), None) or \
@@ -83,6 +84,8 @@ def _check_evidence(cr, val, evidence, out):
     # operator turns spoken to a colleague during hold are not client communication
     ops = [e for e in evidence if e.get("speaker") == "operator" and not e.get("internal")]
     reqs = out.get("client_requests")
+    if cr.get("request_ledger") and isinstance(val, int) and not (isinstance(reqs, list) and reqs):
+        return "ledger_empty"
     if cr.get("request_ledger") and isinstance(reqs, list) and reqs and isinstance(val, int):
         reqs = [r for r in reqs if isinstance(r, dict)]
         ess = [r for r in reqs if r.get("essential")]
@@ -118,6 +121,7 @@ _HINTS = {
     "positive_without_evidence": "Положительная оценка требует цитат из реплик OPERATOR.",
     "ledger_inconsistent": ("Значение не согласуется с client_requests (существенный open → не выше 10; существенный partial → "
                             "не 20; все closed → 20, либо 0 при неверной ключевой рекомендации). Согласуй список и значение по якорям."),
+    "ledger_empty": "Для критерия 04 заполни client_requests: все вопросы/запросы клиента со статусами, затем выбери шаг.",
     "no_operator_evidence": "Критерий оценивает поведение оператора: приведи цитаты из реплик OPERATOR (а не клиента/бота).",
 }
 
@@ -183,13 +187,15 @@ class Evaluator:
         except Exception as e:   # listing is best-effort
             return [f"could not list provider models ({e}); skipping model-id preflight"]
         warns = []
-        fallbacks = [m for m in config.FALLBACK_MODELS if m in avail]
         models = (list(self.jurors) + [self.judge]) if self.ensemble else [self.llm]
+        in_use = {m.model for m in models if m.model in avail}
+        fallbacks = [m for m in config.FALLBACK_MODELS if m in avail and m not in in_use]   # distinct models only
         for m in models:
             if m.model not in avail:
                 if fallbacks:
-                    warns.append(f"model {m.model!r} not available; using fallback {fallbacks[0]!r}")
-                    m.model = fallbacks[0]
+                    fb = fallbacks.pop(0)
+                    warns.append(f"model {m.model!r} not available; using fallback {fb!r}")
+                    m.model = fb
                 else:
                     warns.append(f"model {m.model!r} not in the provider's model list; set CQA_FALLBACK_MODELS or fix .env")
         if self.ensemble:
@@ -345,7 +351,9 @@ class Evaluator:
 
     def evaluate_criterion(self, rec, checklist, cr):
         msig = (f"{config.PROVIDER}:J{config.JURORS}{config.JUDGE}C{sorted(config.confirm_criteria())}S{config.SCALE_SAMPLES}"
-                f"B{config.BLIND_JUDGE}" if self.ensemble else f"{self.llm.provider}:{self.llm.model}")
+                f"B{config.BLIND_JUDGE}" if self.ensemble else
+                f"{self.llm.provider}:{self.llm.model}:n{self.samples or checklist['assumptions'].get('self_consistency_samples')}"
+                f":t{checklist['assumptions'].get('confidence_threshold')}")
         chash = ckl.criterion_hash(checklist, cr)
         key = f"{chash}{hashlib.sha1(msig.encode()).hexdigest()[:6]}_{rec['hash']}"
         cp = config.CACHE_DIR / f"{key}.json"
@@ -357,7 +365,7 @@ class Evaluator:
         n = int(self.samples or a.get("self_consistency_samples", 3))
         thr = float(a.get("confidence_threshold", 0.8))
         tx_block = prompts.transcript_block(rec, data.format_transcript(rec, a.get("ignore_internal_hold_turns", True)),
-                                            data.format_facts(data.compute_facts(rec)))
+                                            data.format_facts(data.compute_facts(rec, a.get("long_wait_seconds"))))
         if self.ensemble:
             res = self._jury(rec, tx_block, checklist, cr, key)
             config.CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -438,7 +446,7 @@ class Evaluator:
         for rec, cid, cr in rescue:
             a = cls[cid]["assumptions"]
             tx = prompts.transcript_block(rec, data.format_transcript(rec, a.get("ignore_internal_hold_turns", True)),
-                                          data.format_facts(data.compute_facts(rec)))
+                                          data.format_facts(data.compute_facts(rec, a.get("long_wait_seconds"))))
             for rescuer in rescuers[:3]:   # strongest model first, then the other models (a different model may be up)
                 try:
                     o = self._sample(rec, tx, cls[cid], cr, 0.0, llm=rescuer)
