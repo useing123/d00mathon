@@ -185,7 +185,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 let G=null,RUN='',DOC=null,DIALOGS={},CUR=null,SORT={k:'total',d:1},FILT='all',CL=null,CLS={},ORDER=[],OPEN=null;
 const SPK={client:'Клиент',operator:'Оператор',bot:'Бот',system:'Система'};
 const CHN=c=>/call|voice/.test(c||'')?'Звонок':'Чат';
-const MODEL=m=>String(m||'').replace('claude-','').replace(/-5-5$/,'').replace(/^./,x=>x.toUpperCase());
+const MODEL=m=>String(m||'').replace(/^\d+:/,'').replace('claude-','').replace(/-5-5$/,'').replace(/^./,x=>x.toUpperCase());
 function toast(m){$$('.toast').forEach(x=>x.remove());const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2600)}
 function cdef(clid,cid){return CLS[clid]?.criteria.find(x=>x.id==cid)}
 // semantic class: good for the operator = green, bad = red (gross criteria: YES = bad)
@@ -233,6 +233,8 @@ function renderOverview(){if(!DOC){$('#ovw').innerHTML=`<div class="card empty" 
  const ins=[];const f0=fails[0],f1=fails[1];const chip=d=>`<span class="chip" onclick="openDialog('${esc(d.conversation_id)}')">${esc(d.conversation_id)}</span>`;
  if(f0&&f0.p.fail.length)ins.push(`<li><span class="dot r"></span><div>Чаще всего не выполняется <b>${f0.k} «${esc(f0.p.name)}»</b> — ${Math.round(f0.r*100)}% применимых диалогов (${f0.p.fail.length}).${f1&&f1.p.fail.length?` Далее — ${f1.k} «${esc(f1.p.name)}», ${Math.round(f1.r*100)}%.`:''}</div></li>`);
  ins.push(S.gross.length?`<li><span class="dot r"></span><div><b>${S.gross.length}</b> с грубой ошибкой:<br>${S.gross.map(chip).join('')}</div></li>`:`<li><span class="dot g"></span><div>Грубых ошибок не обнаружено.</div></li>`);
+ const inc=S.ds.filter(d=>d.status=='incomplete');if(inc.length)ins.unshift(`<li><span class="dot r"></span><div><b>${inc.length}</b> неполных оценок (ошибка модели по критерию — итог не выставлен, нужна переоценка или ручная оценка):<br>${inc.map(chip).join('')}</div></li>`);
+ const nr=S.ds.filter(d=>(d.needs_review||[]).length);if(nr.length)ins.push(`<li><span class="dot r"></span><div>Требуют проверки человеком (грубая ошибка без подтверждённой цитаты оператора): ${nr.map(chip).join('')}</div></li>`);
  const low=S.ds.filter(d=>d.total!=null&&d.total<50&&!d.gross_error);if(low.length)ins.push(`<li><span class="dot r"></span><div>Итог ниже 50 (без грубых): ${low.map(chip).join('')}</div></li>`);
  const jm=MODEL((m.model||'').match(/judge=([\w.-]+)/)?.[1]||'');
  ins.push(`<li><span class="dot"></span><div>Присяжные разошлись в <b>${S.judge}</b> из ${S.cells} оценок (${(100*S.judge/Math.max(1,S.cells)).toFixed(0)}%) — решение принял судья${jm?' '+jm:''}.</div></li>`);
@@ -275,7 +277,7 @@ function renderTable(){const rows=rowsFiltered();ORDER=rows.map(r=>r.conversatio
   ${cids.map(cid=>{const c=d.criteria.find(x=>x.criterion_id==cid);if(!c)return'<td></td>';const def=cdef(d.checklist_id,cid),o=d.human?.overrides?.[cid],jd=c.decided_by&&c.decided_by!=='consensus';
    const tip=`<b>${cid} · ${esc(c.name)}</b><br>`+judgeTip(c)+(o?`<br><span style="color:#c9b3ff">Человек: ${VL[o.value]??o.value}</span>`:'');
    return `<td data-tip="${esc(tip)}">${badge(o?o.value:c.value,def,o?'hum':'')}${jd?'<span class="jd">С</span>':''}</td>`}).join('')}
-  <td><span class="tot num ${tot!=null&&tot<50?'lo':''}">${tot==null?'—':Math.round(tot)}</span></td>${anyH?`<td>${d.human?.reviewed?`<span class="tot num" style="color:var(--hum)">${Math.round(d.human.total)}</span>`:''}</td>`:''}
+  <td>${d.status=='incomplete'?`<span class="tag bad" data-tip="Не оценены: ${esc((d.failed_criteria||[]).join(', '))}${d.provisional_total!=null?' · предварительно '+Math.round(d.provisional_total):''}">неполная</span>`:`<span class="tot num ${tot!=null&&tot<50?'lo':''}">${tot==null?'—':Math.round(tot)}</span>`}</td>${anyH?`<td>${d.human?.reviewed?`<span class="tot num" style="color:var(--hum)">${Math.round(d.human.total)}</span>`:''}</td>`:''}
   <td>${g?'<span class="tag bad">Да</span>':''}</td></tr>`}).join('')+'</tbody>';
  $$('#tbl th[data-k]').forEach(th=>th.onclick=()=>{SORT={k:th.dataset.k,d:SORT.k==th.dataset.k?-SORT.d:1};renderTable()})}
 // ---------- dialog ----------
@@ -286,9 +288,9 @@ function renderDialog(){const rec=DIALOGS[CUR],res=DOC&&DOC.dialogs.find(d=>d.co
  const ev={};(res?res.criteria:[]).forEach(c=>(c.evidence||[]).forEach(e=>{(ev[e.turn]=ev[e.turn]||[]).includes(c.criterion_id)||ev[e.turn].push(c.criterion_id)}));
  const h=res&&res.human,pos=ORDER.indexOf(CUR),g=res&&(h?.reviewed?h.gross_error:res.gross_error);
  $('#dhead').innerHTML=`<button class="btn" onclick="view('runs')">← Обзор</button><span class="id">${esc(rec.conversation_id)}</span>
-  <span class="tag soft">${CHN(rec.channel)}</span><span class="tag soft">${esc(rec.language)}</span>${g?'<span class="tag bad">Грубая ошибка</span>':''}${h?.reviewed?'<span class="tag hum">Проверено человеком</span>':''}
+  <span class="tag soft">${CHN(rec.channel)}</span><span class="tag soft">${esc(rec.language)}</span>${g?'<span class="tag bad">Грубая ошибка</span>':''}${h?.reviewed?'<span class="tag hum">Проверено человеком</span>':''}${res&&res.status=='incomplete'?`<span class="tag bad" id="incTag" data-tip="Итог не выставлен: оценка критериев ${esc((res.failed_criteria||[]).join(', '))} завершилась ошибкой">Неполная оценка: ${esc((res.failed_criteria||[]).join(', '))}</span>`:''}${res&&(res.warnings||[]).length?`<span class="tag soft" id="warnTag" data-tip="${esc(res.warnings.join(' | '))}">⚠ ${res.warnings.length}</span>`:''}
   <span class="sp"></span>
-  <div class="score"><b class="num">${res&&res.total!=null?res.total.toFixed(1):'—'}</b><span>/ 100 · итог AI</span></div>
+  <div class="score"><b class="num">${res&&res.total!=null?res.total.toFixed(1):'—'}</b><span>/ 100 · итог AI${res&&res.provisional_total!=null?` (предварительно ${res.provisional_total.toFixed(1)})`:''}</span></div>
   ${h?.reviewed?`<div class="score h"><b class="num">${h.total!=null?h.total.toFixed(1):'—'}</b><span>/ 100 · после правок</span></div>`:''}
   <span class="mut sm num">${pos>=0?`диалог ${pos+1} из ${ORDER.length}`:''}</span>
   <button class="btn" onclick="nav(-1)" ${pos<=0?'disabled':''} title="Предыдущий (k)">↑</button><button class="btn" onclick="nav(1)" ${pos<0||pos>=ORDER.length-1?'disabled':''} title="Следующий (j)">↓</button>
@@ -306,6 +308,7 @@ function renderDialog(){const rec=DIALOGS[CUR],res=DOC&&DOC.dialogs.find(d=>d.co
   return `<div class="cr ${o?'sel':''}" id="cr_${cid}"><div class="hd"><span class="t"><b>${cid}</b>${esc(c.name)}${def?.gross?' <span class="tag bad">грубая</span>':''}</span>
    ${o?`<span data-tip="Оценка AI">${badge(c.value,def)}</span><span class="mut">→</span><span data-tip="Оценка человека">${badge(o.value,def,'hum')}</span>`:badge(c.value,def)}${c.type=='scale'&&def?.scale?`<span class="mut sm">из ${Math.max(...def.scale)}</span>`:''}</div>
    <div class="js">${esc(c.justification)}</div>
+   ${c.error?`<div class="meta" style="color:var(--bad)">Ошибка оценки: ${esc(c.error)} — критерий не засчитан как NA; выставьте оценку вручную или переоцените.</div>`:''}${c.needs_review?'<div class="meta" style="color:var(--bad)">Требует проверки: грубая ошибка без подтверждённой цитаты оператора.</div>':''}${c.evidence_warning&&!c.needs_review?`<div class="meta">⚠ Доказательства: ${esc(c.evidence_warning)}</div>`:''}
    ${c.na_reason?`<div class="meta">Неприменимо: ${esc(c.na_reason)}</div>`:''}${c.missing_where?`<div class="meta">Ожидалось: ${esc(c.missing_where)}</div>`:''}
    ${(c.evidence||[]).length?`<div class="evs">${c.evidence.slice().sort((a,b)=>a.turn-b.turn).map(e=>`<div class="evq" onclick="focusTurn(${e.turn})" title="Показать в транскрипте"><b>#${e.turn}</b>«${esc(e.quote)}»</div>`).join('')}</div>`:''}
    <div class="jury">${c.jury?Object.entries(c.jury).map(([m,v])=>`<span class="jv">${MODEL(m)} ${badge(v,def)}</span>`).join(''):''}
