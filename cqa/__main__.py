@@ -147,8 +147,18 @@ def cmd_export(a):
         print(txt, end="")
 
 
+def _group_ids(group):
+    """conversation ids of the group in API order (data/<group>.json), or None if the data file is absent."""
+    from .util import safe_child
+    try:
+        p = safe_child(config.DATA_DIR, group, ".json")
+    except ValueError:
+        return None
+    return [r["conversation_id"] for r in data.load_file(p)] if p.exists() else None
+
+
 def cmd_export_v1(a):
-    """Submission format v1.0 -> results/<group>/results.json (validated against cqa.submission.schema())."""
+    """Submission JSON 1.0 -> results/dev/results.json (DEV) or results/prod/results.json (control group)."""
     from pathlib import Path
 
     from . import submission
@@ -156,20 +166,33 @@ def cmd_export_v1(a):
     doc = store.load_run(a.group, a.run)
     if not doc:
         sys.exit(f"no results for group {a.group}" + (f" / run {a.run}" if a.run else ""))
-    obj = submission.to_v1(doc, source_run=a.run or store.results_path(a.group).stem)
-    errs = submission.validate(obj)
-    if errs:
-        sys.exit("v1 export failed validation:\n  " + "\n  ".join(errs[:20]))
+    ids = _group_ids(a.group)
+    obj = submission.to_v1(doc, ids=ids)
     out = Path(a.out) if a.out else submission.out_path(a.group)
+    errs, warns = submission.validate(obj, prod=out.parent.name == "prod", expected_ids=ids, custom_ok=True)
+    for w in warns[:10]:
+        print("WARNING: " + w, file=sys.stderr)
+    if errs:
+        sys.exit("export failed validation:\n  " + "\n  ".join(errs[:20]))
     out.parent.mkdir(parents=True, exist_ok=True)
     atomic_write(out, json.dumps(obj, ensure_ascii=False, indent=1) + "\n")
-    print(f"{out}: {len(obj['dialogs'])} dialogs, format {obj['format_version']}, valid")
+    n_err = sum(r["status"] == "error" for r in obj["results"])
+    print(f"{out}: {len(obj['results'])} records ({n_err} error), schema {obj['schema_version']}, model {obj['model']}, valid")
 
 
 def cmd_validate(a):
     from . import submission
-    errs = submission.validate(json.loads(open(a.file, encoding="utf-8").read()))
-    print("\n".join(errs) if errs else f"{a.file}: valid v{submission.SPEC['format_version']}")
+    try:
+        obj = json.loads(open(a.file, encoding="utf-8").read())
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as e:
+        sys.exit(f"{a.file}: not valid UTF-8 JSON: {e}")
+    prod = a.prod or "/prod/" in a.file.replace("\\", "/")
+    errs, warns = submission.validate(obj, prod=prod, expected_ids=_group_ids(a.group) if a.group else None,
+                                      custom_ok=a.allow_custom)
+    for w in warns[:20]:
+        print("WARNING: " + w)
+    print("\n".join("ERROR: " + e for e in errs) if errs else
+          f"{a.file}: valid JSON 1.0 ({len(obj['results'])} records{', prod: exactly 10' if prod else ''})")
     sys.exit(1 if errs else 0)
 
 
@@ -213,9 +236,12 @@ def main():
     ex.add_argument("--group", required=True)
     ex.add_argument("--run", help="results/<run>.json (default: results/<group>.json)")
     ex.add_argument("--format", default="organizer", choices=["v1", "organizer", "ai", "human", "both"],
-                    help="v1 = submission results.json v1.0 (default out: results/<group>/results.json)")
+                    help="v1 = submission JSON 1.0 (default out: results/dev/results.json for DEV, else results/prod/results.json)")
     va = sub.add_parser("validate", help="validate a v1.0 results.json")
     va.add_argument("file")
+    va.add_argument("--prod", action="store_true", help="enforce exactly 10 records (auto for .../prod/...)")
+    va.add_argument("--group", help="also check ids == data/<group>.json ids")
+    va.add_argument("--allow-custom", action="store_true", help="replaced/custom criterion codes are warnings")
     ex.add_argument("--out")
     ex.add_argument("--fill-provisional", action="store_true")
     lb = sub.add_parser("label", help="label real dialogs by hand (stored in a git-ignored JSON)")

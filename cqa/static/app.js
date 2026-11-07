@@ -3,7 +3,7 @@ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const api=async(u,o={})=>{const r=await fetch(u,o);if(!r.ok){let t=await r.text();try{t=JSON.parse(t).detail||t}catch(e){}throw new Error(t)}return r.json()};
 const J=b=>({method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let G=null,RUN='',DOC=null,DIALOGS={},CUR=null,SORT={k:'total',d:1},FILT='all',CL=null,CLS={},ORDER=[],OPEN=null;
+let APS=[],APOPEN=null,APSTAT='open',G=null,RUN='',DOC=null,DIALOGS={},CUR=null,SORT={k:'total',d:1},FILT='all',CL=null,CLS={},ORDER=[],OPEN=null;
 const SPK={client:'Клиент',operator:'Оператор',bot:'Бот',system:'Система'};
 const CHN=c=>/call|voice/.test(c||'')?'Звонок':'Чат';
 const MODEL=m=>String(m||'').replace(/^\d+:/,'').replace('claude-','').replace(/-5-5$/,'').replace(/^./,x=>x.toUpperCase());
@@ -18,7 +18,7 @@ function badge(v,def,extra=''){return `<span class="v ${cls(v,def)} ${extra}">${
 function judgeTip(c){if(!c.jury)return'';const j=Object.entries(c.jury).map(([m,v])=>`${MODEL(m)}: ${VL[v]??v}`).join('<br>');
  return c.decided_by&&c.decided_by!=='consensus'?`Присяжные разошлись:<br>${j}<br><b>Судья ${MODEL(c.decided_by)}: ${VL[c.value]??c.value}</b>`:`Единогласно:<br>${j}`}
 document.addEventListener('mouseover',e=>{const t=e.target.closest('[data-tip]');const tp=$('#tip');if(!t||!t.dataset.tip){tp.classList.add('hide');return}tp.innerHTML=t.dataset.tip;tp.classList.remove('hide');const r=t.getBoundingClientRect();tp.style.left=Math.max(8,Math.min(innerWidth-330,r.left))+'px';tp.style.top=(r.bottom+6)+'px'});
-function view(v){$$('#tabs a').forEach(a=>a.classList.toggle('on',a.dataset.v==v));['runs','dialog','checklists'].forEach(x=>$('#v-'+x).classList.toggle('hide',x!=v));$('#tip').classList.add('hide');if(v=='checklists')loadCl();window.scrollTo(0,0)}
+function view(v){$$('#tabs a').forEach(a=>a.classList.toggle('on',a.dataset.v==v));['runs','dialog','appeals','checklists'].forEach(x=>$('#v-'+x).classList.toggle('hide',x!=v));$('#tip').classList.add('hide');if(v=='checklists')loadCl();if(v=='appeals')loadAppeals();window.scrollTo(0,0)}
 $$('#tabs a').forEach(a=>a.onclick=()=>view(a.dataset.v));
 const curView=()=>$$('#tabs a.on')[0].dataset.v;
 $('#btnMore').onclick=e=>{e.stopPropagation();$('#pop').classList.toggle('hide')};
@@ -34,7 +34,7 @@ async function loadGroup(g,keepRun){G=g;localStorage.cqaGroup=g;
  let runs=[];try{runs=await api('/api/runs/'+encodeURIComponent(g))}catch(e){}
  if(!keepRun||!runs.find(r=>r.run==RUN))RUN=runs[0]?.run||'';
  $('#rsel').innerHTML=runs.length?runs.map((r,i)=>`<option value="${esc(r.run)}">${esc(r.run)} · ${r.dialogs} · ${esc(r.created_at.slice(5,16).replace('T',' '))}${i==0?' · новый':''}</option>`).join(''):'<option value="">нет результатов</option>';
- $('#rsel').value=RUN;await loadResults()}
+ $('#rsel').value=RUN;await refreshAps();await loadResults()}
 const rq=()=>RUN?'?run='+encodeURIComponent(RUN):'';
 async function loadResults(){try{DOC=await api('/api/results/'+encodeURIComponent(G)+rq())}catch(e){DOC=null}
  $('#exJson').href=`/api/export/${G}.json${rq()}`;$('#exCsv').href=`/api/export/${G}.csv?which=both${RUN?'&run='+encodeURIComponent(RUN):''}`;$('#exV1').href=`/api/export/${G}/results.json${rq()}`;$('#exOrg').href=`/api/export/${G}.csv?which=organizer${RUN?'&run='+encodeURIComponent(RUN):''}`;
@@ -142,7 +142,7 @@ function renderDialog(){const rec=DIALOGS[CUR],res=DOC&&DOC.dialogs.find(d=>d.co
    ${OPEN==cid?`<div class="ovf"><select id="ov_${cid}"><option value="AI">Как у AI (${VL[c.value]??c.value})</option>${opts.map(x=>`<option value="${x}" ${o&&String(o.value)==x?'selected':''}>${VL[x]??x}</option>`).join('')}</select>
     <input id="oj_${cid}" placeholder="Комментарий ревьюера" value="${esc(o?o.justification:'')}"><input id="or_${cid}" placeholder="Имя" style="width:110px;flex:0 0 110px;min-width:0" value="${esc(o?o.reviewer:localStorage.reviewer||'')}">
     <button class="btn pri" onclick="saveOv('${cid}')">Сохранить</button><button class="btn" onclick="OPEN=null;renderDialog()">Отмена</button></div>`:
-    `<div class="ovr"><span class="lnk" onclick="openOv('${cid}')">${o?'Изменить правку':'Исправить оценку'}</span>${o?`<span class="lnk" style="color:var(--mut)" onclick="clearOv('${cid}')">Вернуть оценку AI</span>`:''}${c.reasoning?`<details style="display:inline"><summary style="margin:0">Рассуждение модели</summary><div class="rs">${esc(c.reasoning)}</div></details>`:''}</div>`}</div>`}).join('')}
+    `${apBlock(cid,c)}<div class="ovr"><span class="lnk" onclick="openOv('${cid}')">${o?'Изменить правку':'Исправить оценку'}</span>${apFor(CUR,cid)?'':`<span class="lnk" id="apBtn_${cid}" onclick="APOPEN='${cid}';renderDialog();$('#apc_${cid}').focus()">Оспорить</span>`}${o?`<span class="lnk" style="color:var(--mut)" onclick="clearOv('${cid}')">Вернуть оценку AI</span>`:''}${c.reasoning?`<details style="display:inline"><summary style="margin:0">Рассуждение модели</summary><div class="rs">${esc(c.reasoning)}</div></details>`:''}</div>`}</div>`}).join('')}
 function openOv(cid){const st=$('#crits').scrollTop;OPEN=cid;renderDialog();$('#crits').scrollTop=st;$('#ov_'+cid).focus()}
 function nav(d){const i=ORDER.indexOf(CUR)+d;if(i>=0&&i<ORDER.length){CUR=ORDER[i];OPEN=null;renderDialog();$('#transcript').scrollTop=0;$('#crits').scrollTop=0}}
 document.addEventListener('keydown',e=>{if(curView()!='dialog'||e.target.matches('input,textarea,select')||e.metaKey||e.ctrlKey||e.altKey)return;if(e.key=='j')nav(1);if(e.key=='k')nav(-1);if(e.key=='Escape')view('runs')});
@@ -206,3 +206,39 @@ $('#btnClSave').onclick=async()=>{try{let body;if(!$('#yamlBox').classList.conta
  const r=await api('/api/checklists/'+encodeURIComponent(CL.id||$('#clSel').value),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});$('#clMsg').textContent=`Сохранено: ${r.id}. Теперь «Ещё → Переоценить» (только изменённые критерии) или «Пересчитать веса».`;toast('Чек-лист сохранён');await loadCl(r.id)}catch(e){$('#clMsg').textContent='Ошибка: '+e.message}};
 init().catch(e=>{$('#ovw').innerHTML=`<div class="card empty">Ошибка загрузки: ${esc(e.message)}</div>`});
 async function delCrit(i){if(await ask('Удалить критерий?',null)){CL.criteria.splice(i,1);renderCl()}}
+
+// ---------- appeals (two-step: open -> resolved; API /api/appeals) ----------
+const apFor=(conv,cid)=>APS.find(a=>a.status=='open'&&a.conversation_id==conv&&a.criterion_id==cid);
+async function refreshAps(){try{const r=await api('/api/appeals?group='+encodeURIComponent(G));APS=r.items;const n=r.open;$('#apCnt').textContent=n;$('#apCnt').classList.toggle('hide',!n)}catch(e){APS=[]}}
+function apBlock(cid,c){const a=apFor(CUR,cid);if(a)return `<div class="apn">⚑ Апелляция открыта${a.author?' ('+esc(a.author)+')':''}: «${esc(a.comment)}» <span class="lnk" onclick="view('appeals')">к очереди</span></div>`;
+ if(APOPEN!=cid)return'';return `<div class="ovf apf"><textarea id="apc_${cid}" rows="2" placeholder="Почему вы не согласны с оценкой «${esc(VL[c.value]??c.value)}»? (обязательно)"></textarea>
+ <input id="apa_${cid}" placeholder="Имя" style="width:110px;flex:0 0 110px;min-width:0" value="${esc(localStorage.reviewer||'')}">
+ <button class="btn pri" id="apSend_${cid}" onclick="sendAp('${cid}')">Отправить апелляцию</button><button class="btn" onclick="APOPEN=null;renderDialog()">Отмена</button></div>`}
+async function sendAp(cid){const cm=$('#apc_'+cid).value.trim();if(!cm){toast('Комментарий обязателен');$('#apc_'+cid).focus();return}
+ localStorage.reviewer=$('#apa_'+cid).value;const st=$('#crits').scrollTop;
+ try{await api('/api/appeals',J({group:G,run:RUN,conversation_id:CUR,criterion_id:cid,comment:cm,author:$('#apa_'+cid).value}));APOPEN=null;await refreshAps();renderDialog();$('#crits').scrollTop=st;toast('Апелляция открыта')}catch(e){toast('Ошибка: '+e.message)}}
+$$('#apSeg a').forEach(a=>a.onclick=()=>{APSTAT=a.dataset.s;$$('#apSeg a').forEach(x=>x.classList.toggle('on',x==a));loadAppeals()});
+async function loadAppeals(){let r;try{r=await api(`/api/appeals?group=${encodeURIComponent(G)}&fragment=true${APSTAT?'&status='+APSTAT:''}`)}catch(e){$('#apList').innerHTML=`<div class="card empty">${esc(e.message)}</div>`;return}
+ $('#apMeta').textContent=`группа ${G} · открыто ${r.open}`;$('#apCnt').textContent=r.open;$('#apCnt').classList.toggle('hide',!r.open);
+ if(!r.items.length){$('#apList').innerHTML='<div class="card empty">Апелляций нет.</div>';return}
+ $('#apList').innerHTML=r.items.slice().reverse().map(apCard).join('')}
+function apCard(a){const def=cdef(a.checklist_id,a.criterion_id);const opts=(def?.type=='scale'?(def.scale||[]).map(String):['YES','NO']).concat(def?.allow_na?['NA']:[]);
+ const res=a.resolution;
+ return `<div class="card apcard" id="ap_${a.id}"><div class="aph"><b>${esc(a.criterion_id)}</b> ${esc(a.criterion_name)} · <span class="lnk mono" onclick="openDialog('${esc(a.conversation_id)}')">${esc(a.conversation_id)}</span>
+  <span class="sp"></span><span class="tag ${a.status=='open'?'bad':'soft'}">${a.status=='open'?'открыта':res.decision=='changed'?'решена · изменено':'решена · подтверждено'}</span></div>
+  <div class="apg"><div><div class="mut sm">Вердикт AI</div>${badge(a.ai_value,def)}${String(a.value_at_appeal)!=String(a.ai_value)?` → ${badge(a.value_at_appeal,def,'hum')}`:''} <span class="mut sm">итог на момент апелляции: ${a.total_at_appeal!=null?a.total_at_appeal.toFixed(2):'—'}</span>
+   <div class="js">${esc(a.ai_justification)}</div>${(a.ai_evidence||[]).map(e=>`<div class="evq"><b>#${e.turn}</b>«${esc(e.quote)}»</div>`).join('')}${a.missing_where?`<div class="meta">Ожидалось: ${esc(a.missing_where)}</div>`:''}
+   <div class="apcm"><div class="mut sm">Комментарий${a.author?' · '+esc(a.author):''} · ${esc(a.created_at.replace('T',' '))}</div>«${esc(a.comment)}»</div></div>
+  <div><div class="mut sm">Фрагмент диалога (нумерация с №1)</div><div class="apfr">${(a.fragment||[]).map(t=>`<div class="turn ${esc(t.speaker)} ${t.evidence?'ev':''}"><div class="n">${t.turn}</div><div class="bub"><div class="who">${SPK[t.speaker]||esc(t.speaker)}</div><div class="tx">${esc(t.text)}</div></div></div>`).join('')}</div></div></div>
+  ${a.status=='open'?`<div class="ovf apr"><label><input type="radio" name="apd_${a.id}" value="confirm" checked onchange="$('#apv_${a.id}').disabled=true"> Подтвердить</label>
+   <label><input type="radio" name="apd_${a.id}" value="change" onchange="$('#apv_${a.id}').disabled=false"> Изменить на</label>
+   <select id="apv_${a.id}" disabled>${opts.map(x=>`<option value="${x}" ${String(a.value_at_appeal)==x?'selected':''}>${VL[x]??x}</option>`).join('')}</select>
+   <input id="apr_${a.id}" placeholder="Причина решения (обязательно)"><input id="aprv_${a.id}" placeholder="Проверяющий" style="width:130px;flex:0 0 130px;min-width:0" value="${esc(localStorage.reviewer||'')}">
+   <button class="btn pri" id="apOk_${a.id}" onclick="resolveAp('${a.id}')">Решить</button></div>`:
+  `<div class="hn">Решение: <b>${res.decision=='changed'?'изменено':'подтверждено'}</b> ${badge(res.previous_value,def)} → ${badge(res.value,def,res.decision=='changed'?'hum':'')} — ${esc(res.reason)}${res.reviewer?' ('+esc(res.reviewer)+')':''}</div>`}
+  <details><summary>Журнал (${a.audit.length})</summary>${a.audit.map(x=>`<div class="mut sm">${esc(x.at.replace('T',' '))} · ${esc(x.who||'—')} · ${esc(x.action)}${x.comment?' · «'+esc(x.comment)+'»':''}${x.reason?' · '+esc(x.reason):''}${x.to!==undefined?` · ${esc(x.from)} → ${esc(x.to)}`:''}</div>`).join('')}</details></div>`}
+async function resolveAp(id){const d=document.querySelector(`input[name=apd_${id}]:checked`).value,rs=$('#apr_'+id).value.trim();
+ if(!rs){toast('Причина обязательна');$('#apr_'+id).focus();return}localStorage.reviewer=$('#aprv_'+id).value;
+ try{const r=await api(`/api/appeals/${id}/resolve`,J({group:G,decision:d,value:d=='change'?$('#apv_'+id).value:null,reason:rs,reviewer:$('#aprv_'+id).value}));
+  const i=DOC?DOC.dialogs.findIndex(x=>x.conversation_id==r.dialog.conversation_id):-1;if(i>=0&&(!r.appeal.run||r.appeal.run==RUN))DOC.dialogs[i]=r.dialog;
+  toast(`Апелляция решена · итог диалога: ${r.total!=null?r.total.toFixed(2):'—'}`);await refreshAps();renderTable();renderOverview();await loadAppeals()}catch(e){toast('Ошибка: '+e.message)}}

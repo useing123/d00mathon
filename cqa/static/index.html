@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="/static/app.css"></head><body>
 <div class="top">
  <div class="brand">CQA <span>· Контроль качества</span></div>
- <div class="tabs" id="tabs"><a data-v="runs" class="on">Обзор</a><a data-v="dialog" class="dis">Диалог</a><a data-v="checklists">Чек-листы</a></div>
+ <div class="tabs" id="tabs"><a data-v="runs" class="on">Обзор</a><a data-v="dialog" class="dis">Диалог</a><a data-v="appeals" id="tabAp">Апелляции <span class="apc hide" id="apCnt"></span></a><a data-v="checklists">Чек-листы</a></div>
  <div class="sp"></div>
  <a class="btn" href="/models" title="Сравнение моделей: цена, точность, скорость">Модели</a>
  <div class="ctl">
@@ -46,6 +46,12 @@
    <div id="audioBox"></div><div class="pb" id="transcript"></div></div>
   <div class="pane"><div class="ph"><b>Критерии</b><span class="mut sm" id="cmeta"></span><span class="sp"></span><span class="mut sm"><span class="kbd">j</span> <span class="kbd">k</span> — след./пред. диалог</span></div><div class="pb" id="crits" style="padding:0"></div></div>
  </div>
+</section>
+<section id="v-appeals" class="hide">
+ <div class="tbar"><h2 style="margin:0">Апелляции</h2><span class="mut sm" id="apMeta"></span><span class="sp"></span>
+  <div class="seg" id="apSeg"><a data-s="open" class="on">Открытые</a><a data-s="resolved">Решённые</a><a data-s="">Все</a></div></div>
+ <div class="sub">Шаг 1: на карточке критерия — «Оспорить» с обязательным комментарием. Шаг 2: проверяющий подтверждает оценку AI или меняет её с обязательной причиной; изменение записывается как правка человека и итог пересчитывается.</div>
+ <div id="apList"></div>
 </section>
 <section id="v-checklists" class="hide">
  <div class="tbar"><h2 style="margin:0">Чек-листы</h2><span class="sp"></span>

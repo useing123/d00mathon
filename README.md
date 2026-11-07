@@ -157,13 +157,13 @@ CQA_PROVIDER=openai CQA_OPENAI_BASE_URL=http://127.0.0.1:11434/v1 CQA_MODEL=qwen
 
 | Набор | Совпадение значений | MAE итога | Грубые ошибки P/R |
 |---|---|---|---|
-| Gold, 16 синтетических диалогов (по ним настраивались правила) | 0.992 | 0.43 | 1.0 / 1.0 |
-| **Held-out, 10 синтетических диалогов (не для настройки)** | **0.925–0.938** (3 прогона) | **3.9–5.7** | 1.0 / 1.0 |
+| Gold, 16 синтетических диалогов (по ним настраивались правила) | 0.992 | 0.33–0.43 | 1.0 / 1.0 |
+| **Held-out, 10 синтетических диалогов (не для настройки)** | **0.925–0.938** (5 прогонов) | **3.9–5.7** | 1.0 / 1.0 |
 | Реальные DEV с разметкой человека | не измерено — нужна разметка (`python -m cqa label`, затем `cqa gold --labels`) | | |
 
 Шум между одинаковыми прогонами — около ±2 вердиктов из 128 (Anthropic не принимает `temperature`). Оба gold-набора синтетические и размечены той же командой, что писала правила, — это проверка регрессий, а не оценка совпадения со скрытой разметкой организаторов.
 
-**DEV (65 диалогов: 60 чатов RU 30 / KZ 15 / EN 15, 5 звонков RU):** 0 ошибок, 0 неполных, средний балл 78.53, 5 флагов грубых ошибок, полный прогон ≈ 4–5 мин и ≈ $12–14.
+**DEV (65 диалогов: 60 чатов RU 30 / KZ 15 / EN 15, 5 звонков RU):** 0 ошибок, 0 неполных, средний балл 78.45, 5 флагов грубых ошибок (те же 5 диалогов, что и в первой версии), полный прогон ≈ 5 мин и ≈ $7.5 по текущей таблице цен (`cqa/pricing.py`).
 
 ## Ограничения (честно)
 - Для DEV нет размеченного ground truth; gold-набор синтетический и размечен нами — это регрессионная проверка, а не оценка точности на скрытой разметке.
@@ -211,7 +211,7 @@ Makefile · pyproject.toml · Dockerfile · docker-compose.yml · .github/workfl
 
 **Highlights:** per-criterion prompts · LLM jury + judge · quote validation with auto-correction / retry · deterministic scoring · per-criterion cache (editing one rubric re-evaluates only that criterion; reweighting needs no LLM) · no-login web UI with evidence highlighting, audio seek, human override (stored separately, AI vs Human diff, CSV/JSON export) and checklist editor · cloud (Anthropic), local (Ollama/vLLM via OpenAI-compatible API) or offline mock · Docker · CI on 3.11/3.12 without secrets.
 
-**Results (current version):** tuned synthetic gold set 0.992 / MAE 0.43; **held-out synthetic set 0.925–0.938 / MAE 3.9–5.7 over three runs**; real-DEV agreement not measured (needs human labels: `cqa label`). DEV: 65 dialogs, 0 errors, mean 78.53, 5 gross-error flags, ~$12–14 per full run.
+**Results (current version):** tuned synthetic gold set 0.992 / MAE 0.43; **held-out synthetic set 0.925–0.938 / MAE 3.9–5.7 over three runs**; real-DEV agreement not measured (needs human labels: `cqa label`). DEV: 65 dialogs, 0 errors, mean 78.45, 5 gross-error flags, ~5 min / ~$7.5 per full run (current price table).
 
 **Limitations:** no labelled ground truth for real DEV dialogs; both gold sets are synthetic and self-labelled; criteria 04/05/06 are the most subjective; audio offsets are approximate; local-model accuracy not measured (no local GPU run in this repo).
 

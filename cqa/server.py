@@ -313,10 +313,14 @@ def export_v1(group: str, run: str = ""):
     doc = _load(group, run)
     if not doc:
         raise HTTPException(404, "not evaluated yet")
-    obj = submission.to_v1(doc, source_run=doc.get("run") or run or group.lower())
-    errs = submission.validate(obj)
+    try:
+        ids = [r["conversation_id"] for r in _group_records(group)]
+    except HTTPException:
+        ids = None
+    obj = submission.to_v1(doc, ids=ids)
+    errs, _ = submission.validate(obj, expected_ids=ids, custom_ok=True)
     if errs:
-        raise HTTPException(500, "v1 export failed validation: " + "; ".join(errs[:5]))
+        raise HTTPException(500, "JSON 1.0 export failed validation: " + "; ".join(errs[:5]))
     return JSONResponse(obj, headers={"Content-Disposition": 'attachment; filename="results.json"'})
 
 
@@ -330,3 +334,83 @@ def export_csv(group: str, which: str = "ai", run: str = ""):
     txt = store.to_organizer_csv(doc) if which == "organizer" else store.to_csv(doc, which)
     return PlainTextResponse(txt, media_type="text/csv; charset=utf-8",
                              headers={"Content-Disposition": f'attachment; filename="{group}_{which}.csv"'})
+
+
+# ---------- appeals (two-step: open -> resolved) ----------
+def _fragment(group, a, ctx=2):
+    """Turns around the AI evidence (or the whole short dialog) for the reviewer; turn numbers are 1-based."""
+    try:
+        rec = next((r for r in _group_records(group) if r["conversation_id"] == a["conversation_id"]), None)
+    except HTTPException:
+        rec = None
+    if not rec:
+        return []
+    tr = rec["transcript"]
+    nums = sorted({e["turn"] for e in a.get("ai_evidence") or [] if isinstance(e.get("turn"), int)})
+    if not nums or len(tr) <= 12:
+        keep = {t["index"] for t in tr[:40]}
+    else:
+        keep = {n + k for n in nums for k in range(-ctx, ctx + 1)}
+    return [{"turn": t["index"], "speaker": t.get("speaker"), "text": t.get("text"), "internal": bool(t.get("internal")),
+             "evidence": t["index"] in nums} for t in tr if t["index"] in keep]
+
+
+def _dialog(group, conv, run=""):
+    doc = _load(group, run)
+    if not doc:
+        raise HTTPException(404, "not evaluated yet")
+    d = next((d for d in doc["dialogs"] if d["conversation_id"] == conv), None)
+    if d is None:
+        raise HTTPException(404, "unknown conversation")
+    return d
+
+
+@app.post("/api/appeals")
+def appeal_create(body: dict = Body(...)):
+    from . import appeals
+    group = safe_id(body.get("group"), "group")
+    run = body.get("run") or ""
+    d = _dialog(group, str(body.get("conversation_id") or ""), run)
+    try:
+        return appeals.create(group, d, str(body.get("criterion_id") or ""), body.get("comment"), body.get("author", ""), run)
+    except ValueError as e:
+        raise HTTPException(400, str(e)) from e
+
+
+@app.get("/api/appeals")
+def appeal_list(group: str, status: str = "", fragment: bool = False):
+    from . import appeals
+    group = safe_id(group, "group")
+    try:
+        items = appeals.list_appeals(group, status or None)
+    except ValueError as e:
+        raise HTTPException(400, str(e)) from e
+    if fragment:
+        items = [{**a, "fragment": _fragment(group, a)} for a in items]
+    return {"group": group, "open": sum(a["status"] == "open" for a in appeals.load(group)), "items": items}
+
+
+@app.post("/api/appeals/{aid}/resolve")
+def appeal_resolve(aid: str, body: dict = Body(...)):
+    from . import appeals
+    group = safe_id(body.get("group"), "group")
+    try:
+        a = appeals.resolve(group, safe_id(aid, "appeal id"), body.get("decision"), body.get("reason"),
+                            body.get("reviewer", ""), body.get("value"))
+    except KeyError as e:
+        raise HTTPException(404, "unknown appeal") from e
+    except ValueError as e:
+        raise HTTPException(400, str(e)) from e
+    d = _dialog(group, a["conversation_id"], a.get("run") or "")
+    h = d.get("human") or {}
+    return {"appeal": a, "dialog": d, "total": h["total"] if h.get("reviewed") else d.get("total")}
+
+
+@app.delete("/api/appeals/{aid}")
+def appeal_delete(aid: str, group: str):
+    from . import appeals
+    try:
+        appeals.delete(safe_id(group, "group"), safe_id(aid, "appeal id"))
+    except KeyError as e:
+        raise HTTPException(404, "unknown appeal") from e
+    return {"ok": True}

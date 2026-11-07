@@ -1,6 +1,8 @@
 # HTTP API
 
-Served by `python -m cqa serve --port 8090` (FastAPI, no auth). Interactive docs: `/docs` (Swagger) and `/openapi.json`.
+Served by `python -m cqa serve --port 8090` (FastAPI, no auth).
+
+> **Deployment warning.** There is no login (by the case rules). Anyone who can reach the port can read transcripts and results, edit checklists and start paid evaluations. The server binds to `127.0.0.1` by default; expose it only through a trusted network, VPN or an authenticating reverse proxy, and do not publish the Docker port on a public interface. Interactive docs: `/docs` (Swagger) and `/openapi.json`.
 
 | Method | Path | Body / query | Returns |
 |---|---|---|---|
@@ -22,7 +24,7 @@ Served by `python -m cqa serve --port 8090` (FastAPI, no auth). Interactive docs
 | PUT | `/api/overrides/{group}/{conv}/{crit}` | `{value, justification, reviewer}` (`value: null` removes); `?run=` optional | Updated dialog with human total/diff; **400** if the value is not an allowed step/`YES`/`NO`/`NA` for that criterion, 404 for unknown run/dialog |
 | POST | `/api/rescore/{group}` | — | Recompute totals with current weights (no LLM) → `{ok}` |
 | GET | `/api/export/{group}.json` | `run=` optional | Download results JSON |
-| GET | `/api/export/{group}.csv` | `which=ai\|human\|both`, `run=` optional | Download CSV |
+| GET | `/api/export/{group}.csv` | `which=ai\|human\|both\|organizer`, `run=` optional | Download CSV |
 
 Identifiers that become file names (`group`, `run`, checklist `cid`) must match `[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}` without `..`, and the resolved path must stay inside its directory → otherwise **400** (`tests/test_review_hardening.py::test_path_traversal_rejected`).
 

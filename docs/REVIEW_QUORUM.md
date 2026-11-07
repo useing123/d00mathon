@@ -7,15 +7,16 @@ outputs). Each receives the full repo and returns scores, risks and concrete imp
 suggestions that are correct and do not contradict the organizer rubric, and re-ran the review.
 
 ## Score history (overall, 0–100)
-| Round | claude-fable-5-1 | claude-opus-5-5 | gemini-4-argon | gpt-6-luna | gemini-3.8-flash |
-|---|---|---|---|---|---|
-| 0 (initial repo) | 77 | — | — | 65 | 86 |
-| 1 (after round-0 changes) | 76 | — | 93 | — | — |
-| 2 (after round-1 changes) | 79 | — | 95 | — | — |
-| 3 (after round-2 changes) | 80 | — | 97 | — | — |
-| 4 (after round-3 changes) | 77 | — | 96 | 66 | — |
-| 5 (after round-4 changes) | 77 | 78 | 94 | 72 | — |
-| 6 (after round-5 changes) | 75 | 77 | 94 | 70 | — |
+| Round | claude-fable-5-1 | claude-opus-5-5 | gemini-4-argon | gpt-6-luna | gpt-5.3-codex | gemini-3.8-flash |
+|---|---|---|---|---|---|---|
+| 0 (initial repo) | 77 | — | — | 65 | — | 86 |
+| 1 (after round-0 changes) | 76 | — | 93 | — | — | — |
+| 2 (after round-1 changes) | 79 | — | 95 | — | — | — |
+| 3 (after round-2 changes) | 80 | — | 97 | — | — | — |
+| 4 (after round-3 changes) | 77 | — | 96 | 66 | — | — |
+| 5 (after round-4 changes) | 77 | 78 | 94 | 72 | — | — |
+| 6 (after round-5 changes) | 75 | 77 | 94 | 70 | 404 (wrong endpoint) | — |
+| 7 (after round-6 changes) | 78 | 78 | 82 | 59 | 91 | — |
 
 Reviewer set changed over time (user decision): round 0 fable + luna + gemini-3.8-flash; rounds 1–3 fable + argon;
 round 4 adds luna (run separately on the same commit); round 5 fable + opus + argon + luna; from round 6 also
@@ -199,3 +200,30 @@ Reviewers: claude-fable-5-1 (76), gemini-4-argon (93). fable's first response wa
 | 02 lenient / 07 lenient policy switches (fable, opus) | Both rubric definitions are explicit (02 NA = data sufficient from the start; 07 needs a goodbye); the user decided to keep the rubric reading. |
 | Remove this log / score table (fable, opus) | Kept on the user's request as a transparent record; framed as history, not as a quality claim. |
 | Measure the local-LLM path (fable, opus) | No local inference server in this environment. |
+
+## Round 7 → changes
+Round-7 luna scored functionality 3: a clean checkout failed to import because `cqa/prompts.py` (committed in round 5)
+imported an experimental, untracked `cqa.prompt_variants` package. Fixed: the import is optional and only attempted
+when `CQA_PROMPT_VARIANT` is set; a clean `git archive` checkout is now tested before each review.
+
+### Accepted (implemented)
+| Suggestion (source) | Implementation |
+|---|---|
+| Clean checkout import failure (luna, argon) | optional variant import; test with the package hidden |
+| UI save flattened `extends` (argon) | `checklist.save` writes only the diff from the base; test |
+| Fallback jury collapsing to one model (opus) | distinct fallback per missing member; test |
+| Single-model sampling settings in the cache key (fable) | `msig` includes samples / threshold |
+| Empty 04 ledger accepted silently (opus, argon) | `ledger_empty` → one retry, then warning; test |
+| Organizer CSV from the UI/API (fable) | `which=organizer`, menu item |
+| Cache invalidation test for a changed transcript with the same id (fable) | test |
+| Romanised Kazakh words (argon); configurable wait threshold (fable) | `KZ_WORDS`; `assumptions.long_wait_seconds` |
+| Deterministic gross-error signals for 08 recall (opus) | FACT: operator turns with card numbers, messengers, «на мою карту», insulting words |
+| Exposure warning (opus) | docs/API.md |
+
+### Rejected
+| Suggestion | Why |
+|---|---|
+| Revert 07 «client silent after "чем ещё помочь?"» to NA/YES (fable, opus) | User decision in round 5: the rubric needs a goodbye and the operator had the chance → NO. |
+| `--fill-provisional` on by default (opus, fable) | Fail-closed is a requirement; opt-in flag exists. |
+| 04: contradictory answer + vague redirect → 5 (argon) | Proposed from a held-out mismatch; changing it would contaminate the held-out set further. |
+| `in_app_chat_authenticated: true` by default (opus) | DEV records carry no authentication metadata and the bot text does not state it; the rubric asks for verification. Switch exists for when the organizer confirms. |

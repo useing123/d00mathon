@@ -1,7 +1,19 @@
 # Evaluation
 
 ## Current version — numbers used in the README
-Latest code (blind-judge disagreement resolution, ledger-15 check, criterion hash without model id):
+DEV (`results/dev_jury_v6.json`, latest code): 65 dialogs, 0 errors, 0 incomplete, mean **78.45**, 5 gross flags (the same
+5 dialogs as v1), 306 s, $7.64 (current `cqa/pricing.py` table). Decided by: consensus 449, blind judge 61, judge after
+seeing opinions 5, judge-confirmed 08=YES 5. 36 evidence warnings. 02 = NA in 43/65; 07 = NO 49 / YES 11 / NA 5.
+Changed verdicts vs v1: 42 (04 ×13, 06 ×10, 02 ×9, 07 ×6, 05 ×4); 01/03/08 unchanged.
+
+**Regression caught and fixed on DEV:** after the round-5 08 rule ("rudeness → 05"), p1-ru-029 («Вы вообще читать
+умеете?») lost its gross flag (4 flags). The 08 rule now says demeaning remarks about the client's abilities are an
+insult; the flag is back (5) and the gold sets stay at 08 = 1.0. The example phrase comes from a DEV dialog, so DEV
+is not an independent check for 08 any more.
+
+Gold with that code: tuned 0.992 / MAE 0.33; held-out 0.938 / MAE 5.11.
+
+Earlier in the same version line (blind judge, ledger-15 check, criterion hash without model id):
 
 | Set | Exact agreement | Total MAE | Decided by |
 |---|---|---|---|

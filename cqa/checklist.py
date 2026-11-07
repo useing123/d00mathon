@@ -128,8 +128,34 @@ def save(c):
     if not re.fullmatch(r"[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}", c["id"]) or ".." in c["id"]:
         raise ValueError("bad checklist id")
     from .util import atomic_write
-    atomic_write(config.CHECKLIST_DIR / f"{c['id']}.yaml", yaml.safe_dump(c, allow_unicode=True, sort_keys=False, width=1000))
+    path = config.CHECKLIST_DIR / f"{c['id']}.yaml"
+    out = c
+    if path.exists():
+        raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        if raw.get("extends"):   # keep inheritance: store only what differs from the base checklist
+            out = _diff_from_base(c, raw["extends"])
+    atomic_write(path, yaml.safe_dump(out, allow_unicode=True, sort_keys=False, width=1000))
     return c
+
+
+def _diff_from_base(c, base_id):
+    base = load(base_id)
+    out = {k: v for k, v in c.items() if k not in ("criteria", "assumptions") and base.get(k) != v}
+    out["id"] = c["id"]
+    out["extends"] = base_id
+    ass = {k: v for k, v in c.get("assumptions", {}).items() if base["assumptions"].get(k) != v}
+    if ass:
+        out["assumptions"] = ass
+    bcr = {x["id"]: x for x in base["criteria"]}
+    if [x["id"] for x in c["criteria"]] != [x["id"] for x in base["criteria"]]:
+        out["criteria"] = c["criteria"]          # structure changed (added/removed/reordered) → store criteria in full
+    else:
+        ov = [{"id": x["id"], **{k: v for k, v in x.items() if k != "id" and bcr[x["id"]].get(k) != v}}
+              for x in c["criteria"]]
+        ov = [o for o in ov if len(o) > 1]
+        if ov:
+            out["criteria_overrides"] = ov
+    return out
 
 
 def criterion_hash(checklist, cr):
