@@ -28,6 +28,10 @@ PRESETS = {
                 "ensemble": False, "model": "claude-haiku-5-5", "prompt": "v0",
                 "why": ("Дешёвая локальная модель решает уверенные критерии, неуверенные — haiku, спорные — sonnet. "
                         "Нужен vLLM-эндпоинт (CQA_OPENAI_BASE_URL); см. docs/OSS_ROUTER.md.")},
+    "hybrid": {"label": "гибрид: KZ-сигналы парсера в FACTS + каскад open-weight → haiku → sonnet", "bench_config": "hybrid", "router": "hybrid",
+               "ensemble": False, "model": "claude-haiku-5-5", "prompt": "v0",
+               "why": ("Парсер (RU/KZ/EN) добавляет в FACTS подсказки с номерами реплик и глоссами казахских фраз; "
+                       "вердикты выносят модели каскада. См. docs/HYBRID_KZ.md.")},
 }
 DEFAULT = "jury"
 
@@ -46,7 +50,9 @@ def apply(name, cfg):
     cfg["PRESET"] = name
     if p.get("router"):   # cascade: swap in cqa.router.CascadeEvaluator (thresholds via CQA_ROUTER_* env)
         from . import router
-        router.install()
+        if p["router"] == "hybrid":
+            os.environ.setdefault("CQA_KZ_SIGNALS", "1")
+        router.install(router.HybridEvaluator if p["router"] == "hybrid" else None)
     os.environ["CQA_PROMPT_VARIANT"] = p.get("prompt", "v0")
     import sys
     if "cqa.prompts" in sys.modules:   # re-apply the prompt variant on the base prompts

@@ -1,0 +1,90 @@
+{
+ "gold": {
+  "cascade": {
+   "labels": 128,
+   "agree": 0.9844,
+   "correct": 126
+  },
+  "jev_plain": {
+   "labels": 128,
+   "agree": 0.9844,
+   "correct": 126
+  },
+  "hybrid": {
+   "labels": 128,
+   "agree": 0.9766,
+   "correct": 125
+  },
+  "jev_signals": {
+   "labels": 128,
+   "agree": 0.9531,
+   "correct": 122
+  }
+ },
+ "gold_kz": {
+  "cascade": {
+   "labels": 24,
+   "agree": 1.0,
+   "correct": 24
+  },
+  "jev_plain": {
+   "labels": 24,
+   "agree": 1.0,
+   "correct": 24
+  },
+  "hybrid": {
+   "labels": 24,
+   "agree": 1.0,
+   "correct": 24
+  },
+  "jev_signals": {
+   "labels": 24,
+   "agree": 0.9583,
+   "correct": 23
+  }
+ },
+ "holdout": {
+  "cascade": {
+   "labels": 80,
+   "agree": 0.95,
+   "correct": 76
+  },
+  "jev_plain": {
+   "labels": 80,
+   "agree": 0.925,
+   "correct": 74
+  },
+  "hybrid": {
+   "labels": 80,
+   "agree": 0.95,
+   "correct": 76
+  },
+  "jev_signals": {
+   "labels": 80,
+   "agree": 0.95,
+   "correct": 76
+  }
+ },
+ "holdout_kz": {
+  "cascade": {
+   "labels": 16,
+   "agree": 1.0,
+   "correct": 16
+  },
+  "jev_plain": {
+   "labels": 16,
+   "agree": 0.9375,
+   "correct": 15
+  },
+  "hybrid": {
+   "labels": 16,
+   "agree": 1.0,
+   "correct": 16
+  },
+  "jev_signals": {
+   "labels": 16,
+   "agree": 0.9375,
+   "correct": 15
+  }
+ }
+}

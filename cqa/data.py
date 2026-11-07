@@ -1,6 +1,7 @@
 """Loading, fetching and normalising dialog records."""
 import hashlib
 import json
+import os
 import re
 from datetime import datetime
 
@@ -388,6 +389,9 @@ def compute_facts(rec, long_wait_s=None):
     facts["ending"] = {"last_speaker": non_sys[-1]["speaker"] if non_sys else None,
                        "last_operator_turn": ops[-1]["index"] if ops else None,
                        "system_end_event_turn": end_sys[-1] if end_sys else None}
+    if os.environ.get("CQA_KZ_SIGNALS") == "1":   # preset hybrid; off → byte-identical FACTS (docs/HYBRID_KZ.md)
+        from . import rules_kz
+        facts["kz_signals"] = rules_kz.signals(rec)
     return facts
 
 
@@ -437,6 +441,9 @@ def format_facts(f):
     lines.append(f"- Последний говорящий (без системы): {e['last_speaker']}; последняя реплика оператора: №{e['last_operator_turn']}; "
                  "системное событие завершения: "
                  f"{('№' + str(e['system_end_event_turn'])) if e['system_end_event_turn'] is not None else 'нет'}.")
+    if f.get("kz_signals"):
+        from . import rules_kz
+        lines.append(rules_kz.format_signals(f["kz_signals"]))
     return "\n".join(lines)
 
 

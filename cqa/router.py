@@ -23,6 +23,7 @@ base model id when set. Settings: see ``settings()`` and docs/OSS_ROUTER.md.
 import hashlib
 import json
 import math
+import os
 import re
 import threading
 import time
@@ -255,7 +256,7 @@ class CascadeEvaluator(BaseEvaluator):
 
     def _raw(self, which, llm, rec, tx, checklist, cr):
         key = hashlib.sha1(f"{llm.provider}:{llm.model}:{type(llm).__name__}:{ckl.criterion_hash(checklist, cr)}:"
-                           f"{rec['hash']}".encode()).hexdigest()[:20]
+                           f"{rec['hash']}{':kz' if os.environ.get('CQA_KZ_SIGNALS') == '1' else ''}".encode()).hexdigest()[:20]
         p = CACHE / f"{which}_{key}.json"
         if self.use_cache and p.exists():
             return json.loads(p.read_text())
@@ -387,17 +388,46 @@ class CascadeEvaluator(BaseEvaluator):
         return out, meta
 
 
+class HybridEvaluator(CascadeEvaluator):
+    """Preset ``hybrid``: cascade + KZ-aware parser signals in FACTS (CQA_KZ_SIGNALS=1); an 08 red flag forces Sonnet."""
+
+    def evaluate_criterion(self, rec, checklist, cr):
+        from . import rules_kz
+        facts = data.compute_facts(rec, checklist["assumptions"].get("long_wait_seconds"))
+        flags = rules_kz.red_flags(rec) if cr["id"] == "08" else []
+        if flags:   # rules never say NO on 08; red flags force the strongest model and attach the turns
+            llm = self.judge_llm or self.esc
+            rec_tx = prompts.transcript_block(rec, data.format_transcript(rec, checklist["assumptions"].get(
+                "ignore_internal_hold_turns", True)), data.format_facts(facts))
+            o = self._raw("judge" if self.judge_llm else "escalate", llm, rec, rec_tx, checklist, cr)
+            if not o.get("error"):
+                res = _ev._result_dict(cr, o, o["value"], decided_by=f"hybrid:redflag:{llm.model}",
+                                       routing={"tier": 3, "route": "sonnet", "reasons": ["rules_kz_red_flag"],
+                                                "tier2_reasons": [], "red_flag_turns": flags, "models": [llm.model]})
+                return _ev._flag(cr, res)
+        return super().evaluate_criterion(rec, checklist, cr)
+
+    def evaluate_many(self, records, *args, **kw):
+        out, meta = super().evaluate_many(records, *args, **kw)
+        crit = [c for d in out for c in d["criteria"] if c.get("routing")]
+        r = meta.setdefault("routing", {})
+        r["red_flag_escalations"] = sum("rules_kz_red_flag" in c["routing"].get("reasons", []) for c in crit)
+        meta["model"] = "kz_signals+" + meta.get("model", "cascade")
+        return out, meta
+
+
 def vllm_lora_args(adapter=None):
     """Extra vLLM flags for CQA_LOCAL_ADAPTER (a fine-tuned LoRA; see cqa/finetune/)."""
     adapter = adapter if adapter is not None else (config.get("CQA_LOCAL_ADAPTER") or "")
     return ["--enable-lora", "--max-lora-rank 64", f"--lora-modules {ADAPTER_NAME}={adapter}"] if adapter else []
 
 
-def install():
-    """Make ``cqa.evaluator.Evaluator`` (and modules that already imported it) the cascade evaluator."""
+def install(cls=None):
+    """Make ``cqa.evaluator.Evaluator`` (and modules that already imported it) the cascade (or hybrid) evaluator."""
     import sys
-    _ev.Evaluator = CascadeEvaluator
+    cls = cls or CascadeEvaluator
+    _ev.Evaluator = cls
     for name in ("cqa.gold", "cqa.__main__", "cqa.server"):
         m = sys.modules.get(name)
-        if m is not None and getattr(m, "Evaluator", None) is BaseEvaluator:
-            m.Evaluator = CascadeEvaluator
+        if m is not None and getattr(m, "Evaluator", None) in (BaseEvaluator, CascadeEvaluator, HybridEvaluator):
+            m.Evaluator = cls
