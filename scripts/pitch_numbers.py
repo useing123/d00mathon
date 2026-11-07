@@ -66,10 +66,13 @@ def build() -> dict:
     casc_acc = casc_h["metrics"]["overall_agreement"]
     assert abs(casc_acc - casc_acc_x) < 1e-9, (casc_acc, casc_acc_x)
 
-    dev = _load(R / "dev_jury_v7.json")
+    # DEV mean = latest full run (v8: 07 closure_mode + 02 examples, = results/dev/results.json);
+    # $/dialog = v7, the last run measured without a warm criterion cache (v8 reused cached verdicts).
+    dev = _load(R / "dev_jury_v8.json")
     totals = [d["total"] for d in dev["dialogs"] if d.get("total") is not None]
     n_dev = len(dev["dialogs"])
-    jury_usd = dev["meta"]["cost_usd"] / n_dev
+    cost_run = _load(R / "dev_jury_v7.json")
+    jury_usd = cost_run["meta"]["cost_usd"] / len(cost_run["dialogs"])
 
     casc_d = _load(R / "oss" / "jev3_dev.json")
     jev_usd = _load(R / "jev" / "holdout.json")["usd_per_dialog"]

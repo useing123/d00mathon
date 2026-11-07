@@ -45,7 +45,7 @@ submit:  ## control window: fetch GROUP -> evaluate (default preset) -> export J
 	git -c user.name=cqa -c user.email=cqa@local commit -m "Submission: results/$(SUB)/results.json (group $(GROUP), JSON 1.0)" results/$(SUB)/results.json
 	@echo "committed results/$(SUB)/results.json - now: git push"
 
-submit-dev:  ## re-export results/dev/results.json from an existing DEV run, no LLM calls (RUN=dev_jury_v7)
+submit-dev:  ## re-export results/dev/results.json from an existing DEV run, no LLM calls (RUN=dev_jury_v8)
 	$(PY) -m cqa export --format v1 --group DEV $(if $(RUN),--run $(RUN)) --out results/dev/results.json
 	$(PY) -m cqa validate results/dev/results.json --group DEV
 

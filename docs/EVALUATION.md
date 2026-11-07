@@ -6,7 +6,7 @@ Code: rubric aligned with the official checklist text (docs/ASSUMPTIONS.md, “R
 180 s from the checklist YAML, judge decides scale criteria (04, 06) by the **median of 3 samples**, `needs_review`
 flags and per-dialog `stability`. Preset `jury` (jurors claude-haiku-5-5 + claude-sonnet-5-5, judge claude-opus-5-5).
 
-**DEV** (`results/dev_jury_v7.json` → `results/dev/results.json`): 65 dialogs, 0 errors, 0 incomplete, mean **80.41**
+**DEV** (`results/dev_jury_v7.json`; current submission = `dev_jury_v8.json` → `results/dev/results.json`, mean **80.14** after the 07/02 fix below): 65 dialogs, 0 errors, 0 incomplete, v7 mean **80.41**
 (v6: 78.45), 5 gross flags (the same 5 dialogs), 294 s, **$10.28 = $0.158 per dialog** (1285 API calls, current
 `cqa/pricing.py` table; v6 was $7.64 — the extra cost is the 3 judge samples on scale criteria). Decided by:
 consensus 444, blind judge (binary) 41, judge with juror opinions 30 (29 of them scale criteria, 3 samples each),

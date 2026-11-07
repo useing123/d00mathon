@@ -23,11 +23,19 @@ flowchart LR
 | Метрика | Значение |
 |---|---|
 | Совпадение с эталоном, отложенный набор (10 синтетических диалогов) | **<span data-n="jury_heldout">0.95</span>** (95 % CI <span data-n="jury_heldout_ci">[0.875, 1.000]</span>) |
-| Средний балл на DEV (65 диалогов организаторов, 0 ошибок) | **<span data-n="dev_mean">80.41</span>** |
+| Средний балл на DEV (65 диалогов организаторов, 0 ошибок) | **<span data-n="dev_mean">80.14</span>** |
 | Стоимость, $ за диалог (DEV) | **<span data-n="jury_usd">$0.158</span>** |
 | Флаги `needs_review` (DEV) | 18.3% критериев |
 
-**Для большого потока** тот же пайплайн доступен как каскад Jev 1.14 → Haiku → Sonnet (`--preset cascade`): <span data-n="cascade_heldout">0.963</span> на отложенном наборе, <span data-n="dev_agreement">0.948</span> совпадения с жюри на DEV, <span data-n="cascade_usd">$0.0146</span> за диалог (в <span data-n="cost_ratio">11×</span> дешевле); у неэскалированных критериев нет цитат. Если данные не должны покидать контур — тот же каскад с локальной Qwen3.8-27B (vLLM) на первом уровне: <span data-n="local_cascade_heldout">0.95</span>. Какой режим рекомендуем в продакшен — docs/PRODUCTION.md (обновится).
+**Для большого потока** тот же пайплайн доступен как каскад Jev 1.14 → Haiku → Sonnet (`--preset cascade`): <span data-n="cascade_heldout">0.963</span> на отложенном наборе, <span data-n="dev_agreement">0.948</span> совпадения с жюри на DEV, <span data-n="cascade_usd">$0.0146</span> за диалог (в <span data-n="cost_ratio">11×</span> дешевле); спорные вердикты первого уровня получают дословную цитату отдельным шагом (`CQA_EVIDENCE_STEP`, +$0.001/диалог). Если данные не должны покидать контур — тот же каскад с локальной Qwen3.8-27B (vLLM) на первом уровне: <span data-n="local_cascade_heldout">0.95</span>. Какой режим рекомендуем в продакшен — [docs/PRODUCTION.md](docs/PRODUCTION.md).
+
+| Режим | Отложенный набор | $/диалог | Критерии с проверенной цитатой (отложенный / DEV) | Спорные вердикты с цитатой |
+|---|---|---|---|---|
+| жюри (`--preset jury`, основной) | <span data-n="jury_heldout">0.95</span> | <span data-n="jury_usd">$0.158</span> | 0.975 / 0.756 | 0.946 / 0.649 |
+| каскад (`--preset cascade`) + шаг цитат | <span data-n="cascade_heldout">0.963</span> | <span data-n="cascade_usd">$0.0146</span> + $0.001 | 0.487 / 0.654 (без шага 0.163 / 0.240) | 0.971 / 0.968 |
+| локальный каскад (Qwen3.8-27B, vLLM) + шаг цитат | <span data-n="local_cascade_heldout">0.95</span> | <span data-n="local_cascade_usd">$0.00128</span> | 0.450 / — | 1.000 / — |
+
+Цитаты: [docs/OSS_ROUTER.md](docs/OSS_ROUTER.md) (`results/oss/evidence_step.json`). Разброс жюри между 3 свежими прогонами: 7.2 % ячеек диалог×критерий меняются, σ итогового балла в среднем 2.53 ([EVALUATION](docs/EVALUATION.md)). Маскирование PII (`CQA_PII_MASK=1`): 0.956 против 0.963 без маски, в пределах шума ([PRODUCTION](docs/PRODUCTION.md)).
 
 Все цифры — из [docs/numbers.json](docs/numbers.json) (`python scripts/pitch_numbers.py`); тест `tests/test_numbers.py` сверяет их с README, DEMO и презентацией.
 
@@ -43,7 +51,7 @@ flowchart LR
 
 | Файл | Что внутри | Как получить |
 |---|---|---|
-| [`results/dev/results.json`](results/dev/results.json) | все 65 записей DEV (60 чатов + 5 звонков), прогон `dev_jury_v7` | `make submit-dev RUN=dev_jury_v7` (без вызовов LLM) |
+| [`results/dev/results.json`](results/dev/results.json) | все 65 записей DEV (60 чатов + 5 звонков), прогон `dev_jury_v8` | `make submit-dev RUN=dev_jury_v8` (без вызовов LLM) |
 | `results/prod/results.json` | ровно 10 записей контрольного набора, включая ошибки | в контрольный час: `make submit GROUP=<id>` → `git push` |
 
 - Формат — приложение к студенческому гайду «Как сдать результаты»: `{"schema_version":"1.0","team_name":"казачи капай","model":{"mode","name"},"results":[…]}`; на диалог — `status:"ok"` с 8 критериями (`contact, discovery, identification, consultation, empathy, dialogue, closure, critical`; `true/false/null` или шаг шкалы до веса) и `score:{final_score, critical_flag}`, либо `status:"error"`, `criteria:[]`, `score:null`, `error:"<причина>"` (ошибка никогда не заменяется нулём).
@@ -251,7 +259,7 @@ Makefile · pyproject.toml · Dockerfile · docker-compose.yml · .github/workfl
 
 **Highlights:** per-criterion prompts · LLM jury + judge · quote validation with auto-correction / retry · deterministic scoring · per-criterion cache (editing one rubric re-evaluates only that criterion; reweighting needs no LLM) · no-login web UI with evidence highlighting, audio seek, human override (stored separately, AI vs Human diff, CSV/JSON export) and checklist editor · cloud (Anthropic), local (Ollama/vLLM via OpenAI-compatible API) or offline mock · Docker · CI on 3.11/3.12 without secrets.
 
-**Results (main mode = jury):** held-out synthetic set (n=10) **<span data-n="jury_heldout">0.95</span>** <span data-n="jury_heldout_ci">[0.875, 1.000]</span>; DEV: 65 dialogs, 0 errors, mean **<span data-n="dev_mean">80.41</span>**, **<span data-n="jury_usd">$0.158</span> per dialog**. High-volume option: cascade (`--preset cascade`) <span data-n="cascade_heldout">0.963</span> held-out, <span data-n="cascade_usd">$0.0146</span> per dialog. Human labels on real dialogs: in progress ([docs/LABELING.md](docs/LABELING.md)). Other experiments: [docs/APPENDIX_EXPERIMENTS.md](docs/APPENDIX_EXPERIMENTS.md).
+**Results (main mode = jury):** held-out synthetic set (n=10) **<span data-n="jury_heldout">0.95</span>** <span data-n="jury_heldout_ci">[0.875, 1.000]</span>; DEV: 65 dialogs, 0 errors, mean **<span data-n="dev_mean">80.14</span>**, **<span data-n="jury_usd">$0.158</span> per dialog**. High-volume option: cascade (`--preset cascade`) <span data-n="cascade_heldout">0.963</span> held-out, <span data-n="cascade_usd">$0.0146</span> per dialog. Human labels on real dialogs: in progress ([docs/LABELING.md](docs/LABELING.md)). Other experiments: [docs/APPENDIX_EXPERIMENTS.md](docs/APPENDIX_EXPERIMENTS.md).
 
 **Limitations:** no labelled ground truth for real DEV dialogs; both gold sets are synthetic and self-labelled; criteria 04/05/06 are the most subjective; audio offsets are approximate; local models measured only on the synthetic held-out set.
 

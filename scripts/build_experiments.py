@@ -56,8 +56,12 @@ def _norm_dialog(cid, x):
     if not isinstance(x, dict):
         return None
     d = dict(x)
-    d.setdefault("conversation_id", cid)
+    d.setdefault("conversation_id", cid or d.get("id"))
+    if d.get("conversation_id") is None:
+        d["conversation_id"] = d.get("id")
     cr = d.get("criteria")
+    if cr is None and isinstance(d.get("per_criterion"), dict):  # decision-model schema: {"01": {"pred", "gold"}}
+        cr = {k: (v.get("pred") if isinstance(v, dict) else v) for k, v in d["per_criterion"].items()}
     if cr is None:
         cr = d.get("pred") or d.get("predicted") or d.get("values")
     if isinstance(cr, dict):  # {"01": "YES", ...} or {"01": {"value": ..}}
@@ -66,9 +70,9 @@ def _norm_dialog(cid, x):
         return None
     d["criteria"] = cr
     if d.get("total") is None:
-        d["total"] = d.get("pred_total", d.get("score"))
+        d["total"] = d.get("pred_total", d.get("total_pred", d.get("score")))
     if "gross_error" not in d:
-        d["gross_error"] = d.get("pred_gross", d.get("gross"))
+        d["gross_error"] = d.get("pred_gross", d.get("gross_pred", d.get("gross")))
     return d
 
 
@@ -251,15 +255,18 @@ def build_registry():
         if "__" in Path(p).stem or d.get("method"):  # shared schema: <method>__<model>.json
             stem = Path(p).stem
             meth = d.get("method") or stem.split("__")[0]
+            if meth == "vllm-generate":  # shared-schema copy of a <tag>_holdout.json local run already listed
+                continue
             mod = d.get("model") or (stem.split("__", 1)[1] if "__" in stem else "?")
-            suite = d.get("suite") if d.get("suite") in ("gold", "holdout") else "holdout"
+            sv = d.get("suite") or d.get("split") or ("gold" if stem.endswith("__gold") else "holdout")
+            suite = sv if sv in ("gold", "holdout") else "holdout"
             dl = d.get("dialogs") if isinstance(d.get("dialogs"), int) else len(dialogs_of(d))
             usd = d.get("usd_per_dialog")
             if usd is None and d.get("price_hr") and d.get("wall_s"):
                 usd = d["price_hr"] * d["wall_s"] / 3600 / dl
             if usd is None and d.get("usd") is not None:
                 usd = d["usd"] / dl
-            sec = d.get("sec_per_dialog") or (d["wall_s"] / dl if d.get("wall_s") else None)
+            sec = d.get("sec_per_dialog") or d.get("s_per_dialog") or (d["wall_s"] / dl if d.get("wall_s") else None)
             regs.append(dict(name=d.get("label") or f"{mod} [{meth}]", family=d.get("family") or f"open/decision ({meth})",
                              holdout=[p] if suite == "holdout" else [], gold=[p] if suite == "gold" else [],
                              usd=usd, sec=sec, gpu=d.get("gpu") or "n/r", src=p))
@@ -825,6 +832,44 @@ def main():
       "as one change; on DEV it changed 34/520 verdicts (docs/EVALUATION.md) while held-out moved by one label, "
       "so its accuracy effect is unidentified. Within that run, a single judge sample would have differed from the "
       "median in ≈3 of 29 scale cases.\n")
+
+    # ------------------------------------------------------------------ late additions (evidence, PII, variance, KZ)
+    w("### 6.1 Evidence step, PII masking, run-to-run variance, KZ/open models\n")
+    ev = jload(R / "oss" / "evidence_step.json") or {}
+    if ev:
+        w("Cite-only evidence step for disputed tier-1 cascade verdicts (`CQA_EVIDENCE_STEP=disputed`); the verdict "
+          "value is never changed.\n")
+        w("| run | criteria with verified quote before → after | disputed with quote before → after | "
+          "added $/dialog | verdicts changed | source |")
+        w("|---|---|---|---|---|---|")
+        for k, v in ev.items():
+            if not isinstance(v, dict) or "coverage_after" not in v:
+                continue
+            db, da = v.get("disputed_coverage_before"), v.get("disputed_coverage_after")
+            dis = f"{db:.3f} → {da:.3f}" if db is not None and da is not None else "—"
+            w(f"| {k} | {v['coverage_before']:.3f} → {v['coverage_after']:.3f} | {dis} | "
+              f"${v.get('usd_per_dialog', 0):.4f} | {v.get('verdicts_changed', '—')} | "
+              f"{link(R / 'oss' / 'evidence_step.json')} |")
+        w("")
+    pii = [jload(R / "pii" / f) for f in ("sonnet_masked_holdout.json", "sonnet_masked_holdout_r2.json")]
+    pii = [x["metrics"]["overall_agreement"] for x in pii if x and x.get("metrics")]
+    if pii:
+        w(f"- **PII masking** (`CQA_PII_MASK=1`, `cqa/pii.py`; sonnet, held-out): masked runs "
+          f"{', '.join(f'{a:.3f}' for a in pii)} (mean {statistics.mean(pii):.3f}) vs 0.963 unmasked — within the "
+          f"±2-label noise floor. Source: {link(R / 'pii' / 'sonnet_masked_holdout.json')}.")
+    va = (jload(R / "variance" / "summary.json") or {}).get("all_runs")
+    if va:
+        w(f"- **Run-to-run variance** (default jury, {va['runs']} fresh runs, {va['dialogs']} DEV dialogs): "
+          f"{va['flip_rate_all_criteria'] * 100:.1f} % of dialog×criterion cells flip; total-score std mean "
+          f"{va['total_std_mean']:.2f} (median {va['total_std_median']:.2f}, max {va['total_std_max']:.2f}); "
+          f"{va['dialogs_with_any_flip']}/{va['dialogs']} dialogs have ≥1 flip. Source: "
+          f"{link(R / 'variance' / 'summary.json')}.")
+    w("- **07/02 fix** (`closure_mode: strict|lenient`, 02 NA/YES/NO examples): DEV mean 80.41 (v7) → 80.14 (v8 strict); "
+      "lenient would give 84.53. No held-out regression (docs/EVALUATION.md).")
+    w("- **Negative: GigaChat3.1-10B-A1.8B** did not serve on A40 vLLM (latest, with and without "
+      "`--trust-remote-code`) → no number (docs/KZ_MODELS.md).")
+    w("- **Negative: WAL2-Ternary-27B** (PrismML llama.cpp fork) served but answered \"Astrakhan\" as the capital of "
+      "Kazakhstan in a smoke test; the held-out run did not finish in 25 min and was killed → no number.\n")
 
     # ------------------------------------------------------------------ threats
     w("## 7. Threats to validity\n")

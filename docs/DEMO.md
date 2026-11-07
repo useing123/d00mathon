@@ -26,7 +26,7 @@
 ## Цифры, которые надо знать
 
 Источник — [docs/numbers.json](numbers.json); другие цифры не называть.
-- Основной режим — жюри Claude: <span data-n="jury_heldout">0.95</span> на отложенном синтетическом наборе (10 диалогов, по нему не настраивались), средний балл DEV <span data-n="dev_mean">80.41</span>, <span data-n="jury_usd">$0.158</span> за диалог.
+- Основной режим — жюри Claude: <span data-n="jury_heldout">0.95</span> на отложенном синтетическом наборе (10 диалогов, по нему не настраивались), средний балл DEV <span data-n="dev_mean">80.14</span>, <span data-n="jury_usd">$0.158</span> за диалог.
 - Для потока — каскад Jev → Haiku → Sonnet: <span data-n="cascade_heldout">0.963</span> на отложенном наборе, <span data-n="cascade_usd">$0.0146</span> за диалог. Локальный вариант (Qwen3.8-27B на своей GPU на первом уровне): <span data-n="local_cascade_heldout">0.95</span>.
 - Разметка людьми — в процессе ([docs/LABELING.md](LABELING.md)). Остальные эксперименты — [приложение](APPENDIX_EXPERIMENTS.md).
 

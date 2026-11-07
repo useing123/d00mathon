@@ -74,7 +74,7 @@ Rule of thumb used throughout: **±2 labels of 80 (±0.025) is noise.** Provider
 
 ### 3.3 Interval width
 
-Median 95 % CI width on held-out: **0.137** (range 0.062–0.213). Configurations whose CIs overlap this much cannot be ranked from this set; the leaderboard order is descriptive.
+Median 95 % CI width on held-out: **0.131** (range 0.062–0.275). Configurations whose CIs overlap this much cannot be ranked from this set; the leaderboard order is descriptive.
 
 ## 4. Master leaderboard
 
@@ -94,41 +94,48 @@ Every configuration with per-dialog results on disk. Sorted by held-out agreemen
 | 10 | cascade Jev→haiku→sonnet, KZ signals OFF (hybrid_kz run) | cascade | 0.950 [0.900, 1.000] | 1 | 0.984 | 3.91 | 1.00/1.00 | 1/0 | — | — | — |  | [cascade_gold_holdout.json](results/hybrid_kz/cascade_gold_holdout.json) |
 | 11 | hybrid: KZ parser signals ON → cascade | cascade | 0.950 [0.900, 1.000] | 1 | 0.977 | 3.91 | 1.00/1.00 | 1/0 | — | — | — |  | [hybrid_gold_holdout.json](results/hybrid_kz/hybrid_gold_holdout.json) |
 | 12 | jury-haiku+sonnet>opus | cloud jury | 0.950 [0.875, 1.000] | 2 | 0.992 | 4.21 | 1.00/1.00 | 1/0 | $0.0745 | 4.46 | — |  | [jury-haiku+sonnet>opus__holdout.dialogs.json](results/bench/jury-haiku%2Bsonnet%3Eopus__holdout.dialogs.json) |
-| 13 | jury v7 code (180 s, median-of-3 judge, rubric alignment) | jury code version | 0.950 [0.850, 1.000] | 1 | — | 4.43 | 1.00/1.00 | 1/0 | — | — | — |  | [gold_holdout_v12.json](results/gold_holdout_v12.json) |
-| 14 | gpt-6-luna ★ | cloud single | 0.944 [0.894, 0.988] | 2 | 0.984 | 4.67 | 1.00/1.00 | 1/0 | $0.00212 | 3.45 | — |  | [gpt-6-luna__holdout.dialogs.json](results/bench/gpt-6-luna__holdout.dialogs.json) |
-| 15 | jury prompt v9 run b | jury code version | 0.938 [0.863, 1.000] | 1 | — | 3.86 | 1.00/1.00 | 1/0 | — | — | — |  | [gold_holdout_v9b.json](results/gold_holdout_v9b.json) |
-| 16 | router policy: per-criterion policy, budget $0.001/dialog ★ | router policy (offline replay) | 0.938 [0.900, 0.975] | 1 | — | 4.57 | 1.00/1.00 | 3/0 | $0.00057 | — | — | 99/1/0 | [heldout__per_criterion_policy__budget__0_001_dialog.dialogs.json](results/router_policy/heldout__per_criterion_policy__budget__0_001_dialog.dialogs.json) |
-| 17 | jury-sonnet+luna>opus | cloud jury | 0.938 [0.863, 1.000] | 1 | 1.000 | 4.67 | 1.00/1.00 | 2/0 | $0.0742 | 4.76 | — |  | [jury-sonnet+luna>opus__holdout.dialogs.json](results/bench/jury-sonnet%2Bluna%3Eopus__holdout.dialogs.json) |
-| 18 | gemini-3.8-flash | cloud single | 0.938 [0.863, 1.000] | 1 | 0.984 | 4.87 | 1.00/1.00 | 1/0 | $0.0372 | 7.29 | — |  | [gemini-3.8-flash__holdout.dialogs.json](results/bench/gemini-3.8-flash__holdout.dialogs.json) |
-| 19 | opus | cloud single | 0.938 [0.838, 1.000] | 1 | 0.984 | 4.96 | 1.00/1.00 | 1/0 | $0.1858 | 5.20 | — |  | [opus__holdout.dialogs.json](results/bench/opus__holdout.dialogs.json) |
-| 20 | jury prompt v9 run a | jury code version | 0.938 [0.863, 1.000] | 1 | — | 4.98 | 1.00/1.00 | 1/0 | — | — | — |  | [gold_holdout_v9.json](results/gold_holdout_v9.json) |
-| 21 | jury v6 code (120 s wait, single judge sample) | jury code version | 0.938 [0.863, 1.000] | 1 | — | 5.11 | 1.00/1.00 | 1/0 | — | — | — |  | [gold_holdout_v11.json](results/gold_holdout_v11.json) |
-| 22 | gpt-6-luna@v2 | cloud single (prompt v2) | 0.938 [0.887, 0.988] | 1 | 0.984 | 6.64 | 1.00/1.00 | 2/0 | $0.00333 | 3.98 | — |  | [gpt-6-luna@v2__holdout.dialogs.json](results/bench/gpt-6-luna%40v2__holdout.dialogs.json) |
-| 23 | jury v8-prompt, --confirm 03,04 | jury code version | 0.938 [0.863, 1.000] | 1 | — | 6.88 | 1.00/1.00 | 0/0 | — | — | — |  | [gold_holdout_confirm_report.json](results/gold_holdout_confirm_report.json) |
-| 24 | Jev 1.14 alone (full rules) ★ | decision model (API) | 0.933 [0.892, 0.975] | 3 | 0.974 | 4.83 | 1.00/1.00 | 3/0 | $0.00053 | 0.12 | — |  | [holdout.dialogs.json](results/jev/holdout.dialogs.json) |
-| 25 | fable | cloud single | 0.925 [0.825, 1.000] | 1 | 0.945 | 5.49 | 1.00/1.00 | 1/0 | $0.5436 | 8.82 | — |  | [fable__holdout.dialogs.json](results/bench/fable__holdout.dialogs.json) |
-| 26 | jury prompt v10 (blind judge) | jury code version | 0.925 [0.825, 1.000] | 1 | — | 5.73 | 1.00/1.00 | 1/0 | — | — | — |  | [gold_holdout_v10.json](results/gold_holdout_v10.json) |
-| 27 | jury --final (sonnet+opus, median-of-3 per juror) | jury code version | 0.925 [0.825, 1.000] | 1 | — | 6.55 | 1.00/1.00 | 2/0 | — | — | — |  | [gold_holdout_final.json](results/gold_holdout_final.json) |
-| 28 | cascade Jev → haiku | cascade | 0.925 [0.850, 0.988] | 1 | — | 6.75 | 1.00/1.00 | 1/0 | $0.00164 | 0.90 | — |  | [jev_haiku_holdout.json](results/oss/jev_haiku_holdout.json) |
-| 29 | jury v8-prompt, default (EVALUATION held-out) | jury code version | 0.925 [0.825, 1.000] | 1 | — | 7.32 | 1.00/1.00 | 1/0 | — | — | — |  | [gold_holdout_report.json](results/gold_holdout_report.json) |
-| 30 | haiku@v2 | cloud single (prompt v2) | 0.925 [0.863, 0.975] | 1 | 0.977 | 8.18 | 1.00/1.00 | 1/0 | $0.00530 | 2.94 | — |  | [haiku@v2__holdout.dialogs.json](results/bench/haiku%40v2__holdout.dialogs.json) |
-| 31 | gpt-5.4-mini | cloud single | 0.912 [0.850, 0.975] | 1 | 0.938 | 5.73 | 1.00/1.00 | 4/0 | $0.0224 | 2.13 | — |  | [gpt-5.4-mini__holdout.dialogs.json](results/bench/gpt-5.4-mini__holdout.dialogs.json) |
-| 32 | issai_35b_a3b_kk (local, issai-35b-a3b-kk) | local OSS | 0.912 [0.825, 0.988] | 1 | — | 6.83 | 1.00/1.00 | 4/0 | — | 8.52 | n/r | 100/0/0 | [issai_35b_a3b_kk_holdout.json](results/kz_models/issai_35b_a3b_kk_holdout.json) |
-| 33 | haiku | cloud single | 0.912 [0.838, 0.975] | 1 | 0.969 | 7.59 | 1.00/1.00 | 1/0 | $0.00465 | 2.95 | — |  | [haiku__holdout.dialogs.json](results/bench/haiku__holdout.dialogs.json) |
-| 34 | jury-sonnet+opus>opus | cloud jury | 0.912 [0.800, 1.000] | 1 | 0.984 | 8.90 | 1.00/1.00 | 2/0 | $0.1851 | 4.87 | — |  | [jury-sonnet+opus>opus__holdout.dialogs.json](results/bench/jury-sonnet%2Bopus%3Eopus__holdout.dialogs.json) |
-| 35 | Qwen3-32B-AWQ alone (local, vLLM) | local OSS | 0.887 [0.787, 0.975] | 1 | 0.883 | 6.38 | 1.00/1.00 | 4/0 | $0.00263 | 16.05 | 1× A40 |  | [bench_qwen3-32b-awq_gold_holdout.json](results/bench_qwen3-32b-awq_gold_holdout.json) |
-| 36 | ISSAI Qwen3.5-9B-Kazakh (local, vLLM) | local OSS | 0.887 [0.825, 0.950] | 1 | — | 8.21 | 1.00/1.00 | 4/0 | — | 13.44 | n/r | 100/0/0 | [issai_9b_kk_holdout.json](results/kz_models/issai_9b_kk_holdout.json) |
-| 37 | cascade Qwen3-8B-AWQ → haiku → sonnet | cascade (local tier 1) | 0.863 [0.775, 0.950] | 1 | — | 13.91 | 1.00/1.00 | 6/0 | $0.00286 | 6.98 | 1× A40 | 34/65/1 | [q8_3_holdout.json](results/oss/q8_3_holdout.json) |
-| 38 | Jev 1.14 alone (rules ≤700 chars) ★ | decision model (API) | 0.858 [0.775, 0.929] | 3 | 0.880 | 6.05 | 1.00/1.00 | 4/0 | $0.00037 | 0.12 | — |  | [holdout.dialogs.json](results/jev/truncated700/holdout.dialogs.json) |
-| 39 | Qwen3-8B + QLoRA adapter (16 steps) | fine-tune | 0.787 [0.725, 0.863] | 1 | 0.805 | 10.43 | 0.00/0.00 | 8/0 | $0.00130 | 17.36 | 1× RTX A5000 |  | [holdout_lora.json](results/finetune/holdout_lora.json) |
-| 40 | Qwen3-8B bf16 base (JSON mode) | fine-tune | 0.787 [0.700, 0.875] | 1 | 0.789 | 12.17 | 0.00/0.00 | 8/0 | $0.00125 | 16.69 | 1× RTX A5000 |  | [holdout_base.json](results/finetune/holdout_base.json) |
-| 41 | Qwen3-8B-AWQ alone (local, vLLM) | local OSS | 0.775 [0.662, 0.875] | 1 | 0.781 | 12.47 | —/0.00 | 9/0 | $0.00085 | 5.20 | 1× A40 |  | [bench_oss_qwen3-8b_gold_holdout.json](results/bench_oss_qwen3-8b_gold_holdout.json) |
+| 13 | Qwen/Qwen3.8-27B-FP8 [cascade-vllm-choice] ★ | open/decision (cascade-vllm-choice) | 0.950 [0.900, 1.000] | 1 | — | 4.42 | 1.00/1.00 | 0/0 | $0.00128 | 7.65 | A40 |  | [cascade-vllm-choice__Qwen_Qwen3.8-27B-FP8.json](results/kz_models/cascade-vllm-choice__Qwen_Qwen3.8-27B-FP8.json) |
+| 14 | jury v7 code (180 s, median-of-3 judge, rubric alignment) | jury code version | 0.950 [0.850, 1.000] | 1 | — | 4.43 | 1.00/1.00 | 1/0 | — | — | — |  | [gold_holdout_v12.json](results/gold_holdout_v12.json) |
+| 15 | gpt-6-luna | cloud single | 0.944 [0.894, 0.988] | 2 | 0.984 | 4.67 | 1.00/1.00 | 1/0 | $0.00212 | 3.45 | — |  | [gpt-6-luna__holdout.dialogs.json](results/bench/gpt-6-luna__holdout.dialogs.json) |
+| 16 | jury prompt v9 run b | jury code version | 0.938 [0.863, 1.000] | 1 | — | 3.86 | 1.00/1.00 | 1/0 | — | — | — |  | [gold_holdout_v9b.json](results/gold_holdout_v9b.json) |
+| 17 | router policy: per-criterion policy, budget $0.001/dialog ★ | router policy (offline replay) | 0.938 [0.900, 0.975] | 1 | — | 4.57 | 1.00/1.00 | 3/0 | $0.00057 | — | — | 99/1/0 | [heldout__per_criterion_policy__budget__0_001_dialog.dialogs.json](results/router_policy/heldout__per_criterion_policy__budget__0_001_dialog.dialogs.json) |
+| 18 | Qwen/Qwen3.8-27B-FP8 [vllm-choice] | open/decision (vllm-choice) | 0.938 [0.887, 0.988] | 1 | 0.953 | 4.58 | 1.00/1.00 | 2/0 | $0.00120 | 7.30 | A40 |  | [vllm-choice__Qwen_Qwen3.8-27B-FP8.json](results/kz_models/vllm-choice__Qwen_Qwen3.8-27B-FP8.json) |
+| 19 | jury-sonnet+luna>opus | cloud jury | 0.938 [0.863, 1.000] | 1 | 1.000 | 4.67 | 1.00/1.00 | 2/0 | $0.0742 | 4.76 | — |  | [jury-sonnet+luna>opus__holdout.dialogs.json](results/bench/jury-sonnet%2Bluna%3Eopus__holdout.dialogs.json) |
+| 20 | gemini-3.8-flash | cloud single | 0.938 [0.863, 1.000] | 1 | 0.984 | 4.87 | 1.00/1.00 | 1/0 | $0.0372 | 7.29 | — |  | [gemini-3.8-flash__holdout.dialogs.json](results/bench/gemini-3.8-flash__holdout.dialogs.json) |
+| 21 | opus | cloud single | 0.938 [0.838, 1.000] | 1 | 0.984 | 4.96 | 1.00/1.00 | 1/0 | $0.1858 | 5.20 | — |  | [opus__holdout.dialogs.json](results/bench/opus__holdout.dialogs.json) |
+| 22 | jury prompt v9 run a | jury code version | 0.938 [0.863, 1.000] | 1 | — | 4.98 | 1.00/1.00 | 1/0 | — | — | — |  | [gold_holdout_v9.json](results/gold_holdout_v9.json) |
+| 23 | jury v6 code (120 s wait, single judge sample) | jury code version | 0.938 [0.863, 1.000] | 1 | — | 5.11 | 1.00/1.00 | 1/0 | — | — | — |  | [gold_holdout_v11.json](results/gold_holdout_v11.json) |
+| 24 | gpt-6-luna@v2 | cloud single (prompt v2) | 0.938 [0.887, 0.988] | 1 | 0.984 | 6.64 | 1.00/1.00 | 2/0 | $0.00333 | 3.98 | — |  | [gpt-6-luna@v2__holdout.dialogs.json](results/bench/gpt-6-luna%40v2__holdout.dialogs.json) |
+| 25 | jury v8-prompt, --confirm 03,04 | jury code version | 0.938 [0.863, 1.000] | 1 | — | 6.88 | 1.00/1.00 | 0/0 | — | — | — |  | [gold_holdout_confirm_report.json](results/gold_holdout_confirm_report.json) |
+| 26 | Jev 1.14 alone (full rules) ★ | decision model (API) | 0.933 [0.892, 0.975] | 3 | 0.974 | 4.83 | 1.00/1.00 | 3/0 | $0.00053 | 0.12 | — |  | [holdout.dialogs.json](results/jev/holdout.dialogs.json) |
+| 27 | fable | cloud single | 0.925 [0.825, 1.000] | 1 | 0.945 | 5.49 | 1.00/1.00 | 1/0 | $0.5436 | 8.82 | — |  | [fable__holdout.dialogs.json](results/bench/fable__holdout.dialogs.json) |
+| 28 | jury prompt v10 (blind judge) | jury code version | 0.925 [0.825, 1.000] | 1 | — | 5.73 | 1.00/1.00 | 1/0 | — | — | — |  | [gold_holdout_v10.json](results/gold_holdout_v10.json) |
+| 29 | jury --final (sonnet+opus, median-of-3 per juror) | jury code version | 0.925 [0.825, 1.000] | 1 | — | 6.55 | 1.00/1.00 | 2/0 | — | — | — |  | [gold_holdout_final.json](results/gold_holdout_final.json) |
+| 30 | cascade Jev → haiku | cascade | 0.925 [0.850, 0.988] | 1 | — | 6.75 | 1.00/1.00 | 1/0 | $0.00164 | 0.90 | — |  | [jev_haiku_holdout.json](results/oss/jev_haiku_holdout.json) |
+| 31 | jury v8-prompt, default (EVALUATION held-out) | jury code version | 0.925 [0.825, 1.000] | 1 | — | 7.32 | 1.00/1.00 | 1/0 | — | — | — |  | [gold_holdout_report.json](results/gold_holdout_report.json) |
+| 32 | haiku@v2 | cloud single (prompt v2) | 0.925 [0.863, 0.975] | 1 | 0.977 | 8.18 | 1.00/1.00 | 1/0 | $0.00530 | 2.94 | — |  | [haiku@v2__holdout.dialogs.json](results/bench/haiku%40v2__holdout.dialogs.json) |
+| 33 | gpt-5.4-mini | cloud single | 0.912 [0.850, 0.975] | 1 | 0.938 | 5.73 | 1.00/1.00 | 4/0 | $0.0224 | 2.13 | — |  | [gpt-5.4-mini__holdout.dialogs.json](results/bench/gpt-5.4-mini__holdout.dialogs.json) |
+| 34 | issai_35b_a3b_kk (local, issai-35b-a3b-kk) | local OSS | 0.912 [0.825, 0.988] | 1 | — | 6.83 | 1.00/1.00 | 4/0 | — | 8.52 | n/r | 100/0/0 | [issai_35b_a3b_kk_holdout.json](results/kz_models/issai_35b_a3b_kk_holdout.json) |
+| 35 | haiku | cloud single | 0.912 [0.838, 0.975] | 1 | 0.969 | 7.59 | 1.00/1.00 | 1/0 | $0.00465 | 2.95 | — |  | [haiku__holdout.dialogs.json](results/bench/haiku__holdout.dialogs.json) |
+| 36 | jury-sonnet+opus>opus | cloud jury | 0.912 [0.800, 1.000] | 1 | 0.984 | 8.90 | 1.00/1.00 | 2/0 | $0.1851 | 4.87 | — |  | [jury-sonnet+opus>opus__holdout.dialogs.json](results/bench/jury-sonnet%2Bopus%3Eopus__holdout.dialogs.json) |
+| 37 | Qwen/Qwen3.8-27B-FP8 [qwen-jev-like] ★ | open/decision (qwen-jev-like) | 0.912 [0.863, 0.963] | 1 | 0.875 | 9.41 | 1.00/1.00 | 1/1 | $0.00045 | 2.73 | A40 |  | [qwen-jev-like__Qwen_Qwen3.8-27B-FP8.json](results/kz_models/qwen-jev-like__Qwen_Qwen3.8-27B-FP8.json) |
+| 38 | Qwen3-32B-AWQ alone (local, vLLM) | local OSS | 0.887 [0.787, 0.975] | 1 | 0.883 | 6.38 | 1.00/1.00 | 4/0 | $0.00263 | 16.05 | 1× A40 |  | [bench_qwen3-32b-awq_gold_holdout.json](results/bench_qwen3-32b-awq_gold_holdout.json) |
+| 39 | ISSAI Qwen3.5-9B-Kazakh (local, vLLM) | local OSS | 0.887 [0.825, 0.950] | 1 | — | 8.21 | 1.00/1.00 | 4/0 | — | 13.44 | n/r | 100/0/0 | [issai_9b_kk_holdout.json](results/kz_models/issai_9b_kk_holdout.json) |
+| 40 | Qwen/Qwen3.8-27B-FP8 [litjev] | open/decision (litjev) | 0.863 [0.825, 0.900] | 1 | 0.859 | 7.16 | 1.00/1.00 | 1/9 | $0.00221 | 13.51 | A40 |  | [litjev__Qwen_Qwen3.8-27B-FP8.json](results/kz_models/litjev__Qwen_Qwen3.8-27B-FP8.json) |
+| 41 | cascade Qwen3-8B-AWQ → haiku → sonnet | cascade (local tier 1) | 0.863 [0.775, 0.950] | 1 | — | 13.91 | 1.00/1.00 | 6/0 | $0.00286 | 6.98 | 1× A40 | 34/65/1 | [q8_3_holdout.json](results/oss/q8_3_holdout.json) |
+| 42 | Jev 1.14 alone (rules ≤700 chars) ★ | decision model (API) | 0.858 [0.775, 0.929] | 3 | 0.880 | 6.05 | 1.00/1.00 | 4/0 | $0.00037 | 0.12 | — |  | [holdout.dialogs.json](results/jev/truncated700/holdout.dialogs.json) |
+| 43 | issai_4b_kk (local, qwen3.5-4b-kk) | local OSS | 0.838 [0.762, 0.900] | 1 | — | 9.84 | 1.00/1.00 | 4/1 | — | 7.59 | n/r | 100/0/0 | [issai_4b_kk_holdout.json](results/kz_models/issai_4b_kk_holdout.json) |
+| 44 | issai/Qwen3.5-9B-Kazakh [litjev] | open/decision (litjev) | 0.812 [0.762, 0.863] | 1 | 0.719 | 10.34 | —/0.00 | 1/11 | $0.00063 | 3.83 | A40 |  | [litjev__issai_Qwen3.5-9B-Kazakh.json](results/kz_models/litjev__issai_Qwen3.5-9B-Kazakh.json) |
+| 45 | Qwen3-8B + QLoRA adapter (16 steps) | fine-tune | 0.787 [0.725, 0.863] | 1 | 0.805 | 10.43 | 0.00/0.00 | 8/0 | $0.00130 | 17.36 | 1× RTX A5000 |  | [holdout_lora.json](results/finetune/holdout_lora.json) |
+| 46 | Qwen3-8B bf16 base (JSON mode) | fine-tune | 0.787 [0.700, 0.875] | 1 | 0.789 | 12.17 | 0.00/0.00 | 8/0 | $0.00125 | 16.69 | 1× RTX A5000 |  | [holdout_base.json](results/finetune/holdout_base.json) |
+| 47 | Qwen3-8B-AWQ alone (local, vLLM) | local OSS | 0.775 [0.662, 0.875] | 1 | 0.781 | 12.47 | —/0.00 | 9/0 | $0.00085 | 5.20 | 1× A40 |  | [bench_oss_qwen3-8b_gold_holdout.json](results/bench_oss_qwen3-8b_gold_holdout.json) |
+| 48 | AlexWortega/openjev-qwen3.5-4b-nli-v5 [openjev] | open/decision (openjev) | 0.713 [0.575, 0.850] | 1 | 0.727 | 14.22 | —/0.00 | 10/0 | $0.00105 | 6.39 | A40 |  | [openjev__AlexWortega_openjev-qwen3.5-4b-nli-v5.json](results/kz_models/openjev__AlexWortega_openjev-qwen3.5-4b-nli-v5.json) |
 
 Tuned-gold-only runs (prompt variants not promoted to held-out): gpt-6-luna@v3 0.969; haiku@v1 0.953; haiku@v3 0.945.
 
 ![Pareto: held-out agreement vs $/dialog](docs/img/pareto.svg)
 
-Pareto frontier (cheapest-first): Jev 1.14 alone (rules ≤700 chars) (0.858, $0.00037) → Jev 1.14 alone (full rules) (0.933, $0.00053) → router policy: per-criterion policy, budget $0.001/dialog (0.938, $0.00057) → gpt-6-luna (0.944, $0.00212) → router policy: per-criterion policy, budget $0.0025/dialog (0.963, $0.00237) → router policy: cascade + Sonnet on any Jev≠Haiku disagreement (0.975, $0.00612).
+Pareto frontier (cheapest-first): Jev 1.14 alone (rules ≤700 chars) (0.858, $0.00037) → Qwen/Qwen3.8-27B-FP8 [qwen-jev-like] (0.912, $0.00045) → Jev 1.14 alone (full rules) (0.933, $0.00053) → router policy: per-criterion policy, budget $0.001/dialog (0.938, $0.00057) → Qwen/Qwen3.8-27B-FP8 [cascade-vllm-choice] (0.950, $0.00128) → router policy: per-criterion policy, budget $0.0025/dialog (0.963, $0.00237) → router policy: cascade + Sonnet on any Jev≠Haiku disagreement (0.975, $0.00612).
 
 ### 4.1 DEV (65 real dialogs): agreement with the v7 jury — consistency, NOT accuracy
 
@@ -164,35 +171,35 @@ Older jury code versions vs v7 measure prompt/rubric drift of the reference itse
 | hybrid: KZ parser signals ON → cascade | 1.00 | 1.00 | 0.90 | **0.80** | 1.00 | 0.90 | 1.00 | 1.00 |
 | jury-haiku+sonnet>opus | 1.00 | 0.90 | 1.00 | 0.90 | 0.90 | 0.90 | 1.00 | 1.00 |
 
-### 5.2 Where all configurations fail (pooled over 42 held-out runs)
+### 5.2 Where all configurations fail (pooled over 49 held-out runs)
 
 | criterion | error rate | NA vs applicable | scale: adjacent step | scale: ≥2 steps | binary flip | failed |
 |---|---|---|---|---|---|---|
-| 04 | 0.186 | 0 | 70 | 8 | 0 | 0 |
-| 02 | 0.169 | 70 | 0 | 0 | 1 | 0 |
-| 06 | 0.126 | 0 | 36 | 16 | 0 | 1 |
-| 03 | 0.067 | 24 | 0 | 0 | 4 | 0 |
-| 05 | 0.029 | 0 | 0 | 0 | 12 | 0 |
-| 07 | 0.024 | 5 | 0 | 0 | 5 | 0 |
-| 08 | 0.014 | 0 | 0 | 0 | 6 | 0 |
+| 04 | 0.227 | 19 | 79 | 13 | 0 | 0 |
+| 02 | 0.167 | 81 | 0 | 0 | 1 | 0 |
+| 06 | 0.122 | 0 | 43 | 16 | 0 | 1 |
+| 03 | 0.078 | 33 | 0 | 0 | 5 | 0 |
+| 07 | 0.039 | 7 | 0 | 0 | 12 | 0 |
+| 05 | 0.037 | 0 | 0 | 0 | 18 | 0 |
+| 08 | 0.016 | 0 | 0 | 0 | 8 | 0 |
 | 01 | 0.002 | 0 | 0 | 0 | 1 | 0 |
 
 Most frequently missed (dialog, criterion) pairs (share of runs that missed it):
 
 | dialog | criterion | expected | missed in | gold rationale |
 |---|---|---|---|---|
-| hold-10-ru-contradictory | 04 | 5 | 33/42 | ended with a general hint, client still unsure → 5 |
-| hold-04-ru-transfer-minor-detail | 04 | 15 | 30/42 | process fully explained; did not mention the sending broker's fee (secondary detail) → 15 |
-| hold-10-ru-contradictory | 02 | NA | 25/42 |  |
-| hold-06-ru-wrong-advice-close | 03 | NA | 20/42 |  |
-| hold-10-ru-contradictory | 06 | 4 | 20/42 | contradictory answers, client had to re-ask because of them → 4 |
-| hold-08-ru-third-party-data | 06 | 10 | 17/42 |  |
-| hold-03-kz-no-name | 02 | NA | 12/42 |  |
-| hold-10-ru-contradictory | 05 | YES | 12/42 |  |
+| hold-10-ru-contradictory | 04 | 5 | 40/49 | ended with a general hint, client still unsure → 5 |
+| hold-04-ru-transfer-minor-detail | 04 | 15 | 37/49 | process fully explained; did not mention the sending broker's fee (secondary detail) → 15 |
+| hold-10-ru-contradictory | 02 | NA | 28/49 |  |
+| hold-06-ru-wrong-advice-close | 03 | NA | 23/49 |  |
+| hold-08-ru-third-party-data | 06 | 10 | 21/49 |  |
+| hold-10-ru-contradictory | 06 | 4 | 20/49 | contradictory answers, client had to re-ask because of them → 4 |
+| hold-10-ru-contradictory | 05 | YES | 14/49 |  |
+| hold-08-ru-third-party-data | 04 | 20 | 13/49 |  |
 
 Typical failure modes, quoted from the (synthetic, safe-to-quote) held-out dialogs:
 
-**hold-10-ru-contradictory — criterion 04** (expected `5`, missed by 33/42 runs; title: “contradictory answers”)
+**hold-10-ru-contradictory — criterion 04** (expected `5`, missed by 40/49 runs; title: “contradictory answers”)
 
 > **client** [00:20]: Какая комиссия за сделки с акциями на KASE?
 > **operator** [01:25]: Здравствуйте, меня зовут Ержан. Комиссия 0,1% от суммы сделки.
@@ -200,7 +207,7 @@ Typical failure modes, quoted from the (synthetic, safe-to-quote) held-out dialo
 
 Label rationale: ended with a general hint, client still unsure → 5. Models disagree on how much of a partial or self-contradicting answer still earns credit — the boundary is defined by our synthetic rubric reading, so part of this 'error' is label ambiguity.
 
-**hold-04-ru-transfer-minor-detail — criterion 04** (expected `15`, missed by 30/42 runs; title: “main answered, secondary detail missed”)
+**hold-04-ru-transfer-minor-detail — criterion 04** (expected `15`, missed by 37/49 runs; title: “main answered, secondary detail missed”)
 
 > **client** [00:20]: Как перевести мои акции от другого брокера к вам и сколько это стоит?
 > **operator** [01:35]: Здравствуйте, меня зовут Игорь. Чтобы перевести бумаги, подайте у текущего брокера поручение на перевод, указав наши реквизиты из раздела «Перевод ценных бумаг» в приложе…
@@ -234,6 +241,22 @@ Each row is a single change; Δ on held-out unless stated. Negative and null res
 | router threshold tuning (replay on tuned gold) | best replay 0.992 | held-out 0.963 | -2.4 | — | 260/1000 grid points tie at the optimum → overfit risk | [tune_jev_all.json](results/oss/tune_jev_all.json) |
 
 The v7 jury bundle (median-of-3 judge sampling on 04/06, 180 s wait threshold, rubric alignment) shipped as one change; on DEV it changed 34/520 verdicts (docs/EVALUATION.md) while held-out moved by one label, so its accuracy effect is unidentified. Within that run, a single judge sample would have differed from the median in ≈3 of 29 scale cases.
+
+### 6.1 Evidence step, PII masking, run-to-run variance, KZ/open models
+
+Cite-only evidence step for disputed tier-1 cascade verdicts (`CQA_EVIDENCE_STEP=disputed`); the verdict value is never changed.
+
+| run | criteria with verified quote before → after | disputed with quote before → after | added $/dialog | verdicts changed | source |
+|---|---|---|---|---|---|
+| cascade/holdout | 0.163 → 0.487 | 0.206 → 0.971 | $0.0009 | 0 | [evidence_step.json](results/oss/evidence_step.json) |
+| cascade/dev | 0.240 → 0.654 | 0.197 → 0.968 | $0.0012 | 0 | [evidence_step.json](results/oss/evidence_step.json) |
+| cascade-local/holdout | 0.000 → 0.450 | 0.000 → 1.000 | $0.0003 | 0 | [evidence_step.json](results/oss/evidence_step.json) |
+
+- **PII masking** (`CQA_PII_MASK=1`, `cqa/pii.py`; sonnet, held-out): masked runs 0.963, 0.950 (mean 0.956) vs 0.963 unmasked — within the ±2-label noise floor. Source: [sonnet_masked_holdout.json](results/pii/sonnet_masked_holdout.json).
+- **Run-to-run variance** (default jury, 3 fresh runs, 19 DEV dialogs): 7.2 % of dialog×criterion cells flip; total-score std mean 2.53 (median 0.00, max 10.83); 8/19 dialogs have ≥1 flip. Source: [summary.json](results/variance/summary.json).
+- **07/02 fix** (`closure_mode: strict|lenient`, 02 NA/YES/NO examples): DEV mean 80.41 (v7) → 80.14 (v8 strict); lenient would give 84.53. No held-out regression (docs/EVALUATION.md).
+- **Negative: GigaChat3.1-10B-A1.8B** did not serve on A40 vLLM (latest, with and without `--trust-remote-code`) → no number (docs/KZ_MODELS.md).
+- **Negative: WAL2-Ternary-27B** (PrismML llama.cpp fork) served but answered "Astrakhan" as the capital of Kazakhstan in a smoke test; the held-out run did not finish in 25 min and was killed → no number.
 
 ## 7. Threats to validity
 
