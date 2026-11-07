@@ -306,6 +306,20 @@ def export_json(group: str, run: str = ""):
     return JSONResponse(doc, headers={"Content-Disposition": f'attachment; filename="{group}.json"'})
 
 
+@app.get("/api/export/{group}/results.json")
+def export_v1(group: str, run: str = ""):
+    """Submission format v1.0 (cqa/submission.py), validated before download."""
+    from . import submission
+    doc = _load(group, run)
+    if not doc:
+        raise HTTPException(404, "not evaluated yet")
+    obj = submission.to_v1(doc, source_run=doc.get("run") or run or group.lower())
+    errs = submission.validate(obj)
+    if errs:
+        raise HTTPException(500, "v1 export failed validation: " + "; ".join(errs[:5]))
+    return JSONResponse(obj, headers={"Content-Disposition": 'attachment; filename="results.json"'})
+
+
 @app.get("/api/export/{group}.csv")
 def export_csv(group: str, which: str = "ai", run: str = ""):
     if which not in ("ai", "human", "both", "organizer"):

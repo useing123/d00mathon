@@ -5,7 +5,13 @@
 
 # private data / outputs (contain real client text)
 data/
-results/
+results/*
+!results/dev/
+!results/prod/
+results/dev/*
+results/prod/*
+!results/dev/results.json
+!results/prod/results.json
 .cache/
 *.wav
 *.mp3

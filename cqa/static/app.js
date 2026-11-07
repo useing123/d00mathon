@@ -37,7 +37,7 @@ async function loadGroup(g,keepRun){G=g;localStorage.cqaGroup=g;
  $('#rsel').value=RUN;await loadResults()}
 const rq=()=>RUN?'?run='+encodeURIComponent(RUN):'';
 async function loadResults(){try{DOC=await api('/api/results/'+encodeURIComponent(G)+rq())}catch(e){DOC=null}
- $('#exJson').href=`/api/export/${G}.json${rq()}`;$('#exCsv').href=`/api/export/${G}.csv?which=both${RUN?'&run='+encodeURIComponent(RUN):''}`;$('#exOrg').href=`/api/export/${G}.csv?which=organizer${RUN?'&run='+encodeURIComponent(RUN):''}`;
+ $('#exJson').href=`/api/export/${G}.json${rq()}`;$('#exCsv').href=`/api/export/${G}.csv?which=both${RUN?'&run='+encodeURIComponent(RUN):''}`;$('#exV1').href=`/api/export/${G}/results.json${rq()}`;$('#exOrg').href=`/api/export/${G}.csv?which=organizer${RUN?'&run='+encodeURIComponent(RUN):''}`;
  renderOverview();renderTable();if(CUR&&curView()=='dialog')renderDialog()}
 // ---------- overview ----------
 function stats(){const ds=DOC.dialogs;const tot=d=>d.human&&d.human.reviewed?d.human.total:d.total;

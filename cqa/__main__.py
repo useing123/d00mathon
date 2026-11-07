@@ -129,6 +129,8 @@ def cmd_label(a):
 
 
 def cmd_export(a):
+    if a.format == "v1":
+        return cmd_export_v1(a)
     if a.run:
         from .util import safe_child
         doc = json.loads(safe_child(config.RESULTS_DIR, a.run, ".json").read_text(encoding="utf-8"))
@@ -143,6 +145,32 @@ def cmd_export(a):
         print(a.out)
     else:
         print(txt, end="")
+
+
+def cmd_export_v1(a):
+    """Submission format v1.0 -> results/<group>/results.json (validated against cqa.submission.schema())."""
+    from pathlib import Path
+
+    from . import submission
+    from .util import atomic_write
+    doc = store.load_run(a.group, a.run)
+    if not doc:
+        sys.exit(f"no results for group {a.group}" + (f" / run {a.run}" if a.run else ""))
+    obj = submission.to_v1(doc, source_run=a.run or store.results_path(a.group).stem)
+    errs = submission.validate(obj)
+    if errs:
+        sys.exit("v1 export failed validation:\n  " + "\n  ".join(errs[:20]))
+    out = Path(a.out) if a.out else submission.out_path(a.group)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    atomic_write(out, json.dumps(obj, ensure_ascii=False, indent=1) + "\n")
+    print(f"{out}: {len(obj['dialogs'])} dialogs, format {obj['format_version']}, valid")
+
+
+def cmd_validate(a):
+    from . import submission
+    errs = submission.validate(json.loads(open(a.file, encoding="utf-8").read()))
+    print("\n".join(errs) if errs else f"{a.file}: valid v{submission.SPEC['format_version']}")
+    sys.exit(1 if errs else 0)
 
 
 def main():
@@ -181,10 +209,13 @@ def main():
     gd.add_argument("--dir", help="directory with gold *.json (default examples/gold; held-out: examples/gold_holdout)")
     gd.add_argument("--labels", help="human labels JSON from `cqa label` (e.g. examples/dev_labels.json)")
     gd.add_argument("--group", default="DEV", help="group whose dialogs the --labels refer to")
-    ex = sub.add_parser("export", help="export results: organizer submission CSV or ai/human/both CSV")
+    ex = sub.add_parser("export", help="export results: v1 submission JSON, organizer CSV or ai/human/both CSV")
     ex.add_argument("--group", required=True)
-    ex.add_argument("--run")
-    ex.add_argument("--format", default="organizer", choices=["organizer", "ai", "human", "both"])
+    ex.add_argument("--run", help="results/<run>.json (default: results/<group>.json)")
+    ex.add_argument("--format", default="organizer", choices=["v1", "organizer", "ai", "human", "both"],
+                    help="v1 = submission results.json v1.0 (default out: results/<group>/results.json)")
+    va = sub.add_parser("validate", help="validate a v1.0 results.json")
+    va.add_argument("file")
     ex.add_argument("--out")
     ex.add_argument("--fill-provisional", action="store_true")
     lb = sub.add_parser("label", help="label real dialogs by hand (stored in a git-ignored JSON)")
@@ -215,6 +246,8 @@ def main():
         cmd_gold(a)
     elif a.cmd == "export":
         cmd_export(a)
+    elif a.cmd == "validate":
+        cmd_validate(a)
     elif a.cmd == "label":
         cmd_label(a)
     elif a.cmd == "serve":

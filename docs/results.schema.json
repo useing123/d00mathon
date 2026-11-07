@@ -1,0 +1,136 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "cqa-results-v1.0",
+ "title": "CQA submission results.json v1.0 (see cqa/submission.py SPEC; ASSUMED items pending the guide)",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "format_version",
+  "group",
+  "generated_at",
+  "source_run",
+  "turn_numbering",
+  "dialogs"
+ ],
+ "properties": {
+  "format_version": {
+   "const": "1.0"
+  },
+  "group": {
+   "type": "string"
+  },
+  "generated_at": {
+   "type": "string"
+  },
+  "source_run": {
+   "type": "string"
+  },
+  "turn_numbering": {
+   "const": "1-based"
+  },
+  "dialogs": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/dialog"
+   }
+  }
+ },
+ "$defs": {
+  "criterion": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "value",
+    "evidence_turns"
+   ],
+   "properties": {
+    "value": {
+     "type": [
+      "boolean",
+      "integer",
+      "null"
+     ]
+    },
+    "evidence_turns": {
+     "type": "array",
+     "items": {
+      "type": "integer",
+      "minimum": 1
+     },
+     "uniqueItems": true
+    }
+   }
+  },
+  "dialog": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "conversation_id",
+    "checklist_id",
+    "final_score",
+    "critical_flag",
+    "criteria"
+   ],
+   "properties": {
+    "conversation_id": {
+     "type": "string",
+     "minLength": 1
+    },
+    "checklist_id": {
+     "type": "string"
+    },
+    "final_score": {
+     "type": [
+      "number",
+      "null"
+     ],
+     "minimum": 0,
+     "maximum": 100
+    },
+    "critical_flag": {
+     "type": "boolean"
+    },
+    "criteria": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "contact",
+      "discovery",
+      "identification",
+      "consultation",
+      "empathy",
+      "dialogue_management",
+      "closing",
+      "critical"
+     ],
+     "properties": {
+      "contact": {
+       "$ref": "#/$defs/criterion"
+      },
+      "discovery": {
+       "$ref": "#/$defs/criterion"
+      },
+      "identification": {
+       "$ref": "#/$defs/criterion"
+      },
+      "consultation": {
+       "$ref": "#/$defs/criterion"
+      },
+      "empathy": {
+       "$ref": "#/$defs/criterion"
+      },
+      "dialogue_management": {
+       "$ref": "#/$defs/criterion"
+      },
+      "closing": {
+       "$ref": "#/$defs/criterion"
+      },
+      "critical": {
+       "$ref": "#/$defs/criterion"
+      }
+     }
+    }
+   }
+  }
+ }
+}

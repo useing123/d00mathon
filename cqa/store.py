@@ -48,6 +48,22 @@ def load_results(group):
     return doc
 
 
+def load_run(group, run=None):
+    """Load a named run (results/<run>.json) or the group default, with turn upgrade + overrides applied."""
+    if not run:
+        return load_results(group)
+    from .util import safe_child
+    p = safe_child(config.RESULTS_DIR, run, ".json")
+    if not p.exists():
+        return None
+    doc = upgrade_turns(json.loads(p.read_text(encoding="utf-8")))
+    ov = load_overrides(group)
+    for d in doc["dialogs"]:
+        apply_overrides(d, ckl.load(d["checklist_id"]), ov.get(d["conversation_id"], {}))
+    doc["run"] = run
+    return doc
+
+
 def save_results(group, dialogs, meta, out=None):
     config.RESULTS_DIR.mkdir(exist_ok=True)
     from .data import TURN_BASE
