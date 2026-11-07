@@ -71,13 +71,13 @@ FAREWELL = _rx(r"сау\s+бол", r"қош\s+бол", r"жақсы\s+күн", r
                r"хорошего\s+(дня|вечера)", r"удачи", r"good\s*bye", r"\bbye\b", r"have\s+a\s+(nice|good|great)",
                r"\bsau\s+bol", r"take\s+care", r"всех\s+благ")
 HELP_OFFER = _rx(r"тағы\s+(қандай\s+)?сұрақ", r"басқа\s+сұрақ", r"тағы\s+(не|қалай)\s+көмек", r"сұрақтарыңыз\s+болса",
-                 r"ещ[её]\s+(какие|есть)?\s*вопрос", r"чем\s+ещ[её]", r"ещ[её]\s+чем", r"если\s+(появятся|возникнут|будут)\s+(ещ[её]\s+)?вопрос",
+                 r"ещ[её]\s+(какие|есть)?\s*вопрос", r"чем\s+ещ[её]", r"ещ[её]\s+чем", r"если\s+(появятся|возникнут|будут)\s+(ещ[её]\s+)?вопрос",  # noqa: E501
                  r"обращайтесь", r"пишите", r"anything\s+else", r"other\s+questions", r"further\s+(help|questions)",
                  r"feel\s+free", r"жазыңыз", r"хабарласыңыз")
 SUMMARY = _rx(r"\bитак\b", r"подвед[её]м", r"резюмир", r"to\s+sum(marize)?", r"in\s+summary", r"\bқорыта\s+келе",
               r"\bсонымен\b", r"как\s+договорились")
 RED_FLAGS = _rx(r"личн(ый|ого)\s+номер", r"жеке\s+нөмір", r"переведите\s+мне", r"на\s+(мою|мой)\s+(карту|сч[её]т|номер)",
-                r"маған\s+аударыңыз", r"за\s+плату", r"за\s+[\d\s]+\s*(тенге|тг|₸|руб)", r"telegram|телеграм|whatsapp|ватсап", r"ақыға", r"to\s+my\s+(personal\s+)?(card|account)",
+                r"маған\s+аударыңыз", r"за\s+плату", r"за\s+[\d\s]+\s*(тенге|тг|₸|руб)", r"telegram|телеграм|whatsapp|ватсап", r"ақыға", r"to\s+my\s+(personal\s+)?(card|account)",  # noqa: E501
                 r"туп(ой|ая|ые)", r"идиот", r"дура[кч]", r"ақымақ", r"\bступид", r"stupid", r"idiot", r"\bнадоел")
 # a "full" operator reply (not a one-word ack): ending without farewell then is a real omission
 _MIN_FULL = 25
@@ -167,7 +167,7 @@ def format_signals(sig):
          f"- Язык клиента (KZ-aware): {sig['client_lang'] or 'не определён'}; язык первой реплики оператора: "
          f"{sig['operator_first_lang'] or 'не определён'} (MIXED = смешение KZ/RU; любой из двух языков подходит)."]
     for k, who in (("client", "клиент"), ("operator", "оператор")):
-        tl = [f"№{n}:{l}" for n, l in sig["turn_langs"][k] if l]
+        tl = [f"№{n}:{lang}" for n, lang in sig["turn_langs"][k] if lang]
         if tl:
             L.append(f"- Языки реплик ({who}): " + ", ".join(tl[:20]))
     for s in sig["signals"]:

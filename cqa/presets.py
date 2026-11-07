@@ -28,7 +28,7 @@ PRESETS = {
                 "ensemble": False, "model": "claude-haiku-5-5", "prompt": "v0",
                 "why": ("Дешёвая локальная модель решает уверенные критерии, неуверенные — haiku, спорные — sonnet. "
                         "Нужен vLLM-эндпоинт (CQA_OPENAI_BASE_URL); см. docs/OSS_ROUTER.md.")},
-    "hybrid": {"label": "гибрид: KZ-сигналы парсера в FACTS + каскад open-weight → haiku → sonnet", "bench_config": "hybrid", "router": "hybrid",
+    "hybrid": {"label": "гибрид: KZ-сигналы парсера в FACTS + каскад open-weight → haiku → sonnet", "bench_config": "hybrid", "router": "hybrid",  # noqa: E501
                "ensemble": False, "model": "claude-haiku-5-5", "prompt": "v0",
                "why": ("Парсер (RU/KZ/EN) добавляет в FACTS подсказки с номерами реплик и глоссами казахских фраз; "
                        "вердикты выносят модели каскада. См. docs/HYBRID_KZ.md.")},
