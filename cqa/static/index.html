@@ -1,183 +1,375 @@
 <!doctype html>
-<html lang="ru"><head><meta charset="utf-8"><title>CQA · Freedom Broker</title>
+<html lang="ru"><head><meta charset="utf-8"><title>CQA · Контроль качества</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-:root{--bg:#f6f7f9;--card:#fff;--b:#e3e6ea;--t:#1d2433;--m:#6b7280;--g:#16a34a;--r:#dc2626;--y:#d97706;--a:#2563eb;--na:#9ca3af}
-*{box-sizing:border-box}body{margin:0;font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--t)}
-header{display:flex;align-items:center;gap:16px;padding:10px 18px;background:#0f3d2e;color:#fff}
-header b{font-size:16px}header nav a{color:#cfe;margin-right:14px;cursor:pointer;text-decoration:none}header nav a.on{color:#fff;border-bottom:2px solid #7f7}
-header .meta{margin-left:auto;font-size:12px;opacity:.8}
-main{padding:16px 18px}.card{background:var(--card);border:1px solid var(--b);border-radius:8px;padding:14px;margin-bottom:14px}
-.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}button,select,input,textarea{font:inherit}
-button{background:var(--a);color:#fff;border:0;border-radius:6px;padding:6px 12px;cursor:pointer}button.sec{background:#e5e7eb;color:var(--t)}button:disabled{opacity:.5}
-input,select,textarea{border:1px solid var(--b);border-radius:6px;padding:5px 8px;background:#fff}
-table{border-collapse:collapse;width:100%}th,td{border-bottom:1px solid var(--b);padding:6px 8px;text-align:left;vertical-align:top}th{font-size:12px;color:var(--m);font-weight:600;cursor:pointer}
-tr.click:hover{background:#f0f5ff;cursor:pointer}
-.v{display:inline-block;min-width:34px;text-align:center;padding:1px 6px;border-radius:10px;font-weight:600;font-size:12px}
-.YES{background:#dcfce7;color:var(--g)}.NO{background:#fee2e2;color:var(--r)}.NA{background:#f3f4f6;color:var(--na)}.S{background:#fef3c7;color:#92400e}.ERR{background:#000;color:#fff}
-.gross{background:var(--r);color:#fff;padding:1px 6px;border-radius:4px;font-size:11px}
-.total{font-size:28px;font-weight:700}.muted{color:var(--m);font-size:12px}
-.grid{display:grid;grid-template-columns:minmax(380px,1fr) minmax(420px,1.2fr);gap:14px}
-.turn{padding:5px 8px;border-left:3px solid transparent;margin:2px 0;border-radius:4px;font-size:13px}
-.turn .sp{font-weight:600;font-size:11px;text-transform:uppercase;margin-right:6px}.turn.client .sp{color:#7c3aed}.turn.operator .sp{color:#0f766e}.turn.bot .sp{color:#9ca3af}.turn.system{color:#9ca3af;font-style:italic}
-.turn.internal{background:repeating-linear-gradient(45deg,#fafafa,#fafafa 6px,#f1f1f1 6px,#f1f1f1 12px)}
-.turn.ev{background:#fff7d6;border-left-color:var(--y)}.turn.focus{outline:2px solid var(--a)}.turn.seek{cursor:pointer}.turn.seek:hover{background:#eef}
-.crit{border:1px solid var(--b);border-radius:6px;padding:8px 10px;margin-bottom:8px}.crit h4{margin:0 0 4px;font-size:13px;display:flex;gap:8px;align-items:center}
-.ev a{color:var(--a);cursor:pointer}.diff{background:#ede9fe;color:#5b21b6;font-size:11px;padding:1px 6px;border-radius:4px}
-.bar{height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden;width:260px}.bar>div{height:100%;background:var(--a);width:0}
-.ccard{border:1px solid var(--b);border-radius:6px;padding:8px;margin-bottom:8px}.ccard textarea{width:100%;height:70px}
-.hide{display:none}.transcript{max-height:72vh;overflow:auto}.crits{max-height:80vh;overflow:auto}
-.hist{display:flex;gap:3px;align-items:flex-end;height:60px}.hist div{background:var(--a);width:22px}
+:root{--ink:#1d1d1f;--ink2:#424245;--mut:#86868b;--line:#e5e5ea;--soft:#f5f5f7;--bg:#fff;--acc:#0071e3;--accs:#e8f1fc;
+--good:#1f8a3b;--goods:#e3f4e8;--bad:#d70015;--bads:#fde8ea;--mid:#b25f00;--mids:#fff3e0;--na:#aeaeb2;--nas:#f2f2f4;--hum:#6e3fd1;--hums:#f0eafc}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue",Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+button,select,input,textarea{font:inherit;color:inherit}
+.hide{display:none!important}.mut{color:var(--mut)}.sm{font-size:12px}.num{font-variant-numeric:tabular-nums}
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:20px;height:56px;padding:0 28px;background:rgba(255,255,255,.86);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
+.brand{font-weight:600;font-size:15px;letter-spacing:-.01em;white-space:nowrap}.brand span{color:var(--mut);font-weight:400}
+.tabs{display:flex;gap:2px;background:var(--soft);padding:3px;border-radius:9px}
+.tabs a{padding:5px 14px;border-radius:7px;cursor:pointer;color:var(--ink2);font-size:13px;user-select:none}.tabs a.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.1);font-weight:500}
+.tabs a.dis{opacity:.4;pointer-events:none}
+.sp{flex:1}
+.ctl{display:flex;align-items:center;gap:8px}
+.fld{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mut)}
+select,input[type=text],input:not([type]),input[type=number],textarea{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:#fff;outline:none}
+select:focus,input:focus,textarea:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--accs)}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px;white-space:nowrap;text-decoration:none;color:var(--ink)}
+.btn:hover{background:var(--soft)}.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:500}.btn.pri:hover{background:#0068d1}
+.btn.ghost{border-color:transparent}.btn:disabled{opacity:.45;cursor:default}
+.menu{position:relative}.menu .pop{position:absolute;right:0;top:40px;min-width:280px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.12);padding:6px;z-index:30}
+.pop .it{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:7px;cursor:pointer;font-size:13px}.pop .it:hover{background:var(--soft)}
+.pop .it small{display:block;color:var(--mut);font-size:11px}.pop hr{border:0;border-top:1px solid var(--line);margin:4px 0}
+.prog{display:flex;align-items:center;gap:12px;padding:10px 28px;background:var(--accs);font-size:13px}.prog .bar{flex:0 0 280px;height:6px;background:#fff;border-radius:3px;overflow:hidden}.prog .bar div{height:100%;background:var(--acc);width:0;transition:width .4s}
+.prog.err{background:var(--bads)}.prog.ok{background:var(--goods)}
+main{padding:24px 28px 60px;max-width:1600px;margin:0 auto}
+h2{font-size:22px;letter-spacing:-.02em;margin:0 0 4px;font-weight:600}h3{font-size:15px;margin:0 0 12px;font-weight:600}
+.sub{color:var(--mut);font-size:13px;margin-bottom:20px}
+.card{border:1px solid var(--line);border-radius:14px;padding:20px;background:#fff}
+.ov{display:grid;grid-template-columns:300px 1fr 1fr;gap:16px;margin-bottom:16px}
+.hero .big{font-size:64px;font-weight:600;letter-spacing:-.04em;line-height:1}.hero .big small{font-size:22px;color:var(--mut);font-weight:400;letter-spacing:0}
+.hero .lbl{font-size:13px;color:var(--mut);margin-bottom:10px}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:14px 10px;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+.kpi b{display:block;font-size:22px;font-weight:600;letter-spacing:-.02em}.kpi span{font-size:12px;color:var(--mut)}.kpi.bad b{color:var(--bad)}
+.hist{display:flex;align-items:flex-end;gap:6px;height:150px;padding-top:18px}
+.hist .col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.hist .col i{display:block;width:100%;background:#34a853;opacity:.85;border-radius:4px 4px 0 0;min-height:1px}.hist .col.lo i{background:var(--bad);opacity:.7}.hist .col.mid i{background:#ff9f0a;opacity:.8}
+.hist .col em{font-style:normal;font-size:11px;color:var(--ink2);margin-bottom:3px}.hist .col.zero em{color:var(--na)}.hist .col.zero i{opacity:0}
+.hax{display:flex;gap:6px;font-size:10px;color:var(--mut);margin-top:4px}.hax span{flex:1;text-align:center}
+.ins{list-style:none;padding:0;margin:0}.ins li{padding:9px 0;border-bottom:1px solid var(--line);font-size:13px;display:flex;gap:10px}.ins li:last-child{border:0}
+.ins .dot{flex:0 0 8px;height:8px;border-radius:4px;margin-top:6px;background:var(--acc)}.ins .dot.r{background:var(--bad)}.ins .dot.g{background:var(--good)}.ins .dot.p{background:var(--hum)}
+.chip{display:inline-block;padding:1px 8px;border-radius:6px;background:var(--soft);font-size:12px;cursor:pointer;margin:2px 3px 0 0;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.chip:hover{background:var(--bads);color:var(--bad)}
+.crits-ov{margin-bottom:16px}
+.crow{display:grid;grid-template-columns:260px 1fr 150px;gap:16px;align-items:center;padding:7px 0;font-size:13px}
+.crow .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.crow .nm b{font-weight:500;color:var(--mut);margin-right:6px;font-variant-numeric:tabular-nums}
+.sbar{display:flex;height:16px;border-radius:5px;overflow:hidden;background:var(--soft)}.sbar div{height:100%;font-size:10px;color:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;white-space:nowrap}
+.sbar .g{background:#34a853}.sbar .g2{background:#86cf98}.sbar .m{background:#ff9f0a}.sbar .b{background:#e5484d}.sbar .n{background:#d1d1d6;color:#636366}
+.legend{display:flex;gap:16px;font-size:12px;color:var(--mut)}.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.tbar{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.seg{display:inline-flex;background:var(--soft);border-radius:8px;padding:2px}.seg a{padding:4px 10px;border-radius:6px;font-size:12px;cursor:pointer;color:var(--ink2)}.seg a.on{background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.1);color:var(--ink)}
+.tw{overflow:auto;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:13px}
+th{position:sticky;top:0;background:#fafafa;font-weight:500;color:var(--mut);font-size:11px;text-align:center;padding:8px 6px;border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer;user-select:none}
+th.l,td.l{text-align:left}th .ar{color:var(--acc)}
+td{padding:7px 6px;border-bottom:1px solid #f0f0f2;text-align:center;white-space:nowrap}
+tbody tr{cursor:pointer}tbody tr:hover td{background:#f7f9fc}tbody tr:last-child td{border-bottom:0}
+tr.gross td:first-child{box-shadow:inset 3px 0 0 var(--bad)}
+.v{display:inline-block;min-width:34px;padding:1px 6px;border-radius:6px;font-size:12px;font-weight:500;text-align:center;position:relative;font-variant-numeric:tabular-nums}
+.v.good{background:var(--goods);color:var(--good)}.v.bad{background:var(--bads);color:var(--bad)}.v.mid{background:var(--mids);color:var(--mid)}.v.na{background:var(--nas);color:var(--na)}.v.err{background:var(--ink);color:#fff}
+.v.hum{outline:1.5px solid var(--hum);outline-offset:1px}
+.jd{display:inline-block;width:14px;height:14px;line-height:14px;font-size:9px;border-radius:7px;background:var(--ink2);color:#fff;font-weight:600;vertical-align:1px;margin-left:3px}
+.tot{font-weight:600;font-size:14px}.tot.lo{color:var(--bad)}
+.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:5px;font-weight:500}.tag.bad{background:var(--bad);color:#fff}.tag.hum{background:var(--hums);color:var(--hum)}.tag.soft{background:var(--soft);color:var(--ink2)}
+#tip{position:fixed;z-index:50;background:rgba(29,29,31,.95);color:#fff;font-size:12px;padding:8px 10px;border-radius:8px;pointer-events:none;max-width:320px;line-height:1.5}
+.dh{display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.dh .id{font-size:20px;font-weight:600;letter-spacing:-.02em;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.score{display:flex;align-items:baseline;gap:6px}.score b{font-size:30px;font-weight:600;letter-spacing:-.03em}.score span{font-size:12px;color:var(--mut)}.score.h b{color:var(--hum)}
+.panes{display:grid;grid-template-columns:minmax(440px,1fr) minmax(520px,1.1fr);gap:16px;align-items:start}
+.pane{border:1px solid var(--line);border-radius:14px;overflow:hidden}.pane .ph{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;background:#fafafa;font-size:13px}
+.pane .pb{max-height:calc(100vh - 230px);overflow:auto;padding:12px 14px}
+.turn{display:grid;grid-template-columns:28px 1fr;gap:8px;padding:6px 8px;border-radius:10px;margin:2px 0;transition:background .3s}
+.turn .n{font-size:11px;color:var(--na);text-align:right;padding-top:3px;font-variant-numeric:tabular-nums}
+.turn .who{font-size:11px;font-weight:600;letter-spacing:.02em;margin-bottom:1px}.turn .who time{font-weight:400;color:var(--mut);margin-left:6px}
+.turn .tx{font-size:13.5px;white-space:pre-wrap;word-wrap:break-word}
+.turn.client .who{color:#0071e3}.turn.client .bub{border-left:2px solid #0071e3;padding-left:9px}
+.turn.operator .who{color:#3a3a3c}.turn.operator .bub{border-left:2px solid #3a3a3c;padding-left:9px}
+.turn.bot .who{color:#8e8e93}.turn.bot .bub{border-left:2px dashed #c7c7cc;padding-left:9px}.turn.bot .tx{color:var(--ink2)}
+.turn.system .who{color:var(--na)}.turn.system .tx{color:var(--mut);font-size:12px;font-style:italic}.turn.system .bub{padding-left:11px}
+.turn.internal{background:repeating-linear-gradient(135deg,#fff,#fff 6px,#f7f7f9 6px,#f7f7f9 12px)}
+.turn.ev .n{color:var(--acc);font-weight:600}
+.turn.flash{background:#fff4c2}
+.turn.seek{cursor:pointer}.turn.seek:hover{background:var(--soft)}
+.evm{display:inline-block;font-size:10px;color:var(--acc);background:var(--accs);border-radius:4px;padding:0 4px;margin-left:4px;font-weight:500}
+.audio{padding:10px 14px;border-bottom:1px solid var(--line)}.audio audio{width:100%;height:36px}
+.cr{border-bottom:1px solid var(--line);padding:14px 16px}.cr:last-child{border:0}
+.cr.sel{background:#faf7ff;box-shadow:inset 3px 0 0 var(--hum)}
+.cr .hd{display:flex;align-items:center;gap:8px}.cr .hd .t{font-weight:500;flex:1}.cr .hd .t b{color:var(--mut);font-weight:500;margin-right:4px}
+.cr .js{font-size:13px;color:var(--ink2);margin:6px 0 0}
+.cr .meta{font-size:12px;color:var(--mut);margin-top:6px}
+.evs{margin-top:8px;display:flex;flex-direction:column;gap:4px}
+.evq{font-size:12.5px;background:var(--soft);border-radius:8px;padding:5px 9px;cursor:pointer;color:var(--ink2);border:1px solid transparent}.evq:hover{border-color:var(--acc);background:var(--accs)}
+.evq b{color:var(--acc);font-weight:600;margin-right:6px;font-variant-numeric:tabular-nums}
+.jury{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;font-size:12px;align-items:center}
+.jury .jv{display:inline-flex;gap:5px;align-items:center;background:var(--soft);border-radius:6px;padding:2px 8px}
+.jury .jv.dec{background:var(--ink);color:#fff}
+.ovr{margin-top:8px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.ovr .lnk{font-size:12px;color:var(--acc);cursor:pointer}
+.ovf{margin-top:10px;padding:10px;border:1px solid var(--hums);background:#fcfaff;border-radius:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ovf input{flex:1;min-width:180px}
+.hn{margin-top:8px;font-size:12px;color:var(--hum);background:var(--hums);border-radius:8px;padding:6px 9px}
+details summary{cursor:pointer;font-size:12px;color:var(--mut);margin-top:8px}details .rs{font-size:12px;color:var(--ink2);margin-top:4px;white-space:pre-wrap}
+.kbd{font-family:ui-monospace,monospace;font-size:11px;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 4px;color:var(--ink2)}
+.clg{display:grid;grid-template-columns:1fr 1fr 160px;gap:12px}
+.clg label,.ccard label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--mut)}
+textarea{width:100%;resize:vertical;font-size:13px}
+.ccard{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:10px}
+.ccard .r1{display:grid;grid-template-columns:60px 1fr 120px 130px 80px auto auto 76px;gap:10px;align-items:end}
+.ccard .r2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.ck{display:flex;gap:5px;align-items:center;font-size:12px;color:var(--ink2);padding-bottom:7px;white-space:nowrap}
+.empty{padding:60px;text-align:center;color:var(--mut)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;z-index:40}
+.modal .box{background:#fff;border-radius:16px;padding:22px;width:680px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.toast{position:fixed;bottom:24px;right:28px;box-shadow:0 6px 20px rgba(0,0,0,.2);background:var(--ink);color:#fff;padding:9px 16px;border-radius:10px;font-size:13px;z-index:60}
+@media (max-width:1380px){.ov{grid-template-columns:260px 1fr}.ov .insc{grid-column:1/-1}.panes{grid-template-columns:1fr 1fr}.crow{grid-template-columns:220px 1fr 130px}.top{gap:12px;padding:0 20px}main{padding:20px}}
 </style></head><body>
-<header><b>CQA · Freedom Broker</b><nav>
-<a data-v="runs" class="on">Оценка</a><a data-v="dialog">Диалог</a><a data-v="checklists">Чек-листы</a></nav>
-<span class="meta" id="meta"></span></header>
+<div class="top">
+ <div class="brand">CQA <span>· Контроль качества</span></div>
+ <div class="tabs" id="tabs"><a data-v="runs" class="on">Обзор</a><a data-v="dialog" class="dis">Диалог</a><a data-v="checklists">Чек-листы</a></div>
+ <div class="sp"></div>
+ <div class="ctl">
+  <label class="fld">Группа <select id="gsel" title="Группа диалогов"></select></label>
+  <label class="fld">Прогон <select id="rsel" title="Файл результатов (по умолчанию — самый новый)"></select></label>
+  <button class="btn pri" id="btnMain" title="Загрузить группу из CQA API и оценить (с кэшем)">Загрузить и оценить</button>
+  <div class="menu"><button class="btn" id="btnMore" title="Другие действия">Ещё ▾</button>
+   <div class="pop hide" id="pop">
+    <div class="it" id="mFile">⬆︎<div>Загрузить JSON<small>Файл с диалогами → новая группа</small></div></div>
+    <div class="it" id="mPaste">✎<div>Вставить транскрипт<small>Один диалог текстом</small></div></div>
+    <div class="it" id="mFetch">⇣<div>Только загрузить группу<small>Без оценки</small></div></div>
+    <hr>
+    <div class="it" id="mReeval">↻<div>Переоценить по текущему чек-листу<small>Кэш: только изменённые критерии</small></div></div>
+    <label class="it"><input type="checkbox" id="fresh"><div>Без кэша<small>Все вызовы к модели заново (дороже)</small></div></label>
+    <div class="it" id="mRescore">∑<div>Пересчитать веса<small>Без обращения к модели</small></div></div>
+    <hr>
+    <a class="it" id="exJson" style="color:inherit;text-decoration:none">⇩<div>Экспорт JSON</div></a>
+    <a class="it" id="exCsv" style="color:inherit;text-decoration:none">⇩<div>Экспорт CSV<small>AI + человек</small></div></a>
+   </div></div>
+  <input type="file" id="file" accept=".json" class="hide">
+ </div>
+</div>
+<div class="prog hide" id="prog"><span id="pstat"></span><div class="bar"><div id="pbar"></div></div><span class="mut sm" id="pmeta"></span><span class="sp"></span><a class="btn ghost hide" id="pclose">Закрыть</a></div>
 <main>
-<!-- RUNS -->
 <section id="v-runs">
- <div class="card"><div class="row">
-  <b>Группа:</b><input id="gid" value="DEV" size="10">
-  <button id="btnFetchEval" title="Загрузить группу по CQA_API_URL и сразу оценить">Fetch group &amp; evaluate</button>
-  <button class="sec" id="btnFetch">Только загрузить</button>
-  <button class="sec" id="btnReeval" title="Использует кэш: к LLM уходят только изменённые критерии и новые диалоги">Re-evaluate with current checklist</button>
-  <label class="muted"><input type="checkbox" id="fresh"> без кэша</label>
-  <span>|</span>
-  <label class="sec">Загрузить JSON <input type="file" id="file" accept=".json"></label>
-  <button class="sec" id="btnPasteToggle">Вставить транскрипт</button>
- </div>
- <div id="pasteBox" class="hide" style="margin-top:10px">
-  <div class="muted">Одна реплика на строку: <code>[мм:сс] operator: текст</code> (speaker: client|bot|operator|system)</div>
-  <textarea id="paste" style="width:100%;height:140px"></textarea>
-  <div class="row"><select id="pch"><option>agent chat</option><option>voice call</option></select>
-  <select id="plang"><option>RU</option><option>KZ</option><option>EN</option></select>
-  <button id="btnPaste">Добавить в группу PASTE и оценить</button></div>
- </div>
- <div class="row" style="margin-top:10px"><div class="bar"><div id="pbar"></div></div><span id="pstat" class="muted"></span></div>
- </div>
- <div class="card"><div class="row"><b>Группы:</b><span id="groups"></span></div></div>
- <div class="card" id="summary"></div>
- <div class="card"><div class="row" style="justify-content:space-between"><b>Диалоги</b>
-  <span class="row">
-   <input id="flt" placeholder="фильтр id / язык" size="16">
-   <a id="exJson" class="sec" href="#"><button class="sec">JSON</button></a>
-   <a id="exCsv" href="#"><button class="sec">CSV (AI)</button></a>
-   <a id="exCsvH" href="#"><button class="sec">CSV (Human)</button></a>
-   <a id="exCsvB" href="#"><button class="sec">CSV (AI+Human)</button></a>
-   <button class="sec" id="btnRescore" title="Пересчитать итоги после смены весов (без LLM)">Пересчитать веса</button>
-  </span></div>
-  <table id="tbl"></table></div>
+ <div id="ovw"></div>
+ <div class="tbar"><h3 style="margin:0">Диалоги</h3><span class="mut sm" id="cnt"></span><span class="sp"></span>
+  <div class="seg" id="fseg"><a data-f="all" class="on">Все</a><a data-f="gross">Грубые ошибки</a><a data-f="judge">Решал судья</a><a data-f="low">Итог &lt; 70</a><a data-f="hum">Проверено</a></div>
+  <input id="flt" placeholder="Поиск по id, каналу, языку" style="width:220px"></div>
+ <div class="tw" id="tw"><table id="tbl"></table></div>
+ <div class="mut sm" style="margin-top:8px"><span class="jd">С</span> — присяжные разошлись, решение принял судья (наведите для голосов) · <span class="v good hum">Да</span> — исправлено человеком · красная полоса слева — грубая ошибка</div>
 </section>
-<!-- DIALOG -->
 <section id="v-dialog" class="hide">
- <div class="card row" id="dhead"></div>
- <div class="grid">
-  <div class="card"><div id="audioBox"></div><div class="transcript" id="transcript"></div></div>
-  <div class="card crits" id="crits"></div>
+ <div class="dh" id="dhead"></div>
+ <div class="panes">
+  <div class="pane"><div class="ph"><b>Транскрипт</b><span class="mut sm" id="tmeta"></span><span class="sp"></span><span class="legend"><span><i style="background:#0071e3"></i>Клиент</span><span><i style="background:#3a3a3c"></i>Оператор</span><span><i style="background:#c7c7cc"></i>Бот</span></span></div>
+   <div id="audioBox"></div><div class="pb" id="transcript"></div></div>
+  <div class="pane"><div class="ph"><b>Критерии</b><span class="mut sm" id="cmeta"></span><span class="sp"></span><span class="mut sm"><span class="kbd">j</span> <span class="kbd">k</span> — след./пред. диалог</span></div><div class="pb" id="crits" style="padding:0"></div></div>
  </div>
 </section>
-<!-- CHECKLISTS -->
 <section id="v-checklists" class="hide">
- <div class="card row"><select id="clSel"></select><button class="sec" id="btnClNew">Новый (копия)</button>
- <button class="sec" id="btnYaml">YAML</button><button id="btnClSave">Сохранить</button><span id="clMsg" class="muted"></span></div>
- <div class="card"><div class="row"><label>id <input id="clId" size="22"></label><label>Название <input id="clName" size="40"></label>
-  <label>Канал <select id="clCh"><option>chat</option><option>call</option></select></label><span class="muted" id="wsum"></span></div>
-  <div class="muted" style="margin-top:6px">Описание / допущения для LLM:</div><textarea id="clDesc" style="width:100%;height:50px"></textarea>
-  <div class="muted">Assumptions (JSON):</div><textarea id="clAss" style="width:100%;height:46px"></textarea></div>
- <div id="clCrit"></div><button class="sec" id="btnAddCrit">+ критерий</button>
- <div class="card hide" id="yamlBox"><textarea id="yaml" style="width:100%;height:60vh;font-family:monospace"></textarea></div>
+ <div class="tbar"><h2 style="margin:0">Чек-листы</h2><span class="sp"></span>
+  <select id="clSel"></select><button class="btn" id="btnClNew">Создать копию</button><button class="btn" id="btnYaml">Редактор YAML</button><button class="btn pri" id="btnClSave">Сохранить</button></div>
+ <div class="sub" id="clMsg">Изменения критериев применяются при следующей оценке; «Переоценить» отправит модели только изменённые критерии.</div>
+ <div id="clForm"><div class="card">
+  <div class="clg"><label>Идентификатор<input id="clId"></label><label>Название<input id="clName"></label><label>Канал<select id="clCh"><option value="chat">Чат</option><option value="call">Звонок</option></select></label></div>
+  <div class="clg" style="grid-template-columns:1fr 1fr;margin-top:12px"><label>Описание и допущения для модели<textarea id="clDesc" rows="5"></textarea></label>
+  <label>Допущения (JSON)<textarea id="clAss" rows="5" style="word-break:break-all;font-family:ui-monospace,monospace;font-size:12px"></textarea></label></div>
+  <div class="mut sm" id="wsum" style="margin-top:8px"></div></div>
+  <div id="clCrit"></div><button class="btn" id="btnAddCrit" style="margin-top:12px">+ Добавить критерий</button></div>
+ <div class="card hide" id="yamlBox"><textarea id="yaml" style="height:65vh;font-family:ui-monospace,monospace;font-size:12px"></textarea></div>
 </section>
 </main>
+<div id="tip" class="hide"></div>
+<div class="modal hide" id="pasteM"><div class="box"><h3>Вставить транскрипт</h3>
+ <div class="mut sm" style="margin-bottom:8px">Одна реплика на строку: <code>[мм:сс] operator: текст</code> — роли: client, bot, operator, system.</div>
+ <textarea id="paste" rows="12"></textarea>
+ <div style="display:flex;gap:8px;margin-top:12px;align-items:center"><select id="pch"><option value="agent chat">Чат</option><option value="voice call">Звонок</option></select>
+ <select id="plang"><option>RU</option><option>KZ</option><option>EN</option></select><span class="sp"></span>
+ <button class="btn" onclick="$('#pasteM').classList.add('hide')">Отмена</button><button class="btn pri" id="btnPaste">Добавить в группу PASTE и оценить</button></div></div></div>
 <script>
-const $=s=>document.querySelector(s), api=async(u,o={})=>{const r=await fetch(u,o);if(!r.ok)throw new Error((await r.text()));return r.json()};
-let G='DEV', DOC=null, DIALOGS={}, CUR=null, SORT={k:'conversation_id',d:1}, CL=null;
-const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-function badge(v){if(v===null||v===undefined)return '<span class="v ERR">ERR</span>';const c=(v==='YES'||v==='NO'||v==='NA')?v:'S';return `<span class="v ${c}">${v}</span>`}
-function view(v){document.querySelectorAll('header nav a').forEach(a=>a.classList.toggle('on',a.dataset.v==v));['runs','dialog','checklists'].forEach(x=>$('#v-'+x).classList.toggle('hide',x!=v));if(v=='checklists')loadCl()}
-document.querySelectorAll('header nav a').forEach(a=>a.onclick=()=>view(a.dataset.v));
-async function init(){const h=await api('/api/health');$('#meta').textContent=`${h.provider} · ${h.model}`;await loadGroups();await loadGroup(G)}
-async function loadGroups(){const gs=await api('/api/groups');$('#groups').innerHTML=gs.map(g=>`<button class="sec" onclick="loadGroup('${g.group}')">${g.group} (${g.dialogs})${g.evaluated?' ✓':''}</button>`).join(' ')}
-async function loadGroup(g){G=g;$('#gid').value=g;
- for(const [id,suf] of [['exJson','.json'],['exCsv','.csv?which=ai'],['exCsvH','.csv?which=human'],['exCsvB','.csv?which=both']])$('#'+id).href=`/api/export/${g}${suf}`;
- try{const ds=await api('/api/dialogs/'+g);DIALOGS={};ds.forEach(d=>DIALOGS[d.conversation_id]=d)}catch(e){DIALOGS={}}
- try{DOC=await api('/api/results/'+g)}catch(e){DOC=null}
- renderTable();renderSummary()}
-function renderSummary(){if(!DOC){$('#summary').innerHTML='<span class="muted">Группа ещё не оценена.</span>';return}
- const ds=DOC.dialogs,t=ds.map(d=>d.total).filter(x=>x!=null),m=DOC.meta||{};const bins=Array(10).fill(0);t.forEach(x=>bins[Math.min(9,Math.floor(x/10))]++);const mx=Math.max(...bins,1);
- const per={};ds.forEach(d=>d.criteria.forEach(c=>{per[c.criterion_id]=per[c.criterion_id]||{name:c.name,c:{}};per[c.criterion_id].c[c.value]=(per[c.criterion_id].c[c.value]||0)+1}));
- $('#summary').innerHTML=`<div class="row" style="gap:28px"><div><div class="muted">Средний балл</div><div class="total">${t.length?(t.reduce((a,b)=>a+b,0)/t.length).toFixed(2):'—'}</div><div class="muted">${ds.length} диалогов · грубых ошибок: ${ds.filter(d=>d.gross_error).length} · проверено человеком: ${ds.filter(d=>d.human&&d.human.reviewed).length}</div></div>
- <div><div class="muted">Распределение 0..100</div><div class="hist">${bins.map((b,i)=>`<div title="${i*10}-${i*10+10}: ${b}" style="height:${b/mx*60}px"></div>`).join('')}</div></div>
- <div class="muted">${m.model||''} · ${m.elapsed_s||'?'} c · $${m.cost_usd??'?'}</div></div>
- <table style="margin-top:8px"><tr><th>Критерий</th><th>Распределение значений</th></tr>${Object.entries(per).map(([k,v])=>`<tr><td>${k} ${esc(v.name)}</td><td>${Object.entries(v.c).map(([x,n])=>badge(x)+' '+n).join(' &nbsp; ')}</td></tr>`).join('')}</table>`}
-function renderTable(){const f=$('#flt').value.toLowerCase();let rows;
- if(DOC){rows=DOC.dialogs.slice()}else{rows=Object.values(DIALOGS).map(d=>({conversation_id:d.conversation_id,language:d.language,channel:d.channel,criteria:[]}))}
- rows=rows.filter(d=>!f||(d.conversation_id+' '+d.language+' '+d.channel).toLowerCase().includes(f));
- const k=SORT.k;rows.sort((a,b)=>{const x=k=='total'?(a.total??-1):a[k],y=k=='total'?(b.total??-1):b[k];return (x>y?1:x<y?-1:0)*SORT.d});
- const cids=rows[0]?rows[0].criteria.map(c=>c.criterion_id):[];
- $('#tbl').innerHTML=`<tr><th data-k="conversation_id">ID</th><th data-k="channel">Канал</th><th data-k="language">Язык</th>${cids.map(c=>`<th>${c}</th>`).join('')}<th data-k="total">Итог (AI)</th><th>Итог (человек)</th><th>Грубая</th></tr>`+
- rows.map(d=>`<tr class="click" onclick="openDialog('${d.conversation_id}')"><td>${d.conversation_id}</td><td>${d.channel||''}</td><td>${d.language||''}</td>${d.criteria.map(c=>`<td>${badge(c.value)}${c.self_consistency_disagreement?' <span title="самосогласованность: голоса '+esc(JSON.stringify(c.votes))+'">⚖</span>':''}${d.human&&d.human.overrides[c.criterion_id]?' ✎':''}</td>`).join('')}<td><b>${d.total??'—'}</b></td><td>${d.human&&d.human.reviewed?'<b>'+(d.human.total??'—')+'</b>':'<span class="muted">—</span>'}</td><td>${d.gross_error?'<span class="gross">ДА</span>':''}</td></tr>`).join('');
- document.querySelectorAll('#tbl th[data-k]').forEach(th=>th.onclick=()=>{SORT={k:th.dataset.k,d:SORT.k==th.dataset.k?-SORT.d:1};renderTable()})}
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const api=async(u,o={})=>{const r=await fetch(u,o);if(!r.ok){let t=await r.text();try{t=JSON.parse(t).detail||t}catch(e){}throw new Error(t)}return r.json()};
+const J=b=>({method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let G=null,RUN='',DOC=null,DIALOGS={},CUR=null,SORT={k:'total',d:1},FILT='all',CL=null,CLS={},ORDER=[],OPEN=null;
+const SPK={client:'Клиент',operator:'Оператор',bot:'Бот',system:'Система'};
+const CHN=c=>/call|voice/.test(c||'')?'Звонок':'Чат';
+const MODEL=m=>String(m||'').replace('claude-','').replace(/-5-5$/,'').replace(/^./,x=>x.toUpperCase());
+function toast(m){$$('.toast').forEach(x=>x.remove());const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2600)}
+function cdef(clid,cid){return CLS[clid]?.criteria.find(x=>x.id==cid)}
+// semantic class: good for the operator = green, bad = red (gross criteria: YES = bad)
+function cls(v,def){if(v===null||v===undefined)return'err';if(v==='NA')return'na';
+ if(v==='YES'||v==='NO'){const good=def&&def.gross?v==='NO':v==='YES';return good?'good':'bad'}
+ const sc=(def&&def.scale)||[];const mx=sc.length?Math.max(...sc):20;const n=+v;return n>=mx?'good':n<=0?'bad':'mid'}
+const VL={YES:'Да',NO:'Нет',NA:'н/п'};
+function badge(v,def,extra=''){return `<span class="v ${cls(v,def)} ${extra}">${v===null||v===undefined?'ошибка':VL[v]??v}</span>`}
+function judgeTip(c){if(!c.jury)return'';const j=Object.entries(c.jury).map(([m,v])=>`${MODEL(m)}: ${VL[v]??v}`).join('<br>');
+ return c.decided_by&&c.decided_by!=='consensus'?`Присяжные разошлись:<br>${j}<br><b>Судья ${MODEL(c.decided_by)}: ${VL[c.value]??c.value}</b>`:`Единогласно:<br>${j}`}
+document.addEventListener('mouseover',e=>{const t=e.target.closest('[data-tip]');const tp=$('#tip');if(!t||!t.dataset.tip){tp.classList.add('hide');return}tp.innerHTML=t.dataset.tip;tp.classList.remove('hide');const r=t.getBoundingClientRect();tp.style.left=Math.max(8,Math.min(innerWidth-330,r.left))+'px';tp.style.top=(r.bottom+6)+'px'});
+function view(v){$$('#tabs a').forEach(a=>a.classList.toggle('on',a.dataset.v==v));['runs','dialog','checklists'].forEach(x=>$('#v-'+x).classList.toggle('hide',x!=v));$('#tip').classList.add('hide');if(v=='checklists')loadCl();window.scrollTo(0,0)}
+$$('#tabs a').forEach(a=>a.onclick=()=>view(a.dataset.v));
+const curView=()=>$$('#tabs a.on')[0].dataset.v;
+$('#btnMore').onclick=e=>{e.stopPropagation();$('#pop').classList.toggle('hide')};
+document.addEventListener('click',e=>{if(!e.target.closest('.menu'))$('#pop').classList.add('hide')});
+async function init(){await loadAllCl();const gs=await api('/api/groups');
+ $('#gsel').innerHTML=gs.map(g=>`<option value="${esc(g.group)}">${esc(g.group)} · ${g.dialogs}</option>`).join('');
+ const want=localStorage.cqaGroup&&gs.find(g=>g.group==localStorage.cqaGroup)?localStorage.cqaGroup:(gs.find(g=>g.group=='DEV')||gs[0]||{}).group;
+ if(want){$('#gsel').value=want;await loadGroup(want)}else $('#ovw').innerHTML='<div class="card empty">Нет данных. Загрузите группу или JSON-файл.</div>'}
+$('#gsel').onchange=()=>loadGroup($('#gsel').value);
+$('#rsel').onchange=()=>{RUN=$('#rsel').value;loadResults()};
+async function loadGroup(g,keepRun){G=g;localStorage.cqaGroup=g;
+ try{const ds=await api('/api/dialogs/'+encodeURIComponent(g));DIALOGS={};ds.forEach(d=>DIALOGS[d.conversation_id]=d)}catch(e){DIALOGS={}}
+ let runs=[];try{runs=await api('/api/runs/'+encodeURIComponent(g))}catch(e){}
+ if(!keepRun||!runs.find(r=>r.run==RUN))RUN=runs[0]?.run||'';
+ $('#rsel').innerHTML=runs.length?runs.map((r,i)=>`<option value="${esc(r.run)}">${esc(r.run)} · ${r.dialogs} · ${esc(r.created_at.slice(5,16).replace('T',' '))}${i==0?' · новый':''}</option>`).join(''):'<option value="">нет результатов</option>';
+ $('#rsel').value=RUN;await loadResults()}
+const rq=()=>RUN?'?run='+encodeURIComponent(RUN):'';
+async function loadResults(){try{DOC=await api('/api/results/'+encodeURIComponent(G)+rq())}catch(e){DOC=null}
+ $('#exJson').href=`/api/export/${G}.json${rq()}`;$('#exCsv').href=`/api/export/${G}.csv?which=both${RUN?'&run='+encodeURIComponent(RUN):''}`;
+ renderOverview();renderTable();if(CUR&&curView()=='dialog')renderDialog()}
+// ---------- overview ----------
+function stats(){const ds=DOC.dialogs;const tot=d=>d.human&&d.human.reviewed?d.human.total:d.total;
+ const t=ds.map(tot).filter(x=>x!=null);const per={};let judge=0,cells=0;
+ ds.forEach(d=>d.criteria.forEach(c=>{const def=cdef(d.checklist_id,c.criterion_id);const p=per[c.criterion_id]=per[c.criterion_id]||{name:c.name,def,n:0,b:{g:0,g2:0,m:0,b:0,n:0},fail:[]};
+  const hv=d.human?.overrides?.[c.criterion_id];const v=hv?hv.value:c.value;p.n++;cells++;if(c.decided_by&&c.decided_by!=='consensus')judge++;
+  const k=cls(v,def);if(k=='na')p.b.n++;else if(k=='good')p.b.g++;else if(k=='mid'){const mx=Math.max(...((def?.scale)||[20]));if(+v>=mx/2)p.b.g2++;else p.b.m++;p.fail.push(d.conversation_id)}else{p.b.b++;p.fail.push(d.conversation_id)}}));
+ return{ds,t,per,judge,cells,gross:ds.filter(d=>(d.human?.reviewed?d.human.gross_error:d.gross_error)),rev:ds.filter(d=>d.human&&d.human.reviewed)}}
+function renderOverview(){if(!DOC){$('#ovw').innerHTML=`<div class="card empty" style="margin-bottom:16px">Группа <b>${esc(G)}</b> ещё не оценена — нажмите «Загрузить и оценить» или «Ещё → Переоценить».</div>`;return}
+ const S=stats(),m=DOC.meta||{},avg=S.t.length?S.t.reduce((a,b)=>a+b,0)/S.t.length:null;
+ const bins=Array(10).fill(0);S.t.forEach(x=>bins[Math.min(9,Math.floor(x/10))]++);const mx=Math.max(...bins,1);
+ const srt=S.t.slice().sort((a,b)=>a-b),med=srt.length?srt[Math.floor(srt.length/2)]:null;
+ const fails=Object.entries(S.per).filter(([k,p])=>!p.def?.gross).map(([k,p])=>({k,p,r:p.fail.length/Math.max(1,p.n-p.b.n)})).sort((a,b)=>b.r-a.r);
+ const ins=[];const f0=fails[0],f1=fails[1];const chip=d=>`<span class="chip" onclick="openDialog('${esc(d.conversation_id)}')">${esc(d.conversation_id)}</span>`;
+ if(f0&&f0.p.fail.length)ins.push(`<li><span class="dot r"></span><div>Чаще всего не выполняется <b>${f0.k} «${esc(f0.p.name)}»</b> — ${Math.round(f0.r*100)}% применимых диалогов (${f0.p.fail.length}).${f1&&f1.p.fail.length?` Далее — ${f1.k} «${esc(f1.p.name)}», ${Math.round(f1.r*100)}%.`:''}</div></li>`);
+ ins.push(S.gross.length?`<li><span class="dot r"></span><div><b>${S.gross.length}</b> с грубой ошибкой:<br>${S.gross.map(chip).join('')}</div></li>`:`<li><span class="dot g"></span><div>Грубых ошибок не обнаружено.</div></li>`);
+ const low=S.ds.filter(d=>d.total!=null&&d.total<50&&!d.gross_error);if(low.length)ins.push(`<li><span class="dot r"></span><div>Итог ниже 50 (без грубых): ${low.map(chip).join('')}</div></li>`);
+ const jm=MODEL((m.model||'').match(/judge=([\w.-]+)/)?.[1]||'');
+ ins.push(`<li><span class="dot"></span><div>Присяжные разошлись в <b>${S.judge}</b> из ${S.cells} оценок (${(100*S.judge/Math.max(1,S.cells)).toFixed(0)}%) — решение принял судья${jm?' '+jm:''}.</div></li>`);
+ ins.push(`<li><span class="dot p"></span><div>Проверено человеком: <b>${S.rev.length}</b> из ${S.ds.length}.${S.rev.length?'':' Откройте диалог, чтобы подтвердить или исправить оценку.'}</div></li>`);
+ const jury=(m.model||'').replace(/^jury\[|\].*$/g,'').split('+').map(MODEL).join(' + ');
+ $('#ovw').innerHTML=`<div class="ov">
+ <div class="card hero"><div class="lbl">Средний балл качества</div><div class="big num">${avg==null?'—':avg.toFixed(1)}<small> / 100</small></div>
+  <div class="mut sm" style="margin-top:6px">медиана ${med==null?'—':med.toFixed(1)} · группа ${esc(G)}</div>
+  <div class="kpis"><div class="kpi"><b class="num">${S.ds.length}</b><span>диалогов</span></div><div class="kpi ${S.gross.length?'bad':''}"><b class="num">${S.gross.length}</b><span>грубых ошибок</span></div>
+  <div class="kpi"><b class="num">${S.judge}</b><span>оценок решил судья</span></div><div class="kpi"><b class="num">${S.rev.length}</b><span>проверено человеком</span></div></div></div>
+ <div class="card"><h3>Распределение итоговых баллов</h3><div class="hist">${bins.map((b,i)=>`<div class="col ${i<5?'lo':i<7?'mid':''} ${b?'':'zero'}" data-tip="Итог ${i*10}–${i*10+10}: ${b} диал."><em>${b}</em><i style="height:${b/mx*112}px"></i></div>`).join('')}</div>
+  <div class="hax">${bins.map((b,i)=>`<span>${i*10}–${i*10+10}</span>`).join('')}</div><div class="mut sm" style="margin-top:10px">Число диалогов по диапазонам итогового балла (с учётом ручных правок). Грубая ошибка помечается отдельно и в балл не входит.</div></div>
+ <div class="card insc"><h3>Выводы</h3><ul class="ins">${ins.join('')}</ul></div></div>
+ <div class="card crits-ov"><div style="display:flex;align-items:center;margin-bottom:8px"><h3 style="margin:0">Выполнение критериев</h3><span class="sp"></span>
+  <div class="legend"><span><i style="background:#34a853"></i>Выполнен</span><span><i style="background:#86cf98"></i>Частично ≥ ½</span><span><i style="background:#ff9f0a"></i>Частично &lt; ½</span><span><i style="background:#e5484d"></i>Не выполнен / грубая</span><span><i style="background:#d1d1d6"></i>Неприменимо</span></div></div>
+  ${Object.entries(S.per).map(([k,p])=>{const gr=p.def?.gross,sc=p.def?.type=='scale';const seg=[['g',p.b.g,gr?'Нет грубой ошибки':sc?'Максимум':'Да'],['g2',p.b.g2,'Частично ≥ ½'],['m',p.b.m,'Частично < ½'],['b',p.b.b,gr?'Грубая ошибка':sc?'0 баллов':'Нет'],['n',p.b.n,'Неприменимо']];
+   const ap=p.n-p.b.n;return `<div class="crow"><div class="nm" title="${esc(p.name)}"><b>${k}</b>${esc(p.name)}</div>
+   <div class="sbar">${seg.filter(s=>s[1]).map(s=>`<div class="${s[0]}" style="width:${100*s[1]/p.n}%" data-tip="${s[2]}: ${s[1]} из ${p.n}">${s[1]/p.n>.05?s[1]:''}</div>`).join('')}</div>
+   <div class="mut sm num">${ap?(gr?`${p.b.b} случ. · ${Math.round(100*p.b.b/ap)}%`:`${Math.round(100*p.b.g/ap)}% выполнено`):'—'}${p.b.n?` · ${p.b.n} н/п`:''}</div></div>`}).join('')}
+  <div class="mut sm" style="margin-top:12px;padding-top:10px;border-top:1px solid var(--line)">Прогон ${esc(DOC.run||RUN)} от ${esc((DOC.created_at||'').replace('T',' '))} · присяжные: ${esc(jury)}${jm?' · судья: '+esc(jm):''}${m.cost_usd!=null?' · стоимость $'+m.cost_usd:''}</div></div>`}
+// ---------- table ----------
+$$('#fseg a').forEach(a=>a.onclick=()=>{FILT=a.dataset.f;$$('#fseg a').forEach(x=>x.classList.toggle('on',x==a));renderTable()});
 $('#flt').oninput=renderTable;
+function critSort(d,cid){const c=d.criteria.find(x=>x.criterion_id==cid);if(!c)return -9;const o=d.human?.overrides?.[cid];return{err:-1,bad:0,mid:1,good:2,na:3}[cls(o?o.value:c.value,cdef(d.checklist_id,cid))]}
+function rowsFiltered(){const f=$('#flt').value.toLowerCase().trim();let rows=DOC?DOC.dialogs.slice():Object.values(DIALOGS).map(d=>({conversation_id:d.conversation_id,language:d.language,channel:d.channel,criteria:[]}));
+ rows=rows.filter(d=>!f||(d.conversation_id+' '+d.language+' '+d.channel+' '+CHN(d.channel)).toLowerCase().includes(f));
+ if(FILT=='gross')rows=rows.filter(d=>d.human?.reviewed?d.human.gross_error:d.gross_error);if(FILT=='judge')rows=rows.filter(d=>d.criteria.some(c=>c.decided_by&&c.decided_by!=='consensus'));
+ if(FILT=='low')rows=rows.filter(d=>d.total!=null&&d.total<70);if(FILT=='hum')rows=rows.filter(d=>d.human?.reviewed);
+ const k=SORT.k,gv=d=>k=='total'?(d.total??-1):k=='human'?(d.human?.reviewed?d.human.total:-1):k=='gross'?(d.gross_error?1:0):k.startsWith('c:')?critSort(d,k.slice(2)):String(d[k]??'');
+ rows.sort((a,b)=>{const x=gv(a),y=gv(b);return(x>y?1:x<y?-1:a.conversation_id>b.conversation_id?1:-1)*SORT.d});return rows}
+function renderTable(){const rows=rowsFiltered();ORDER=rows.map(r=>r.conversation_id);
+ $('#cnt').textContent=`${rows.length} из ${DOC?DOC.dialogs.length:Object.keys(DIALOGS).length}`;
+ const all=DOC?DOC.dialogs:[];const cids=[],cname={};all.forEach(d=>d.criteria.forEach(c=>{if(!cids.includes(c.criterion_id)){cids.push(c.criterion_id);cname[c.criterion_id]=c.name}}));
+ const anyH=all.some(d=>d.human?.reviewed);
+ const th=(k,l,c='',tip='')=>`<th class="${c}" data-k="${k}" ${tip?`data-tip="${esc(tip)}"`:''}>${l}${SORT.k==k?`<span class="ar"> ${SORT.d>0?'↑':'↓'}</span>`:''}</th>`;
+ if(!rows.length){$('#tbl').innerHTML=`<tbody><tr><td class="empty">Нет диалогов по выбранному фильтру.</td></tr></tbody>`;return}
+ $('#tbl').innerHTML=`<thead><tr>${th('conversation_id','Диалог','l')}${th('channel','Канал','l')}${th('language','Язык')}${cids.map(c=>th('c:'+c,c,'',c+' · '+esc(cname[c]))).join('')}${th('total','Итог AI')}${anyH?th('human','После правок'):''}${th('gross','Грубая')}</tr></thead><tbody>`+
+ rows.map(d=>{const g=d.human?.reviewed?d.human.gross_error:d.gross_error,tot=d.total;
+  return `<tr class="${g?'gross':''}" onclick="openDialog('${esc(d.conversation_id)}')"><td class="l" style="font-family:ui-monospace,Menlo,monospace;font-size:12px">${esc(d.conversation_id)}</td><td class="l mut">${CHN(d.channel)}</td><td class="mut">${esc(d.language||'')}</td>
+  ${cids.map(cid=>{const c=d.criteria.find(x=>x.criterion_id==cid);if(!c)return'<td></td>';const def=cdef(d.checklist_id,cid),o=d.human?.overrides?.[cid],jd=c.decided_by&&c.decided_by!=='consensus';
+   const tip=`<b>${cid} · ${esc(c.name)}</b><br>`+judgeTip(c)+(o?`<br><span style="color:#c9b3ff">Человек: ${VL[o.value]??o.value}</span>`:'');
+   return `<td data-tip="${esc(tip)}">${badge(o?o.value:c.value,def,o?'hum':'')}${jd?'<span class="jd">С</span>':''}</td>`}).join('')}
+  <td><span class="tot num ${tot!=null&&tot<50?'lo':''}">${tot==null?'—':Math.round(tot)}</span></td>${anyH?`<td>${d.human?.reviewed?`<span class="tot num" style="color:var(--hum)">${Math.round(d.human.total)}</span>`:''}</td>`:''}
+  <td>${g?'<span class="tag bad">Да</span>':''}</td></tr>`}).join('')+'</tbody>';
+ $$('#tbl th[data-k]').forEach(th=>th.onclick=()=>{SORT={k:th.dataset.k,d:SORT.k==th.dataset.k?-SORT.d:1};renderTable()})}
+// ---------- dialog ----------
 function fmt(s){if(s==null)return'';s=Math.floor(s);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
-function openDialog(id){CUR=id;view('dialog');renderDialog()}
-function renderDialog(){const rec=DIALOGS[CUR],res=DOC&&DOC.dialogs.find(d=>d.conversation_id==CUR);if(!rec){$('#dhead').innerHTML='нет данных';return}
- const ev={};(res?res.criteria:[]).forEach(c=>(c.evidence||[]).forEach(e=>{(ev[e.turn]=ev[e.turn]||[]).push(c.criterion_id)}));
- const h=res&&res.human;
- $('#dhead').innerHTML=`<b>${rec.conversation_id}</b><span>${rec.channel} · ${rec.language}</span><span>чек-лист: ${res?res.checklist_id:'—'}</span>
-  <span>Итог AI: <span class="total">${res?res.total??'—':'—'}</span></span>${h&&h.reviewed?`<span>Итог человек: <span class="total" style="color:#5b21b6">${h.total??'—'}</span></span>`:''}
-  ${res&&res.gross_error?'<span class="gross">ГРУБАЯ ОШИБКА</span>':''}<button class="sec" onclick="reevalOne()">Переоценить диалог</button><button class="sec" onclick="view('runs')">← к списку</button>`;
+function openDialog(id){CUR=id;OPEN=null;if(!ORDER.includes(id))ORDER=(DOC?DOC.dialogs:[]).map(d=>d.conversation_id);$('#tabs a[data-v=dialog]').classList.remove('dis');view('dialog');renderDialog()}
+function renderDialog(){const rec=DIALOGS[CUR],res=DOC&&DOC.dialogs.find(d=>d.conversation_id==CUR);
+ if(!rec){$('#dhead').innerHTML='<span class="mut">Нет данных диалога</span>';return}
+ const ev={};(res?res.criteria:[]).forEach(c=>(c.evidence||[]).forEach(e=>{(ev[e.turn]=ev[e.turn]||[]).includes(c.criterion_id)||ev[e.turn].push(c.criterion_id)}));
+ const h=res&&res.human,pos=ORDER.indexOf(CUR),g=res&&(h?.reviewed?h.gross_error:res.gross_error);
+ $('#dhead').innerHTML=`<button class="btn" onclick="view('runs')">← Обзор</button><span class="id">${esc(rec.conversation_id)}</span>
+  <span class="tag soft">${CHN(rec.channel)}</span><span class="tag soft">${esc(rec.language)}</span>${g?'<span class="tag bad">Грубая ошибка</span>':''}${h?.reviewed?'<span class="tag hum">Проверено человеком</span>':''}
+  <span class="sp"></span>
+  <div class="score"><b class="num">${res&&res.total!=null?res.total.toFixed(1):'—'}</b><span>/ 100 · итог AI</span></div>
+  ${h?.reviewed?`<div class="score h"><b class="num">${h.total!=null?h.total.toFixed(1):'—'}</b><span>/ 100 · после правок</span></div>`:''}
+  <span class="mut sm num">${pos>=0?`диалог ${pos+1} из ${ORDER.length}`:''}</span>
+  <button class="btn" onclick="nav(-1)" ${pos<=0?'disabled':''} title="Предыдущий (k)">↑</button><button class="btn" onclick="nav(1)" ${pos<0||pos>=ORDER.length-1?'disabled':''} title="Следующий (j)">↓</button>
+  <button class="btn" onclick="reevalOne()" title="Повторная оценка только этого диалога (без кэша)">Переоценить</button>`;
  const isCall=rec.kind=='call';
- $('#audioBox').innerHTML=isCall&&rec.audio_url?`<audio id="aud" controls preload="none" style="width:100%" src="${esc(rec.audio_url)}"></audio><div class="muted">Клик по реплике — перемотка. Смещение = время реплики − время первой реплики (приблизительно: запись может начинаться позже/раньше).</div>`:'';
- $('#transcript').innerHTML=rec.transcript.map(t=>`<div id="t${t.index}" class="turn ${t.speaker} ${t.internal?'internal':''} ${ev[t.index]?'ev':''} ${isCall?'seek':''}" ${isCall?`onclick="seek(${t.offset??0})"`:''}><span class="muted">[${t.index}] ${fmt(t.offset)}</span> <span class="sp">${t.speaker}${t.internal?' · удержание':''}</span>${esc(t.text)}${ev[t.index]?` <span class="muted">← ${ev[t.index].join(',')}</span>`:''}</div>`).join('');
- if(!res){$('#crits').innerHTML='<span class="muted">Не оценён.</span>';return}
- $('#crits').innerHTML=res.criteria.map(c=>{const o=h&&h.overrides[c.criterion_id];const opts=c.type=='scale'?(CLS[res.checklist_id]?.criteria.find(x=>x.id==c.criterion_id)?.scale||[]).map(String):['YES','NO'];const crd=CLS[res.checklist_id]?.criteria.find(x=>x.id==c.criterion_id);if(crd&&crd.allow_na)opts.push('NA');
- return `<div class="crit"><h4>${c.criterion_id}. ${esc(c.name)} ${badge(c.value)} ${o?'→ '+badge(o.value)+' <span class="diff">человек</span>':''}
- ${c.self_consistency_disagreement?`<span class="muted" title="голоса сэмплов">⚖ ${esc(JSON.stringify(c.votes))}</span>`:''}<span class="muted">conf ${c.confidence??''}${c.cached?' · cache':''}</span></h4>
- <div>${esc(c.justification)}</div>
- ${c.na_reason?`<div class="muted">NA: ${esc(c.na_reason)}</div>`:''}${c.missing_where?`<div class="muted">Ожидалось: ${esc(c.missing_where)}</div>`:''}
- <div class="ev">${(c.evidence||[]).map(e=>`<div>• <a onclick="focusTurn(${e.turn})">[${e.turn}]</a> «${esc(e.quote)}»</div>`).join('')}</div>
- ${(c.rejected_quotes||[]).length?`<div class="muted">отклонено цитат (не найдены в тексте): ${c.rejected_quotes.length}</div>`:''}
- <details><summary class="muted">Ручная проверка${o?' (изменено: '+esc(o.reviewer||'')+')':''}</summary><div class="row" style="margin-top:4px">
- <select id="ov_${c.criterion_id}"><option value="AI">= AI</option>${opts.map(x=>`<option ${o&&String(o.value)==x?'selected':''}>${x}</option>`).join('')}</select>
- <input id="oj_${c.criterion_id}" placeholder="обоснование ревьюера" size="34" value="${esc(o?o.justification:'')}"><input id="or_${c.criterion_id}" placeholder="кто" size="8" value="${esc(o?o.reviewer:localStorage.reviewer||'')}">
- <button onclick="saveOv('${c.criterion_id}')">Сохранить</button></div><details><summary class="muted">рассуждение модели</summary><div class="muted">${esc(c.reasoning)}</div></details></details></div>`}).join('')}
-function focusTurn(i){document.querySelectorAll('.turn.focus').forEach(x=>x.classList.remove('focus'));const el=$('#t'+i);if(el){el.classList.add('focus');el.scrollIntoView({block:'center',behavior:'smooth'});const t=DIALOGS[CUR].transcript[i];if(DIALOGS[CUR].kind=='call'&&t)seek(t.offset||0)}}
-function seek(s){const a=$('#aud');if(a){a.currentTime=s;a.play().catch(()=>{})}}
+ $('#tmeta').textContent=`${rec.transcript.length} реплик (с №0)${isCall?' · клик по реплике — перемотка записи':''}`;
+ $('#audioBox').innerHTML=isCall&&rec.audio_url?`<div class="audio"><audio id="aud" controls preload="none" src="${esc(rec.audio_url)}"></audio><div class="mut sm">Перемотка приблизительная: смещение отсчитывается от первой реплики.</div></div>`:'';
+ $('#transcript').innerHTML=rec.transcript.map(t=>`<div id="t${t.index}" class="turn ${esc(t.speaker)} ${t.internal?'internal':''} ${ev[t.index]?'ev':''} ${isCall?'seek':''}" ${isCall?`onclick="seek(${t.offset??0})"`:''}>
+  <div class="n">${t.index}</div><div class="bub"><div class="who">${SPK[t.speaker]||esc(t.speaker)}${t.internal?' · внутреннее':''}<time>${fmt(t.offset)}</time>${(ev[t.index]||[]).map(c=>`<span class="evm" data-tip="Цитата для критерия ${c}">${c}</span>`).join('')}</div><div class="tx">${esc(t.text)}</div></div></div>`).join('');
+ if(!res){$('#crits').innerHTML='<div class="empty">Диалог не оценён.</div>';$('#cmeta').textContent='';return}
+ const jn=res.criteria.filter(c=>c.decided_by&&c.decided_by!=='consensus').length;
+ $('#cmeta').textContent=`${res.criteria.length} критериев${jn?` · судья решил ${jn}`:' · модели единогласны'}${h&&Object.keys(h.overrides||{}).length?` · правок: ${Object.keys(h.overrides).length}`:''}`;
+ $('#crits').innerHTML=res.criteria.map(c=>{const def=cdef(res.checklist_id,c.criterion_id),o=h?.overrides?.[c.criterion_id],cid=c.criterion_id;
+  const opts=(c.type=='scale'?(def?.scale||[]).map(String):['YES','NO']).concat(def?.allow_na?['NA']:[]),jd=c.decided_by&&c.decided_by!=='consensus';
+  return `<div class="cr ${o?'sel':''}" id="cr_${cid}"><div class="hd"><span class="t"><b>${cid}</b>${esc(c.name)}${def?.gross?' <span class="tag bad">грубая</span>':''}</span>
+   ${o?`<span data-tip="Оценка AI">${badge(c.value,def)}</span><span class="mut">→</span><span data-tip="Оценка человека">${badge(o.value,def,'hum')}</span>`:badge(c.value,def)}${c.type=='scale'&&def?.scale?`<span class="mut sm">из ${Math.max(...def.scale)}</span>`:''}</div>
+   <div class="js">${esc(c.justification)}</div>
+   ${c.na_reason?`<div class="meta">Неприменимо: ${esc(c.na_reason)}</div>`:''}${c.missing_where?`<div class="meta">Ожидалось: ${esc(c.missing_where)}</div>`:''}
+   ${(c.evidence||[]).length?`<div class="evs">${c.evidence.slice().sort((a,b)=>a.turn-b.turn).map(e=>`<div class="evq" onclick="focusTurn(${e.turn})" title="Показать в транскрипте"><b>#${e.turn}</b>«${esc(e.quote)}»</div>`).join('')}</div>`:''}
+   <div class="jury">${c.jury?Object.entries(c.jury).map(([m,v])=>`<span class="jv">${MODEL(m)} ${badge(v,def)}</span>`).join(''):''}
+    ${jd?`<span class="jv dec" data-tip="Присяжные разошлись — решение принял судья">Судья ${MODEL(c.decided_by)} → ${VL[c.value]??c.value}</span>`:c.jury?'<span class="mut">единогласно</span>':''}
+    ${c.confidence!=null?`<span class="mut">· уверенность ${Math.round(c.confidence*100)}%</span>`:''}</div>
+   ${o?`<div class="hn">Правка${o.reviewer?' ('+esc(o.reviewer)+')':''}: ${VL[c.value]??c.value} → <b>${VL[o.value]??o.value}</b>${o.justification?` — ${esc(o.justification)}`:''}</div>`:''}
+   ${OPEN==cid?`<div class="ovf"><select id="ov_${cid}"><option value="AI">Как у AI (${VL[c.value]??c.value})</option>${opts.map(x=>`<option value="${x}" ${o&&String(o.value)==x?'selected':''}>${VL[x]??x}</option>`).join('')}</select>
+    <input id="oj_${cid}" placeholder="Комментарий ревьюера" value="${esc(o?o.justification:'')}"><input id="or_${cid}" placeholder="Имя" style="width:110px;flex:0 0 110px;min-width:0" value="${esc(o?o.reviewer:localStorage.reviewer||'')}">
+    <button class="btn pri" onclick="saveOv('${cid}')">Сохранить</button><button class="btn" onclick="OPEN=null;renderDialog()">Отмена</button></div>`:
+    `<div class="ovr"><span class="lnk" onclick="openOv('${cid}')">${o?'Изменить правку':'Исправить оценку'}</span>${o?`<span class="lnk" style="color:var(--mut)" onclick="clearOv('${cid}')">Вернуть оценку AI</span>`:''}${c.reasoning?`<details style="display:inline"><summary style="margin:0">Рассуждение модели</summary><div class="rs">${esc(c.reasoning)}</div></details>`:''}</div>`}</div>`}).join('')}
+function openOv(cid){const st=$('#crits').scrollTop;OPEN=cid;renderDialog();$('#crits').scrollTop=st;$('#ov_'+cid).focus()}
+function nav(d){const i=ORDER.indexOf(CUR)+d;if(i>=0&&i<ORDER.length){CUR=ORDER[i];OPEN=null;renderDialog();$('#transcript').scrollTop=0;$('#crits').scrollTop=0}}
+document.addEventListener('keydown',e=>{if(curView()!='dialog'||e.target.matches('input,textarea,select')||e.metaKey||e.ctrlKey||e.altKey)return;if(e.key=='j')nav(1);if(e.key=='k')nav(-1);if(e.key=='Escape')view('runs')});
+function focusTurn(i){const el=$('#t'+i);if(!el)return;$$('.turn.flash').forEach(x=>x.classList.remove('flash'));el.classList.add('flash');el.scrollIntoView({block:'center',behavior:'smooth'});setTimeout(()=>el.classList.remove('flash'),2500);
+ const t=DIALOGS[CUR].transcript.find(x=>x.index==i);if(DIALOGS[CUR].kind=='call'&&t)seek(t.offset||0,false)}
+function seek(s,play=true){const a=$('#aud');if(a){try{a.currentTime=s}catch(e){}if(play)a.play().catch(()=>{})}}
+async function putOv(cid,body){const st=$('#crits').scrollTop;const d=await api(`/api/overrides/${encodeURIComponent(G)}/${encodeURIComponent(CUR)}/${encodeURIComponent(cid)}${rq()}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+ const i=DOC.dialogs.findIndex(x=>x.conversation_id==CUR);if(i>=0)DOC.dialogs[i]=d;OPEN=null;renderDialog();$('#crits').scrollTop=st;renderTable();renderOverview();return d}
 async function saveOv(cid){const v=$('#ov_'+cid).value;localStorage.reviewer=$('#or_'+cid).value;
- await api(`/api/overrides/${G}/${CUR}/${cid}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({value:v=='AI'?null:v,justification:$('#oj_'+cid).value,reviewer:$('#or_'+cid).value})});
- DOC=await api('/api/results/'+G);renderDialog();renderTable();renderSummary()}
-let CLS={};async function loadAllCl(){for(const c of await api('/api/checklists'))CLS[c.id]=(await api('/api/checklists/'+c.id)).checklist}
-async function runJob(body){$('#pstat').textContent='запуск…';$('#pbar').style.width='0';
- const j=await api('/api/evaluate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
- const tick=async()=>{const s=await api('/api/jobs/'+j.id);$('#pbar').style.width=(s.total?100*s.done/s.total:0)+'%';
-  $('#pstat').textContent=`${s.status} ${s.done}/${s.total} критериев · ${s.dialogs??'?'} диалогов · ${s.elapsed_s}с ${s.meta?'· $'+s.meta.cost_usd:''} ${s.error||''}`;
-  if(s.status=='done'||s.status=='error'){await loadGroups();await loadGroup(body.group);if(CUR&&!$('#v-dialog').classList.contains('hide'))renderDialog();return}setTimeout(tick,1500)};tick()}
-$('#btnFetchEval').onclick=()=>runJob({group:$('#gid').value.trim(),fetch:true,fresh:$('#fresh').checked});
-$('#btnReeval').onclick=()=>runJob({group:$('#gid').value.trim(),fresh:$('#fresh').checked});
-function reevalOne(){runJob({group:G,ids:[CUR],fresh:true});view('runs')}
-$('#btnFetch').onclick=async()=>{try{const r=await api('/api/fetch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({group_id:$('#gid').value.trim()})});$('#pstat').textContent=`загружено ${r.dialogs}`;await loadGroups();await loadGroup(r.group)}catch(e){$('#pstat').textContent=e.message}};
-$('#file').onchange=async e=>{const fd=new FormData();fd.append('file',e.target.files[0]);const g=prompt('Имя группы','UPLOAD')||'UPLOAD';try{const r=await api('/api/upload?group='+encodeURIComponent(g),{method:'POST',body:fd});await loadGroups();await loadGroup(g);$('#pstat').textContent=`загружено ${r.dialogs} диалогов — нажмите Re-evaluate`}catch(er){alert(er.message)}};
-$('#btnPasteToggle').onclick=()=>$('#pasteBox').classList.toggle('hide');
-$('#btnPaste').onclick=async()=>{const r=await api('/api/paste',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:$('#paste').value,channel:$('#pch').value,language:$('#plang').value,group:'PASTE'})});await loadGroup('PASTE');runJob({group:'PASTE',ids:[r.conversation_id]})};
-$('#btnRescore').onclick=async()=>{await api('/api/rescore/'+G,{method:'POST'});await loadGroup(G)};
-// ---- checklist editor ----
-async function loadCl(id){await loadAllCl();const ls=Object.keys(CLS);$('#clSel').innerHTML=ls.map(x=>`<option>${x}</option>`).join('');if(id)$('#clSel').value=id;CL=JSON.parse(JSON.stringify(CLS[$('#clSel').value]));renderCl()}
+ try{const d=await putOv(cid,{value:v=='AI'?null:v,justification:$('#oj_'+cid).value,reviewer:$('#or_'+cid).value});toast(v=='AI'?'Оценка AI восстановлена':`Сохранено · итог после правок ${d.human?.total!=null?d.human.total.toFixed(1):'—'}`)}catch(e){toast('Ошибка: '+e.message)}}
+async function clearOv(cid){try{await putOv(cid,{value:null});toast('Оценка AI восстановлена')}catch(e){toast('Ошибка: '+e.message)}}
+// ---------- jobs ----------
+const ST={queued:'В очереди',fetching:'Загрузка группы',running:'Оценка',done:'Готово',error:'Ошибка'};
+async function runJob(body){const P=$('#prog');P.className='prog';$('#pclose').classList.add('hide');$('#pstat').textContent='Запуск…';$('#pbar').style.width='0';$('#pmeta').textContent='';
+ let j;try{j=await api('/api/evaluate',J(body))}catch(e){P.classList.add('err');$('#pstat').textContent='Ошибка: '+e.message;$('#pclose').classList.remove('hide');return}
+ const tick=async()=>{let s;try{s=await api('/api/jobs/'+j.id)}catch(e){setTimeout(tick,2000);return}$('#pbar').style.width=(s.status=='done'?100:s.total?100*s.done/s.total:0)+'%';
+  $('#pstat').innerHTML=`<b>${ST[s.status]||esc(s.status)}</b> · группа ${esc(body.group)}${s.total?` · ${s.done} из ${s.total} оценок`:''}`;
+  $('#pmeta').textContent=`${s.dialogs??'…'} диал. · ${s.elapsed_s} с${s.meta?' · $'+s.meta.cost_usd:''}${s.error?' · '+s.error:''}`;
+  if(s.status=='done'||s.status=='error'){P.classList.add(s.status=='done'?'ok':'err');$('#pclose').classList.remove('hide');await reloadGroups(body.group);return}setTimeout(tick,1200)};tick()}
+$('#pclose').onclick=()=>$('#prog').classList.add('hide');
+async function reloadGroups(g){const gs=await api('/api/groups');$('#gsel').innerHTML=gs.map(x=>`<option value="${esc(x.group)}">${esc(x.group)} · ${x.dialogs}</option>`).join('');$('#gsel').value=g;await loadGroup(g)}
+const fresh=()=>$('#fresh').checked;
+$('#btnMain').onclick=()=>{const g=prompt('ID группы для загрузки из CQA API и оценки',G||'');if(g)runJob({group:g.trim(),fetch:true,fresh:fresh()})};
+$('#mReeval').onclick=()=>{$('#pop').classList.add('hide');if(confirm(`Переоценить группу ${G}${fresh()?' без кэша (все вызовы заново)':''}?`))runJob({group:G,fresh:fresh()})};
+function reevalOne(){if(confirm(`Переоценить диалог ${CUR} заново (без кэша)?`))runJob({group:G,ids:[CUR],fresh:true})}
+$('#mFetch').onclick=async()=>{$('#pop').classList.add('hide');const g=prompt('ID группы',G||'');if(!g)return;try{const r=await api('/api/fetch',J({group_id:g.trim()}));toast(`Загружено ${r.dialogs} диалогов`);await reloadGroups(r.group)}catch(e){toast('Ошибка: '+e.message)}};
+$('#mFile').onclick=()=>{$('#pop').classList.add('hide');$('#file').click()};
+$('#file').onchange=async e=>{const f=e.target.files[0];if(!f)return;const g=prompt('Имя новой группы','UPLOAD')||'UPLOAD';const fd=new FormData();fd.append('file',f);
+ try{const r=await api('/api/upload?group='+encodeURIComponent(g),{method:'POST',body:fd});await reloadGroups(g);toast(`Загружено ${r.dialogs} диалогов — «Ещё → Переоценить» для оценки`)}catch(er){toast('Ошибка: '+er.message)}e.target.value=''};
+$('#mPaste').onclick=()=>{$('#pop').classList.add('hide');$('#pasteM').classList.remove('hide');$('#paste').focus()};
+$('#btnPaste').onclick=async()=>{try{const r=await api('/api/paste',J({text:$('#paste').value,channel:$('#pch').value,language:$('#plang').value,group:'PASTE'}));$('#pasteM').classList.add('hide');await reloadGroups('PASTE');runJob({group:'PASTE',ids:[r.conversation_id]})}catch(e){toast('Ошибка: '+e.message)}};
+$('#mRescore').onclick=async()=>{$('#pop').classList.add('hide');try{await api('/api/rescore/'+encodeURIComponent(G),{method:'POST'});await loadGroup(G,true);toast('Итоги пересчитаны')}catch(e){toast('Ошибка: '+e.message)}};
+// ---------- checklist editor ----------
+async function loadAllCl(){for(const c of await api('/api/checklists'))CLS[c.id]=(await api('/api/checklists/'+c.id)).checklist}
+async function loadCl(id){await loadAllCl();const ls=Object.keys(CLS);$('#clSel').innerHTML=ls.map(x=>`<option>${esc(x)}</option>`).join('');const w=id||CL?.id;if(w&&CLS[w])$('#clSel').value=w;else $('#clSel').value=ls[0];CL=JSON.parse(JSON.stringify(CLS[$('#clSel').value]));renderCl()}
 $('#clSel').onchange=()=>{CL=JSON.parse(JSON.stringify(CLS[$('#clSel').value]));renderCl()};
 function renderCl(){$('#clId').value=CL.id;$('#clName').value=CL.name||'';$('#clCh').value=CL.channel||'chat';$('#clDesc').value=CL.description||'';$('#clAss').value=JSON.stringify(CL.assumptions||{});
- const ws=CL.criteria.reduce((a,c)=>a+(c.gross?0:+c.weight||0),0);$('#wsum').textContent=`сумма весов: ${ws} (итог всегда нормируется к 100)`;
- $('#clCrit').innerHTML=CL.criteria.map((c,i)=>`<div class="ccard"><div class="row"><input size="3" value="${esc(c.id)}" onchange="CL.criteria[${i}].id=this.value"><input size="30" value="${esc(c.name)}" onchange="CL.criteria[${i}].name=this.value">
- <select onchange="CL.criteria[${i}].type=this.value;renderCl()"><option ${c.type=='binary'?'selected':''}>binary</option><option ${c.type=='scale'?'selected':''}>scale</option></select>
- ${c.type=='scale'?`шкала <input size="12" value="${(c.scale||[]).join(',')}" onchange="CL.criteria[${i}].scale=this.value.split(',').map(Number)">`:''}
- вес <input size="3" type="number" value="${c.weight}" onchange="CL.criteria[${i}].weight=+this.value;renderCl()">
- <label><input type="checkbox" ${c.allow_na?'checked':''} onchange="CL.criteria[${i}].allow_na=this.checked">NA</label>
- <label><input type="checkbox" ${c.gross?'checked':''} onchange="CL.criteria[${i}].gross=this.checked">грубая (без баллов)</label>
- <button class="sec" onclick="CL.criteria.splice(${i},1);renderCl()">удалить</button>${i>0?`<button class="sec" onclick="mv(${i},-1)">↑</button>`:''}</div>
- <div class="muted">Рубрика</div><textarea onchange="CL.criteria[${i}].rubric=this.value">${esc(c.rubric)}</textarea>
- <div class="muted">Правила решения</div><textarea onchange="CL.criteria[${i}].rules=this.value">${esc(c.rules)}</textarea></div>`).join('')}
+ const ws=CL.criteria.reduce((a,c)=>a+(c.gross?0:+c.weight||0),0);$('#wsum').textContent=`${CL.criteria.length} критериев · сумма весов ${ws} (итог всегда нормируется к 100; грубые критерии в балл не входят и помечаются отдельно)`;
+ $('#clCrit').innerHTML=CL.criteria.map((c,i)=>`<div class="ccard"><div class="r1">
+  <label class="f">№<input value="${esc(c.id)}" onchange="CL.criteria[${i}].id=this.value"></label>
+  <label class="f">Название<input value="${esc(c.name)}" onchange="CL.criteria[${i}].name=this.value"></label>
+  <label class="f">Тип<select onchange="CL.criteria[${i}].type=this.value;renderCl()"><option value="binary" ${c.type=='binary'?'selected':''}>Да / Нет</option><option value="scale" ${c.type=='scale'?'selected':''}>Шкала</option></select></label>
+  <label class="f">Шкала${c.type=='scale'?`<input value="${(c.scale||[]).join(',')}" onchange="CL.criteria[${i}].scale=this.value.split(',').map(Number)">`:'<input disabled value="—">'}</label>
+  <label class="f">Вес<input type="number" value="${c.weight}" onchange="CL.criteria[${i}].weight=+this.value;renderCl()"></label>
+  <label class="ck"><input type="checkbox" ${c.allow_na?'checked':''} onchange="CL.criteria[${i}].allow_na=this.checked">Допускает н/п</label>
+  <label class="ck"><input type="checkbox" ${c.gross?'checked':''} onchange="CL.criteria[${i}].gross=this.checked">Грубая ошибка</label>
+  <div style="display:flex;gap:4px;padding-bottom:1px;justify-content:flex-end">${i>0?`<button class="btn" onclick="mv(${i},-1)" title="Выше">↑</button>`:''}<button class="btn" onclick="if(confirm('Удалить критерий?')){CL.criteria.splice(${i},1);renderCl()}" title="Удалить">✕</button></div></div>
+  <div class="r2"><label class="f">Рубрика<textarea rows="6" onchange="CL.criteria[${i}].rubric=this.value">${esc(c.rubric)}</textarea></label>
+  <label class="f">Правила решения<textarea rows="6" onchange="CL.criteria[${i}].rules=this.value">${esc(c.rules)}</textarea></label></div></div>`).join('')}
 function mv(i,d){const c=CL.criteria.splice(i,1)[0];CL.criteria.splice(i+d,0,c);renderCl()}
 $('#btnAddCrit').onclick=()=>{CL.criteria.push({id:String(CL.criteria.length+1).padStart(2,'0'),name:'Новый критерий',type:'binary',weight:10,allow_na:false,gross:false,rubric:'YES — ...\nNO — ...',rules:''});renderCl()};
-$('#btnClNew').onclick=()=>{CL=JSON.parse(JSON.stringify(CL));CL.id=CL.id+'_copy';renderCl()};
-$('#btnYaml').onclick=async()=>{const b=$('#yamlBox');b.classList.toggle('hide');if(!b.classList.contains('hide')){const r=await api('/api/checklists/'+$('#clSel').value);$('#yaml').value=r.yaml}};
+$('#btnClNew').onclick=()=>{CL=JSON.parse(JSON.stringify(CL));CL.id=CL.id+'_copy';renderCl();toast('Создана копия — измените идентификатор и сохраните')};
+$('#btnYaml').onclick=async()=>{const b=$('#yamlBox');b.classList.toggle('hide');const on=!b.classList.contains('hide');$('#clForm').classList.toggle('hide',on);$('#btnYaml').textContent=on?'Форма':'Редактор YAML';if(on){const r=await api('/api/checklists/'+encodeURIComponent($('#clSel').value));$('#yaml').value=r.yaml}};
 $('#btnClSave').onclick=async()=>{try{let body;if(!$('#yamlBox').classList.contains('hide'))body={yaml:$('#yaml').value};else{CL.id=$('#clId').value;CL.name=$('#clName').value;CL.channel=$('#clCh').value;CL.description=$('#clDesc').value;CL.assumptions=JSON.parse($('#clAss').value||'{}');body={checklist:CL}}
- const r=await api('/api/checklists/'+(CL.id||$('#clSel').value),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});$('#clMsg').textContent='сохранено '+r.id+' — теперь «Re-evaluate with current checklist» (переоценятся только изменённые критерии) или «Пересчитать веса»';await loadCl(r.id)}catch(e){$('#clMsg').textContent='Ошибка: '+e.message}};
-loadAllCl().then(init);
+ const r=await api('/api/checklists/'+encodeURIComponent(CL.id||$('#clSel').value),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});$('#clMsg').textContent=`Сохранено: ${r.id}. Теперь «Ещё → Переоценить» (только изменённые критерии) или «Пересчитать веса».`;toast('Чек-лист сохранён');await loadCl(r.id)}catch(e){$('#clMsg').textContent='Ошибка: '+e.message}};
+init().catch(e=>{$('#ovw').innerHTML=`<div class="card empty">Ошибка загрузки: ${esc(e.message)}</div>`});
 </script></body></html>

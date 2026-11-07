@@ -16,11 +16,12 @@ Served by `python -m cqa serve --port 8090` (FastAPI, no auth). Interactive docs
 | GET | `/api/dialogs/{group}` | — | Normalised dialogs (turns, roles, offsets, internal flags) |
 | POST | `/api/evaluate` | `{group, ids?, fresh?, checklist?, fetch?}` | Background job `{id, status, done, total, ...}` |
 | GET | `/api/jobs/{jid}` | — | Job progress `{status: queued/running/done/error, done, total, elapsed_s, ...}` |
-| GET | `/api/results/{group}` | — | Results document with AI output + `human` block per dialog |
-| PUT | `/api/overrides/{group}/{conv}/{crit}` | `{value, justification, reviewer}` (`value: null` removes) | Updated dialog with human total/diff |
+| GET | `/api/runs/{group}` | — | Result files for the group, newest first: `[{run, created_at, dialogs, model, cost_usd, mtime}]` |
+| GET | `/api/results/{group}` | `run=<name>` (optional; default = newest run) | Results document with AI output + `human` block per dialog |
+| PUT | `/api/overrides/{group}/{conv}/{crit}` | `{value, justification, reviewer}` (`value: null` removes); `?run=` optional | Updated dialog with human total/diff |
 | POST | `/api/rescore/{group}` | — | Recompute totals with current weights (no LLM) → `{ok}` |
-| GET | `/api/export/{group}.json` | — | Download results JSON |
-| GET | `/api/export/{group}.csv` | `which=ai\|human\|both` | Download CSV |
+| GET | `/api/export/{group}.json` | `run=` optional | Download results JSON |
+| GET | `/api/export/{group}.csv` | `which=ai\|human\|both`, `run=` optional | Download CSV |
 
 Example (offline):
 ```bash

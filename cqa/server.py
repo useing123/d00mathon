@@ -169,19 +169,59 @@ def job(jid: str):
 
 
 # ---------- results / review ----------
+def _runs(group):
+    """All result files for a group (results/*.json whose doc.group matches), newest first."""
+    out = []
+    for p in config.RESULTS_DIR.glob("*.json"):
+        try:
+            d = json.loads(p.read_text())
+        except Exception:
+            continue
+        if str(d.get("group", "")).lower() != group.lower() or not isinstance(d.get("dialogs"), list):
+            continue
+        m = d.get("meta") or {}
+        out.append({"run": p.stem, "created_at": d.get("created_at", ""), "dialogs": len(d["dialogs"]),
+                    "model": m.get("model", ""), "cost_usd": m.get("cost_usd"), "mtime": p.stat().st_mtime})
+    return sorted(out, key=lambda r: (r["created_at"], r["mtime"]), reverse=True)
+
+
+def _load(group, run=None):
+    """Load a run with overrides applied. Default: newest run for the group."""
+    if not run:
+        rs = _runs(group)
+        run = rs[0]["run"] if rs else None
+    if not run or run == store.results_path(group).stem:
+        return store.load_results(group)
+    p = config.RESULTS_DIR / f"{Path(run).name}.json"
+    if not p.exists():
+        return None
+    from .evaluator import apply_overrides
+    doc = json.loads(p.read_text())
+    ov = store.load_overrides(group)
+    for d in doc["dialogs"]:
+        apply_overrides(d, ckl.load(d["checklist_id"]), ov.get(d["conversation_id"], {}))
+    doc["run"] = run
+    return doc
+
+
+@app.get("/api/runs/{group}")
+def runs(group: str):
+    return _runs(group)
+
+
 @app.get("/api/results/{group}")
-def results(group: str):
-    doc = store.load_results(group)
+def results(group: str, run: str = ""):
+    doc = _load(group, run)
     if not doc:
         raise HTTPException(404, "not evaluated yet")
     return doc
 
 
 @app.put("/api/overrides/{group}/{conv}/{crit}")
-def override(group: str, conv: str, crit: str, body: dict = Body(...)):
+def override(group: str, conv: str, crit: str, body: dict = Body(...), run: str = ""):
     try:
         store.save_override(group, conv, crit, body.get("value"), body.get("justification", ""), body.get("reviewer", ""))
-        doc = store.load_results(group)
+        doc = _load(group, run)
     except Exception as e:
         raise HTTPException(400, str(e)) from e
     return next(d for d in doc["dialogs"] if d["conversation_id"] == conv)
@@ -195,13 +235,13 @@ def do_rescore(group: str):
 
 
 @app.get("/api/export/{group}.json")
-def export_json(group: str):
-    doc = store.load_results(group)
+def export_json(group: str, run: str = ""):
+    doc = _load(group, run)
     return JSONResponse(doc, headers={"Content-Disposition": f'attachment; filename="{group}.json"'})
 
 
 @app.get("/api/export/{group}.csv")
-def export_csv(group: str, which: str = "ai"):
-    doc = store.load_results(group)
+def export_csv(group: str, which: str = "ai", run: str = ""):
+    doc = _load(group, run)
     return PlainTextResponse(store.to_csv(doc, which), media_type="text/csv; charset=utf-8",
                              headers={"Content-Disposition": f'attachment; filename="{group}_{which}.csv"'})
