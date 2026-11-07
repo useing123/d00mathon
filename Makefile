@@ -46,3 +46,10 @@ submit:  ## control window: fetch GROUP -> evaluate (default preset) -> export J
 submit-dev:  ## re-export results/dev/results.json from an existing DEV run, no LLM calls (RUN=dev_jury_v7)
 	$(PY) -m cqa export --format v1 --group DEV $(if $(RUN),--run $(RUN)) --out results/dev/results.json
 	$(PY) -m cqa validate results/dev/results.json --group DEV
+
+finetune-data:  ## build the SFT dataset (data/finetune, git-ignored) + stats; no GPU
+	$(PY) scripts/finetune_dataset.py
+
+finetune-mock:  ## CPU proof of the fine-tuning pipeline (no torch needed) + cost estimate
+	$(PY) scripts/finetune_lora.py --mock
+	$(PY) scripts/finetune_lora.py --estimate-only --no-tokenizer
