@@ -117,7 +117,7 @@ function renderDialog(){const rec=DIALOGS[CUR],res=DOC&&DOC.dialogs.find(d=>d.co
   ${h?.reviewed?`<div class="score h"><b class="num">${h.total!=null?h.total.toFixed(1):'—'}</b><span>/ 100 · после правок</span></div>`:''}
   <span class="mut sm num">${pos>=0?`диалог ${pos+1} из ${ORDER.length}`:''}</span>
   <button class="btn" onclick="nav(-1)" ${pos<=0?'disabled':''} title="Предыдущий (k)">↑</button><button class="btn" onclick="nav(1)" ${pos<0||pos>=ORDER.length-1?'disabled':''} title="Следующий (j)">↓</button>
-  <button class="btn" onclick="reevalOne()" title="Повторная оценка только этого диалога (без кэша)">Переоценить</button>`;
+  <button class="btn" onclick="reevalOne()" title="Повторная оценка только этого диалога: модели уходят только изменённые критерии (кэш; «Без кэша» в меню «Ещё» — всё заново)">Переоценить</button>`;
  const isCall=rec.kind=='call';
  $('#tmeta').textContent=`${rec.transcript.length} реплик (нумерация с №1)${isCall?' · клик по реплике — перемотка записи':''}`;
  $('#audioBox').innerHTML=isCall&&rec.audio_url?`<div class="audio"><audio id="aud" controls preload="none" src="${esc(rec.audio_url)}"></audio><div class="mut sm">Перемотка приблизительная: смещение отсчитывается от первой реплики.</div></div>`:'';
@@ -173,7 +173,7 @@ function ask(title,label,def=''){return new Promise(res=>{const m=$('#askM'),inp
  inp.onkeydown=e=>{if(e.key=='Enter')$('#askOk').click();if(e.key=='Escape')$('#askNo').click()}})}
 $('#btnMain').onclick=async()=>{const g=await ask('Загрузить и оценить','ID группы в CQA API (например, DEV или ID контрольного набора)',G||'');if(g)runJob({group:g,fetch:true,fresh:fresh()})};
 $('#mReeval').onclick=async()=>{$('#pop').classList.add('hide');if(await ask(`Переоценить группу ${G}${fresh()?' без кэша (все вызовы заново)':''}?`,null))runJob({group:G,fresh:fresh()})};
-async function reevalOne(){if(await ask(`Переоценить диалог ${CUR} заново (без кэша)?`,null))runJob({group:G,ids:[CUR],fresh:true})}
+async function reevalOne(){if(await ask(`Переоценить диалог ${CUR} по текущему чек-листу?${fresh()?' Без кэша: все критерии заново.':' Модели уйдут только изменённые критерии.'}`,null))runJob({group:G,ids:[CUR],fresh:fresh()})}
 $('#mFetch').onclick=async()=>{$('#pop').classList.add('hide');const g=await ask('Загрузить группу','ID группы в CQA API',G||'');if(!g)return;try{const r=await api('/api/fetch',J({group_id:g.trim()}));toast(`Загружено ${r.dialogs} диалогов`);await reloadGroups(r.group)}catch(e){toast('Ошибка: '+e.message)}};
 $('#mFile').onclick=()=>{$('#pop').classList.add('hide');$('#file').click()};
 $('#file').onchange=async e=>{const f=e.target.files[0];if(!f)return;const g=await ask('Загрузка JSON','Имя группы (латиница, цифры, _ . -)','UPLOAD');if(!g){e.target.value='';return}const fd=new FormData();fd.append('file',f);
@@ -190,6 +190,7 @@ function renderCl(){$('#clId').value=CL.id;$('#clName').value=CL.name||'';$('#cl
  $('#clCrit').innerHTML=CL.criteria.map((c,i)=>`<div class="ccard"><div class="r1">
   <label class="f">№<input value="${esc(c.id)}" onchange="CL.criteria[${i}].id=this.value"></label>
   <label class="f">Название<input value="${esc(c.name)}" onchange="CL.criteria[${i}].name=this.value"></label>
+  <label class="f" title="Код критерия в results.json (v1.0); пусто — официальный код или №">Код<input value="${esc(c.code||'')}" placeholder="${esc(({'01':'contact','02':'discovery','03':'identification','04':'consultation','05':'empathy','06':'dialogue','07':'closure','08':'critical'})[c.id]||c.id)}" onchange="if(this.value.trim())CL.criteria[${i}].code=this.value.trim();else delete CL.criteria[${i}].code"></label>
   <label class="f">Тип<select onchange="CL.criteria[${i}].type=this.value;renderCl()"><option value="binary" ${c.type=='binary'?'selected':''}>Да / Нет</option><option value="scale" ${c.type=='scale'?'selected':''}>Шкала</option></select></label>
   <label class="f">Шкала${c.type=='scale'?`<input value="${(c.scale||[]).join(',')}" onchange="CL.criteria[${i}].scale=this.value.split(',').map(Number)">`:'<input disabled value="—">'}</label>
   <label class="f">Вес<input type="number" value="${c.weight}" onchange="CL.criteria[${i}].weight=+this.value;renderCl()"></label>

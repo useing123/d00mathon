@@ -152,7 +152,19 @@ def strict_value(cr, v):
     return s if s in ("YES", "NO") else None
 
 
-def save(c):
+def save(c, raw_text=None):
+    """Validate and store a checklist. `raw_text` (YAML editor): stored verbatim (comments, `extends`/
+    `criteria_overrides` kept) after the resolved form validates."""
+    if raw_text is not None or c.get("extends"):
+        import copy
+        resolved = validate(_resolve(copy.deepcopy(c), str(c.get("id", ""))))
+        if raw_text is None:
+            raw_text = yaml.safe_dump(c, allow_unicode=True, sort_keys=False, width=1000)
+        if not re.fullmatch(r"[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}", resolved["id"]) or ".." in resolved["id"]:
+            raise ValueError("bad checklist id")
+        from .util import atomic_write
+        atomic_write(config.CHECKLIST_DIR / f"{resolved['id']}.yaml", raw_text)
+        return resolved
     c = validate(c)
     if not all(ch.isalnum() or ch in "_-." for ch in c["id"]):
         raise ValueError("bad checklist id")
@@ -191,8 +203,8 @@ def _diff_from_base(c, base_id):
 
 def criterion_hash(checklist, cr):
     """Hash of everything that changes the LLM's judgement for this criterion (weight excluded:
-    reweighting only changes scoring, not the per-criterion value)."""
-    payload = {k: v for k, v in cr.items() if k != "weight"}
+    reweighting only changes scoring, not the per-criterion value; `code` is the export name only)."""
+    payload = {k: v for k, v in cr.items() if k not in ("weight", "code")}
     payload["_desc"] = checklist.get("description", "")
     payload["_assumptions"] = {k: v for k, v in checklist["assumptions"].items() if k not in ("rounding", "decimals")}
     # model / jury identity is NOT part of this hash: it is added to the cache key in Evaluator.evaluate_criterion

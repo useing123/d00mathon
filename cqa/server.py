@@ -135,9 +135,12 @@ def put_checklist(cid: str, body: dict = Body(...)):
     cid = safe_id(cid, "checklist id")
     try:
         c = yaml.safe_load(body["yaml"]) if "yaml" in body else body["checklist"]
+        if not isinstance(c, dict):
+            raise ValueError("checklist must be a mapping")
+        raw = body["yaml"] if "yaml" in body and c.get("id") else None
         c["id"] = c.get("id") or cid
         safe_id(c["id"], "checklist id")
-        c = ckl.save(c)
+        c = ckl.save(c, raw_text=raw)
     except Exception as e:
         raise HTTPException(400, str(e)) from e
     return {"ok": True, "id": c["id"]}
