@@ -1,0 +1,738 @@
+{
+ "ext": {
+  "TS": {
+   "n": 68,
+   "accuracy": 0.397,
+   "accuracy_ci": [
+    0.294,
+    0.515
+   ],
+   "kappa": 0.151,
+   "kappa_ci": [
+    0.041,
+    0.273
+   ],
+   "human_dist": {
+    "1": 7,
+    "2": 15,
+    "3": 23,
+    "4": 3,
+    "5": 20
+   },
+   "system_dist": {
+    "2": 12,
+    "3": 47,
+    "4": 6,
+    "5": 3
+   },
+   "qwk": 0.449,
+   "qwk_ci": [
+    0.287,
+    0.593
+   ],
+   "spearman": 0.578,
+   "spearman_ci": [
+    0.411,
+    0.712
+   ],
+   "within1": 0.779,
+   "mae": 0.824,
+   "n_missing": 0
+  },
+  "DC": {
+   "n": 68,
+   "accuracy": 0.824,
+   "accuracy_ci": [
+    0.735,
+    0.912
+   ],
+   "kappa": 0.634,
+   "kappa_ci": [
+    0.44,
+    0.807
+   ],
+   "human_dist": {
+    "NO": 30,
+    "YES": 38
+   },
+   "system_dist": {
+    "NO": 24,
+    "YES": 44
+   },
+   "neg_class": "NO",
+   "neg_precision": 0.875,
+   "neg_recall": 0.7,
+   "neg_precision_ci": [
+    0.727,
+    1.0
+   ],
+   "neg_recall_ci": [
+    0.52,
+    0.857
+   ],
+   "n_missing": 0
+  },
+  "POL": {
+   "n": 68,
+   "accuracy": 0.794,
+   "accuracy_ci": [
+    0.691,
+    0.882
+   ],
+   "kappa": 0.227,
+   "kappa_ci": [
+    -0.006,
+    0.492
+   ],
+   "human_dist": {
+    "NO": 16,
+    "YES": 52
+   },
+   "system_dist": {
+    "NO": 4,
+    "YES": 64
+   },
+   "neg_class": "NO",
+   "neg_precision": 0.75,
+   "neg_recall": 0.188,
+   "neg_precision_ci": [
+    0.2,
+    1.0
+   ],
+   "neg_recall_ci": [
+    0.0,
+    0.4
+   ],
+   "n_missing": 0
+  },
+  "SENS": {
+   "n": 68,
+   "accuracy": 0.647,
+   "accuracy_ci": [
+    0.529,
+    0.765
+   ],
+   "kappa": 0.245,
+   "kappa_ci": [
+    0.016,
+    0.468
+   ],
+   "human_dist": {
+    "NO": 19,
+    "YES": 49
+   },
+   "system_dist": {
+    "NO": 29,
+    "YES": 39
+   },
+   "neg_class": "NO",
+   "neg_precision": 0.414,
+   "neg_recall": 0.632,
+   "neg_precision_ci": [
+    0.231,
+    0.6
+   ],
+   "neg_recall_ci": [
+    0.409,
+    0.842
+   ],
+   "n_missing": 0
+  },
+  "TS_binary_ge4": {
+   "n": 68,
+   "accuracy": 0.765,
+   "accuracy_ci": [
+    0.662,
+    0.868
+   ],
+   "kappa": 0.383,
+   "kappa_ci": [
+    0.157,
+    0.605
+   ],
+   "human_dist": {
+    "False": 45,
+    "True": 23
+   },
+   "system_dist": {
+    "False": 59,
+    "True": 9
+   },
+   "neg_class": false,
+   "neg_precision": 0.746,
+   "neg_recall": 0.978,
+   "neg_precision_ci": [
+    0.63,
+    0.849
+   ],
+   "neg_recall_ci": [
+    0.927,
+    1.0
+   ]
+  },
+  "cost_usd": 5.1464,
+  "setup": "jury",
+  "model": "jury[claude-haiku-5-5+claude-sonnet-5-5] judge=claude-opus-5-5"
+ },
+ "freedom": {
+  "04_vs_TS_spearman": {
+   "n": 68,
+   "spearman": 0.549,
+   "spearman_ci": [
+    0.339,
+    0.722
+   ],
+   "n_na": 0
+  },
+  "04ge15_vs_TSge4": {
+   "n": 68,
+   "accuracy": 0.721,
+   "accuracy_ci": [
+    0.618,
+    0.824
+   ],
+   "kappa": 0.407,
+   "kappa_ci": [
+    0.185,
+    0.628
+   ],
+   "human_dist": {
+    "False": 45,
+    "True": 23
+   },
+   "system_dist": {
+    "False": 40,
+    "True": 28
+   },
+   "neg_class": false,
+   "neg_precision": 0.825,
+   "neg_recall": 0.733,
+   "neg_precision_ci": [
+    0.698,
+    0.935
+   ],
+   "neg_recall_ci": [
+    0.605,
+    0.851
+   ]
+  },
+  "05_vs_POL": {
+   "n": 68,
+   "accuracy": 0.691,
+   "accuracy_ci": [
+    0.574,
+    0.809
+   ],
+   "kappa": 0.282,
+   "kappa_ci": [
+    0.048,
+    0.516
+   ],
+   "human_dist": {
+    "NO": 16,
+    "YES": 52
+   },
+   "system_dist": {
+    "NO": 25,
+    "YES": 43
+   },
+   "neg_class": "NO",
+   "neg_precision": 0.4,
+   "neg_recall": 0.625,
+   "neg_precision_ci": [
+    0.217,
+    0.6
+   ],
+   "neg_recall_ci": [
+    0.375,
+    0.875
+   ]
+  },
+  "08_vs_POL(08=YES means impolite)": {
+   "n": 68,
+   "accuracy": 0.765,
+   "accuracy_ci": [
+    0.662,
+    0.853
+   ],
+   "kappa": 0.0,
+   "kappa_ci": [
+    0.0,
+    0.0
+   ],
+   "human_dist": {
+    "NO": 16,
+    "YES": 52
+   },
+   "system_dist": {
+    "YES": 68
+   },
+   "neg_class": "NO",
+   "neg_precision": null,
+   "neg_recall": 0.0,
+   "neg_precision_ci": null,
+   "neg_recall_ci": [
+    0.0,
+    0.0
+   ]
+  },
+  "07NA_vs_DC": {
+   "n": 68,
+   "accuracy": 0.559,
+   "accuracy_ci": [
+    0.441,
+    0.676
+   ],
+   "kappa": 0.0,
+   "kappa_ci": [
+    0.0,
+    0.0
+   ],
+   "human_dist": {
+    "False": 38,
+    "True": 30
+   },
+   "system_dist": {
+    "False": 68
+   },
+   "neg_class": true,
+   "neg_precision": null,
+   "neg_recall": 0.0,
+   "neg_precision_ci": null,
+   "neg_recall_ci": [
+    0.0,
+    0.0
+   ]
+  },
+  "cost_usd": 0.5556
+ },
+ "iaa_ceiling": {
+  "TS": "30.0% full / 60.0% partial (Likert 1-5); 80% full when binarised (paper §3.3)",
+  "DC": "90.0% full",
+  "POL": "98.36% full (turn level)",
+  "SENS": "92.12% full (turn level)"
+ },
+ "ext_cascade-local": {
+  "TS": {
+   "n": 68,
+   "accuracy": 0.471,
+   "accuracy_ci": [
+    0.353,
+    0.588
+   ],
+   "kappa": 0.234,
+   "kappa_ci": [
+    0.109,
+    0.361
+   ],
+   "human_dist": {
+    "1": 7,
+    "2": 15,
+    "3": 23,
+    "4": 3,
+    "5": 20
+   },
+   "system_dist": {
+    "2": 9,
+    "3": 49,
+    "4": 2,
+    "5": 8
+   },
+   "qwk": 0.51,
+   "qwk_ci": [
+    0.341,
+    0.649
+   ],
+   "spearman": 0.638,
+   "spearman_ci": [
+    0.484,
+    0.751
+   ],
+   "within1": 0.779,
+   "mae": 0.75,
+   "n_missing": 0
+  },
+  "DC": {
+   "n": 68,
+   "accuracy": 0.706,
+   "accuracy_ci": [
+    0.603,
+    0.809
+   ],
+   "kappa": 0.373,
+   "kappa_ci": [
+    0.166,
+    0.574
+   ],
+   "human_dist": {
+    "NO": 30,
+    "YES": 38
+   },
+   "system_dist": {
+    "NO": 16,
+    "YES": 52
+   },
+   "neg_class": "NO",
+   "neg_precision": 0.812,
+   "neg_recall": 0.433,
+   "neg_precision_ci": [
+    0.583,
+    1.0
+   ],
+   "neg_recall_ci": [
+    0.257,
+    0.625
+   ],
+   "n_missing": 0
+  },
+  "POL": {
+   "n": 68,
+   "accuracy": 0.779,
+   "accuracy_ci": [
+    0.676,
+    0.868
+   ],
+   "kappa": 0.093,
+   "kappa_ci": [
+    0.0,
+    0.299
+   ],
+   "human_dist": {
+    "NO": 16,
+    "YES": 52
+   },
+   "system_dist": {
+    "NO": 1,
+    "YES": 67
+   },
+   "neg_class": "NO",
+   "neg_precision": 1.0,
+   "neg_recall": 0.062,
+   "neg_precision_ci": [
+    1.0,
+    1.0
+   ],
+   "neg_recall_ci": [
+    0.0,
+    0.214
+   ],
+   "n_missing": 0
+  },
+  "SENS": {
+   "n": 68,
+   "accuracy": 0.529,
+   "accuracy_ci": [
+    0.412,
+    0.647
+   ],
+   "kappa": 0.137,
+   "kappa_ci": [
+    -0.059,
+    0.326
+   ],
+   "human_dist": {
+    "NO": 19,
+    "YES": 49
+   },
+   "system_dist": {
+    "NO": 41,
+    "YES": 27
+   },
+   "neg_class": "NO",
+   "neg_precision": 0.341,
+   "neg_recall": 0.737,
+   "neg_precision_ci": [
+    0.194,
+    0.488
+   ],
+   "neg_recall_ci": [
+    0.5,
+    0.933
+   ],
+   "n_missing": 0
+  },
+  "TS_binary_ge4": {
+   "n": 68,
+   "accuracy": 0.779,
+   "accuracy_ci": [
+    0.676,
+    0.868
+   ],
+   "kappa": 0.428,
+   "kappa_ci": [
+    0.212,
+    0.641
+   ],
+   "human_dist": {
+    "False": 45,
+    "True": 23
+   },
+   "system_dist": {
+    "False": 58,
+    "True": 10
+   },
+   "neg_class": false,
+   "neg_precision": 0.759,
+   "neg_recall": 0.978,
+   "neg_precision_ci": [
+    0.645,
+    0.862
+   ],
+   "neg_recall_ci": [
+    0.927,
+    1.0
+   ]
+  },
+  "cost_usd": 0.05468,
+  "setup": "cascade-local",
+  "model": "cascade[jev-1.14→claude-haiku-5-5→claude-sonnet-5-5]"
+ },
+ "ext_local": {
+  "TS": {
+   "n": 68,
+   "accuracy": 0.485,
+   "accuracy_ci": [
+    0.368,
+    0.603
+   ],
+   "kappa": 0.265,
+   "kappa_ci": [
+    0.109,
+    0.417
+   ],
+   "human_dist": {
+    "1": 7,
+    "2": 15,
+    "3": 23,
+    "4": 3,
+    "5": 20
+   },
+   "system_dist": {
+    "2": 11,
+    "3": 39,
+    "4": 2,
+    "5": 16
+   },
+   "qwk": 0.571,
+   "qwk_ci": [
+    0.41,
+    0.699
+   ],
+   "spearman": 0.616,
+   "spearman_ci": [
+    0.463,
+    0.734
+   ],
+   "within1": 0.765,
+   "mae": 0.75,
+   "n_missing": 0
+  },
+  "DC": {
+   "n": 68,
+   "accuracy": 0.794,
+   "accuracy_ci": [
+    0.691,
+    0.882
+   ],
+   "kappa": 0.567,
+   "kappa_ci": [
+    0.365,
+    0.756
+   ],
+   "human_dist": {
+    "NO": 30,
+    "YES": 38
+   },
+   "system_dist": {
+    "NO": 20,
+    "YES": 48
+   },
+   "neg_class": "NO",
+   "neg_precision": 0.9,
+   "neg_recall": 0.6,
+   "neg_precision_ci": [
+    0.762,
+    1.0
+   ],
+   "neg_recall_ci": [
+    0.407,
+    0.774
+   ],
+   "n_missing": 0
+  },
+  "POL": {
+   "n": 68,
+   "accuracy": 0.779,
+   "accuracy_ci": [
+    0.676,
+    0.868
+   ],
+   "kappa": 0.093,
+   "kappa_ci": [
+    0.0,
+    0.299
+   ],
+   "human_dist": {
+    "NO": 16,
+    "YES": 52
+   },
+   "system_dist": {
+    "NO": 1,
+    "YES": 67
+   },
+   "neg_class": "NO",
+   "neg_precision": 1.0,
+   "neg_recall": 0.062,
+   "neg_precision_ci": [
+    1.0,
+    1.0
+   ],
+   "neg_recall_ci": [
+    0.0,
+    0.214
+   ],
+   "n_missing": 0
+  },
+  "SENS": {
+   "n": 68,
+   "accuracy": 0.691,
+   "accuracy_ci": [
+    0.588,
+    0.794
+   ],
+   "kappa": 0.103,
+   "kappa_ci": [
+    -0.136,
+    0.343
+   ],
+   "human_dist": {
+    "NO": 19,
+    "YES": 49
+   },
+   "system_dist": {
+    "NO": 10,
+    "YES": 58
+   },
+   "neg_class": "NO",
+   "neg_precision": 0.4,
+   "neg_recall": 0.211,
+   "neg_precision_ci": [
+    0.091,
+    0.714
+   ],
+   "neg_recall_ci": [
+    0.043,
+    0.4
+   ],
+   "n_missing": 0
+  },
+  "TS_binary_ge4": {
+   "n": 68,
+   "accuracy": 0.779,
+   "accuracy_ci": [
+    0.676,
+    0.882
+   ],
+   "kappa": 0.48,
+   "kappa_ci": [
+    0.245,
+    0.707
+   ],
+   "human_dist": {
+    "False": 45,
+    "True": 23
+   },
+   "system_dist": {
+    "False": 50,
+    "True": 18
+   },
+   "neg_class": false,
+   "neg_precision": 0.8,
+   "neg_recall": 0.889,
+   "neg_precision_ci": [
+    0.68,
+    0.909
+   ],
+   "neg_recall_ci": [
+    0.792,
+    0.974
+   ]
+  },
+  "cost_usd": 0.0,
+  "setup": "local",
+  "model": "qwen3.8-27b-fp8"
+ },
+ "disagreements_total": 91,
+ "disagreement_sample": [
+  {
+   "id": "en_de_#CLIENT-01#_default_2021-01-10-47",
+   "criterion": "DC",
+   "human": "YES",
+   "system": "NO",
+   "system_rationale": "Разговор оборван: проблема клиента (возврат/отмена двух товаров) не решена, последняя реплика оператора — повторный запрос данных без ответа и заключения."
+  },
+  {
+   "id": "en_pt-br_#CLIENT-04#_2021-01-31-5",
+   "criterion": "DC",
+   "human": "NO",
+   "system": "YES",
+   "system_rationale": "Разговор дошёл до завершения: оператор подтвердил email клиента и закрыл чат обещанием follow-up по почте. Обрыва нет."
+  },
+  {
+   "id": "en_de_#CLIENT-02#_default_2021-01-31-7",
+   "criterion": "DC",
+   "human": "NO",
+   "system": "YES",
+   "system_rationale": "Диалог завершён: оператор дал закрывающую реплику, клиент попрощался, оператор ответил в конце. Клиент не пропал посреди диалога, хотя проблема не решена."
+  },
+  {
+   "id": "en_pt-br_#CLIENT-04#_2021-01-17-0",
+   "criterion": "SENS",
+   "human": "YES",
+   "system": "NO",
+   "system_rationale": "В [8] есть шаблонное сообщение о закрытии чата, хотя клиент был на связи. В [16] оператор ответил общей фразой про будущие изменения и не ответил на вопрос клиента о лучшем варианте потратить кредиты и потом отменить подписку."
+  },
+  {
+   "id": "en_de_#CLIENT-01#_default_2020-12-27-31",
+   "criterion": "SENS",
+   "human": "YES",
+   "system": "NO",
+   "system_rationale": "In turn 10 the operator ignored the client's question about a replacement. Instead, it repeated the greeting and asked again for details the client had already given, so the response did not follow the conversation history."
+  },
+  {
+   "id": "en_de_#CLIENT-01#_default_2021-02-21-3",
+   "criterion": "SENS",
+   "human": "YES",
+   "system": "NO",
+   "system_rationale": "В [12] оператор спрашивает, в чате ли клиент, хотя тот только что ответил, и сразу завершает чат, не обработав запрос про оранжевый/синий образец. Реплика [10] тоже слабо соответствует контексту."
+  },
+  {
+   "id": "en_de_#CLIENT-01#_default_2021-02-21-3",
+   "criterion": "TS",
+   "human": 5,
+   "system": 3,
+   "system_rationale": "Оператор подтвердил наличие образца и сказал, что цвет доступен только с хранилищем. Вопрос об альтернативе остался без ответа, а чат был закрыт. Запрос выполнен частично."
+  },
+  {
+   "id": "en_de_#CLIENT-01#_default_2021-01-03-6",
+   "criterion": "TS",
+   "human": 5,
+   "system": 4,
+   "system_rationale": "Оператор понял запрос и предложил возврат разницы в цене, что решает проблему клиента. Были дополнительные шаги (верификация, уточнение товаров) и лишняя информация о сроках возврата, поэтому 4, а не 5."
+  },
+  {
+   "id": "en_de_#CLIENT-01#_default_2021-01-10-18",
+   "criterion": "TS",
+   "human": 2,
+   "system": 3,
+   "system_rationale": "Оператор дал текущую дату отправки (16 февраля) и пообещал рассмотреть компенсацию после доставки, но не смог ни гарантировать срок, ни повлиять на задержку. Запрос выполнен лишь частично."
+  },
+  {
+   "id": "en_de_#CLIENT-01#_default_2021-01-24-14",
+   "criterion": "TS",
+   "human": 5,
+   "system": 4,
+   "system_rationale": "Оператор понял запрос: сообщил статус, предложил три варианта решения, подтвердил полный возврат и пообещал письмо. Но в чате были лишние ходы (путаница в начале, обсуждение отзыва), а на вопрос о способе связи оператор не ответил."
+  }
+ ]
+}

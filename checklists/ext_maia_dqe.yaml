@@ -1,0 +1,68 @@
+id: ext_maia_dqe
+version: "1.0.0"
+name: MAIA-DQE human rubric (external validation, dialogue level)
+channel: chat
+description: >
+  External-validation checklist. Criteria literally mirror the human annotation guidelines of MAIA-DQE
+  (Mendonça et al., "Dialogue Quality and Emotion Annotations for Customer Support Conversations", GEM 2023,
+  https://aclanthology.org/2023.gem-1.2, data CC BY-ND 4.0). Real customer-support chats of a retail/e-commerce
+  company; the AGENT is the "operator", the customer the "client". Tokens like #NAME#, #PRS_ORG#, #EMAIL#,
+  #NUMBER#, #URL# are the dataset's anonymisation placeholders — treat them as the real value (e.g. "#NAME#" in
+  a greeting IS a name). Customer turns are machine translations into English; ignore translation artefacts.
+  Turn-level labels (Politeness, Sensibleness) are aggregated to the dialogue: NO if ANY agent turn fails.
+assumptions:
+  rounding: half_up
+  decimals: 2
+  self_consistency_samples: 1
+  confidence_threshold: 0.8
+  long_wait_seconds: 300   # required by the decision-model path (cqa/jev.py); MAIA has no timestamps, so unused
+  na_rule: Never NA — every criterion is rated on every dialogue (as in the source annotation).
+criteria:
+  - id: TS
+    code: TASK_SUCCESS
+    name: Task Success
+    type: scale
+    scale: [1, 2, 3, 4, 5]
+    weight: 40
+    allow_na: false
+    rubric: |
+      Question: "Was the agent able to fulfil the customer's request?"
+      1 — the agent failed to understand and fulfil the customer's request.
+      2 — the agent understood the request but failed to satisfy it in any way.
+      3 — the agent understood the customer's request and either partially satisfies the request or provided information on how the request can be fulfilled.
+      4 — the agent understood and satisfied the customer request, but provided more information than what the customer requested or took unnecessary turns before meeting the request.
+      5 — the agent understood and satisfied the customer request completely and efficiently.
+    rules: |
+      - Judge what the agent achieved within this chat transcript.
+  - id: DC
+    code: CONVERSATION_CONCLUDED
+    name: Conversation reached its end (not dropped)
+    type: binary
+    weight: 20
+    allow_na: false
+    rubric: |
+      Questions: "Was the conversation terminated without a conclusion?" and/or "Was the conversation dropped?"
+      YES — the conversation reached its end (source label Dropped Conversation = 0).
+      NO — the conversation was dropped, i.e. it did not reach its end, implying that the issue was not resolved (source label = 1).
+  - id: POL
+    code: AGENT_POLITENESS
+    name: Agent politeness (every agent turn)
+    type: binary
+    weight: 20
+    allow_na: false
+    rubric: |
+      Politeness measures the courtesy level of the participant towards the other.
+      YES — in EVERY agent turn the agent was at worst civil and respectful (source label 1 on all agent turns).
+      NO — at least one agent turn shows disrespect, discourtesy inter alia towards the customer (source label 0 on some agent turn).
+  - id: SENS
+    code: AGENT_SENSIBLENESS
+    name: Agent sensibleness (every agent turn)
+    type: binary
+    weight: 20
+    allow_na: false
+    rubric: |
+      Sensibleness measures the response appropriateness to what was previously stated by the other participant.
+      YES — in EVERY agent turn the agent acknowledged the conversation history and provided a suitable response (source label 1 on all agent turns).
+      NO — at least one agent response did not follow what was previously stated or requested, i.e. the agent ignored the conversation history (source label 0 on some agent turn).
+    rules: |
+      - The agent's first turn (opening greeting / account-details request) is not evaluated in the source; ignore it.

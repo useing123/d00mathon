@@ -1,0 +1,2610 @@
+{
+ "checklist": "ext_maia_dqe",
+ "preset": "cascade-local",
+ "model_override": null,
+ "meta": {
+  "cost_usd": 0.05468,
+  "usage": {
+   "input_tokens": 123002,
+   "output_tokens": 36562,
+   "cache_read_input_tokens": 180857,
+   "cache_creation_input_tokens": 178302,
+   "calls": 131,
+   "usd": 0.05467752000000003
+  },
+  "model": "cascade[jev-1.14→claude-haiku-5-5→claude-sonnet-5-5]",
+  "elapsed_s": 233.6,
+  "errors": []
+ },
+ "dialogs": {
+  "en_de_#CLIENT-01#_default_2020-12-27-13": {
+   "TS": {
+    "value": 5,
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.61",
+    "votes": [
+     5
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.98",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Реплика [8] не отвечает на вопрос клиента о цене на конкретный товар без хранения (ответ клиента [9]), а [10] переспрашивает уже заданное. Ответ [12] неточно отвечает на запрос о скидке: вместо подтверждения цены оператор объясняет отсутствие товара, что противоречит предыдущим репликам клиента. [decision model (Jev) p=0.62]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2020-12-27-15": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос, но не выполнил его полностью: заменить или добавить товар в заказ нельзя, а клиенту предложено оформить новый заказ отдельно (что является указанием пути решения). Ответ на вопрос о количестве полок дан, но без бесплатной доставки запрос удовлетворён частично, что соответствует оценке 3. [decision model (Jev) p=0.91]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.97",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор на реплике [10] обещал проверить количество полок, но ответа на вопрос клиента о полках не дал, а в [6] и [8] ответы не учитывали, что клиент уточнил свою просьбу (хотел заменить заказ и добавить второй комод). Это указывает на ответы, не следующие за историей диалога, что и даёт NO. [decision model (Jev) p=0.85]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2020-12-27-23": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос на ремонт дивана и предложил варианты (возврат 50 €, замена, поиск мастера), но не выполнил сам ремонт и не решил вопрос окончательно, поэтому частичное удовлетворение и информация о пути решения соответствуют оценке 3. [decision model (Jev) p=0.76]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.98",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.85",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2020-12-27-31": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос клиента (забрать повреждённый товар и вернуть деньги) и частично его выполнил: организовал забор и пообещал возврат, но курьерский портал недоступен, и подтверждение заберут позже, поэтому запрос выполнен не полностью — оценка 3. [decision model (Jev) p=0.68]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.99",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Реплика [20] оператора не отвечает на предыдущую жалобу клиента и просьбу о компенсации (клиент в [19] описал ситуацию и попросил ускорить вывоз и скидку), а в [16] оператор ответил неясным, не связанным с предыдущим сообщением клиента вопросом о товаре. Это нарушение sensibleness, поэтому значение NO. [decision model (Jev) p=0.62]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2020-12-27-56": {
+   "TS": {
+    "value": 2,
+    "is_na": false,
+    "justification": "Оператор понял запрос на замену стекла, но в реплиях [8], [12] и [16] прямо отказал и не предложил способа выполнить запрос, что соответствует оценке 2. [decision model (Jev) p=0.94]",
+    "votes": [
+     2
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.62",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.99",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в [10] ответил про покупку деталей, хотя клиент просил не бесплатно, а за оплату; в [14] ответил «не знаем про аукционы» на вопрос о цене, а в [16] ответ не связан с тем, что клиент спрашивал про аукцион и скидку, что показывает игнорирование истории диалога. [decision model (Jev) p=0.59]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2020-12-27-72": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял вопрос клиента о НДС/UID и дал информацию о том, как можно выполнить запрос (добавить VAT-номер к онлайн-заказу), но не подтвердил полностью ответ на вопрос о вычете из суммы счёта, что соответствует частичному удовлетворению. [decision model (Jev) p=0.56]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.97",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "На вопрос клиента [5] «Is deducted from the invoice amount?» (вычитается ли НДС из суммы счёта) оператор в [6] ответил, что НДС включён в заказ, и сразу перешёл к завершению диалога, не подтвердив прямо ответ на вопрос о вычете; это указывает на игнорирование заданного клиентом вопроса. [decision model (Jev) p=0.68]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2020-12-27-73": {
+   "TS": {
+    "value": 5,
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.58",
+    "votes": [
+     5
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.99",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.71",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-03-36": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос о возврате и отмене заказа и предпринял действия (передача коллеге, проверка скидки), но вопрос клиента не был решён в этом чате: возврат передан другому сотруднику и остаётся неподтверждённым, что соответствует частичному выполнению (3). [decision model (Jev) p=0.99]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.89",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в [14] ответил на вопрос клиента о сумме не по существу (клиент спрашивал про расчёт скидки и возврат), а в [16] сообщил сумму скидки, не согласованную с предыдущими репликами клиента (клиент указывал 75 € скидки и 10%). Это указывает на то, что часть ответов не отражала историю разговора, что подтверждает оценку NO. [decision model (Jev) p=0.56]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-03-45": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос о цифровом коде краски и показал, как его получить (магазин), а также пообещал отправить номер по email, что соответствует частичному выполнению или указанию пути решения. Вопрос о ваучере остался без завершённого решения. [decision model (Jev) p=0.84]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в реплике [18] пообещал вернуться через мгновение и после этого не вернулся к клиенту, а в [12] взял обязательство отправить номер на email, которое в транскрипте не выполнено; диалог завершился без решения вопроса с ваучером, что подтверждает решение NO. [decision model (Jev) p=0.71]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.98",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "В реплике [10] оператор предлагает клиенту идти в магазин за номером краски, хотя клиент прямо сообщил, что локдаун и магазины закрыты, и на вопрос о ваучере (сообщение [9], [13]) не ответил. В [14] оператор возвращается к дате ваучера, уже обсуждённой клиентом в [13] и [15], что показывает игнорирование предыдущего контекста. [decision model (Jev) p=0.85]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-03-46": {
+   "TS": {
+    "value": 2,
+    "is_na": false,
+    "justification": "Оператор понял запрос клиента (возврат/гарантийная замена стула), но в итоге отказал в его выполнении и ограничился ваучером на 20 евро в качестве жеста доброй воли. Поэтому запрос не удовлетворён ни в какой форме — оценка 2. [decision model (Jev) p=0.74]",
+    "votes": [
+     2
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.84",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.98",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Клиент в реплике [27] и [29] уже ответил, что дефект возник через несколько месяцев, но оператор в [30] повторил тот же вопрос дословно, игнорируя историю диалога. Это нарушает требование учитывать предыдущие реплики клиента. [decision model (Jev) p=0.75]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-03-48": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос о компенсации и частично удовлетворил его (ваучер 15 € и запрос на возврат средств), но не выполнил полностью запрошенную оплату шипинга, что соответствует частичному выполнению запроса (уровень 3). [decision model (Jev) p=0.82]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.98",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в [12] предложил ваучер на 15 евро, не ответив на заявленное клиентом требование о компенсации за задержку и доставку, а в [20] проигнорировал жалобу на стоимость доставки, сославшись на 11 дней задержки, хотя клиент описал задержку около двух месяцев. Это указывает на ответ, не следующий за историей диалога, поэтому оценка NO. [decision model (Jev) p=0.80]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-03-6": {
+   "TS": {
+    "value": 5,
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.89",
+    "votes": [
+     5
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.95",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.87",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-03-60": {
+   "TS": {
+    "value": 5,
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.68",
+    "votes": [
+     5
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.97",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.84",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-03-78": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос (вход на немецкий сайт) и дал путь к заказу через флаг, а по коду ваучера указал, что нужен немецкий сайт и повторная подписка, то есть показал, как запрос может быть выполнен, но не решил его полностью. Это соответствует оценке 3. [decision model (Jev) p=0.97]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Решение NO уже принято: последняя реплика клиента [15] «What should I do now?» остаётся без ответа оператора, а в [14] оператор сообщил о неверном ваучере, не дав конкретного пути решения для немецкого сайта. Диалог завершился на вопросе клиента, без заключения. [decision model (Jev) p=0.80]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.73",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-03-81": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос о возврате и инициировал отмену и возврат, но сам возврат ещё не выполнен (передан в финансовый отдел), поэтому запрос выполнен лишь частично. Это соответствует оценке 3. [decision model (Jev) p=0.80]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.78",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.93",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Решение NO подтверждается репликой [10], где оператор на вопрос клиента о местонахождении посылки (уже сообщившего о просрочке с 19.12 и грейс-периоде) отвечает общими фразами и вопросом «Ready for collection?», не учитывая историю диалога; в [8] оператор тоже не дал содержательного ответа на повторный запрос. [decision model (Jev) p=0.75]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-03-85": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос и нашёл заказ, сообщил даты отгрузки и что курьер свяжется для доставки, но точная дата доставки не названа, а запрос на инвойс не выполнен — частичное удовлетворение.",
+    "votes": [
+     4,
+     3
+    ],
+    "decided_by": "cascade:tier2:claude-haiku-5-5"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.98",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "В реплике [10] оператор не ответил на вопрос клиента о счёте-фактуре и сразу перевёл разговор на «anything else», проигнорировав запрос [9]. В [4] оператор повторно запросил номер заказа и адрес, которые клиент уже не мог предоставить, не учитывая сказанное в [3]. [decision model (Jev) p=0.65]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-03-86": {
+   "TS": {
+    "value": 2,
+    "is_na": false,
+    "justification": "Оператор понял запрос клиента (отмена заказа / оплата при получении), но не выполнил его: сообщил, что оплата взимается при оформлении, и не предложил решения. Это соответствует оценке 2 — запрос понят, но не удовлетворён. [decision model (Jev) p=0.60]",
+    "votes": [
+     2
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.96",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.99",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Клиент уже ясно сказал, что хочет отменить заказ целиком, и спросил про конвертацию в счёт (реплики [3], [9]); оператор в [8] спросил, какую часть заказа отменить, не отреагировав на сказанное, а в [10] ответил шаблонным отказом без учёта вопроса клиента о счёте. [decision model (Jev) p=0.56]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-03-99": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос и дал информацию о том, как можно решить вопрос (создать аккаунт с тем же email), но не смог полностью удовлетворить запрос клиента о доступе к заказу. Это соответствует частичному решению/указанию пути (оценка 3). [decision model (Jev) p=0.96]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.75",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Реплика [8] отвечает на вопрос клиента о регистрации, но не признаёт его недоумение из [9] «I don't understand», а [10] переходит к общему вопросу, игнорируя, что клиент не понял объяснение и собирается сам попробовать. Это указывает на нарушение связности с историей диалога, что соответствует значению NO. [decision model (Jev) p=0.65]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-10-0": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос и дал оценочные даты выхода со склада и описал процесс уведомления о доставке, но точной даты доставки и подтверждения обновления по комоду не дал — запрос удовлетворён частично.",
+    "votes": [
+     5,
+     3
+    ],
+    "decided_by": "cascade:tier2:claude-haiku-5-5"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.92",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.80",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-10-18": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос о сроках доставки и сообщил текущую дату отправки (16 февраля), но не смог гарантировать её и не решил проблему задержки, поэтому запрос выполнен лишь частично. Это соответствует оценке 3 (частичное выполнение или информация о путях решения). [decision model (Jev) p=0.91]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.92",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.98",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "В реплике [8] оператор не принял во внимание заявление клиента о задержке более полугода и уточнил срок до «чуть более 2 месяцев», а в [10] ответ не согласуется с ранее названной клиентом датой заказа 3 августа; это ответы, не следующие за историей диалога. Решение NO подтверждается этими репликами. [decision model (Jev) p=0.71]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-10-21": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос о статусе заказа у таможни и сообщил, что передаст вопрос в профильный отдел и пришлёт обновление по email, то есть указал путь решения, но не дал самого ответа о статусе. Это соответствует частичному удовлетворению запроса (значение 3). [decision model (Jev) p=0.94]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.99",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.85",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-10-47": {
+   "TS": {
+    "value": 2,
+    "is_na": false,
+    "justification": "Оператор понял запрос на возврат, но не выполнил его: в [6] спросил про товары и упаковку и сразу завершил чат, а в [10] повторно запросил уже предоставленные клиентом данные заказа. Поэтому запрос клиента не был удовлетворён ни в какой степени. [decision model (Jev) p=0.79]",
+    "votes": [
+     2
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в [6] завершил чат, не ответив на вопрос клиента о статусе товаров и не решив запрос на возврат, а в [10] повторно запросил данные, уже полученные в [5]. Это подтверждает, что диалог оборван без завершения. [decision model (Jev) p=0.78]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.97",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "В реплике [6] оператор не отреагировал на уже сообщённые клиентом данные (заказ, адрес, email, желание вернуть два товара) и задал повторные вопросы, а затем завершил чат. В реплике [10] оператор повторно запросил номер заказа, адрес и email, которые клиент уже указал в [5], и не ответил на вопрос клиента [7] о товарах. [decision model (Jev) p=0.97]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-17-11": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос о компенсации и дал статус заказа с новой датой отправки и условия возможной компенсации/отмены, то есть частично удовлетворил запрос и показал, как его можно решить. Это соответствует оценке 3. [decision model (Jev) p=0.82]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.88",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в реплике [2] переспросил название компании, на что клиент ответил «#NAME?», и оператор не отреагировал на это, а в [4] дал ответ о сроках отправки без ссылки на предыдущую реплику клиента о компенсации из отзыва. Это указывает на игнорирование истории диалога, поэтому оценка NO подтверждается. [decision model (Jev) p=0.59]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-17-44": {
+   "TS": {
+    "value": 5,
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.98",
+    "votes": [
+     5
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.92",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.87",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-17-9": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос о сроках доставки и объяснил, что для его выполнения нужно подтверждение владельца аккаунта по email, то есть показал путь решения, но сам запрос (сроки заказа) не выполнил. Это соответствует частичному удовлетворению/информации о том, как запрос можно выполнить (значение 3). [decision model (Jev) p=0.79]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор завершил диалог на реплике 22, не дав клиенту ответа о сроках доставки и не предложив альтернативы, а повторно требовал письмо от мужа. Это подтверждает, что разговор не дошёл до конца с решением вопроса (решение NO уже принято). [decision model (Jev) p=0.53]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.82",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в репликах [14], [20] и [22] повторяет одно и то же требование, не реагируя на заявление клиента в [13], [15], [17], [19] и [21], что она сама является владельцем счёта и что ей нужен только статус заказа. Это игнорирование истории диалога, поэтому SENS = NO. [decision model (Jev) p=0.84]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-24-14": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос и предложил варианты (возврат с выкупом, частичный возврат или ваучер), подтвердил полный возврат, но итоговые три варианта обещал прислать по email позже, то есть запрос выполнен лишь частично. Решение 3 подтверждается этими репликами. [decision model (Jev) p=0.66]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.97",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.87",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в реплике [8] ответил на жалобу клиента нерелевантно (благодарил за плохой отзыв), а в [4] не понял реплику клиента «What are you waiting for?»; в [24] ответ на вопрос клиента о сроках письма не отвечает на вопрос о том, когда придёт письмо. Это указывает на игнорирование истории диалога, поэтому значение NO. [decision model (Jev) p=0.56]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-24-31": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор не смог найти запрос без названия арта, но сообщил клиенту, что уведомление придёт автоматически, и объяснил, от чего зависит срок возврата товара — это частичное удовлетворение запроса и информация о том, как он может быть выполнен. [decision model (Jev) p=0.87]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.96",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.65",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-24-51": {
+   "TS": {
+    "value": 2,
+    "is_na": false,
+    "justification": "Оператор в ответ на вопрос клиента о комплектации матрасов только уточнил, какой товар интересует, и сразу завершил чат, не дав информации и не решив запрос. Это подтверждает, что запрос понят не был и не удовлетворён, и решение value = 2 основано на этом. [decision model (Jev) p=0.72]",
+    "votes": [
+     2
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.50",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.98",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Клиент в реплике [1] спросил, входят ли матрасы в комплект, но оператор в реплике [2] не ответил на вопрос, а сразу уточнил, какой товар смотрит клиент, и завершил чат. Это игнорирует историю диалога, поэтому оценка NO подтверждается. [decision model (Jev) p=0.89]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-24-6": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос, но не выяснил статус заказа и не решил проблему: он предложил процедуру получения разрешения от владельца аккаунта и передал вопрос коллеге, то есть частично удовлетворил запрос и указал путь решения. Поэтому оценка 3 подтверждается этими репликами. [decision model (Jev) p=0.98]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Диалог оборвался на ожидании ответа коллеги: последняя реплика оператора [16] не содержит ответа клиенту на вопрос о дальнейших действиях и о том, отправлены ли все товары [15]. Значение NO уже принято, цитаты подтверждают незавершённость разговора. [decision model (Jev) p=0.75]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.53",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-31-10": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос о невыполненном возврате и сообщил подтверждённые данные по транзакции, но вместо его выполнения направил клиента в банк (частичное решение с указанием пути). Это соответствует оценке 3. [decision model (Jev) p=0.95]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.98",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в ответ на сообщение клиента о непоступлении денег и вопрос о неверной сумме повторял одно и то же (возврат на карту, «сумма уже возвращена»), не отвечая на конкретные вопросы клиента (куда ушли деньги, почему 1699€ vs сумма письма). Это нарушает требование учитывать историю диалога. [decision model (Jev) p=0.68]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-01-31-31": {
+   "TS": {
+    "value": 2,
+    "is_na": false,
+    "justification": "Оператор понял запрос клиента об отмене заказа, но в единственной реплике лишь запросил данные аккаунта и не выполнил отмену, поэтому запрос не удовлетворён (value 2). [decision model (Jev) p=0.73]",
+    "votes": [
+     2
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в единственной реплике попросил данные для идентификации и не решил вопрос клиента об отмене заказа; диалог на этом оборвался, поэтому диалог не дошёл до конца и решение NO подтверждается. [decision model (Jev) p=0.62]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.65",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-02-07-19": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос (заказ ламп и торшеров), сообщил, что добавить в существующий заказ нельзя и что нужен отдельный заказ, но в итоге сообщил, что товар недоступен на немецком сайте, то есть запрос выполнен лишь частично и дан только вариант развития. [decision model (Jev) p=0.68]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в последней реплике [10] сообщил, что товар недоступен, не предложив альтернативы или дальнейших шагов, и диалог завершился без решения запроса клиента, что соответствует обрыву диалога (DC = NO). [decision model (Jev) p=0.53]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.98",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Реплика [10] не соответствует запросу клиента о лампе с патроном и 4 торшерах: оператор ответил про немецкий сайт, не предложив альтернативы или дальнейших действий. Реплика [8] также не отвечает на предыдущий запрос клиента [7], который оператор ранее уточнил в [6]. [decision model (Jev) p=0.68]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-02-07-6": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор объяснил, как будет решаться вопрос (склад и курьер, дата доставки назначается после готовности товара), и предложил компенсацию после получения, то есть дал информацию о пути решения, но не назвал срок доставки, что соответствует оценке 3. [decision model (Jev) p=0.97]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.96",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.65",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-02-14-10": {
+   "TS": {
+    "value": 5,
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.53",
+    "votes": [
+     5
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.92",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.75",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-02-14-11": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос о возврате денег и передал его профильному отделу с указанием срока ответа, то есть показал, как запрос может быть выполнен, но сам не решил его (частичное выполнение). Это соответствует оценке 3. [decision model (Jev) p=0.97]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.62",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.99",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.50",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-01#_default_2021-02-21-3": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос о ткани и образце, но выполнил его лишь частично: сообщил, что нужный цвет доступен только с отсječением storage, и не предложил окончательного результата по альтернативному варианту (dark orange/steel blue), ограничившись обещанием поискать. [decision model (Jev) p=0.95]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.73",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "В реплике [10] оператор отвечает на запрос клиента о другом узоре общим вопросом «Is there anything else?», не подтверждая понимание альтернативы (тёмно-оранжевый/орех). В [12] оператор спрашивает о сэмплах, которые клиент не запрашивал, и не отвечает на предложенные варианты (dark orange или steel blue). [decision model (Jev) p=0.88]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-02#_default_2020-12-20-2": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос на настройку через WLAN и дал инструкции по подключению (реплика 4), а по сбросу пароля дал пошаговый процесс, который не завершает задачу клиента, так как клиент уже сбрасывал всё и хочет перенастроить (реплики 8–10). Это частичное выполнение или информация о пути решения, что соответствует оценке 3. [decision model (Jev) p=0.93]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Диалог обрывается на вопросе оператора в реплике [10] о сроке покупки устройства, после того как клиент сообщил, что уже пробовал сбрасывать всё и хочет перенастроить через WLAN; ответа или решения проблемы в конце нет, что соответствует решению NO (диалог не дошёл до завершения). [decision model (Jev) p=0.75]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "В реплике [9] клиент сообщил, что уже всё удалял и сбрасывал и хочет перенастроить через WLAN, но оператор в [10] проигнорировал это и задал нерелевантный вопрос о дате покупки. Ответ [6] тоже не отвечает на сказанное клиентом про пароль и сброс. [decision model (Jev) p=0.82]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-02#_default_2020-12-27-2": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос и дал способ решения (попросить библиотеку сбросить лицензию), но сам проблему не устранил, что соответствует частичному решению/информации о пути решения (уровень 3). [decision model (Jev) p=0.99]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.87",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.89",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-02#_default_2021-01-24-1": {
+   "TS": {
+    "value": 5,
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.99",
+    "votes": [
+     5
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.98",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-02#_default_2021-01-31-10": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос о покупке книг и дал инструкции по синхронизации и способы решения (переввод биллинга, покупка через сайт), но проблема не была устранена, что соответствует частичному удовлетворению запроса. Цитаты 10, 20 и 22 показывают предложенные шаги. [decision model (Jev) p=0.96]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в реплике [12] завершил диалог, не дождавшись ответа клиента, и закрыл обращение, хотя проблема (ошибка при оплате) не была решена. Клиент в [13] и далее продолжает сообщать, что покупка не работает, значит диалог оборван без завершения по существу. [decision model (Jev) p=0.68]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.98",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в реплике [12] проигнорировал ответы клиента и закрыл чат, хотя клиент продолжал отвечать; в [14] предложил переключить на другого агента, не учитывая ранее сказанное, а в [24] ответ не соответствует вопросу клиента о данных и ошибке в дата-центре. Это подтверждает решение NO. [decision model (Jev) p=0.93]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-02#_default_2021-01-31-6": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял проблему (загрузка книг на устройстве) и предоставил инструкцию по восстановлению синхронизации, то есть показал способ решения, но не подтвердил, что запрос выполнен, поэтому оценка частичная (3). Реплика [2] содержит уточняющий вопрос, а [4] — инструкцию и просьбу сообщить о результате. [decision model (Jev) p=0.98]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.71",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.99",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в реплике [4] не ответил на сообщение клиента о невозможности скачать книгу и на вопрос о девайсе, а сразу выдал инструкцию по sync repair, одновременно спросив, какие названия отсутствуют, и затем обвинил клиента в отключении. Такой ответ не учитывает предыдущую реплику клиента, что соответствует решению NO. [decision model (Jev) p=0.62]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-02#_default_2021-01-31-7": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял проблему с покупкой и частично помог (очистил платёжные данные), а также дал инструкции по обходу и указал, как можно решить проблему (связаться с банком или создать новый аккаунт), но сама проблема клиента не была устранена. [decision model (Jev) p=0.87]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.65",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.93",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "На вопрос клиента «почему это нужно» (реплика 9) и «почему» (реплика 11) оператор отвечал нерелевантно или ничего не объяснял; в реплике 20 он просит повторить попытку с сайта, хотя клиент уже ответил, что покупал из приложения (реплика 19). Это игнорирование истории диалога. [decision model (Jev) p=0.75]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-02#_default_2021-02-07-11": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял проблему со скачиванием книги и дал инструкции по выходу и повторному входу в аккаунт, а также пояснил восстановление книг, то есть показал путь решения, но сам запрос клиента (работающая загрузка) не был удовлетворён, что соответствует частичному решению (3). [decision model (Jev) p=0.92]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Клиент сообщил в реплике [9], что ошибка повторилась, и диалог завершился без подтверждённого решения и без закрывающего действия оператора (последняя реплика оператора — [8]). Это подтверждает решение NO: разговор не дошёл до конца. [decision model (Jev) p=0.78]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.68",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-02#_default_2021-02-07-3": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял проблему клиента с авторизацией и дал пошаговую инструкцию по решению (ответ [6], [12]), то есть указал путь решения, но не подтвердил устранение проблемы; при этом аккаунт по email не найден [4], что частично снижает выполнение запроса, поэтому оценка 3. [decision model (Jev) p=0.98]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.50",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в реплике [12] повторно выдал весь длинный список из шагов, хотя клиент только что подтвердил выполнение первого шага [11] («Yes.») и не запрашивал полный текст; ответ не учитывает текущее состояние диалога. Это нарушает требование соответствовать предыдущей реплике клиента. [decision model (Jev) p=0.78]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-02#_default_2021-02-07-9": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял проблему с покупками и дал инструкции по восстановлению аккаунта (шаги в [14]) и попросил проверить покупку ([16]), то есть показал путь решения, но не подтвердил, что покупка заработала — поэтому оценка 3 (частичное решение / информация о пути решения). [decision model (Jev) p=0.98]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.56",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.71",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-02#_default_2021-02-14-8": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос о переносе купленных книг и дал пошаговые инструкции по авторизации и переносу, то есть показал, как запрос можно выполнить, но не подтвердил, что книги реально перенесены. Это соответствует частичному выполнению / информации о пути решения (3). [decision model (Jev) p=0.92]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.95",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.97",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в реплике [16] повторно спросил, чем помочь, хотя клиент уже сообщил проблему в [15] (\"Does not work\"), а в [4] предложил сброс DRM без связи с запросом клиента о переносе книг; это игнорирует историю диалога. Поэтому оценка SENS = NO. [decision model (Jev) p=0.94]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_de_#CLIENT-02#_default_2021-02-21-7": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор предоставил инструкцию по выходу и повторному входу в аккаунт и указал, как загрузятся книги после синхронизации, то есть показал путь решения, но проблема клиента не была полностью устранена в чате (клиенту нужен пароль WiFi, и чат закрыт без подтверждения результата). [decision model (Jev) p=0.86]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.73",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.62",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "В реплике [8] оператор не ответил на вопрос клиента [7] о том, как отписаться, и повторил инструкцию без пояснения. В реплике [14] оператор задал вопрос про «anything else», хотя клиент сообщил, что ему нужно поговорить с мужем из-за пароля Wi‑Fi, а затем закрыл чат, не учтя этого. [decision model (Jev) p=0.92]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_pt-br_#CLIENT-04#_2021-01-03-0": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос и дал цены в правильной валюте (R$), ответил на вопрос о расходе кредитов общим диапазоном, но не подтвердил прямо возможность использования абонемента на занятиях бодибилдингом и начал с ошибочных цен в евро — запрос выполнен частично.",
+    "votes": [
+     4,
+     3
+    ],
+    "decided_by": "cascade:tier2:claude-haiku-5-5"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.91",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.73",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_pt-br_#CLIENT-04#_2021-01-03-2": {
+   "TS": {
+    "value": 2,
+    "is_na": false,
+    "justification": "Оператор понял запрос клиента (отмена списания/подтверждение отсутствия связи с компанией), но не смог найти аккаунт и не выполнил запрос ни в каком виде. В репликах [12] и [18] оператор прямо фиксирует, что аккаунт не найден, что соответствует значению 2. [decision model (Jev) p=0.96]",
+    "votes": [
+     2
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.82",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Клиент прямо спросил, можно ли отменить платёж через банк (№11), и просил письмо о том, что он не связан с компанией (№17), однако оператор на это не ответил и повторил только, что не может найти аккаунт (№12, №18). Это игнорирование сообщённой клиентом просьбы, поэтому SENS = NO. [decision model (Jev) p=0.68]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_pt-br_#CLIENT-04#_2021-01-03-3": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос о стоимости в кредитах и дал частичный ответ (диапазоны 4–6 и 8–10 кредитов), но не ответил полностью на вопрос о сроке отмены автопродления (реплика [20] лишь «That's correct.»), что соответствует оценке 3. [decision model (Jev) p=0.85]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в реплике [2] закрыл чат, сославшись на занятость клиента, хотя клиент ещё не получил ответа; диалог оборван на вопросе клиента [21], на который оператор [20] ответил лишь «That's correct.», не разрешив вопрос, что соответствует решению NO. [decision model (Jev) p=0.82]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.98",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в [14] и [18] отвечает не на вопрос клиента о стоимости отмены и подписки, а на другие темы, а в [20] отвечает «That's correct» на вопрос о пробном периоде и списании, не давая ответа; клиент в [21] повторяет вопрос о сроке отмены без ответа. Это указывает на игнорирование истории диалога, что подтверждает решение NO. [decision model (Jev) p=0.87]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_pt-br_#CLIENT-04#_2021-01-03-4": {
+   "TS": {
+    "value": 2,
+    "is_na": false,
+    "justification": "Оператор понял запрос клиента о блокировке аккаунта, но не выполнил его: в [6] повторил предложение обновить карту, а в [8] закрыл чат, сославшись на систему, без блокировки аккаунта и без решения. [decision model (Jev) p=0.71]",
+    "votes": [
+     2
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.50",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.88",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Клиент прямо сообщил о блокировке аккаунта по медицинским показаниям и просил сохранить блокировку, но оператор в [6] повторил шаблон про отклонённую карту, а в [8] ответил, что система «автоматически активировала» аккаунт, и закрыл чат, не решив запрос клиента. Это игнорирование истории диалога, поэтому SENS = NO. [decision model (Jev) p=0.96]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_pt-br_#CLIENT-04#_2021-01-03-6": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос о неверном списании и обозначил, какие данные нужны для поиска, а также как клиент может продолжить обращение позже, то есть дал информацию о пути решения, но сам списание не нашёл и не исправил. [decision model (Jev) p=0.65]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в [4] завершил попытку помочь, предложив клиенту вернуться позже, без решения вопроса; в [8] диалог продолжался без итога, и последняя реплика оператора — [8], что подтверждает обрыв разговора без завершения. [decision model (Jev) p=0.65]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.99",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.59",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_pt-br_#CLIENT-04#_2021-01-03-7": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос о списании кредитов, но не выполнил его и лишь указал, как решить вопрос напрямую со студией (оплата drop-in fee / обращение в студию). Это соответствует частичному удовлетворению или информации о пути решения, что и даёт значение 3. [decision model (Jev) p=0.74]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в реплике [6] закрыл чат, не дождавшись ответа клиента и не решив вопрос о возврате кредитов (клиент прямо указал, что перевести деньги в школу не может). Это подтверждает, что диалог завершился без выхода на решение, то есть был оборван, а не доведён до конца. [decision model (Jev) p=0.68]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.97",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "В реплике [8] оператор, уже получив подробное сообщение клиента [7] о повторной отмене брони, спрашивает, чем помочь, то есть игнорирует историю диалога. В [6] оператор закрывает чат, хотя клиент задал дополнительный вопрос в [5] и [7], что также не соответствует предыдущим репликам клиента. [decision model (Jev) p=0.96]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_pt-br_#CLIENT-04#_2021-01-03-9": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос и дал частичное решение: объяснил, что продлить пробный период нельзя, но указал, как можно перейти на меньший план и что неиспользованные кредиты переносятся. Это соответствует оценке 3 — информация о возможностях выполнения запроса без полного удовлетворения. [decision model (Jev) p=0.97]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.73",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.95",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Клиент просил проверить возможность 14 дней бесплатно для теста студии, но в реплике [6] оператор не ответил на этот запрос, а предложил отменить аккаунт и закрыл чат, игнорируя историю диалога. Это подтверждает решение NO. [decision model (Jev) p=0.90]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_pt-br_#CLIENT-04#_2021-01-10-3": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор не дал точного ответа о ценности кредитов по залам, но показал, как клиент может узнать стоимость класса до бронирования и предложил помочь с планом по местоположению, что соответствует частичному удовлетворению запроса / указанию пути его выполнения (значение 3). [decision model (Jev) p=0.97]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.71",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.98",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "В [4] оператор отвечает на вопрос клиента о стоимости в конкретном зале, но не то, что было запрошено: клиент спрашивал о тарифе и стоимости в зале, а оператор ушёл от ответа и попросил локацию. В [6] оператор на прямой вопрос клиента о списании по конкретному залу отвечает общо и сразу закрывает чат, не отвечая на заданный вопрос, что нарушает требование учитывать историю диалога. [decision model (Jev) p=0.80]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_pt-br_#CLIENT-04#_2021-01-17-0": {
+   "TS": {
+    "value": 4,
+    "is_na": false,
+    "justification": "Оператор понял запрос и подтвердил паузу за R$25, сохранение кредитов и дату списания, но изменение тарифа не выполнил сам, отправил клиента в настройки и дал избыточные/повторяющиеся сообщения.",
+    "votes": [
+     4,
+     4
+    ],
+    "decided_by": "cascade:tier2:claude-haiku-5-5"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.99",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Решение NO уже принято. В реплике [10] оператор ответил на вопрос клиента о кредитах при отмене шаблонным напоминанием, а в [12] спросил, нужна ли помощь, проигнорировав вопрос клиента [11]. В [16] оператор не ответил на прямой вопрос клиента о стоимости паузы и сумме R$35 ([15], [17]), вместо этого дав общую инструкцию. [decision model (Jev) p=0.91]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_pt-br_#CLIENT-04#_2021-01-17-2": {
+   "TS": {
+    "value": 5,
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.77",
+    "votes": [
+     5
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.99",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.88",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_pt-br_#CLIENT-04#_2021-01-24-3": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос о сроке истечения кредитов и проверил его, но не дал ответа и лишь пообещал последующий звонок/письмо по электронной почте, то есть частично удовлетворил запрос и обозначил путь решения. Это соответствует оценке 3. [decision model (Jev) p=0.90]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.91",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.87",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_pt-br_#CLIENT-04#_2021-01-24-5": {
+   "TS": {
+    "value": 2,
+    "is_na": false,
+    "justification": "Оператор понял запрос клиента о возврате кредитов за несостоявшийся класс, но в единственной реплике лишь запросил email и не предпринял действий по удовлетворению запроса, поэтому значение 2 подтверждается этими цитатами. [decision model (Jev) p=0.58]",
+    "votes": [
+     2
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Диалог оборван на первой реплике оператора: после запроса email оператор задал вопрос «Are you still there?» и не получил ответа, клиент не вернулся, вопрос о возврате кредитов не решён. Поэтому разговор не дошёл до конца, что соответствует решению NO. [decision model (Jev) p=0.71]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.73",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_pt-br_#CLIENT-04#_2021-01-31-0": {
+   "TS": {
+    "value": 4,
+    "is_na": false,
+    "justification": "Оператор понял запрос и полностью выполнил его (возврат и отмена в [4]), но сначала дал отказ и ссылку на политику в [2], что потребовало лишнего хода до решения.",
+    "votes": [
+     5,
+     4
+    ],
+    "decided_by": "cascade:tier2:claude-haiku-5-5"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.99",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.94",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_pt-br_#CLIENT-04#_2021-01-31-3": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос о партнёрстве и направил клиента в Partners team, а когда форма недоступна, дал альтернативный контакт (email). Это информация о том, как можно выполнить запрос, но не полное его выполнение, что соответствует оценке 3. [decision model (Jev) p=0.84]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.94",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.68",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_pt-br_#CLIENT-04#_2021-01-31-4": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял вопрос клиента о стоимости занятий в кредитах и объяснил, как формируется цена, и предложил пробный период, то есть дал информацию о пути решения, но не дал точного ответа на вопрос о стоимости и доступе к студиям. Это соответствует частичному удовлетворению запроса (оценка 3). [decision model (Jev) p=0.89]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.89",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Реплика [2] не отвечает на вопрос клиента о академиях Сан-Паулу (клиент спросил про студии, оператор отвечает про отсутствие ответа), а в [4] на вопрос клиента о стоимости кредитов и доступе к залам оператор уклоняется, что делает ответ неполно связанным с предыдущим вопросом. Это подтверждает нарушение требования sensibleness, решение NO. [decision model (Jev) p=0.59]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_pt-br_#CLIENT-04#_2021-01-31-5": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос, но не решил проблему в чате и только пообещал дальнейший разбор и ответ по email, что соответствует частичному удовлетворению запроса (уровень 3). [decision model (Jev) p=0.92]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.90",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.53",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_pt-br_#CLIENT-04#_2021-02-14-3": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос о бронировании и сообщил причину (техническая ошибка), а также передал информацию в техническую команду, но бронирование не выполнено, то есть запрос только частично удовлетворён. Это соответствует оценке 3. [decision model (Jev) p=0.83]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.89",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.75",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_pt_#CLIENT-03#_2021-01-17-3": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял проблему с картой и дал инструкцию, как решить её (скачать последнюю карту, удалив старую), то есть показал путь решения, но сам запрос не был полностью выполнен в чате. Это соответствует оценке 3: частичное удовлетворение или информация о том, как можно выполнить запрос. [decision model (Jev) p=0.98]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Диалог оборвался на вопросе оператора в реплике [8] без подтверждения решения и без завершения, клиент не получил итогового ответа по установке карты. Это подтверждает, что разговор не дошёл до конца. [decision model (Jev) p=0.71]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.99",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Клиент сообщил, что установил новую карту поверх старой и она не работает, а оператор в реплике [8] не отреагировал на проблему и задал не относящийся к делу вопрос о наличии приложения Home, игнорируя историю диалога. Это нарушает требование sensibleness, поэтому решение NO подтверждается. [decision model (Jev) p=0.73]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_pt_#CLIENT-03#_2021-01-31-0": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял проблему с подсчётом дистанции и предложил шаги (сброс в recovery mode), а затем эскалировал кейс с обещанием ответа по email, то есть дал информацию о пути решения, но не решил проблему полностью в чате. [decision model (Jev) p=0.95]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.97",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.99",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в [14] задал вопрос, не учитывающий уже сказанное клиентом (клиент описал отсутствие подсчёта дистанции и темпа), а в [22] и [32] ответ не соответствует ситуации: вместо решения передан email и просьба завершить чат при том, что клиент ещё ждал ответа. Это указывает на игнорирование истории диалога. [decision model (Jev) p=0.82]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_pt_#CLIENT-03#_2021-01-31-1": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял проблему (недостаточно места для обновления) и дал инструкции по пути решения (SD-карта, обновление navcore), но запрос клиента о завершении обновления не был выполнен. [decision model (Jev) p=0.95]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Решение DC=NO уже принято; цитаты показывают, что диалог завершился без разрешения проблемы: оператор переадресовал клиента на ссылку вместо решения (реплика 36) и последней репликой запросил скриншоты без подтверждения результата (реплика 42), после чего диалог оборвался. [decision model (Jev) p=0.56]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в репликах [36] и [30] упрекает клиента в невнимательности и неисполнении инструкций (\"you haven't answered anything properly\", \"you were not following the instruction\"), что является пренебрежительным, недружелюбным тоном по отношению к клиенту, и потому нарушает требование вежливости. [decision model (Jev) p=0.89]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в реплике 30 проигнорировал сообщение клиента о том, что ПО уже установлено, и повторил прежнее требование; в реплике 36 он не учёл, что клиент уже сообщил о проблеме распознавания устройства, и обвинил его в невнимательности. Это ответы, не соответствующие предыдущим репликам клиента. [decision model (Jev) p=0.91]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  },
+  "en_pt_#CLIENT-03#_2021-01-31-2": {
+   "TS": {
+    "value": 3,
+    "is_na": false,
+    "justification": "Оператор понял запрос и дал информацию (цену изменили, предложил factory reset для активации), но не предоставил клиенту нужный пакет за 49.95 евро, то есть запрос выполнен лишь частично/указан путь решения. Это соответствует оценке 3. [decision model (Jev) p=0.62]",
+    "votes": [
+     3
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "DC": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=0.50",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "POL": {
+    "value": "YES",
+    "is_na": false,
+    "justification": "decision model (Jev) p=1.00",
+    "votes": [
+     "YES"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   },
+   "SENS": {
+    "value": "NO",
+    "is_na": false,
+    "justification": "Оператор в [6] не ответил на жалобу клиента на покупку не того пакета и на желание 49.95 евро, а в [8] предложил сброс устройства, не связанный с запросом о неверно купленном пакете и истёкших услугах. Это показывает игнорирование истории диалога, что и обосновывает решение NO. [decision model (Jev) p=0.88]",
+    "votes": [
+     "NO"
+    ],
+    "decided_by": "cascade:tier1:jev-1.14"
+   }
+  }
+ }
+}
